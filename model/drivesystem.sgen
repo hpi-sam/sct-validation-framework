@@ -1,0 +1,19 @@
+GeneratorModel for yakindu::java {
+
+	statechart drivesystem {
+
+		feature Outlet {
+			targetProject = "drivesystem"
+			targetFolder = "src-gen"
+			libraryTargetFolder = "src"
+		}
+		
+		feature Naming {
+			basePackage = "de.hpi.mod.sim"
+		}
+		
+		feature GeneralFeatures {
+            TimerService = true
+        }
+	}
+}
