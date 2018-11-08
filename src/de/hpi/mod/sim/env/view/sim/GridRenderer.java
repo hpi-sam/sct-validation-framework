@@ -1,8 +1,9 @@
-package de.hpi.mod.sim.env.view;
+package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.model.CellType;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -10,40 +11,36 @@ import java.awt.geom.Point2D;
 public class GridRenderer {
 
     private ServerGridManagement grid;
-    private SimulatorView parent;
+    private SimulationWorld world;
 
 
-    public GridRenderer(SimulatorView parent, ServerGridManagement grid) {
-        this.parent = parent;
+    public GridRenderer(SimulationWorld world, ServerGridManagement grid) {
+        this.world = world;
         this.grid = grid;
     }
 
-    public void update(float delta) {
-
-    }
-
     public void render(Graphics g) {
-        float offsetX = parent.getOffsetX();
-        float offsetY = parent.getOffsetY();
-        float blockSize = parent.getBlockSize();
+        float offsetX = world.getOffsetX();
+        float offsetY = world.getOffsetY();
+        float blockSize = world.getBlockSize();
         int blocksOffsetX = (int) (offsetX / blockSize) - 1;
         int blocksOffsetY = (int) (offsetY / blockSize);
-        int blocksWidth = (int) (parent.getWidth() / blockSize + 2);
-        int blocksHeight = (int) (parent.getHeight() / blockSize + 2);
+        int blocksWidth = (int) (world.getView().getWidth() / blockSize + 2);
+        int blocksHeight = (int) (world.getView().getHeight() / blockSize + 2);
         int stationDepth = ServerGridManagement.QUEUE_SIZE + 1;
 
         for (int y = -stationDepth + blocksOffsetY; y < blocksHeight - stationDepth + blocksOffsetY; y++) {
             for (int x = blocksOffsetX; x < blocksWidth + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
-                boolean highlight = parent.isHighlighted() && parent.getHighlight().equals(current);
+                boolean highlight = world.isMousePointing() && world.getMousePointer().equals(current);
 
-                drawBlock(g, grid.cellType(current), parent.toDrawPosition(current), highlight);
+                drawBlock(g, grid.cellType(current), world.toDrawPosition(current), highlight);
             }
         }
     }
 
     private void drawBlock(Graphics g, CellType cell, Point2D drawPos, boolean highlight) {
-        float blockSize = parent.getBlockSize();
+        float blockSize = world.getBlockSize();
 
         if (cell == CellType.BLOCK)
             g.setColor(Color.BLACK);

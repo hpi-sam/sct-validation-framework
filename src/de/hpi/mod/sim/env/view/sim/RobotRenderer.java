@@ -1,7 +1,8 @@
-package de.hpi.mod.sim.env.view;
+package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.robot.DriveManager;
 import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,17 +12,15 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
 
 public class RobotRenderer {
 
-    private SimulatorView parent;
+    private SimulationWorld world;
     private BufferedImage robotIcon, robotHighlightIcon;
 
 
-    public RobotRenderer(SimulatorView parent) {
-        this.parent = parent;
+    public RobotRenderer(SimulationWorld world) {
+        this.world = world;
 
         try {
             robotIcon = ImageIO.read(new File("res/robot.png"));
@@ -31,34 +30,22 @@ public class RobotRenderer {
         }
     }
 
-    public void update(float delta) {
-        Iterator<Robot> it = parent.getSim().getRobots().iterator();
-        try {
-            while (it.hasNext()) {
-                Robot r = it.next();
-                r.getDriveManager().update(delta);
-            }
-        } catch (ConcurrentModificationException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void render(Graphics g) {
-        for (Robot r : parent.getSim().getRobots()) {
+        for (Robot r : world.getRobots()) {
             DriveManager drive = r.getDriveManager();
-            Point2D drawPos = parent.toDrawPosition(drive.getX(), drive.getY());
+            Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
 
-            boolean highlighted = r.equals(parent.highlightedRobot());
+            boolean highlighted = r.equals(world.getHighlightedRobot());
 
             drawRobot(g, drawPos, drive.getAngle(), highlighted);
         }
 
         // Render additional Info like Targets
-        for (Robot r : parent.getSim().getRobots()) {
-            if (r.equals(parent.highlightedRobot())) {
+        for (Robot r : world.getRobots()) {
+            if (r.equals(world.getHighlightedRobot())) {
                 DriveManager drive = r.getDriveManager();
-                Point2D drawPos = parent.toDrawPosition(drive.getX(), drive.getY());
-                Point2D targetPos = parent.toDrawPosition(r.getTarget());
+                Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
+                Point2D targetPos = world.toDrawPosition(r.getTarget());
 
                 drawTarget(g, drawPos, targetPos);
             }
@@ -66,7 +53,7 @@ public class RobotRenderer {
     }
 
     private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted) {
-        float blockSize = parent.getBlockSize();
+        float blockSize = world.getBlockSize();
         int translateX = (int) drawPos.getX();
         int translateY = (int) drawPos.getY();
 
@@ -84,7 +71,7 @@ public class RobotRenderer {
         Graphics2D g2d = (Graphics2D) g;
         g.setColor(Color.RED);
 
-        int offset = (int) parent.getBlockSize() / 2;
+        int offset = (int) world.getBlockSize() / 2;
         g2d.drawLine(
                 (int) drawPos.getX() + offset,
                 (int) drawPos.getY() + offset,

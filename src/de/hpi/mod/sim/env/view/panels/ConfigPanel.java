@@ -1,15 +1,9 @@
-package de.hpi.mod.sim.env.view;
+package de.hpi.mod.sim.env.view.panels;
 
-import de.hpi.mod.sim.env.Simulator;
 import de.hpi.mod.sim.env.SimulatorConfig;
-import de.hpi.mod.sim.env.robot.DriveManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * rotationSpeed

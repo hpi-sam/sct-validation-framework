@@ -1,18 +1,20 @@
 package de.hpi.mod.sim.env.view;
 
+import de.hpi.mod.sim.env.view.model.IWindow;
+import de.hpi.mod.sim.env.view.panels.ConfigPanel;
+import de.hpi.mod.sim.env.view.panels.ControlPanel;
+import de.hpi.mod.sim.env.view.panels.RobotInfoPanel;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.view.sim.SimulatorView;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
-public class DriveSimFrame extends JFrame implements IRobotController {
+public class DriveSimFrame extends JFrame implements IWindow {
 
     private SimulatorView sim;
-    private RobotInfoView info;
-    private ConfigPanel config;
-    private ControlPanel control;
+    private RobotInfoPanel info;
 
     private long lastFrame;
     private long lastRefresh;
@@ -26,10 +28,15 @@ public class DriveSimFrame extends JFrame implements IRobotController {
         JPanel side = new JPanel();
         side.setLayout(new BorderLayout());
 
-        info = new RobotInfoView();
-        sim = new SimulatorView(info);
-        config = new ConfigPanel();
-        control = new ControlPanel(this);
+        sim = new SimulatorView();
+        SimulationWorld world = sim.getWorld();
+
+        info = new RobotInfoPanel(world);
+        var config = new ConfigPanel();
+        var control = new ControlPanel(world);
+
+        world.addHighlightedRobotListener(info);
+        world.addTimeListener(control);
 
         info.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info"));
@@ -44,34 +51,7 @@ public class DriveSimFrame extends JFrame implements IRobotController {
         add(sim, BorderLayout.CENTER);
         add(side, BorderLayout.EAST);
 
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK), "zoom in");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK), "zoom out");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_LEFT, 0), "move left");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_RIGHT, 0), "move right");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_UP, 0), "move up");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_DOWN, 0), "move down");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_A, 0), "add robot");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_SPACE, 0), "toggle running");
-        sim.getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_ESCAPE, 0), "exit");
-
-        sim.getActionMap().put("zoom in", addAction(e -> sim.zoomIn()));
-        sim.getActionMap().put("zoom out", addAction(e -> sim.zoomOut()));
-        sim.getActionMap().put("move left", addAction(e -> sim.moveHorizontal(-1)));
-        sim.getActionMap().put("move right", addAction(e -> sim.moveHorizontal(1)));
-        sim.getActionMap().put("move up", addAction(e -> sim.moveVertical(1)));
-        sim.getActionMap().put("move down", addAction(e -> sim.moveVertical(-1)));
-        sim.getActionMap().put("add robot", addAction(e -> sim.addRobot()));
-        sim.getActionMap().put("toggle running", addAction(e -> toggleRunning()));
-        sim.getActionMap().put("exit", addAction(e -> running = false));
+        KeyHandler.registerKeyEventsOn(world, this, sim);
 
         setSystemLookAndFeel();
 
@@ -91,13 +71,13 @@ public class DriveSimFrame extends JFrame implements IRobotController {
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
 
-        if (System.currentTimeMillis() - lastRefresh > sim.getSensorRefreshInterval()) {
+        if (System.currentTimeMillis() - lastRefresh > sim.getWorld().getSensorRefreshInterval()) {
             lastRefresh = System.currentTimeMillis();
-            sim.refresh();
+            sim.getWorld().refresh();
             info.refresh();
         }
 
-        sim.update(delta);
+        sim.getWorld().update(delta);
 
         this.repaint();
     }
@@ -112,34 +92,15 @@ public class DriveSimFrame extends JFrame implements IRobotController {
     }
 
     private void close() {
-        sim.close();
+        sim.getWorld().dispose();
         setVisible(false);
         dispose();
         System.exit(0);
     }
 
-    private AbstractAction addAction(ActionTemplate template) {
-        return new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                template.action(e);
-            }
-        };
-    }
-
     @Override
-    public void toggleRunning() {
-        sim.toggleRunning();
-        control.updateRunning();
-    }
-
-    @Override
-    public boolean isRunning() {
-        return sim.isRunning();
-    }
-
-    private interface ActionTemplate {
-        void action(ActionEvent e);
+    public void exit() {
+        running = false;
     }
 
     public static void main(String[] args) {
