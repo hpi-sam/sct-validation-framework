@@ -28,6 +28,8 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     private float offsetY = DEFAULT_OFFSET_Y;
     private float sensorRefreshInterval = DEFAULT_SENSOR_REFRESH_INTERVAL;
 
+    private boolean running = false;
+
     private Position highlight;
     private boolean isHighlighted;
 
@@ -51,12 +53,16 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     }
 
     public void refresh() {
-        sim.refresh();
+        if (running) {
+            sim.refresh();
+        }
     }
 
     public void update(float delta) {
-        grid.update(delta);
-        robot.update(delta);
+        if (running) {
+            grid.update(delta);
+            robot.update(delta);
+        }
     }
 
     public void zoomIn() {
@@ -105,6 +111,14 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     public Robot highlightedRobot() {
         return inspector.getRobot();
+    }
+
+    public void toggleRunning() {
+        running = !running;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     Position toGridPosition(int x, int y) {

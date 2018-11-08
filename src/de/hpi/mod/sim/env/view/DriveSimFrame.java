@@ -1,19 +1,18 @@
 package de.hpi.mod.sim.env.view;
 
-import de.hpi.mod.sim.env.robot.Robot;
-
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
-public class DriveSimFrame extends JFrame {
+public class DriveSimFrame extends JFrame implements IRobotController {
 
     private SimulatorView sim;
     private RobotInfoView info;
     private ConfigPanel config;
+    private ControlPanel control;
 
     private long lastFrame;
     private long lastRefresh;
@@ -30,6 +29,7 @@ public class DriveSimFrame extends JFrame {
         info = new RobotInfoView();
         sim = new SimulatorView(info);
         config = new ConfigPanel();
+        control = new ControlPanel(this);
 
         info.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info"));
@@ -39,6 +39,7 @@ public class DriveSimFrame extends JFrame {
 
         side.add(config, BorderLayout.NORTH);
         side.add(info, BorderLayout.CENTER);
+        side.add(control, BorderLayout.SOUTH);
 
         add(sim, BorderLayout.CENTER);
         add(side, BorderLayout.EAST);
@@ -58,6 +59,8 @@ public class DriveSimFrame extends JFrame {
         sim.getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_A, 0), "add robot");
         sim.getInputMap().put(KeyStroke.getKeyStroke(
+                KeyEvent.VK_SPACE, 0), "toggle running");
+        sim.getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_ESCAPE, 0), "exit");
 
         sim.getActionMap().put("zoom in", addAction(e -> sim.zoomIn()));
@@ -67,6 +70,7 @@ public class DriveSimFrame extends JFrame {
         sim.getActionMap().put("move up", addAction(e -> sim.moveVertical(1)));
         sim.getActionMap().put("move down", addAction(e -> sim.moveVertical(-1)));
         sim.getActionMap().put("add robot", addAction(e -> sim.addRobot()));
+        sim.getActionMap().put("toggle running", addAction(e -> toggleRunning()));
         sim.getActionMap().put("exit", addAction(e -> running = false));
 
         setSystemLookAndFeel();
@@ -121,6 +125,17 @@ public class DriveSimFrame extends JFrame {
                 template.action(e);
             }
         };
+    }
+
+    @Override
+    public void toggleRunning() {
+        sim.toggleRunning();
+        control.updateRunning();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return sim.isRunning();
     }
 
     private interface ActionTemplate {
