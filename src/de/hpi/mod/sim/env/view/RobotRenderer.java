@@ -52,12 +52,23 @@ public class RobotRenderer {
 
             drawRobot(g, drawPos, drive.getAngle(), highlighted);
         }
+
+        // Render additional Info like Targets
+        for (Robot r : parent.getSim().getRobots()) {
+            if (r.equals(parent.highlightedRobot())) {
+                DriveManager drive = r.getDriveManager();
+                Point2D drawPos = parent.toDrawPosition(drive.getX(), drive.getY());
+                Point2D targetPos = parent.toDrawPosition(r.getTarget());
+
+                drawTarget(g, drawPos, targetPos);
+            }
+        }
     }
 
     private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted) {
         float blockSize = parent.getBlockSize();
         int translateX = (int) drawPos.getX();
-        int translateY = (int) (parent.getHeight() - drawPos.getY() - blockSize / 2);
+        int translateY = (int) drawPos.getY();
 
         var image = highlighted ? robotHighlightIcon : robotIcon;
 
@@ -67,5 +78,17 @@ public class RobotRenderer {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
         g.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
+    }
+
+    private void drawTarget(Graphics g, Point2D drawPos, Point2D targetPos) {
+        Graphics2D g2d = (Graphics2D) g;
+        g.setColor(Color.RED);
+
+        int offset = (int) parent.getBlockSize() / 2;
+        g2d.drawLine(
+                (int) drawPos.getX() + offset,
+                (int) drawPos.getY() + offset,
+                (int) targetPos.getX() + offset,
+                (int) targetPos.getY() + offset);
     }
 }

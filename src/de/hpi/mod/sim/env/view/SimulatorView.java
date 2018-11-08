@@ -121,7 +121,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     Point2D toDrawPosition(float x, float y) {
         float drawX = x * blockSize - offsetX;
-        float drawY = (y + ServerGridManagement.QUEUE_SIZE + 1) * blockSize - offsetY;
+        float drawY = getHeight() - (y + ServerGridManagement.QUEUE_SIZE + 1.5f) * blockSize - offsetY;
         return new Point2D.Float(drawX, drawY);
     }
 

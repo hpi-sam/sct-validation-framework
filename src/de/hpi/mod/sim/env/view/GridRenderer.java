@@ -58,12 +58,12 @@ public class GridRenderer {
         if (cell == CellType.STATION)
             g.setColor(Color.GRAY);
 
-        g.fillRect((int) drawPos.getX(), (int) (parent.getHeight() - drawPos.getY() - blockSize / 2), (int) blockSize, (int) blockSize);
+        g.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
 
         if (highlight) {
             g.setColor(Color.RED);
             g.fillRect((int) (drawPos.getX() + blockSize / 4),
-                    (int) (parent.getHeight() - drawPos.getY() - blockSize / 4),
+                    (int) (drawPos.getY() + blockSize / 4),
                     (int) (blockSize / 2),
                     (int) (blockSize / 2));
         }
