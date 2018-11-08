@@ -5,6 +5,7 @@ import de.hpi.mod.sim.env.model.CellType;
 import de.hpi.mod.sim.env.model.Position;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public class GridRenderer {
 
@@ -29,23 +30,19 @@ public class GridRenderer {
         int blocksOffsetY = (int) (offsetY / blockSize);
         int blocksWidth = (int) (parent.getWidth() / blockSize + 2);
         int blocksHeight = (int) (parent.getHeight() / blockSize + 2);
-        float realOffsetX = offsetX - blocksOffsetX * blockSize;
-        float realOffsetY = offsetY - blocksOffsetY * blockSize;
         int stationDepth = ServerGridManagement.QUEUE_SIZE + 1;
 
         for (int y = -stationDepth + blocksOffsetY; y < blocksHeight - stationDepth + blocksOffsetY; y++) {
             for (int x = blocksOffsetX; x < blocksWidth + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
-                float realX = (x - blocksOffsetX) * blockSize - realOffsetX;
-                float realY = (y - blocksOffsetY + stationDepth) * blockSize - realOffsetY;
                 boolean highlight = parent.isHighlighted() && parent.getHighlight().equals(current);
 
-                drawBlock(g, grid.cellType(current), realX, realY, highlight);
+                drawBlock(g, grid.cellType(current), parent.toDrawPosition(current), highlight);
             }
         }
     }
 
-    private void drawBlock(Graphics g, CellType cell, float x, float y, boolean highlight) {
+    private void drawBlock(Graphics g, CellType cell, Point2D drawPos, boolean highlight) {
         float blockSize = parent.getBlockSize();
 
         if (cell == CellType.BLOCK)
@@ -61,12 +58,12 @@ public class GridRenderer {
         if (cell == CellType.STATION)
             g.setColor(Color.GRAY);
 
-        g.fillRect((int) x, (int) (parent.getHeight() - y - blockSize / 2), (int) blockSize, (int) blockSize);
+        g.fillRect((int) drawPos.getX(), (int) (parent.getHeight() - drawPos.getY() - blockSize / 2), (int) blockSize, (int) blockSize);
 
         if (highlight) {
             g.setColor(Color.RED);
-            g.fillRect((int) (x + blockSize / 4),
-                    (int) (parent.getHeight() - y - blockSize / 4),
+            g.fillRect((int) (drawPos.getX() + blockSize / 4),
+                    (int) (parent.getHeight() - drawPos.getY() - blockSize / 4),
                     (int) (blockSize / 2),
                     (int) (blockSize / 2));
         }

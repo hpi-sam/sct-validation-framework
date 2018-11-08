@@ -3,12 +3,14 @@ package de.hpi.mod.sim.env.view;
 import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.Simulator;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.robot.Robot;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 
 public class SimulatorView extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -101,12 +103,26 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         return isHighlighted;
     }
 
-    private Position toPosition(int x, int y) {
+    public Robot highlightedRobot() {
+        return inspector.getRobot();
+    }
+
+    Position toGridPosition(int x, int y) {
         y = (int) (getHeight() - y - blockSize / 2);
         int blockX = (int) Math.floor((x + offsetX) / blockSize);
         int blockY = (int) Math.floor((y + offsetY) / blockSize - ServerGridManagement.QUEUE_SIZE);
 
         return new Position(blockX, blockY);
+    }
+
+    Point2D toDrawPosition(Position pos) {
+        return toDrawPosition(pos.getX(), pos.getY());
+    }
+
+    Point2D toDrawPosition(float x, float y) {
+        float drawX = x * blockSize - offsetX;
+        float drawY = (y + ServerGridManagement.QUEUE_SIZE + 1) * blockSize - offsetY;
+        return new Point2D.Float(drawX, drawY);
     }
 
     public void close() {
@@ -140,7 +156,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Position pos = toPosition(e.getX(), e.getY());
+        Position pos = toGridPosition(e.getX(), e.getY());
         for (de.hpi.mod.sim.env.robot.Robot r : sim.getRobots()) {
             if (r.getDriveManager().currentPosition().equals(pos)) {
                 inspector.showInfo(r);
@@ -170,7 +186,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        highlight = toPosition(e.getX(), e.getY());
+        highlight = toGridPosition(e.getX(), e.getY());
         isHighlighted = true;
     }
 }

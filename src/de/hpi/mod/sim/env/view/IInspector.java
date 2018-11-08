@@ -4,4 +4,5 @@ import de.hpi.mod.sim.env.robot.Robot;
 
 public interface IInspector {
     void showInfo(Robot r);
+    Robot getRobot();
 }

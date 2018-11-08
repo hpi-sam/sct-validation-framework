@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RobotInfoView extends JPanel {
+public class RobotInfoView extends JPanel implements IInspector {
 
     private List<LabelRefresher> refresher = new ArrayList<>();
     private Robot robot = null;
@@ -36,11 +36,6 @@ public class RobotInfoView extends JPanel {
         add(label);
     }
 
-    public void setRobot(Robot robot) {
-        this.robot = robot;
-        refresh();
-    }
-
     public void refresh() {
         for (LabelRefresher ref : refresher)
             ref.refresh();
@@ -49,6 +44,17 @@ public class RobotInfoView extends JPanel {
 
     private String stringify(Position pos) {
         return String.format("(%s, %s)", pos.getX(), pos.getY());
+    }
+
+    @Override
+    public void showInfo(Robot robot) {
+        this.robot = robot;
+        refresh();
+    }
+
+    @Override
+    public Robot getRobot() {
+        return robot;
     }
 
     private class LabelRefresher {

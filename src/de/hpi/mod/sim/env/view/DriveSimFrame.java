@@ -9,7 +9,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
-public class DriveSimFrame extends JFrame implements IInspector {
+public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
     private RobotInfoView info;
@@ -27,8 +27,8 @@ public class DriveSimFrame extends JFrame implements IInspector {
         JPanel side = new JPanel();
         side.setLayout(new BorderLayout());
 
-        sim = new SimulatorView(this);
         info = new RobotInfoView();
+        sim = new SimulatorView(info);
         config = new ConfigPanel();
 
         info.setBorder(BorderFactory.createTitledBorder(
@@ -121,11 +121,6 @@ public class DriveSimFrame extends JFrame implements IInspector {
                 template.action(e);
             }
         };
-    }
-
-    @Override
-    public void showInfo(Robot r) {
-        info.setRobot(r);
     }
 
     private interface ActionTemplate {

@@ -1,11 +1,12 @@
 package de.hpi.mod.sim.env.view;
 
-import de.hpi.mod.sim.env.ServerGridManagement;
+import de.hpi.mod.sim.env.robot.DriveManager;
 import de.hpi.mod.sim.env.robot.Robot;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,8 +17,7 @@ import java.util.Iterator;
 public class RobotRenderer {
 
     private SimulatorView parent;
-
-    private BufferedImage robotIcon;
+    private BufferedImage robotIcon, robotHighlightIcon;
 
 
     public RobotRenderer(SimulatorView parent) {
@@ -25,6 +25,7 @@ public class RobotRenderer {
 
         try {
             robotIcon = ImageIO.read(new File("res/robot.png"));
+            robotHighlightIcon = ImageIO.read(new File("res/robot-highlight.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,27 +44,28 @@ public class RobotRenderer {
     }
 
     public void render(Graphics g) {
-        float blockSize = parent.getBlockSize();
-        float offsetX = parent.getOffsetX();
-        float offsetY = parent.getOffsetY() - (ServerGridManagement.QUEUE_SIZE + 1) * blockSize;
-
         for (Robot r : parent.getSim().getRobots()) {
-            var drive = r.getDriveManager();
-            float realX = drive.getX() * blockSize - offsetX;
-            float realY = (drive.getY()) * blockSize - offsetY;
-            drawRobot(g, realX, realY, drive.getAngle());
+            DriveManager drive = r.getDriveManager();
+            Point2D drawPos = parent.toDrawPosition(drive.getX(), drive.getY());
+
+            boolean highlighted = r.equals(parent.highlightedRobot());
+
+            drawRobot(g, drawPos, drive.getAngle(), highlighted);
         }
     }
 
-    private void drawRobot(Graphics g, float realX, float realY, float angle) {
+    private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted) {
         float blockSize = parent.getBlockSize();
-        int translateX = (int) (realX);
-        int translateY = (int) (parent.getHeight() - realY - blockSize / 2);
+        int translateX = (int) drawPos.getX();
+        int translateY = (int) (parent.getHeight() - drawPos.getY() - blockSize / 2);
 
+        var image = highlighted ? robotHighlightIcon : robotIcon;
+
+        // Rotate
         AffineTransform tx = AffineTransform.getRotateInstance(Math.toRadians(angle),
-                robotIcon.getWidth() / 2f, robotIcon.getHeight() / 2f);
+                image.getWidth() / 2f, image.getHeight() / 2f);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
-        g.drawImage(op.filter(robotIcon, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
+        g.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
     }
 }
