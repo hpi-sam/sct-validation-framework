@@ -53,10 +53,6 @@ public class DriveSimFrame extends JFrame implements IWindow {
         add(sim, BorderLayout.CENTER);
         add(side, BorderLayout.EAST);
 
-        KeyHandler.registerKeyEventsOn(world, this, sim);
-
-        setSystemLookAndFeel();
-
         setPreferredSize(new Dimension(800, 500));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -84,15 +80,6 @@ public class DriveSimFrame extends JFrame implements IWindow {
         this.repaint();
     }
 
-    private void setSystemLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
-            JOptionPane.showMessageDialog(null, "Could not switch to System Look-And-Feel",
-                    "UI Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     private void close() {
         sim.getWorld().dispose();
         setVisible(false);
@@ -106,6 +93,21 @@ public class DriveSimFrame extends JFrame implements IWindow {
     }
 
     public static void main(String[] args) {
+        setSystemLookAndFeel();
         new DriveSimFrame();
+    }
+
+    private static void setSystemLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            if (UIManager.getSystemLookAndFeelClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
+                Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
+                UIManager.put("MenuItem.acceleratorFont", original.deriveFont(Font.PLAIN, 10));
+                UIManager.put("MenuItem.acceleratorForeground", new Color(100, 150, 255));
+            }
+        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
+            JOptionPane.showMessageDialog(null, "Could not switch to System Look-And-Feel",
+                    "UI Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

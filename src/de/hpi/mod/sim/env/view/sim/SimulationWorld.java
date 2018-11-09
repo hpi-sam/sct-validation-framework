@@ -87,14 +87,18 @@ public class SimulationWorld {
         return sim.getRobots();
     }
 
-    public void zoomIn() {
+    public void zoomIn(float zoom) {
         if (blockSize < MAX_BLOCK_SIZE)
-            blockSize++;
+            blockSize += zoom;
     }
     
-    public void zoomOut() {
+    public void zoomOut(float zoom) {
         if (blockSize > MIN_BLOCK_SIZE)
-            blockSize--;
+            blockSize -= zoom;
+    }
+
+    public void resetZoom() {
+        blockSize = DEFAULT_BLOCK_SIZE;
     }
     
     public float getZoom() {
@@ -113,6 +117,11 @@ public class SimulationWorld {
         offsetY += dir * MOVE_SPEED;
         if (offsetY < 0)
             offsetY = 0;
+    }
+
+    public void resetOffset() {
+        offsetX = DEFAULT_OFFSET_X;
+        offsetY = DEFAULT_OFFSET_Y;
     }
 
     public float getOffsetX() {
@@ -196,7 +205,7 @@ public class SimulationWorld {
     public Position toGridPosition(int x, int y) {
         y = (int) (view.getHeight() - y - blockSize / 2);
         int blockX = (int) Math.floor((x + offsetX) / blockSize);
-        int blockY = (int) Math.floor((y + offsetY) / blockSize - ServerGridManagement.QUEUE_SIZE);
+        int blockY = (int) Math.floor((y - offsetY) / blockSize - ServerGridManagement.QUEUE_SIZE);
 
         return new Position(blockX, blockY);
     }
