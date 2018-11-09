@@ -30,7 +30,7 @@ public class ServerGridManagement implements ISensorDataProvider {
     public static final int MAP_HEIGHT = 4;
 
     /**
-     * Because the Map doesn't have direct access to robots,
+     * Because the Map doesn't have direct access to newRobots,
      * it needs a controller to find out if a cells is blocked by a robot.
      */
     private IRobotController control;
@@ -179,7 +179,7 @@ public class ServerGridManagement implements ISensorDataProvider {
     }
 
     /**
-     * Whether the crossroad ahead of the robot is blocked by other robots.<br>
+     * Whether the crossroad ahead of the robot is blocked by other newRobots.<br>
      * Position has to be on a waypoint or a crossroad.
      * If its a crossroad the current crossroad is checked
      * @param facing The orientation the robot is looking at
@@ -200,7 +200,7 @@ public class ServerGridManagement implements ISensorDataProvider {
     }
 
     /**
-     * Whether the crossroad right of the robot is blocked by other robots.<br>
+     * Whether the crossroad right of the robot is blocked by other newRobots.<br>
      * Position has to be on a waypoint.
      * @param facing The orientation the robot is looking at
      * @param pos The position of the robot

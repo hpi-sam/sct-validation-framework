@@ -26,19 +26,40 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
 
     public Robot addRobot() {
         Station station = getStationWithFreeBattery();
-        int robotID = Robot.incrementID();
-        int stationID = station.getStationID();
-        requestNextStation(robotID, true);
-        int batteryID = requestFreeChargerAtStation(robotID, stationID);
+        return addRobot(station.getStationID());
+    }
 
-        Robot robot = new Robot(
-                robotID,
-                stationID,
-                grid, this, this, this,
-                getChargerPositionAtStation(stationID, batteryID),
-                Orientation.EAST);
-        robots.add(robot);
-        return robot;
+    public Robot addRobot(int stationID) {
+        Station station = getStationByID(stationID);
+        if (station.hasFreeBattery()) {
+            int robotID = Robot.incrementID();
+            requestNextStation(robotID, true);
+            int batteryID = requestFreeChargerAtStation(robotID, stationID);
+
+            Robot robot = new Robot(
+                    robotID,
+                    stationID,
+                    grid, this, this, this,
+                    getChargerPositionAtStation(stationID, batteryID),
+                    Orientation.EAST);
+            robots.add(robot);
+            return robot;
+        }
+        return null;
+    }
+
+    public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
+        if (grid.posType(pos) == PositionType.WAYPOINT) {
+            int robotID = Robot.incrementID();
+            Robot robot = new Robot(
+                    robotID,
+                    getStationWithFreeBattery().getStationID(),
+                    grid, this, this, this,
+                    pos, facing, target);
+            robots.add(robot);
+            return robot;
+        }
+        return null;
     }
 
     public void refresh() {

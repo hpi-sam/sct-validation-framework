@@ -2,10 +2,12 @@ package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.Simulator;
+import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
+import de.hpi.mod.sim.env.view.model.Scenario;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -129,9 +131,31 @@ public class SimulationWorld {
         this.sensorRefreshInterval = sensorRefreshInterval;
     }
 
-    public void addRobot() {
+    public Robot addRobot() {
         Robot r = sim.addRobot();
         setHighlightedRobot(r);
+        return r;
+    }
+
+    public Robot addRobot(int stationID) {
+        Robot r = sim.addRobot(stationID);
+        setHighlightedRobot(r);
+        return r;
+    }
+
+    public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
+        Robot r = sim.addRobotAtWaypoint(pos, facing, target);
+        setHighlightedRobot(r);
+        return r;
+    }
+
+    public void playScenario(Scenario scenario) {
+        if (isRunning()) toggleRunning();
+        sim.getRobots().clear();
+
+        scenario.clear();
+        scenario.loadScenario();
+        scenario.playScenario(this);
     }
 
     public void setMousePointer(Position mousePointer) {

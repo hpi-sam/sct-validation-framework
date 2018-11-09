@@ -35,6 +35,8 @@ public class DriveSimFrame extends JFrame implements IWindow {
         var config = new ConfigPanel();
         var control = new ControlPanel(world);
 
+        setJMenuBar(new DriveSimMenu(world));
+
         world.addHighlightedRobotListener(info);
         world.addTimeListener(control);
 

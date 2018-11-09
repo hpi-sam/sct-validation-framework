@@ -25,8 +25,8 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
-                 IRobotDispatcher dispatcher, ILocation location, IScanner scanner,
-                 @NotNull Position startPosition, @NotNull Orientation startFacing) {
+                  IRobotDispatcher dispatcher, ILocation location, IScanner scanner,
+                  @NotNull Position startPosition, @NotNull Orientation startFacing) {
         this.robotID = robotID;
         this.stationID = stationID;
         this.grid = grid;
@@ -36,6 +36,14 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         manager = new DriveManager(this, startPosition, startFacing);
         drive = new DriveSystemWrapper(this, manager, this);
         target = startPosition;
+    }
+
+    public Robot(int robotID, int stationID, ISensorDataProvider grid,
+                 IRobotDispatcher dispatcher, ILocation location, IScanner scanner,
+                 @NotNull Position startPosition, @NotNull Orientation startFacing, Position target) {
+        this(robotID, stationID, grid, dispatcher, location, scanner, startPosition, startFacing);
+        this.target = target;
+        state = RobotState.SCENARIO;
     }
 
     @Override
@@ -49,11 +57,13 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
                     driving = true;
                     drive.newTarget();
                 }
+
             } else if (state == RobotState.TO_QUEUE) {
                 target = location.getLoadingPositionAtStation(stationID);
                 state = RobotState.TO_LOADING;
                 driving = true;
                 drive.newTarget();
+
             } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
                 packageID = scanner.getPackageID(stationID);
                 hasPackage = true;
@@ -62,6 +72,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
                 state = RobotState.TO_UNLOADING;
                 driving = true;
                 drive.newTarget();
+
             } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
                 boolean needsLoading = manager.getBattery() < DriveManager.BATTERY_LOW;
                 stationID = dispatcher.requestNextStation(robotID, needsLoading);
@@ -69,6 +80,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
                 state = RobotState.TO_STATION;
                 driving = true;
                 drive.newTarget();
+
             } else if (state == RobotState.TO_STATION && manager.getBattery() < DriveManager.BATTERY_LOW) {
                 int optionalBattery = dispatcher.requestFreeChargerAtStation(robotID, stationID);
                 if (optionalBattery >= 0) {
@@ -77,9 +89,14 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
                     driving = true;
                     drive.newTarget();
                 }
+
             } else if (state == RobotState.TO_STATION) {
                 target = location.getQueuePositionAtStation(stationID);
                 state = RobotState.TO_QUEUE;
+                driving = true;
+                drive.newTarget();
+
+            } else if (state == RobotState.SCENARIO && !manager.currentPosition().equals(target)) {
                 driving = true;
                 drive.newTarget();
             }
@@ -242,6 +259,6 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     }
 
     private enum RobotState {
-        TO_QUEUE, TO_BATTERY, TO_LOADING, TO_UNLOADING, TO_STATION
+        TO_QUEUE, TO_BATTERY, TO_LOADING, TO_UNLOADING, TO_STATION, SCENARIO
     }
 }
