@@ -47,25 +47,48 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
         JMenu worldMenu = new JMenu("World");
         JMenu zoomMenu = new JMenu("Zoom");
-        JMenuItem addRobotItem = new JMenuItem("Add Robot");
+        JMenu moveMenu = new JMenu("Move");
         JMenuItem zoomInItem = new JMenuItem("In");
         JMenuItem zoomOutItem = new JMenuItem("Out");
         JMenuItem zoomResetItem = new JMenuItem("Reset");
+        JMenuItem moveLeftItem = new JMenuItem("Left");
+        JMenuItem moveRightItem = new JMenuItem("Right");
+        JMenuItem moveUpItem = new JMenuItem("Up");
+        JMenuItem moveDownItem = new JMenuItem("Down");
+        JMenuItem moveResetItem = new JMenuItem("Reset");
+        JMenuItem addRobotItem = new JMenuItem("Add Robot");
 
         addRobotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0));
         zoomInItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK));
         zoomOutItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK));
         zoomResetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));
+        moveLeftItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
+        moveRightItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
+        moveUpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+        moveDownItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+        moveResetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));
 
         addRobotItem.addActionListener(e -> world.addRobot());
         zoomInItem.addActionListener(e -> world.zoomIn(1));
         zoomOutItem.addActionListener(e -> world.zoomOut(1));
         zoomResetItem.addActionListener(e -> world.resetZoom());
+        moveLeftItem.addActionListener(e -> world.moveHorizontal(-1));
+        moveRightItem.addActionListener(e -> world.moveHorizontal(1));
+        moveUpItem.addActionListener(e -> world.moveVertical(1));
+        moveDownItem.addActionListener(e -> world.moveVertical(-1));
+        moveResetItem.addActionListener(e -> world.resetOffset());
+
+        moveMenu.add(moveLeftItem);
+        moveMenu.add(moveRightItem);
+        moveMenu.add(moveUpItem);
+        moveMenu.add(moveDownItem);
+        moveMenu.add(moveResetItem);
 
         zoomMenu.add(zoomInItem);
         zoomMenu.add(zoomOutItem);
         zoomMenu.add(zoomResetItem);
 
+        worldMenu.add(moveMenu);
         worldMenu.add(zoomMenu);
         worldMenu.addSeparator();
         worldMenu.add(addRobotItem);

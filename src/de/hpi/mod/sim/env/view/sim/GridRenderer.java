@@ -20,17 +20,15 @@ public class GridRenderer {
     }
 
     public void render(Graphics g) {
-        float offsetX = world.getOffsetX();
-        float offsetY = world.getOffsetY();
+        float blocksOffsetX = world.getOffsetX();
+        float blocksOffsetY = world.getOffsetY();
         float blockSize = world.getBlockSize();
-        int blocksOffsetX = (int) (offsetX / blockSize) - 1;
-        int blocksOffsetY = (int) (offsetY / blockSize);
-        int blocksWidth = (int) (world.getView().getWidth() / blockSize + 2);
-        int blocksHeight = (int) (world.getView().getHeight() / blockSize + 2);
+        int widthInBlocks = (int) (world.getView().getWidth() / blockSize + 2);
+        int heightInBlocks = (int) (world.getView().getHeight() / blockSize + 2);
         int stationDepth = ServerGridManagement.QUEUE_SIZE + 1;
 
-        for (int y = -stationDepth + blocksOffsetY; y < blocksHeight - stationDepth + blocksOffsetY; y++) {
-            for (int x = blocksOffsetX; x < blocksWidth + blocksOffsetX; x++) {
+        for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
+            for (int x = (int) blocksOffsetX; x < widthInBlocks + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
                 boolean highlight = world.isMousePointing() && world.getMousePointer().equals(current);
 

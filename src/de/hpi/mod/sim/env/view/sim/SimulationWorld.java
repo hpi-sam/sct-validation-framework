@@ -18,12 +18,11 @@ public class SimulationWorld {
 
     public static final float
             DEFAULT_BLOCK_SIZE = 20,
-            DEFAULT_OFFSET_X = 0,
+            DEFAULT_OFFSET_X = 1,
             DEFAULT_OFFSET_Y = 0,
             DEFAULT_SENSOR_REFRESH_INTERVAL = 10,
             MIN_BLOCK_SIZE = 5,
-            MAX_BLOCK_SIZE = 30,
-            MOVE_SPEED = 1;
+            MAX_BLOCK_SIZE = 30;
 
     private float blockSize = DEFAULT_BLOCK_SIZE;
     private float offsetX = DEFAULT_OFFSET_X;
@@ -110,11 +109,11 @@ public class SimulationWorld {
     }
 
     public void moveHorizontal(int dir) {
-        offsetX += dir * MOVE_SPEED;
+        offsetX += dir;
     }
 
     public void moveVertical(int dir) {
-        offsetY += dir * MOVE_SPEED;
+        offsetY += dir;
         if (offsetY < 0)
             offsetY = 0;
     }
@@ -204,8 +203,8 @@ public class SimulationWorld {
 
     public Position toGridPosition(int x, int y) {
         y = (int) (view.getHeight() - y - blockSize / 2);
-        int blockX = (int) Math.floor((x + offsetX) / blockSize);
-        int blockY = (int) Math.floor((y - offsetY) / blockSize - ServerGridManagement.QUEUE_SIZE);
+        int blockX = (int) Math.floor(x / blockSize + offsetX);
+        int blockY = (int) Math.floor(y / blockSize - ServerGridManagement.QUEUE_SIZE + offsetY);
 
         return new Position(blockX, blockY);
     }
@@ -215,8 +214,8 @@ public class SimulationWorld {
     }
 
     public Point2D toDrawPosition(float x, float y) {
-        float drawX = x * blockSize - offsetX;
-        float drawY = view.getHeight() - (y + ServerGridManagement.QUEUE_SIZE + 1.5f) * blockSize - offsetY;
+        float drawX = (x - offsetX) * blockSize;
+        float drawY = view.getHeight() - (y + ServerGridManagement.QUEUE_SIZE + 1.5f - offsetY) * blockSize;
         return new Point2D.Float(drawX, drawY);
     }
 
