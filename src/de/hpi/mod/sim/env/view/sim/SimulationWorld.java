@@ -16,9 +16,9 @@ import java.util.List;
 
 public class SimulationWorld {
 
-    public static final float
+    private static final float
             DEFAULT_BLOCK_SIZE = 20,
-            DEFAULT_OFFSET_X = 1,
+            DEFAULT_OFFSET_X = 0,
             DEFAULT_OFFSET_Y = 0,
             DEFAULT_SENSOR_REFRESH_INTERVAL = 10,
             MIN_BLOCK_SIZE = 5,

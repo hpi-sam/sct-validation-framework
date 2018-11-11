@@ -2,7 +2,6 @@ package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.Scenario;
-import de.hpi.mod.sim.env.view.model.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
@@ -26,13 +25,17 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
     private Icon playIcon, pauseIcon;
     private SimulationWorld world;
 
-    private JMenuItem playItem;
+    private JMenuItem playItem, zoomInItem, zoomOutItem, zoomResetItem, moveLeftItem,
+            moveRightItem, moveUpItem, moveDownItem, moveResetItem, addRobotItem, keyItem;
+
+    private KeyManager keyManager;
 
 
     public DriveSimMenu(SimulationWorld world) {
         this.world = world;
 
         loadIcons();
+        keyManager = new KeyManager();
 
         JMenu scenariosMenu = new JMenu("Scenarios");
         scenariosMenu.setMnemonic(KeyEvent.VK_S);
@@ -40,33 +43,24 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         fillScenarioMenu(scenariosMenu);
 
         JMenu playMenu = new JMenu("Play");
-        playItem = new JMenuItem("Play/Pause", playIcon);
-        playItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
-        playItem.addActionListener(e -> world.toggleRunning());
-        playMenu.add(playItem);
-
+        JMenu optionsMenu = new JMenu("Options");
         JMenu worldMenu = new JMenu("World");
         JMenu zoomMenu = new JMenu("Zoom");
         JMenu moveMenu = new JMenu("Move");
-        JMenuItem zoomInItem = new JMenuItem("In");
-        JMenuItem zoomOutItem = new JMenuItem("Out");
-        JMenuItem zoomResetItem = new JMenuItem("Reset");
-        JMenuItem moveLeftItem = new JMenuItem("Left");
-        JMenuItem moveRightItem = new JMenuItem("Right");
-        JMenuItem moveUpItem = new JMenuItem("Up");
-        JMenuItem moveDownItem = new JMenuItem("Down");
-        JMenuItem moveResetItem = new JMenuItem("Reset");
-        JMenuItem addRobotItem = new JMenuItem("Add Robot");
 
-        addRobotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0));
-        zoomInItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK));
-        zoomOutItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK));
-        zoomResetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));
-        moveLeftItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
-        moveRightItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
-        moveUpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
-        moveDownItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
-        moveResetItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));
+        zoomInItem = new JMenuItem("In");
+        zoomOutItem = new JMenuItem("Out");
+        zoomResetItem = new JMenuItem("Reset");
+        moveLeftItem = new JMenuItem("Left");
+        moveRightItem = new JMenuItem("Right");
+        moveUpItem = new JMenuItem("Up");
+        moveDownItem = new JMenuItem("Down");
+        moveResetItem = new JMenuItem("Reset");
+        addRobotItem = new JMenuItem("Add Robot");
+        playItem = new JMenuItem("Play/Pause", playIcon);
+        keyItem = new JMenuItem("Keystrokes");
+
+        updateKeystrokes();
 
         addRobotItem.addActionListener(e -> world.addRobot());
         zoomInItem.addActionListener(e -> world.zoomIn(1));
@@ -77,6 +71,8 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         moveUpItem.addActionListener(e -> world.moveVertical(1));
         moveDownItem.addActionListener(e -> world.moveVertical(-1));
         moveResetItem.addActionListener(e -> world.resetOffset());
+        playItem.addActionListener(e -> world.toggleRunning());
+        keyItem.addActionListener(e -> openKeyDialog());
 
         moveMenu.add(moveLeftItem);
         moveMenu.add(moveRightItem);
@@ -93,9 +89,14 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         worldMenu.addSeparator();
         worldMenu.add(addRobotItem);
 
+        playMenu.add(playItem);
+
+        optionsMenu.add(keyItem);
+
         add(worldMenu);
         add(playMenu);
         add(scenariosMenu);
+        add(optionsMenu);
 
         world.addTimeListener(this);
     }
@@ -103,6 +104,24 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
     private void loadIcons() {
         playIcon = new ImageIcon("res/play.png");
         pauseIcon = new ImageIcon("res/pause.png");
+    }
+
+    private void openKeyDialog() {
+        new KeyDialog(keyManager);
+        updateKeystrokes();
+    }
+
+    private void updateKeystrokes() {
+        playItem.setAccelerator(keyManager.getKey("Pause/Play"));
+        addRobotItem.setAccelerator(keyManager.getKey("Add Robot"));
+        zoomInItem.setAccelerator(keyManager.getKey("Zoom In"));
+        zoomOutItem.setAccelerator(keyManager.getKey("Zoom Out"));
+        zoomResetItem.setAccelerator(keyManager.getKey("Reset Zoom"));
+        moveLeftItem.setAccelerator(keyManager.getKey("Move Left"));
+        moveRightItem.setAccelerator(keyManager.getKey("Move Right"));
+        moveUpItem.setAccelerator(keyManager.getKey("Move Up"));
+        moveDownItem.setAccelerator(keyManager.getKey("Move Down"));
+        moveResetItem.setAccelerator(keyManager.getKey("Reset Move"));
     }
 
     private void fillScenarioMenu(JMenu menu) {

@@ -1,7 +1,8 @@
-package de.hpi.mod.sim.env.view.model;
+package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.view.model.Scenario;
 
 import java.util.ArrayList;
 import java.util.List;
