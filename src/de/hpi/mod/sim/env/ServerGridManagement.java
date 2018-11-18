@@ -256,7 +256,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 
     public Position getQueuePositionAtStation(int stationID, int queueID) {
         int x = stationID * 3 + 2;
-        int y = -1 - queueID;
+        int y = -queueID;
         return new Position(x, y);
     }
 
