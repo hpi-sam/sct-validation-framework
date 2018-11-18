@@ -135,7 +135,7 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
 
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
-        // Nothing to do here except log
+        getStationByID(stationID).takeFromQueue();
     }
 
     @Override

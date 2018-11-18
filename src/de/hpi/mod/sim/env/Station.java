@@ -34,7 +34,7 @@ class Station implements Comparable<Station> {
         queueSize++;
     }
 
-    public void takeFromQueue() {
+    void takeFromQueue() {
         queueSize--;
     }
 
