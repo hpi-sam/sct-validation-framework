@@ -13,6 +13,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class SimulationWorld {
 
@@ -42,24 +45,32 @@ public class SimulationWorld {
     private List<IHighlightedRobotListener> highlightedRobotListeners = new ArrayList<>();
     private List<ITimeListener> timeListeners = new ArrayList<>();
 
+    boolean isRefreshing = false, isUpdating = false;
+
 
     public SimulationWorld(SimulatorView view) {
         this.view = view;
         sim = new Simulator();
     }
 
-    public void refresh() {
+    public synchronized void refresh() {
         if (running) {
+            isRefreshing = true;
             sim.refresh();
+            isRefreshing = false;
+            notifyAll();
         }
     }
 
-    public void update(float delta) {
+    public synchronized void update(float delta) {
         if (running) {
             try {
+                isUpdating = true;
                 for (Robot r : sim.getRobots()) {
                     r.getDriveManager().update(delta);
                 }
+                isUpdating = false;
+                notifyAll();
             } catch (ConcurrentModificationException e) {
                 e.printStackTrace();
             }
@@ -139,22 +150,32 @@ public class SimulationWorld {
         this.sensorRefreshInterval = sensorRefreshInterval;
     }
 
-    public Robot addRobot() {
-        Robot r = sim.addRobot();
-        setHighlightedRobot(r);
-        return r;
+    public synchronized Robot addRobot() {
+        return addRobotRunner(() -> sim.addRobot());
     }
 
     public Robot addRobot(int stationID) {
-        Robot r = sim.addRobot(stationID);
-        setHighlightedRobot(r);
-        return r;
+        return addRobotRunner(() -> sim.addRobot(stationID));
     }
 
     public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
-        Robot r = sim.addRobotAtWaypoint(pos, facing, target);
-        setHighlightedRobot(r);
-        return r;
+        return addRobotRunner(() -> sim.addRobotAtWaypoint(pos, facing, target));
+    }
+
+    private Robot addRobotRunner(AddRobotRunner runner) {
+        try {
+            while (isRefreshing || isUpdating) {
+                wait();
+            }
+
+            Robot r = runner.run();
+            setHighlightedRobot(r);
+            return r;
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void playScenario(Scenario scenario) {
@@ -229,5 +250,9 @@ public class SimulationWorld {
 
     private void refreshTimeListeners() {
         timeListeners.forEach(ITimeListener::refresh);
+    }
+
+    private interface AddRobotRunner {
+        Robot run();
     }
 }
