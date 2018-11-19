@@ -26,18 +26,6 @@ public class ScenarioManager {
         public void initializeScenario() {}
     }
 
-    private static class RobotInEachStationScenario extends Scenario {
-
-        public RobotInEachStationScenario() {
-            name = "Robot in each Station";
-        }
-
-        @Override
-        public void initializeScenario() {
-
-        }
-    }
-
     private static class FourRobotsOnCrossroadScenario extends Scenario {
 
         public FourRobotsOnCrossroadScenario() {

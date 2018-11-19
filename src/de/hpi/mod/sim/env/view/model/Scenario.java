@@ -8,18 +8,24 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains Positions of Robots which can be applied to the Simulation.
+ * Some Scenarios are defined in {@link de.hpi.mod.sim.env.view.ScenarioManager}
+ */
 public abstract class Scenario {
 
+    /**
+     * List of Robots the add to the Simulation
+     */
     protected List<NewRobot> newRobots = new ArrayList<>();
-    private List<Robot> robots = new ArrayList<>();
 
-    private boolean playing = false;
-    protected boolean isATest = false;
-
+    /**
+     * The name of the Scenario
+     */
     protected String name = "Unnamed";
 
 
-    public Scenario() {
+    protected Scenario() {
         loadScenario();
     }
 
@@ -27,6 +33,10 @@ public abstract class Scenario {
         return name;
     }
 
+    /**
+     * Loads the values of the new Robots.
+     * Has to be called before {@link #playScenario(SimulationWorld)}
+     */
     public void loadScenario() {
         newRobots.clear();
         initializeScenario();
@@ -35,52 +45,11 @@ public abstract class Scenario {
     protected abstract void initializeScenario();
 
     public void playScenario(SimulationWorld sim) {
-        robots.clear();
         newRobots.forEach(r -> r.register(sim));
-        // TODO add robots and targets to list
     }
-
-    public boolean isScenarioFullfilled() {
-        if (isATest) {
-            // TODO implement check if Robots are on target
-            return false;
-        }
-        return false;
-    }
-
-    public boolean isScenarioATest() {
-        return isATest;
-    }
-
-    public void clear() {
-        robots.clear();
-    }
-
 
     public abstract class NewRobot {
-        public abstract Robot register(SimulationWorld sim);
-    }
-
-    public class NewSimpleRobot extends NewRobot {
-
-        @Override
-        public Robot register(SimulationWorld sim) {
-            return sim.addRobot();
-        }
-    }
-
-    public class NewStationRobot extends NewRobot {
-
-        private int stationID;
-
-        public NewStationRobot(int stationID) {
-            this.stationID = stationID;
-        }
-
-        @Override
-        public Robot register(SimulationWorld sim) {
-            return sim.addRobot(stationID);
-        }
+        public abstract void register(SimulationWorld sim);
     }
 
     public class NewWaypointRobot extends NewRobot {
@@ -95,8 +64,8 @@ public abstract class Scenario {
         }
 
         @Override
-        public Robot register(SimulationWorld sim) {
-            return sim.addRobotAtWaypoint(pos, facing, target);
+        public void register(SimulationWorld sim) {
+            sim.addRobotAtWaypoint(pos, facing, target);
         }
     }
 }

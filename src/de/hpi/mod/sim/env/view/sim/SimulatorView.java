@@ -9,6 +9,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+/**
+ * Uses {@link GridRenderer} and {@link RobotRenderer} to render the Simulation given by {@link SimulationWorld}.
+ * Keeps track of the Mouse
+ */
 public class SimulatorView extends JPanel implements MouseListener, MouseMotionListener {
 
     private GridRenderer grid;

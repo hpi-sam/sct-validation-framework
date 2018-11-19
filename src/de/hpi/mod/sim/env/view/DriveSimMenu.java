@@ -5,7 +5,6 @@ import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class DriveSimMenu extends JMenuBar implements ITimeListener {

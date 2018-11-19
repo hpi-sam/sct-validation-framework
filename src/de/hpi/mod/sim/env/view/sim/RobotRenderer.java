@@ -13,6 +13,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Render all Robots.
+ */
 public class RobotRenderer {
 
     private SimulationWorld world;
@@ -22,6 +25,10 @@ public class RobotRenderer {
     public RobotRenderer(SimulationWorld world) {
         this.world = world;
 
+        loadImages();
+    }
+
+    private void loadImages() {
         try {
             robotIcon = ImageIO.read(new File("res/robot.png"));
             robotHighlightIcon = ImageIO.read(new File("res/robot-highlight.png"));
@@ -30,7 +37,8 @@ public class RobotRenderer {
         }
     }
 
-    public void render(Graphics g) {
+    void render(Graphics g) {
+        // Draw Robots
         for (Robot r : world.getRobots()) {
             DriveManager drive = r.getDriveManager();
             Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());

@@ -1,6 +1,5 @@
 package de.hpi.mod.sim.env.view;
 
-import de.hpi.mod.sim.env.view.model.IWindow;
 import de.hpi.mod.sim.env.view.panels.ConfigPanel;
 import de.hpi.mod.sim.env.view.panels.ControlPanel;
 import de.hpi.mod.sim.env.view.panels.RobotInfoPanel;
@@ -11,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
-public class DriveSimFrame extends JFrame implements IWindow {
+public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
     private RobotInfoPanel info;
@@ -72,7 +71,7 @@ public class DriveSimFrame extends JFrame implements IWindow {
         if (System.currentTimeMillis() - lastRefresh > sim.getWorld().getSensorRefreshInterval()) {
             lastRefresh = System.currentTimeMillis();
             sim.getWorld().refresh();
-            info.refresh();
+            info.onHighlightedRobotChange();
         }
 
         sim.getWorld().update(delta);
@@ -85,11 +84,6 @@ public class DriveSimFrame extends JFrame implements IWindow {
         setVisible(false);
         dispose();
         System.exit(0);
-    }
-
-    @Override
-    public void exit() {
-        running = false;
     }
 
     public static void main(String[] args) {

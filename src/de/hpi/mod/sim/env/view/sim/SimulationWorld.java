@@ -8,17 +8,21 @@ import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.Scenario;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Stores the values needed to display the Simulation and gives access to the Simulation
+ */
 public class SimulationWorld {
 
+    /**
+     * Default values needed to reset
+     */
     private static final float
             DEFAULT_BLOCK_SIZE = 20,
             DEFAULT_OFFSET_X = 0,
@@ -27,25 +31,62 @@ public class SimulationWorld {
             MIN_BLOCK_SIZE = 5,
             MAX_BLOCK_SIZE = 30;
 
+    /**
+     * The scaling of a block
+     */
     private float blockSize = DEFAULT_BLOCK_SIZE;
-    private float offsetX = DEFAULT_OFFSET_X;
-    private float offsetY = DEFAULT_OFFSET_Y;
+
+    /**
+     * Offset in blocks
+     */
+    private float offsetX = DEFAULT_OFFSET_X, offsetY = DEFAULT_OFFSET_Y;
+
+    /**
+     * Number of milliseconds between sensor refreshes
+     */
     private float sensorRefreshInterval = DEFAULT_SENSOR_REFRESH_INTERVAL;
 
+    /**
+     * Whether the simulation is running or not
+     */
     private boolean running = false;
 
+    /**
+     * The Position of the mouse in blocks
+     */
     private Position mousePointer;
+
+    /**
+     * Whether the mouse is on screen or nor.
+     * If false, {@link SimulationWorld#mousePointer} is garbage
+     */
     private boolean isMousePointing;
 
-    private Robot highlightedRobot = null;
+    /**
+     * The highlighted Robot. Null if none
+     */
+    private @Nullable Robot highlightedRobot = null;
 
     private Simulator sim;
 
     private SimulatorView view;
+
+    /**
+     * List of {@link IHighlightedRobotListener}s.
+     * Gets called if the highlighted Robot changes
+     */
     private List<IHighlightedRobotListener> highlightedRobotListeners = new ArrayList<>();
+
+    /**
+     * List of {@link ITimeListener}s.
+     * Gets called if the time flow changes.
+     */
     private List<ITimeListener> timeListeners = new ArrayList<>();
 
-    boolean isRefreshing = false, isUpdating = false;
+    /**
+     * Used for locking while the List of Robots gets traversed
+     */
+    private boolean isRefreshing = false, isUpdating = false;
 
 
     public SimulationWorld(SimulatorView view) {
@@ -53,6 +94,10 @@ public class SimulationWorld {
         sim = new Simulator();
     }
 
+    /**
+     * Refreshes the Simulation and sends Sensor-Refreshes to all Robots.
+     * Locks the List of robots
+     */
     public synchronized void refresh() {
         if (running) {
             isRefreshing = true;
@@ -62,6 +107,11 @@ public class SimulationWorld {
         }
     }
 
+    /**
+     * Updates the Robots each frame.
+     * Locks the List of Robots
+     * @param delta The time since last frame in milliseconds
+     */
     public synchronized void update(float delta) {
         if (running) {
             try {
@@ -93,6 +143,12 @@ public class SimulationWorld {
         return view;
     }
 
+    /**
+     * Returns the Robots of the Simulation.
+     * Be careful when using this, since other threads are modifying the List, which can lead
+     * to {@link ConcurrentModificationException}
+     * @return List of Robots in Simulation
+     */
     public List<Robot> getRobots() {
         return sim.getRobots();
     }
@@ -109,10 +165,6 @@ public class SimulationWorld {
 
     public void resetZoom() {
         blockSize = DEFAULT_BLOCK_SIZE;
-    }
-    
-    public float getZoom() {
-        return blockSize;
     }
 
     public float getBlockSize() {
@@ -178,11 +230,14 @@ public class SimulationWorld {
         return null;
     }
 
+    /**
+     * Clears all Robots, stops the simulation, loads the scenario and plays it
+     * @param scenario The Scenario to play
+     */
     public void playScenario(Scenario scenario) {
         if (isRunning()) toggleRunning();
         sim.getRobots().clear();
 
-        scenario.clear();
         scenario.loadScenario();
         scenario.playScenario(this);
     }
@@ -209,7 +264,7 @@ public class SimulationWorld {
         refreshHighlightedRobotListeners();
     }
 
-    public Robot getHighlightedRobot() {
+    public @Nullable Robot getHighlightedRobot() {
         return highlightedRobot;
     }
     
@@ -222,6 +277,10 @@ public class SimulationWorld {
         return running;
     }
 
+
+    /**
+     * Converts a draw-position to a grid-position
+     */
     public Position toGridPosition(int x, int y) {
         y = (int) (view.getHeight() - y - blockSize / 2);
         int blockX = (int) Math.floor(x / blockSize + offsetX);
@@ -230,10 +289,16 @@ public class SimulationWorld {
         return new Position(blockX, blockY);
     }
 
+    /**
+     * Converts a grid-position to the draw-position
+     */
     public Point2D toDrawPosition(Position pos) {
         return toDrawPosition(pos.getX(), pos.getY());
     }
 
+    /**
+     * Converts a grid-position to the draw-position
+     */
     public Point2D toDrawPosition(float x, float y) {
         float drawX = (x - offsetX) * blockSize;
         float drawY = view.getHeight() - (y + ServerGridManagement.QUEUE_SIZE + 1.5f - offsetY) * blockSize;
@@ -245,7 +310,7 @@ public class SimulationWorld {
     }
 
     private void refreshHighlightedRobotListeners() {
-        highlightedRobotListeners.forEach(IHighlightedRobotListener::refresh);
+        highlightedRobotListeners.forEach(IHighlightedRobotListener::onHighlightedRobotChange);
     }
 
     private void refreshTimeListeners() {
