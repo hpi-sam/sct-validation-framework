@@ -238,8 +238,7 @@ public class SimulationWorld {
         if (isRunning()) toggleRunning();
         sim.getRobots().clear();
 
-        scenario.loadScenario();
-        scenario.playScenario(this);
+        scenario.loadScenario(this);
     }
 
     public void setMousePointer(Position mousePointer) {

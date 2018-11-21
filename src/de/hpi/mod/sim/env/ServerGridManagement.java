@@ -229,6 +229,8 @@ public class ServerGridManagement implements ISensorDataProvider {
             return Orientation.NORTH;
         }
 
+        // TODO special behaviour WAYPOINT, CROSSROAD
+
         // Special Case
         // If target exactly below return EAST
         if (Position.nextPositionInOrientation(Orientation.SOUTH, current).equals(target))

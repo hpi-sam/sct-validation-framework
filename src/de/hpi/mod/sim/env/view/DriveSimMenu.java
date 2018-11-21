@@ -125,18 +125,18 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
     private void fillScenarioMenu(JMenu menu) {
 
-        for (int i = 0; i < ScenarioManager.scenarios.size(); i++) {
-            Scenario scenario = ScenarioManager.scenarios.get(i);
-
-            JMenuItem item = new JMenuItem(scenario.getName());
-            item.addActionListener(e -> world.playScenario(scenario));
-
-            if (i < NUMBER_KEYS.length) {
-                item.setAccelerator(KeyStroke.getKeyStroke(NUMBER_KEYS[i]));
-            }
-
-            menu.add(item);
-        }
+//        for (int i = 0; i < ScenarioManager.scenarios.size(); i++) {
+//            Scenario scenario = ScenarioManager.scenarios.get(i);
+//
+//            JMenuItem item = new JMenuItem(scenario.getName());
+//            item.addActionListener(e -> world.playScenario(scenario));
+//
+//            if (i < NUMBER_KEYS.length) {
+//                item.setAccelerator(KeyStroke.getKeyStroke(NUMBER_KEYS[i]));
+//            }
+//
+//            menu.add(item);
+//        }
     }
 
     @Override

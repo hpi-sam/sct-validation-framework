@@ -3,10 +3,13 @@ package de.hpi.mod.sim.env.view;
 import de.hpi.mod.sim.env.view.panels.ConfigPanel;
 import de.hpi.mod.sim.env.view.panels.ControlPanel;
 import de.hpi.mod.sim.env.view.panels.RobotInfoPanel;
+import de.hpi.mod.sim.env.view.panels.TestPanel;
+import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.view.sim.SimulatorView;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
@@ -14,6 +17,8 @@ public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
     private RobotInfoPanel info;
+
+    private ScenarioManager scenarioManager;
 
     private long lastFrame;
     private long lastRefresh;
@@ -30,22 +35,29 @@ public class DriveSimFrame extends JFrame {
         sim = new SimulatorView();
         SimulationWorld world = sim.getWorld();
 
+        scenarioManager = new ScenarioManager(world);
+
         info = new RobotInfoPanel(world);
         var config = new ConfigPanel();
         var control = new ControlPanel(world);
+        var test = new TestPanel(scenarioManager);
 
         setJMenuBar(new DriveSimMenu(world));
 
         world.addHighlightedRobotListener(info);
         world.addTimeListener(control);
+        scenarioManager.addTestListener(test);
 
         info.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info"));
         config.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
+        test.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
         side.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
 
-        side.add(config, BorderLayout.NORTH);
+        side.add(test, BorderLayout.NORTH);
+        // side.add(config, BorderLayout.NORTH);
         side.add(info, BorderLayout.CENTER);
         side.add(control, BorderLayout.SOUTH);
 
@@ -72,6 +84,7 @@ public class DriveSimFrame extends JFrame {
             lastRefresh = System.currentTimeMillis();
             sim.getWorld().refresh();
             info.onHighlightedRobotChange();
+            scenarioManager.refresh();
         }
 
         sim.getWorld().update(delta);
