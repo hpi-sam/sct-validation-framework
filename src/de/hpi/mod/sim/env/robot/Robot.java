@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.env.robot;
 
 import de.hpi.mod.sim.env.model.*;
-import org.jetbrains.annotations.NotNull;
 
 public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
 
@@ -26,7 +25,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                   IRobotDispatcher dispatcher, ILocation location, IScanner scanner,
-                  @NotNull Position startPosition, @NotNull Orientation startFacing) {
+                  Position startPosition, Orientation startFacing) {
         this.robotID = robotID;
         this.stationID = stationID;
         this.grid = grid;
@@ -40,7 +39,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotDispatcher dispatcher, ILocation location, IScanner scanner,
-                 @NotNull Position startPosition, @NotNull Orientation startFacing, Position target) {
+                 Position startPosition, Orientation startFacing, Position target) {
         this(robotID, stationID, grid, dispatcher, location, scanner, startPosition, startFacing);
         this.target = target;
         state = RobotState.SCENARIO;

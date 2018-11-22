@@ -4,7 +4,6 @@ import de.hpi.mod.sim.TimerService;
 import de.hpi.mod.sim.drivesystem.DrivesystemStatemachine;
 import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
 import de.hpi.mod.sim.env.model.*;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles calls to the statechard.
@@ -119,7 +118,7 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         return toSCIDirection(data.targetDirection());
     }
 
-    private long toSCIPositionType(@NotNull PositionType type) {
+    private long toSCIPositionType(PositionType type) {
         switch (type) {
             case WAYPOINT:
                 return machine.getSCIPositionType().getWAYPOINT();
@@ -132,7 +131,7 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         }
     }
 
-    private long toSCIOrientation(@NotNull Orientation orient) {
+    private long toSCIOrientation(Orientation orient) {
         switch (orient) {
             case NORTH:
                 return machine.getSCIOrientation().getNORTH();
@@ -147,7 +146,7 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         }
     }
 
-    private long toSCIDirection(@NotNull Direction dir) {
+    private long toSCIDirection(Direction dir) {
         switch (dir) {
             case LEFT:
                 return machine.getSCIDirection().getLEFT();

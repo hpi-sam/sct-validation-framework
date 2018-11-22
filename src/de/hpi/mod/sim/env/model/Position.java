@@ -1,7 +1,5 @@
 package de.hpi.mod.sim.env.model;
 
-import org.jetbrains.annotations.NotNull;
-
 public class Position {
 
     private int x, y;
@@ -45,7 +43,7 @@ public class Position {
                 '}';
     }
 
-    public static Position nextPositionInOrientation(@NotNull Orientation facing, Position current) {
+    public static Position nextPositionInOrientation(Orientation facing, Position current) {
         switch (facing) {
             case NORTH:
                 return new Position(current.getX(), current.getY() + 1);

@@ -1,7 +1,5 @@
 package de.hpi.mod.sim.env;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -99,7 +97,7 @@ class Station implements Comparable<Station> {
     }
 
     @Override
-    public int compareTo(@NotNull Station s) {
+    public int compareTo(Station s) {
         if (stationID == s.getStationID())
             return 0;
         return stationID > s.getStationID() ? 1 : -1;

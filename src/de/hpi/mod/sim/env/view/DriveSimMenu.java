@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.view.model.ITimeListener;
-import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
