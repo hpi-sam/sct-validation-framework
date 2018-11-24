@@ -7,6 +7,7 @@ import de.hpi.mod.sim.env.model.Position;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
@@ -262,7 +263,54 @@ public class ServerGridManagementTest {
 
     @Test
     public void targetOrientation() {
-        // TODO
+        var grid = getGrid();
+
+        // m >= 0
+        // Loading = (3n+2, 0)
+        // Unloading = (3n, 3m+1)
+        // Station Entry = (3n+1, 0)
+        // Battery = (3n, -2), (3n, -3), (3n, -4)
+        // Station Depth = -5
+
+        IntStream nRange = IntStream.range(-2, 3);
+        IntStream mRange = IntStream.range(0, 3);
+        IntStream depthRange = IntStream.range(0, -5); // Without last Position
+        IntStream batteryRange = IntStream.range(-2, -5);
+
+        // Drive out of Station from Loading to Unloading
+        // Always North because Robot has to exit Station before driving to WP
+        nRange.forEach(n1 ->
+                nRange.forEach(n2 ->
+                        mRange.forEach(m ->
+                                assertEquals(Orientation.NORTH, grid.targetOrientation(loadP(n1), unloadP(n2, m))))));
+
+        // Drive in Station to Loading
+        // While driving down should be South because Robot has to drive to end of station first
+        nRange.forEach(n ->
+                depthRange.forEach(d ->
+                        assertEquals(Orientation.SOUTH, grid.targetOrientation(stationWayDownP(n, d), loadP(n)))));
+        // While driving up -> North
+
+    }
+
+    private Position loadP(int n) {
+        return new Position(3*n+2, 0);
+    }
+
+    private Position unloadP(int n, int m) {
+        return new Position(3*n, 3*m+1);
+    }
+
+    private Position stationWayDownP(int n, int depth) {
+        return new Position(3*n+1, depth);
+    }
+
+    private Position stationWayUpP(int n, int depth) {
+        return new Position(3*n+2, depth);
+    }
+
+    private Position batteryP(int n, int b) {
+        return new Position(3*n, b);
     }
 
     private class DummyRobotController implements IRobotController {

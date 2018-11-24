@@ -214,6 +214,8 @@ public class ServerGridManagement implements ISensorDataProvider {
 
     @Override
     public Orientation targetOrientation(Position current, Position target) {
+
+        // If Position is in Station
         if (posType(current) == PositionType.STATION) {
             if (cellType(current) == CellType.BATTERY)
                 return Orientation.EAST;
@@ -229,19 +231,33 @@ public class ServerGridManagement implements ISensorDataProvider {
             return Orientation.NORTH;
         }
 
-        // TODO special behaviour WAYPOINT, CROSSROAD
-
         // Special Case
         // If target exactly below return EAST
         if (Position.nextPositionInOrientation(Orientation.SOUTH, current).equals(target))
             return Orientation.EAST;
 
-        if (current.getY() < target.getY())
-            return Orientation.NORTH;
-        if (current.getX() > target.getX() + 1)
-            return Orientation.WEST;
-        if (current.getX() < target.getX())
-            return Orientation.EAST;
+        // If Position is on Waypoint
+        if (posType(current) == PositionType.WAYPOINT) {
+            if (current.getY() < target.getY())
+                return Orientation.NORTH;
+            if (current.getX() > target.getX() + 1)
+                return Orientation.WEST;
+            if (current.getX() < target.getX())
+                return Orientation.EAST;
+            return Orientation.SOUTH;
+        }
+
+        // If Position is on Crossroad
+        if (posType(current) == PositionType.CROSSROAD) {
+            if (current.getY() < target.getY())
+                return Orientation.NORTH;
+            if (current.getX() > target.getX() + 1)
+                return Orientation.WEST;
+            if (current.getX() < target.getX())
+                return Orientation.EAST;
+            return Orientation.SOUTH;
+        }
+
         return Orientation.SOUTH;
     }
 
