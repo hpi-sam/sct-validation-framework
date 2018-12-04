@@ -19,7 +19,7 @@ import java.io.IOException;
 public class RobotRenderer {
 
     private SimulationWorld world;
-    private BufferedImage robotIcon, robotHighlightIcon;
+    private BufferedImage robotIcon, robotHighlightIcon, batteryIcon;
 
 
     public RobotRenderer(SimulationWorld world) {
@@ -32,6 +32,7 @@ public class RobotRenderer {
         try {
             robotIcon = ImageIO.read(new File("res/robot.png"));
             robotHighlightIcon = ImageIO.read(new File("res/robot-highlight.png"));
+            batteryIcon = ImageIO.read(new File("res/battery_empty.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,7 +46,7 @@ public class RobotRenderer {
 
             boolean highlighted = r.equals(world.getHighlightedRobot());
 
-            drawRobot(g, drawPos, drive.getAngle(), highlighted, r.isHasPackage());
+            drawRobot(g, drawPos, drive.getAngle(), highlighted, r.isHasPackage(), r.getBattery() < .1);
         }
 
         // Render additional Info like Targets
@@ -60,7 +61,7 @@ public class RobotRenderer {
         }
     }
 
-    private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted, boolean hasPackage) {
+    private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted, boolean hasPackage, boolean batteryEmpty) {
         float blockSize = world.getBlockSize();
         int translateX = (int) drawPos.getX();
         int translateY = (int) drawPos.getY();
@@ -79,6 +80,10 @@ public class RobotRenderer {
         }
 
         g.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
+
+        if (batteryEmpty) {
+            g.drawImage(batteryIcon, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
+        }
     }
 
     private void drawTarget(Graphics g, Point2D drawPos, Point2D targetPos) {
