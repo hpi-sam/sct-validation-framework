@@ -45,7 +45,7 @@ public class RobotRenderer {
 
             boolean highlighted = r.equals(world.getHighlightedRobot());
 
-            drawRobot(g, drawPos, drive.getAngle(), highlighted);
+            drawRobot(g, drawPos, drive.getAngle(), highlighted, r.isHasPackage());
         }
 
         // Render additional Info like Targets
@@ -60,7 +60,7 @@ public class RobotRenderer {
         }
     }
 
-    private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted) {
+    private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted, boolean hasPackage) {
         float blockSize = world.getBlockSize();
         int translateX = (int) drawPos.getX();
         int translateY = (int) drawPos.getY();
@@ -71,6 +71,12 @@ public class RobotRenderer {
         AffineTransform tx = AffineTransform.getRotateInstance(Math.toRadians(angle),
                 image.getWidth() / 2f, image.getHeight() / 2f);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+
+        if (hasPackage) {
+            g.setColor(Color.green);
+            g.fillArc((int) (drawPos.getX() - blockSize * .1), (int) (drawPos.getY() - blockSize * .1),
+                    (int) (blockSize * 1.2), (int) (blockSize * 1.2), 0, 360);
+        }
 
         g.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
     }
