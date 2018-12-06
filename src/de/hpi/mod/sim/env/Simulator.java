@@ -6,10 +6,6 @@ import de.hpi.mod.sim.env.robot.Robot;
 import java.util.*;
 
 
-/**
- * TODO doc
- * TODO tests
- */
 public class Simulator implements IRobotController, IRobotDispatcher, ILocation, IScanner {
 
     public static final int DEFAULT_UNLOADING_RANGE = 10;
@@ -17,6 +13,10 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
     private List<Robot> robots = new ArrayList<>();
     private ServerGridManagement grid;
     private SortedSet<Station> stations = new TreeSet<>();
+
+    /**
+     * TODO
+     */
     private int unloadingRange = DEFAULT_UNLOADING_RANGE;
 
 
@@ -24,14 +24,25 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
         grid = new ServerGridManagement(this);
     }
 
+    /**
+     * Creates ans adds a new Robot in the first free Station
+     * @return The created Robot
+     */
     public Robot addRobot() {
         Station station = getStationWithFreeBattery();
         return addRobot(station.getStationID());
     }
 
+    /**
+     * Creates a new Robot and adds it to the given Station if there is a free battery
+     * @param stationID the ID of the Station with a free battery
+     * @return The added Robot or Null if there is no free battery in the station
+     */
     public Robot addRobot(int stationID) {
         Station station = getStationByID(stationID);
         if (station.hasFreeBattery()) {
+
+            // Get next unused ID
             int robotID = Robot.incrementID();
             requestNextStation(robotID, true);
             int batteryID = requestFreeChargerAtStation(robotID, stationID);
@@ -48,7 +59,19 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
         return null;
     }
 
+    /**
+     * Creates and adds new Robot at given Position if it is a Waypoint, with given Orientation and target.
+     * This should only be used for Debug-Scenarios,
+     * since the Robots may be in an invalid state after reaching their targets
+     *
+     * @param pos The Waypoint where the Robot will be placed
+     * @param facing The Orientation of the Robot at its starting position
+     * @param target The target of the Robot to drive to
+     * @return The added Robot or NULL if the Position is not a Waypoint
+     */
     public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
+
+        // Check if Position is a Waypoint
         if (grid.posType(pos) == PositionType.WAYPOINT) {
             int robotID = Robot.incrementID();
             Robot robot = new Robot(
@@ -62,15 +85,19 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
         return null;
     }
 
+    /**
+     * Refreshes the Robots.
+     */
     public void refresh() {
-        try {
-            for (IRobot robot : robots)
-                robot.refresh();
-        } catch (ConcurrentModificationException e) {
-            e.printStackTrace();
-        }
+        for (IRobot robot : robots)
+            robot.refresh();
     }
 
+    /**
+     * Whether there is a Robot on the given Position
+     * @param pos The Position to check
+     * @return true if there is a Robot on the Position
+     */
     @Override
     public boolean isBlockedByRobot(Position pos) {
         for (IRobot r : robots) {
@@ -135,7 +162,7 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
 
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
-        getStationByID(stationID).takeFromQueue();
+
     }
 
     @Override
