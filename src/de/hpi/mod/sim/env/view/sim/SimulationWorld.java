@@ -8,7 +8,6 @@ import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.Scenario;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class SimulationWorld {
     /**
      * The highlighted Robot. Null if none
      */
-    private @Nullable Robot highlightedRobot = null;
+    private Robot highlightedRobot = null;
 
     private Simulator sim;
 
@@ -263,7 +262,7 @@ public class SimulationWorld {
         refreshHighlightedRobotListeners();
     }
 
-    public @Nullable Robot getHighlightedRobot() {
+    public Robot getHighlightedRobot() {
         return highlightedRobot;
     }
     
