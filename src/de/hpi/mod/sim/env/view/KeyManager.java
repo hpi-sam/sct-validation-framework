@@ -28,6 +28,7 @@ public class KeyManager {
         keys.put("Move Up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
         keys.put("Move Down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
         keys.put("Reset Move", KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));
+        keys.put("Reset Simulation", KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
     }
 
     public void addKey(String name, KeyStroke key) {

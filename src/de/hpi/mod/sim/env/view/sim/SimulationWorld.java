@@ -234,10 +234,19 @@ public class SimulationWorld {
      * @param scenario The Scenario to play
      */
     public void playScenario(Scenario scenario) {
-        if (isRunning()) toggleRunning();
-        sim.getRobots().clear();
+        try {
+            while (isRefreshing || isUpdating) {
+                wait();
+            }
 
-        scenario.loadScenario(this);
+            if (isRunning()) toggleRunning();
+            sim.getRobots().clear();
+
+            scenario.loadScenario(this);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setMousePointer(Position mousePointer) {

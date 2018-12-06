@@ -1,30 +1,22 @@
 package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.view.model.ITimeListener;
+import de.hpi.mod.sim.env.view.model.NewRobot;
+import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DriveSimMenu extends JMenuBar implements ITimeListener {
-
-    private final char[] NUMBER_KEYS = {
-            '1',
-            '2',
-            '3',
-            '4',
-            '5',
-            '6',
-            '7',
-            '8',
-            '9',
-    };
 
     private Icon playIcon, pauseIcon;
     private SimulationWorld world;
 
     private JMenuItem playItem, zoomInItem, zoomOutItem, zoomResetItem, moveLeftItem,
-            moveRightItem, moveUpItem, moveDownItem, moveResetItem, addRobotItem, keyItem;
+            moveRightItem, moveUpItem, moveDownItem, moveResetItem, addRobotItem, resetSimItem, keyItem;
 
     private KeyManager keyManager;
 
@@ -34,11 +26,6 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
         loadIcons();
         keyManager = new KeyManager();
-
-        JMenu scenariosMenu = new JMenu("Scenarios");
-        scenariosMenu.setMnemonic(KeyEvent.VK_S);
-
-        fillScenarioMenu(scenariosMenu);
 
         JMenu playMenu = new JMenu("Play");
         JMenu optionsMenu = new JMenu("Options");
@@ -56,9 +43,17 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         moveResetItem = new JMenuItem("Reset");
         addRobotItem = new JMenuItem("Add Robot");
         playItem = new JMenuItem("Play/Pause", playIcon);
+        resetSimItem = new JMenuItem("Reset Simulation");
         keyItem = new JMenuItem("Keystrokes");
 
         updateKeystrokes();
+
+        Scenario resetSimulationScenario = new Scenario() {
+            @Override
+            protected List<NewRobot> initializeScenario() {
+                return new ArrayList<>();
+            }
+        };
 
         addRobotItem.addActionListener(e -> world.addRobot());
         zoomInItem.addActionListener(e -> world.zoomIn(1));
@@ -70,6 +65,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         moveDownItem.addActionListener(e -> world.moveVertical(-1));
         moveResetItem.addActionListener(e -> world.resetOffset());
         playItem.addActionListener(e -> world.toggleRunning());
+        resetSimItem.addActionListener(e -> world.playScenario(resetSimulationScenario));
         keyItem.addActionListener(e -> openKeyDialog());
 
         moveMenu.add(moveLeftItem);
@@ -86,6 +82,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         worldMenu.add(zoomMenu);
         worldMenu.addSeparator();
         worldMenu.add(addRobotItem);
+        worldMenu.add(resetSimItem);
 
         playMenu.add(playItem);
 
@@ -93,7 +90,6 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
         add(worldMenu);
         add(playMenu);
-        add(scenariosMenu);
         add(optionsMenu);
 
         world.addTimeListener(this);
@@ -120,22 +116,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         moveUpItem.setAccelerator(keyManager.getKey("Move Up"));
         moveDownItem.setAccelerator(keyManager.getKey("Move Down"));
         moveResetItem.setAccelerator(keyManager.getKey("Reset Move"));
-    }
-
-    private void fillScenarioMenu(JMenu menu) {
-
-//        for (int i = 0; i < ScenarioManager.scenarios.size(); i++) {
-//            Scenario scenario = ScenarioManager.scenarios.get(i);
-//
-//            JMenuItem item = new JMenuItem(scenario.getName());
-//            item.addActionListener(e -> world.playScenario(scenario));
-//
-//            if (i < NUMBER_KEYS.length) {
-//                item.setAccelerator(KeyStroke.getKeyStroke(NUMBER_KEYS[i]));
-//            }
-//
-//            menu.add(item);
-//        }
+        resetSimItem.setAccelerator(keyManager.getKey("Reset Simulation"));
     }
 
     @Override

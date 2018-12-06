@@ -17,6 +17,8 @@ public class TestPanel extends JPanel implements ITestListener {
 
 
     public TestPanel(ScenarioManager scenarioManager) {
+        setLayout(new GridLayout(0, 1));
+
         for (TestScenario test : scenarioManager.getTests())
             addTest(scenarioManager, test);
     }
@@ -26,10 +28,11 @@ public class TestPanel extends JPanel implements ITestListener {
         JLabel label = new JLabel(test.getName());
         JButton run = new JButton("run");
 
+        panel.setLayout(new BorderLayout());
         run.addActionListener(e -> manager.runScenario(test));
 
-        panel.add(label);
-        panel.add(run);
+        panel.add(label, BorderLayout.CENTER);
+        panel.add(run, BorderLayout.EAST);
 
         tests.put(test, panel);
 

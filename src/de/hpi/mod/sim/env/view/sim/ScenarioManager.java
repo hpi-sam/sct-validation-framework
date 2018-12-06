@@ -26,6 +26,7 @@ public class ScenarioManager {
         this.world = world;
         scenarios.add(new EmptyScenario());
         tests.add(new FourRobotsOnCrossroadScenario());
+        tests.add(new OppositeRobotsScenario());
     }
 
     public void runScenario(Scenario scenario) {
@@ -81,6 +82,18 @@ public class ScenarioManager {
             newRobots.add(new NewWaypointRobot(new Position(5, 3), Orientation.NORTH, new Position(5, 9)));
             newRobots.add(new NewWaypointRobot(new Position(3, 4), Orientation.EAST, new Position(9, 4)));
             newRobots.add(new NewWaypointRobot(new Position(4, 6), Orientation.SOUTH, new Position(4, 0)));
+            return newRobots;
+        }
+    }
+
+    private class OppositeRobotsScenario extends TestScenario {
+        public OppositeRobotsScenario() { name = "Opposite Robots"; }
+
+        @Override
+        protected List<NewRobot> initializeScenario() {
+            List<NewRobot> newRobots = new ArrayList<>();
+            newRobots.add(new NewWaypointRobot(new Position(3, 4), Orientation.EAST, new Position(1, 0)));
+            newRobots.add(new NewWaypointRobot(new Position(3, 5), Orientation.WEST, new Position(3, 4)));
             return newRobots;
         }
     }
