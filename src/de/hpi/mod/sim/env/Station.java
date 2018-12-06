@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.env;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 class Station implements Comparable<Station> {
 
@@ -28,16 +27,16 @@ class Station implements Comparable<Station> {
         }
     }
 
-    void addToQueue() {
+    int getStationID() {
+        return stationID;
+    }
+
+    void increaseQueue() {
         queueSize++;
     }
 
-    void takeFromQueue() {
+    void decreaseQueue() {
         queueSize--;
-    }
-
-    int getStationID() {
-        return stationID;
     }
 
     int getQueueSize() {
@@ -45,7 +44,7 @@ class Station implements Comparable<Station> {
     }
 
     boolean hasFreeQueuePosition() {
-        return queueSize < ServerGridManagement.QUEUE_SIZE;
+        return getQueueSize() < ServerGridManagement.QUEUE_SIZE;
     }
 
     boolean hasFreeBattery() {
@@ -70,7 +69,7 @@ class Station implements Comparable<Station> {
                 .findFirst();
         if (battery.isPresent())
             return battery.get().getBatteryID();
-        throw new IllegalArgumentException("Theres is no battery reserved for " + robotID);
+        throw new IllegalArgumentException("There is no battery reserved for " + robotID);
     }
 
     private Battery getFreeBattery() {

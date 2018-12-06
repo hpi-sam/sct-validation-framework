@@ -125,13 +125,15 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
 
     @Override
     public int requestNextStation(int robotID, boolean charge) {
+        Station station;
         if (charge) {
-            Station station = getStationWithFreeBattery();
+            station = getStationWithFreeBattery();
             station.reserveBatteryForRobot(robotID);
-            return station.getStationID();
         } else {
-            return getStationWithMinQueue().getStationID();
+            station = getStationWithMinQueue();
         }
+        station.increaseQueue();
+        return station.getStationID();
     }
 
     @Override
@@ -142,12 +144,7 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
 
     @Override
     public boolean requestEnqueueAtStation(int robotID, int stationID) {
-        Station station = getStationByID(stationID);
-        if (station.hasFreeQueuePosition()) {
-            station.addToQueue();
-            return true;
-        }
-        return false;
+        return getStationByID(stationID).hasFreeQueuePosition();
     }
 
     @Override
@@ -156,13 +153,9 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
     }
 
     @Override
-    public void reportEnqueueAtStation(int robotID, int stationID) {
-        getStationByID(stationID).unregisterBatteryWithRobotIfPresent(robotID);
-    }
-
-    @Override
     public void reportLeaveStation(int robotID, int stationID) {
-
+        getStationByID(stationID).decreaseQueue();
+        getStationByID(stationID).unregisterBatteryWithRobotIfPresent(robotID);
     }
 
     @Override
@@ -178,12 +171,6 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
     @Override
     public Position getChargerPositionAtStation(int stationID, int chargerID) {
         return grid.getChargerPositionAtStation(stationID, chargerID);
-    }
-
-    @Override
-    public Position getQueuePositionAtStation(int stationID) {
-        Station station = getStationByID(stationID);
-        return grid.getQueuePositionAtStation(stationID, station.getQueueSize());
     }
 
     @Override

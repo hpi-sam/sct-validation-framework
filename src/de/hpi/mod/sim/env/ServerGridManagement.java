@@ -272,12 +272,6 @@ public class ServerGridManagement implements ISensorDataProvider {
         return new Position(x, y);
     }
 
-    public Position getQueuePositionAtStation(int stationID, int queueID) {
-        int x = stationID * 3 + 2;
-        int y = -queueID - 1;
-        return new Position(x, y);
-    }
-
     public Position getLoadingPositionAtStation(int stationID) {
         int x = stationID * 3 + 2;
         return new Position(x, 0);

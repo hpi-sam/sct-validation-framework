@@ -51,17 +51,11 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
             if (state == RobotState.TO_BATTERY && manager.getBattery() == DriveManager.BATTERY_FULL) {
                 manager.setLoading(false);
                 if (dispatcher.requestEnqueueAtStation(robotID, stationID)) {
-                    target = location.getQueuePositionAtStation(stationID);
-                    state = RobotState.TO_QUEUE;
+                    target = location.getLoadingPositionAtStation(stationID);
+                    state = RobotState.TO_LOADING;
                     driving = true;
                     drive.newTarget();
                 }
-
-            } else if (state == RobotState.TO_QUEUE) {
-                target = location.getLoadingPositionAtStation(stationID);
-                state = RobotState.TO_LOADING;
-                driving = true;
-                drive.newTarget();
 
             } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
                 packageID = scanner.getPackageID(stationID);
@@ -90,8 +84,8 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
                 }
 
             } else if (state == RobotState.TO_STATION) {
-                target = location.getQueuePositionAtStation(stationID);
-                state = RobotState.TO_QUEUE;
+                target = location.getLoadingPositionAtStation(stationID);
+                state = RobotState.TO_LOADING;
                 driving = true;
                 drive.newTarget();
 
@@ -111,9 +105,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     @Override
     public void arrived() {
         driving = false;
-        if (state == RobotState.TO_QUEUE)
-            dispatcher.reportEnqueueAtStation(robotID, stationID);
-        else if (state == RobotState.TO_UNLOADING) {
+        if (state == RobotState.TO_UNLOADING) {
             drive.unload();
         } else if (state == RobotState.TO_BATTERY) {
             dispatcher.reportChargingAtStation(robotID, stationID);
@@ -258,6 +250,6 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     }
 
     private enum RobotState {
-        TO_QUEUE, TO_BATTERY, TO_LOADING, TO_UNLOADING, TO_STATION, SCENARIO
+        TO_BATTERY, TO_LOADING, TO_UNLOADING, TO_STATION, SCENARIO
     }
 }

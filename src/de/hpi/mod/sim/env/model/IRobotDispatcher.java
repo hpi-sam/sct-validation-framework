@@ -5,7 +5,6 @@ public interface IRobotDispatcher {
     int requestFreeChargerAtStation(int robotID, int stationID);
     boolean requestEnqueueAtStation(int robotID, int stationID);
     void reportChargingAtStation(int robotID, int stationID);
-    void reportEnqueueAtStation(int robotID, int stationID);
     void reportLeaveStation(int robotID, int stationID);
     void reportUnloadingPackage(int robotID, int packageID);
 }

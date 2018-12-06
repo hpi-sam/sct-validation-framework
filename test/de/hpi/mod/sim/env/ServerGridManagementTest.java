@@ -242,13 +242,6 @@ public class ServerGridManagementTest {
     }
 
     @Test
-    public void getQueuePositionAtStation() {
-        var grid = getGrid();
-        assertEquals(new Position(2, -1), grid.getQueuePositionAtStation(0, 0));
-        assertEquals(new Position(2, -2), grid.getQueuePositionAtStation(0, 1));
-    }
-
-    @Test
     public void getLoadingPositionAtStation() {
         var grid = getGrid();
         assertEquals(new Position(2, 0), grid.getLoadingPositionAtStation(0));
