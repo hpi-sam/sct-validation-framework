@@ -171,11 +171,10 @@ public class DriveManager implements IRobotActors {
     }
 
     /**
-     * TODO: Shouldn't this return the targetPosition? If not two Robots could move to the same cell and not detect a collision
-     * @return The floor of the Position of the robot
+     * @return The ceiling of the Position of the robot
      */
     public Position currentPosition() {
-        return oldPosition;
+        return targetPosition;
     }
 
     public Orientation currentFacing() {
