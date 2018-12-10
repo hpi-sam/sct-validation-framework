@@ -2,20 +2,15 @@ package de.hpi.mod.sim.env;
 
 import java.util.*;
 
-class Station implements Comparable<Station> {
-
-    private static int idCounter = 0;
+public class Station implements Comparable<Station> {
 
     private int stationID;
     private int queueSize = 0;
     private Battery[] batteries;
+    private boolean driveLock = false;
 
 
-    static Station getInstance() {
-        return new Station(idCounter++);
-    }
-
-    private Station(int stationID) {
+    public Station(int stationID) {
         this.stationID = stationID;
         initBatteries();
     }
@@ -50,6 +45,12 @@ class Station implements Comparable<Station> {
     boolean hasFreeBattery() {
         return Arrays.stream(batteries).anyMatch(b -> !b.isBlocked());
     }
+
+    boolean isDriveLock() { return driveLock; }
+
+    boolean toggleDriveLock() { return (driveLock = !driveLock); }
+
+    void resetDriveLock() { driveLock = false; }
 
     void reserveBatteryForRobot(int robotID) {
         getFreeBattery().setReservedForRobot(robotID);

@@ -6,13 +6,13 @@ import de.hpi.mod.sim.env.robot.Robot;
 import java.util.*;
 
 
-public class Simulator implements IRobotController, IRobotDispatcher, ILocation, IScanner {
+public class Simulator implements IRobotController, ILocation, IScanner {
 
     public static final int DEFAULT_UNLOADING_RANGE = 10;
 
     private List<Robot> robots = new ArrayList<>();
     private ServerGridManagement grid;
-    private SortedSet<Station> stations = new TreeSet<>();
+    private IRobotStationDispatcher stations;
 
     /**
      * TODO
@@ -22,41 +22,28 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
 
     public Simulator() {
         grid = new ServerGridManagement(this);
+        stations = new StationManager(10);
     }
 
     /**
-     * Creates ans adds a new Robot in the first free Station
-     * @return The created Robot
+     * Creates a new Robot and adds it to a battery
+     * @return The added Robot
      */
     public Robot addRobot() {
-        Station station = getStationWithFreeBattery();
-        return addRobot(station.getStationID());
-    }
+        // Get next unused ID
+        int robotID = Robot.incrementID();
+        int stationID = stations.getReservationNextForStation(robotID, true);
+        int batteryID = stations.getReservedChargerAtStation(robotID, stationID);
+        stations.reportChargingAtStation(robotID, stationID);
 
-    /**
-     * Creates a new Robot and adds it to the given Station if there is a free battery
-     * @param stationID the ID of the Station with a free battery
-     * @return The added Robot or Null if there is no free battery in the station
-     */
-    public Robot addRobot(int stationID) {
-        Station station = getStationByID(stationID);
-        if (station.hasFreeBattery()) {
-
-            // Get next unused ID
-            int robotID = Robot.incrementID();
-            requestNextStation(robotID, true);
-            int batteryID = requestFreeChargerAtStation(robotID, stationID);
-
-            Robot robot = new Robot(
-                    robotID,
-                    stationID,
-                    grid, this, this, this,
-                    getChargerPositionAtStation(stationID, batteryID),
-                    Orientation.EAST);
-            robots.add(robot);
-            return robot;
-        }
-        return null;
+        Robot robot = new Robot(
+                robotID,
+                stationID,
+                grid, stations, this, this,
+                getChargerPositionAtStation(stationID, batteryID),
+                Orientation.EAST);
+        robots.add(robot);
+        return robot;
     }
 
     /**
@@ -76,8 +63,8 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
             int robotID = Robot.incrementID();
             Robot robot = new Robot(
                     robotID,
-                    getStationWithFreeBattery().getStationID(),
-                    grid, this, this, this,
+                    0,
+                    grid, stations, this, this,
                     pos, facing, target);
             robots.add(robot);
             return robot;
@@ -124,46 +111,6 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
     }
 
     @Override
-    public int requestNextStation(int robotID, boolean charge) {
-        Station station;
-        if (charge) {
-            station = getStationWithFreeBattery();
-            station.reserveBatteryForRobot(robotID);
-        } else {
-            station = getStationWithMinQueue();
-        }
-        station.increaseQueue();
-        return station.getStationID();
-    }
-
-    @Override
-    public int requestFreeChargerAtStation(int robotID, int stationID) {
-        Station station = getStationByID(stationID);
-        return station.getBatteryReservedForRobot(robotID);
-    }
-
-    @Override
-    public boolean requestEnqueueAtStation(int robotID, int stationID) {
-        return getStationByID(stationID).hasFreeQueuePosition();
-    }
-
-    @Override
-    public void reportChargingAtStation(int robotID, int stationID) {
-        // No logic needed here except log
-    }
-
-    @Override
-    public void reportLeaveStation(int robotID, int stationID) {
-        getStationByID(stationID).decreaseQueue();
-        getStationByID(stationID).unregisterBatteryWithRobotIfPresent(robotID);
-    }
-
-    @Override
-    public void reportUnloadingPackage(int robotID, int packageID) {
-
-    }
-
-    @Override
     public Position getArrivalPositionAtStation(int stationID) {
         return grid.getArrivalPositionAtStation(stationID);
     }
@@ -179,50 +126,18 @@ public class Simulator implements IRobotController, IRobotDispatcher, ILocation,
     }
 
     @Override
-    public Position getUnloadingPositionFromID(int unloadingID) {
-        return grid.getUnloadingPositionFromID(unloadingID);
+    public Position getQueuePositionAtStation(int stationID) {
+        return grid.getQueuePositionAtStation(stationID);
     }
 
-    private Station getStationWithFreeBattery() {
-        return stations
-                .stream()
-                .filter(Station::hasFreeBattery)
-                .findFirst()
-                .orElseGet(this::addNewStation);
+    @Override
+    public Position getUnloadingPositionFromID(int unloadingID) {
+        return grid.getUnloadingPositionFromID(unloadingID);
     }
 
     private int getRandomUnloadingID() {
         Random r = new Random();
         return r.nextInt(unloadingRange);
-    }
-
-    private Station getStationWithMinQueue() {
-        Optional<Station> station = stations.stream()
-                .min(Station::compareByQueueSize);
-        if (station.isPresent()) {
-
-            // Only returns station if free queue positions are available
-            int queueSize = station.get().getQueueSize();
-            if (queueSize < ServerGridManagement.QUEUE_SIZE)
-                return station.get();
-        }
-
-        // If no free queue positions are available create new Stations
-        return addNewStation();
-    }
-
-    private Station addNewStation() {
-        Station created = Station.getInstance();
-        stations.add(created);
-        return created;
-    }
-
-    private Station getStationByID(int stationID) {
-        Optional<Station> station = stations.stream()
-                .filter(s -> s.getStationID() == stationID).findFirst();
-        if (station.isPresent())
-            return station.get();
-        throw new NullPointerException("No Station with id " + stationID);
     }
 
     @Override
