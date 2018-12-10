@@ -24,8 +24,9 @@ public class ConfigPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         addConfigElement("Move Speed", "In cells per milliseconds",
-                Float.toString(SimulatorConfig.DEFAULT_ROBOT_MOVE_SPEED),
-                (v) -> SimulatorConfig.setRobotMoveSpeed(Float.parseFloat(v)));
+                0, .05f, 10000,
+                SimulatorConfig.DEFAULT_ROBOT_MOVE_SPEED,
+                SimulatorConfig::setRobotMoveSpeed);
     }
 
     /**
@@ -35,12 +36,13 @@ public class ConfigPanel extends JPanel {
      * @param initValue The default Value
      * @param setter The setter to change the value
      */
-    private void addConfigElement(String name, String toolTip, String initValue, ValueSetter setter) {
+    private void addConfigElement(String name, String toolTip, float minValue, float maxValue,
+                                  float multiplier, float initValue, ValueSetter setter) {
 
         /*
          * Panel:
          * | ------------------------ |
-         * | Name - TextField - Reset |
+         * | Name - Slider - Reset |
          * | ------------------------ |
          */
 
@@ -51,19 +53,31 @@ public class ConfigPanel extends JPanel {
         JLabel label = new JLabel(name);
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
 
-        // Textfield (with tooltip) to input changes
-        JTextField textField = new JTextField(initValue);
-        textField.setToolTipText(toolTip);
-        textField.addActionListener(e -> setter.setValue(textField.getText()));
+        // TextField to show values
+        JTextField valueField = new JTextField();
+        valueField.setEditable(false);
+        valueField.setPreferredSize(new Dimension(50, 0));
+        valueField.setText(Float.toString(initValue));
+
+        // Slider (with tooltip) to input changes
+        JSlider valueSlider = new JSlider((int) (minValue * multiplier),
+                (int) (maxValue * multiplier), (int) (initValue * multiplier));
+        valueSlider.setToolTipText(toolTip);
+        valueSlider.addChangeListener(e -> {
+            setter.setValue(valueSlider.getValue() / multiplier);
+            valueField.setText(Float.toString(valueSlider.getValue() / multiplier));
+        });
 
         // Button to reset
         JButton button = new JButton("Reset");
         button.addActionListener(e -> {
-            textField.setText(initValue);
+            valueSlider.setValue((int) (initValue * multiplier));
+            valueField.setText(Float.toString(initValue));
             setter.setValue(initValue);
         });
 
-        input.add(textField, BorderLayout.CENTER);
+        input.add(valueField, BorderLayout.WEST);
+        input.add(valueSlider, BorderLayout.CENTER);
         input.add(button, BorderLayout.EAST);
 
         root.add(label, BorderLayout.NORTH);
@@ -73,6 +87,6 @@ public class ConfigPanel extends JPanel {
     }
 
     private interface ValueSetter {
-        void setValue(String value);
+        void setValue(float value);
     }
 }

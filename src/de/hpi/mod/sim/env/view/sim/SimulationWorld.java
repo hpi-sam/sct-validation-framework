@@ -205,10 +205,6 @@ public class SimulationWorld {
         return addRobotRunner(() -> sim.addRobot());
     }
 
-    public Robot addRobot(int stationID) {
-        return addRobotRunner(() -> sim.addRobot(stationID));
-    }
-
     public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
         return addRobotRunner(() -> sim.addRobotAtWaypoint(pos, facing, target));
     }

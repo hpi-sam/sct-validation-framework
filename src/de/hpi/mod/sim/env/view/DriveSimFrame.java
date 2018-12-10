@@ -55,8 +55,13 @@ public class DriveSimFrame extends JFrame {
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
         side.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
 
-        side.add(test, BorderLayout.NORTH);
-        // side.add(config, BorderLayout.NORTH);
+        JPanel northPanel = new JPanel(new GridLayout(0, 1));
+
+
+        northPanel.add(test);
+        northPanel.add(config);
+
+        side.add(northPanel, BorderLayout.NORTH);
         side.add(info, BorderLayout.CENTER);
         side.add(control, BorderLayout.SOUTH);
 

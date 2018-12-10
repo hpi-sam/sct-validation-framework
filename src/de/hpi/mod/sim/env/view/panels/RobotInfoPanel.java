@@ -35,7 +35,8 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         addInfo("Pos", r -> stringify(r.pos()));
         addInfo("Target", r -> stringify(r.getTarget()));
         addInfo("Facing", r -> r.posOrientation().toString());
-        addInfo("Target Direction", r -> r.targetDirection().toString());
+        addInfo("Target Direction", r ->
+                r.isTargetReached() ? "-" : r.targetDirection().toString());
     }
 
     /**
