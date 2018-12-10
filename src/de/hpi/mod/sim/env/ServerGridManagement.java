@@ -266,6 +266,11 @@ public class ServerGridManagement implements ISensorDataProvider {
         return new Position(x, 0);
     }
 
+    public Position getQueuePositionAtStation(int stationID) {
+        int x = stationID * 3 + 2;
+        return new Position(x, -QUEUE_SIZE);
+    }
+
     public Position getChargerPositionAtStation(int stationID, int chargerID) {
         int x = stationID * 3;
         int y = -2 - chargerID;
@@ -278,7 +283,7 @@ public class ServerGridManagement implements ISensorDataProvider {
     }
 
     public Position getUnloadingPositionFromID(int unloadingID) {
-        int y = (unloadingID % MAP_HEIGHT) * 3 + 1;
+        int y = (unloadingID % MAP_HEIGHT) * 3 + 4;
         int x = unloadingID / MAP_HEIGHT * 3;
         return new Position(x, y);
     }

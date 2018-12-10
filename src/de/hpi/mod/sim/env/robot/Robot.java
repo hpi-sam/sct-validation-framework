@@ -9,7 +9,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     private DriveManager manager;
     private IDriveSystem drive;
     private ISensorDataProvider grid;
-    private IRobotDispatcher dispatcher;
+    private IRobotStationDispatcher dispatcher;
     private ILocation location;
     private IScanner scanner;
 
@@ -24,8 +24,8 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
-                  IRobotDispatcher dispatcher, ILocation location, IScanner scanner,
-                  Position startPosition, Orientation startFacing) {
+                 IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
+                 Position startPosition, Orientation startFacing) {
         this.robotID = robotID;
         this.stationID = stationID;
         this.grid = grid;
@@ -38,7 +38,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     }
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
-                 IRobotDispatcher dispatcher, ILocation location, IScanner scanner,
+                 IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing, Position target) {
         this(robotID, stationID, grid, dispatcher, location, scanner, startPosition, startFacing);
         this.target = target;
@@ -49,52 +49,99 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     public void refresh() {
         if (!driving) {
             if (state == RobotState.TO_BATTERY && manager.getBattery() == DriveManager.BATTERY_FULL) {
-                manager.setLoading(false);
-                if (dispatcher.requestEnqueueAtStation(robotID, stationID)) {
-                    target = location.getLoadingPositionAtStation(stationID);
-                    state = RobotState.TO_LOADING;
-                    driving = true;
-                    drive.newTarget();
-                }
-
+                handleFinishedCharging();
             } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
-                packageID = scanner.getPackageID(stationID);
-                hasPackage = true;
-                target = location.getUnloadingPositionFromID(packageID);
-                dispatcher.reportLeaveStation(robotID, stationID);
-                state = RobotState.TO_UNLOADING;
-                driving = true;
-                drive.newTarget();
-
+                handleFinishedLoading();
             } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
-                boolean needsLoading = manager.getBattery() < DriveManager.BATTERY_LOW;
-                stationID = dispatcher.requestNextStation(robotID, needsLoading);
-                target = location.getArrivalPositionAtStation(stationID);
-                state = RobotState.TO_STATION;
-                driving = true;
-                drive.newTarget();
-
-            } else if (state == RobotState.TO_STATION && manager.getBattery() < DriveManager.BATTERY_LOW) {
-                int optionalBattery = dispatcher.requestFreeChargerAtStation(robotID, stationID);
-                if (optionalBattery >= 0) {
-                    target = location.getChargerPositionAtStation(stationID, optionalBattery);
-                    state = RobotState.TO_BATTERY;
-                    driving = true;
-                    drive.newTarget();
-                }
-
+                handleFinishedUnloading();
             } else if (state == RobotState.TO_STATION) {
-                target = location.getLoadingPositionAtStation(stationID);
-                state = RobotState.TO_LOADING;
-                driving = true;
-                drive.newTarget();
-
+                handleArriveAtStation();
+            } else if (state == RobotState.TO_QUEUE) {
+                handleArriveAtQueue();
             } else if (state == RobotState.SCENARIO && !manager.currentPosition().equals(target)) {
-                driving = true;
-                drive.newTarget();
+                startDriving();
             }
         }
         drive.dataRefresh();
+    }
+
+    @Override
+    public void arrived() {
+        driving = false;
+        if (state == RobotState.TO_UNLOADING) {
+            handleArriveAtUnloading();
+        } else if (state == RobotState.TO_BATTERY) {
+            handleArriveAtBattery();
+        }
+    }
+
+    private void handleArriveAtStation() {
+        if (dispatcher.requestEnteringStation(robotID, stationID)) {
+
+            if (manager.isBatteryLow()) {
+                target = location.getChargerPositionAtStation(stationID,
+                        dispatcher.getReservedChargerAtStation(robotID, stationID));
+                state = RobotState.TO_BATTERY;
+                startDriving();
+            } else {
+                target = location.getQueuePositionAtStation(stationID);
+                state = RobotState.TO_QUEUE;
+            }
+
+            startDriving();
+        }
+    }
+
+    private void handleArriveAtBattery() {
+        dispatcher.reportChargingAtStation(robotID, stationID);
+        manager.setLoading(true);
+    }
+
+    private void handleFinishedCharging() {
+        manager.setLoading(false);
+
+        if (dispatcher.requestLeavingBattery(robotID, stationID)) {
+            target = location.getQueuePositionAtStation(stationID);
+            state = RobotState.TO_QUEUE;
+            startDriving();
+        }
+    }
+
+    private void handleArriveAtQueue() {
+        dispatcher.reportEnteringQueueAtStation(robotID, stationID);
+        target = location.getLoadingPositionAtStation(stationID);
+        state = RobotState.TO_LOADING;
+        startDriving();
+    }
+
+    private void handleArriveAtLoading() {
+
+    }
+
+    private void handleFinishedLoading() {
+        packageID = scanner.getPackageID(stationID);
+        hasPackage = true;
+        target = location.getUnloadingPositionFromID(packageID);
+        dispatcher.reportLeaveStation(robotID, stationID);
+        state = RobotState.TO_UNLOADING;
+        startDriving();
+    }
+
+    private void handleArriveAtUnloading() {
+        drive.unload();
+    }
+
+    private void handleFinishedUnloading() {
+        boolean needsLoading = manager.getBattery() < DriveManager.BATTERY_LOW;
+        stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
+        target = location.getArrivalPositionAtStation(stationID);
+        state = RobotState.TO_STATION;
+        startDriving();
+    }
+
+    private void startDriving() {
+        driving = true;
+        drive.newTarget();
     }
 
     @Override
@@ -103,20 +150,10 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     }
 
     @Override
-    public void arrived() {
-        driving = false;
-        if (state == RobotState.TO_UNLOADING) {
-            drive.unload();
-        } else if (state == RobotState.TO_BATTERY) {
-            dispatcher.reportChargingAtStation(robotID, stationID);
-            manager.setLoading(true);
-        }
-    }
-
-    @Override
     public void unloaded() {
         manager.startUnloading();
-        dispatcher.reportUnloadingPackage(robotID, packageID);
+        // TODO unloading Dispatcher
+        //dispatcher.reportUnloadingPackage(robotID, packageID);
         hasPackage = false;
     }
 
@@ -250,6 +287,6 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     }
 
     private enum RobotState {
-        TO_BATTERY, TO_LOADING, TO_UNLOADING, TO_STATION, SCENARIO
+        TO_BATTERY, TO_QUEUE, TO_LOADING, TO_UNLOADING, TO_STATION, SCENARIO
     }
 }

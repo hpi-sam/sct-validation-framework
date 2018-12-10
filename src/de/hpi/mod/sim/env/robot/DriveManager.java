@@ -162,6 +162,8 @@ public class DriveManager implements IRobotActors {
         return battery > 0;
     }
 
+    public boolean isBatteryLow() { return battery < BATTERY_LOW; }
+
     public float getBattery() {
         return battery;
     }
