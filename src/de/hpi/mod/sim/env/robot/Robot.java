@@ -22,6 +22,8 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     private boolean driving = false;
     private boolean hasPackage = false;
 
+    private boolean hasReservedBattery = false;
+
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -78,11 +80,13 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
     private void handleArriveAtStation() {
         if (dispatcher.requestEnteringStation(robotID, stationID)) {
 
-            if (manager.isBatteryLow()) {
+            if (hasReservedBattery) {
                 target = location.getChargerPositionAtStation(stationID,
                         dispatcher.getReservedChargerAtStation(robotID, stationID));
                 state = RobotState.TO_BATTERY;
+                hasReservedBattery = false;
                 startDriving();
+
             } else {
                 target = location.getQueuePositionAtStation(stationID);
                 state = RobotState.TO_QUEUE;
@@ -136,6 +140,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
         target = location.getArrivalPositionAtStation(stationID);
         state = RobotState.TO_STATION;
+        hasReservedBattery = needsLoading;
         startDriving();
     }
 
