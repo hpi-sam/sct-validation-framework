@@ -2,8 +2,19 @@ package de.hpi.mod.sim.env.robot;
 
 import de.hpi.mod.sim.env.model.*;
 
-public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
+/**
+ * Controller for a Robot.
+ * Is drawn by the view and managed by a Simulation.
+ * A {@link IDriveSystem} is used through a Wrapper to access the State-Machine and
+ * a {@link DriveManager} to calculate the real position.
+ * It relays sensor-information from a {@link ISensorDataProvider} to the Drive-System.
+ * It uses a {@link IRobotStationDispatcher} to drive in a station and {@link ILocation} to get new Targets.
+ */
+public class Robot implements IProcessor, ISensor, DriveListener {
 
+    /**
+     * Used so each Robot has an unique id
+     */
     private static int idCount = 0;
 
     private DriveManager manager;
@@ -39,6 +50,9 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         target = startPosition;
     }
 
+    /**
+     * This constructor is only used for test-scenarios and sets the Robots state to Scenario
+     */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing, Position target) {
@@ -47,10 +61,12 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         state = RobotState.SCENARIO;
     }
 
-    @Override
+    /**
+     * Handles state changes and refreshes the State-Machine
+     */
     public void refresh() {
         if (!driving) {
-            if (state == RobotState.TO_BATTERY && manager.getBattery() == DriveManager.BATTERY_FULL) {
+            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
                 handleFinishedCharging();
             } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
                 handleFinishedLoading();
@@ -67,6 +83,9 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         drive.dataRefresh();
     }
 
+    /**
+     * Gets called by the Drive-System if the robot arrived at its target
+     */
     @Override
     public void arrived() {
         driving = false;
@@ -81,7 +100,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         if (dispatcher.requestEnteringStation(robotID, stationID)) {
 
             if (hasReservedBattery) {
-                target = location.getChargerPositionAtStation(stationID,
+                target = location.getBatteryPositionAtStation(stationID,
                         dispatcher.getReservedChargerAtStation(robotID, stationID));
                 state = RobotState.TO_BATTERY;
                 hasReservedBattery = false;
@@ -101,6 +120,10 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         manager.setLoading(true);
     }
 
+    /**
+     * Requests leaving the battery.
+     * If not allowed it does nothing and has to be called again at a later time
+     */
     private void handleFinishedCharging() {
         manager.setLoading(false);
 
@@ -149,7 +172,6 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         drive.newTarget();
     }
 
-    @Override
     public void stop() {
         drive.stop();
     }
@@ -241,12 +263,10 @@ public class Robot implements IProcessor, ISensor, DriveListener, IRobot {
         drive.unloaded();
     }
 
-    @Override
     public int getID() {
         return robotID;
     }
 
-    @Override
     public Position pos() {
         return manager.currentPosition();
     }

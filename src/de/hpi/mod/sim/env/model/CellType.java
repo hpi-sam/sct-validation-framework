@@ -1,5 +1,9 @@
 package de.hpi.mod.sim.env.model;
 
+/**
+ * Similar to {@link PositionType}, but more specific.
+ * Is used in the {@link de.hpi.mod.sim.env.ServerGridManagement} and when drawing in the view
+ */
 public enum CellType {
     WAYPOINT, CROSSROAD, BLOCK, BATTERY, LOADING, STATION;
 

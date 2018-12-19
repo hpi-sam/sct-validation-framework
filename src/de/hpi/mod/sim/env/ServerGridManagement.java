@@ -212,6 +212,9 @@ public class ServerGridManagement implements ISensorDataProvider {
         return blockedCrossroadAhead(right, pos);
     }
 
+    /**
+     * Returns the orientation the target is pointing to
+     */
     @Override
     public Orientation targetOrientation(Position current, Position target) {
 
@@ -248,6 +251,7 @@ public class ServerGridManagement implements ISensorDataProvider {
         }
 
         // If Position is on Crossroad
+        // Repeated code because both cases should have different behaviours
         if (posType(current) == PositionType.CROSSROAD) {
             if (current.getY() < target.getY())
                 return Orientation.NORTH;

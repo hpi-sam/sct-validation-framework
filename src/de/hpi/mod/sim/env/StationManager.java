@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -92,47 +93,48 @@ public class StationManager implements IRobotStationDispatcher {
 
     @Override
     public void reportEnteringQueueAtStation(int robotID, int stationID) {
+        getStationByID(stationID).unregisterBatteryWithRobotIfPresent(robotID);
         getStationByID(stationID).resetDriveLock();
     }
 
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
         getStationByID(stationID).decreaseQueue();
-        getStationByID(stationID).unregisterBatteryWithRobotIfPresent(robotID);
     }
 
     public List<Station> getStations() {
         return stations;
     }
 
+    /**
+     * Returns a station with a free battery
+     */
     private Station getRandomStationWithFreeBattery() {
-        Random r = new Random();
-
-        List<Station> freeStations = stations
-                .stream()
-                .filter(Station::hasFreeBattery)
-                .collect(Collectors.toList());
-        return freeStations.isEmpty() ?
-                addNewStation() :
-                freeStations.get(r.nextInt(freeStations.size()));
+        return getRandomStationWithPredicate(Station::hasFreeBattery);
     }
 
-    /*
-     * TODO Random
+    /**
+     * Returns a station with a free queue-position
      */
     private Station getRandomStationWithMinQueue() {
-        Optional<Station> station = stations.stream()
-                .min(Station::compareByQueueSize);
+        return getRandomStationWithPredicate(Station::hasFreeQueuePosition);
+    }
 
-        if (station.isPresent()) {
-            // Only returns station if free queue positions are available
-            int queueSize = station.get().getQueueSize();
-            if (queueSize < ServerGridManagement.QUEUE_SIZE)
-                return station.get();
-        }
+    /**
+     * TODO: range = view
+     * @param stationFilter
+     * @return
+     */
+    private Station getRandomStationWithPredicate(Predicate<Station> stationFilter) {
+        Random r = new Random();
 
-        // If no free queue positions are available create new Stations
-        return addNewStation();
+        List<Station> filteredStations = stations.stream()
+                .filter(stationFilter)  // Only get Stations where the predicate is true
+                .collect(Collectors.toList());
+
+        return filteredStations.isEmpty() ?
+                addNewStation() :
+                filteredStations.get(r.nextInt(filteredStations.size()));
     }
 
     private Station addNewStation() {

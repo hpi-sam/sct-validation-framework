@@ -2,14 +2,14 @@
 
 ## Entities
 
-- **Station:** Contains (3) Batteries and (5) Queue-Positions. Is used to get new packages or recharge
+- **Station:** Contains (3) Batteries and (5) Queue-Positions. Is used to get new packages or recharge. A Drive-Lock checks that only 1 Robot drives from arrival to queue or battery to queue at a time
 - **Queue:** Contains all robots how want to drive to the station. If all queue-positions are reserved, no robot can drive to the station
 - **Battery:** While inside a battery, a robot can recharge. A robot has to wait for permission to leave a battery and drive to the queue
 - **Station-Range:** The Stations which are in use. Can be increased if needed.
 
 ## Goals
 
-- Only 1 robot should drive from a stations arrival-position or battery to the queue-start at the same time
+- Only 1 robot should drive from a stations arrival-position or battery to the queue-start at the same time (Drive-Lock)
 - If a stations queue is full it will not get a reservation for a new robot until a queue-position is free
 - A robots target position in the station is either a battery or loading-position
 - Each station from the default station range should be accessed at the same rate

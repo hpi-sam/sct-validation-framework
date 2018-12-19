@@ -2,11 +2,28 @@ package de.hpi.mod.sim.env;
 
 import java.util.*;
 
-public class Station implements Comparable<Station> {
+/**
+ * Manages the Queue, Drive-Lock and Batteries of a station
+ */
+public class Station {
 
     private int stationID;
+
+    /**
+     * How many robots want to drive or are in the queue.
+     * Must not be greater than {@link ServerGridManagement#QUEUE_SIZE}
+     */
     private int queueSize = 0;
+
+    /**
+     * There are {@link ServerGridManagement#BATTERIES_PER_STATION} batteries in this station.
+     */
     private Battery[] batteries;
+
+    /**
+     * Whether a robot is driving from arrival or battery to queue-start.
+     * Is set so no two robots are driving simultaneously
+     */
     private boolean driveLock = false;
 
 
@@ -15,6 +32,9 @@ public class Station implements Comparable<Station> {
         initBatteries();
     }
 
+    /**
+     * Adds the batteries with IDs 0, 1, 2 to the station
+     */
     private void initBatteries() {
         batteries = new Battery[ServerGridManagement.BATTERIES_PER_STATION];
         for (int i = 0; i < batteries.length; i++) {
@@ -43,7 +63,7 @@ public class Station implements Comparable<Station> {
     }
 
     boolean hasFreeBattery() {
-        return Arrays.stream(batteries).anyMatch(b -> !b.isBlocked());
+        return Arrays.stream(batteries).anyMatch(Battery::isFree);
     }
 
     boolean isDriveLock() { return driveLock; }
@@ -52,10 +72,18 @@ public class Station implements Comparable<Station> {
 
     void resetDriveLock() { driveLock = false; }
 
+    /**
+     * Reserves a free battery for the robot.
+     * Always check first if there are any free batteries
+     */
     void reserveBatteryForRobot(int robotID) {
         getFreeBattery().setReservedForRobot(robotID);
     }
 
+    /**
+     * Removes a reservation of a robot from the batteries of this station if it is present
+     * @param robotID The robot to remove
+     */
     void unregisterBatteryWithRobotIfPresent(int robotID) {
         Arrays
                 .stream(batteries)
@@ -64,6 +92,10 @@ public class Station implements Comparable<Station> {
                 .ifPresent(battery1 -> battery1.setBlocked(false));
     }
 
+    /**
+     * Returns the id of the Battery which is reserved for the given Robot or throws an error if no such battery exists
+     * @return id of the battery
+     */
     int getBatteryReservedForRobot(int robotID) {
         Optional<Battery> battery = Arrays.stream(batteries)
                 .filter(b -> b.getReservedForRobot() == robotID)
@@ -73,9 +105,13 @@ public class Station implements Comparable<Station> {
         throw new IllegalArgumentException("There is no battery reserved for " + robotID);
     }
 
+    /**
+     * Returns the first free battery or throws an error if no free exists
+     * @return A free battery
+     */
     private Battery getFreeBattery() {
         Optional<Battery> battery = Arrays.stream(batteries)
-                .filter(b -> !b.isBlocked()).findFirst();
+                .filter(Battery::isFree).findFirst();
         if (battery.isPresent())
             return battery.get();
         throw new IllegalStateException("There is no free battery");
@@ -89,23 +125,5 @@ public class Station implements Comparable<Station> {
         Station station = (Station) o;
 
         return stationID == station.stationID;
-    }
-
-    @Override
-    public int hashCode() {
-        return stationID;
-    }
-
-    @Override
-    public int compareTo(Station s) {
-        if (stationID == s.getStationID())
-            return 0;
-        return stationID > s.getStationID() ? 1 : -1;
-    }
-
-    static int compareByQueueSize(Station s1, Station s2) {
-        if (s1.getQueueSize() == s2.getQueueSize())
-            return 0;
-        return s1.getQueueSize() > s2.getQueueSize() ? 1 : -1;
     }
 }

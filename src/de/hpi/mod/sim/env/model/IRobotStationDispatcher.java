@@ -1,5 +1,9 @@
 package de.hpi.mod.sim.env.model;
 
+/**
+ * A Robot can use the Dispatcher to get through a Station.
+ * To find more info about to interaction see <code>env/stations.md</code>
+ */
 public interface IRobotStationDispatcher {
     int getReservationNextForStation(int robotID, boolean charge);
     int getReservedChargerAtStation(int robotID, int stationID);

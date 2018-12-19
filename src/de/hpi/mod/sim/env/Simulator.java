@@ -40,7 +40,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
                 robotID,
                 stationID,
                 grid, stations, this, this,
-                getChargerPositionAtStation(stationID, batteryID),
+                getBatteryPositionAtStation(stationID, batteryID),
                 Orientation.EAST);
         robots.add(robot);
         return robot;
@@ -76,7 +76,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * Refreshes the Robots.
      */
     public void refresh() {
-        for (IRobot robot : robots)
+        for (Robot robot : robots)
             robot.refresh();
     }
 
@@ -87,7 +87,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      */
     @Override
     public boolean isBlockedByRobot(Position pos) {
-        for (IRobot r : robots) {
+        for (Robot r : robots) {
             if (r.pos().equals(pos))
                 return true;
         }
@@ -116,7 +116,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     }
 
     @Override
-    public Position getChargerPositionAtStation(int stationID, int chargerID) {
+    public Position getBatteryPositionAtStation(int stationID, int chargerID) {
         return grid.getChargerPositionAtStation(stationID, chargerID);
     }
 
@@ -151,7 +151,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     }
 
     public void close() {
-        for (IRobot robot : robots)
+        for (Robot robot : robots)
             robot.close();
     }
 }

@@ -5,6 +5,9 @@ import de.hpi.mod.sim.env.model.IRobotActors;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 
+/**
+ * Calculates the real x and y position, angle and battery
+ */
 public class DriveManager implements IRobotActors {
 
     public static final float
@@ -14,7 +17,7 @@ public class DriveManager implements IRobotActors {
     public static final float BATTERY_FULL = 100;
     public static final float BATTERY_LOW = 20;
     public static final float BATTERY_LOSS = .1f;
-    public static final float BATTERY_LOADING_SPEED = .002f;
+    public static final float BATTERY_LOADING_SPEED = .02f;
 
     private DriveListener listener;
 
@@ -163,6 +166,8 @@ public class DriveManager implements IRobotActors {
     }
 
     public boolean isBatteryLow() { return battery < BATTERY_LOW; }
+
+    public boolean isBatteryFull() { return battery >= BATTERY_FULL; }
 
     public float getBattery() {
         return battery;
