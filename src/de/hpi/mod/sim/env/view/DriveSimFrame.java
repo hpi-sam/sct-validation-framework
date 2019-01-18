@@ -1,9 +1,6 @@
 package de.hpi.mod.sim.env.view;
 
-import de.hpi.mod.sim.env.view.panels.ConfigPanel;
-import de.hpi.mod.sim.env.view.panels.ControlPanel;
-import de.hpi.mod.sim.env.view.panels.RobotInfoPanel;
-import de.hpi.mod.sim.env.view.panels.TestPanel;
+import de.hpi.mod.sim.env.view.panels.*;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.view.sim.SimulatorView;
@@ -40,6 +37,7 @@ public class DriveSimFrame extends JFrame {
         var config = new ConfigPanel();
         var control = new ControlPanel(world);
         var test = new TestPanel(scenarioManager);
+        var scenario = new ScenarioPanel(scenarioManager);
 
         setJMenuBar(new DriveSimMenu(world));
 
@@ -53,12 +51,15 @@ public class DriveSimFrame extends JFrame {
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
         test.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+        scenario.setBorder(BorderFactory.createTitledBorder(
+        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
         side.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
 
         JPanel northPanel = new JPanel(new GridLayout(0, 1));
 
 
         northPanel.add(test);
+        northPanel.add(scenario);
         northPanel.add(config);
 
         side.add(northPanel, BorderLayout.NORTH);
