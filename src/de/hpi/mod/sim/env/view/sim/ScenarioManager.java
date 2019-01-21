@@ -76,10 +76,10 @@ public class ScenarioManager {
     	@Override
     	public List<NewRobot> initializeScenario(){
     		List<NewRobot> newRobots = new ArrayList<>();
-            newRobots.add(new NewScenarioRobot(new Position(6,5), Orientation.WEST));
-            newRobots.add(new NewScenarioRobot(new Position(5, 3), Orientation.NORTH));
-            newRobots.add(new NewScenarioRobot(new Position(3, 4), Orientation.EAST));
-            newRobots.add(new NewScenarioRobot(new Position(4, 6), Orientation.SOUTH));
+            newRobots.add(new NewScenarioRobotHPI(new Position(6,5), Orientation.WEST));
+            newRobots.add(new NewScenarioRobotHPI(new Position(5, 3), Orientation.NORTH));
+            newRobots.add(new NewScenarioRobotHPI(new Position(3, 4), Orientation.EAST));
+            newRobots.add(new NewScenarioRobotHPI(new Position(4, 6), Orientation.SOUTH));
             return newRobots;
     	}
     }
@@ -130,18 +130,18 @@ public class ScenarioManager {
         }
     }
     
-    private class NewScenarioRobot extends NewRobot{
+    private class NewScenarioRobotHPI extends NewRobot{
     	private Position pos;
     	private Orientation facing;
     	
-    	public NewScenarioRobot(Position pos, Orientation facing) {
+    	public NewScenarioRobotHPI(Position pos, Orientation facing) {
     		this.pos = pos;
     		this.facing = facing;
     	}
     	
     	@Override
     	public Robot register(SimulationWorld sim) {
-    		return sim.addRobotInScenario(pos, facing);
+    		return sim.addRobotInScenarioHPI2(pos, facing);
     	}
     }
 }
