@@ -74,6 +74,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     
     public Robot addRobotInScenarioHPI(Position pos, Orientation facing) {
 
+	if (grid.posType(pos) == PositionType.STATION) {
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
@@ -82,6 +83,9 @@ public class Simulator implements IRobotController, ILocation, IScanner {
                 pos, facing);
         robots.add(robot);
         return robot;
+    } else {
+    	throw new IllegalStateException("Illegal initial position for scenario robot. Please contact the mod chair");
+    }
     }
 
     /**

@@ -76,10 +76,10 @@ public class ScenarioManager {
     	@Override
     	public List<NewRobot> initializeScenario(){
     		List<NewRobot> newRobots = new ArrayList<>();
-            newRobots.add(new NewScenarioRobotHPI(new Position(6,5), Orientation.WEST));
-            newRobots.add(new NewScenarioRobotHPI(new Position(5, 3), Orientation.NORTH));
-            newRobots.add(new NewScenarioRobotHPI(new Position(3, 4), Orientation.EAST));
-            newRobots.add(new NewScenarioRobotHPI(new Position(4, 6), Orientation.SOUTH));
+            newRobots.add(new NewScenarioRobotHPI(new Position(0,-2), Orientation.EAST));
+            // newRobots.add(new NewScenarioRobotHPI(new Position(5, 3), Orientation.NORTH));
+            // newRobots.add(new NewScenarioRobotHPI(new Position(3, 4), Orientation.EAST));
+            // newRobots.add(new NewScenarioRobotHPI(new Position(4, 6), Orientation.SOUTH));
             return newRobots;
     	}
     }
