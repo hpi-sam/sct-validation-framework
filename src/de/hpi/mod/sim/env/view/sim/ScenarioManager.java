@@ -16,14 +16,15 @@ public class ScenarioManager {
 
     private List<Scenario> scenarios = new ArrayList<>();
     private List<TestScenario> tests = new ArrayList<>();
+
     private SimulationWorld world;
+
     private List<ITestListener> listeners = new ArrayList<>();
 
 
     public ScenarioManager(SimulationWorld world) {
         this.world = world;
         scenarios.add(new EmptyScenario());
-        scenarios.add(new EasyScenario());
         tests.add(new FourRobotsOnCrossroadScenario());
         tests.add(new OppositeRobotsScenario());
     }
@@ -66,22 +67,6 @@ public class ScenarioManager {
         public List<NewRobot> initializeScenario() {
             return new ArrayList<>();
         }
-    }
-    
-    private class EasyScenario extends Scenario{
-    	public EasyScenario() {
-    		name = "Easy scenario";
-    	}
-    	
-    	@Override
-    	public List<NewRobot> initializeScenario(){
-    		List<NewRobot> newRobots = new ArrayList<>();
-            newRobots.add(new NewScenarioRobot(new Position(6,5), Orientation.WEST));
-            newRobots.add(new NewScenarioRobot(new Position(5, 3), Orientation.NORTH));
-            newRobots.add(new NewScenarioRobot(new Position(3, 4), Orientation.EAST));
-            newRobots.add(new NewScenarioRobot(new Position(4, 6), Orientation.SOUTH));
-            return newRobots;
-    	}
     }
 
     private class FourRobotsOnCrossroadScenario extends TestScenario {
@@ -128,20 +113,5 @@ public class ScenarioManager {
         public Robot register(SimulationWorld sim) {
             return sim.addRobotAtWaypoint(pos, facing, target);
         }
-    }
-    
-    private class NewScenarioRobot extends NewRobot{
-    	private Position pos;
-    	private Orientation facing;
-    	
-    	public NewScenarioRobot(Position pos, Orientation facing) {
-    		this.pos = pos;
-    		this.facing = facing;
-    	}
-    	
-    	@Override
-    	public Robot register(SimulationWorld sim) {
-    		return sim.addRobotInScenario(pos, facing);
-    	}
     }
 }

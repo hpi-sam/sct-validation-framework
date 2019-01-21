@@ -71,18 +71,6 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         }
         return null;
     }
-    
-    public Robot addRobotInScenario(Position pos, Orientation facing) {
-
-        int robotID = Robot.incrementID();
-        Robot robot = new Robot(
-                robotID,
-                0,
-                grid, stations, this, this,
-                pos, facing);
-        robots.add(robot);
-        return robot;
-    }
 
     /**
      * Refreshes the Robots.
