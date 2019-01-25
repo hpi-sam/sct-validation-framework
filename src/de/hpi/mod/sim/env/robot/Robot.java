@@ -1,6 +1,8 @@
 package de.hpi.mod.sim.env.robot;
 
 import de.hpi.mod.sim.env.model.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Controller for a Robot.
@@ -69,7 +71,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
             if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
                 handleFinishedCharging();
             } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
-                handleFinishedLoading();
+            	handleFinishedLoading();
             } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
                 handleFinishedUnloading();
             } else if (state == RobotState.TO_STATION) {
@@ -143,16 +145,19 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtLoading() {
-
     }
 
     private void handleFinishedLoading() {
-        packageID = scanner.getPackageID(stationID);
-        hasPackage = true;
-        target = location.getUnloadingPositionFromID(packageID);
-        dispatcher.reportLeaveStation(robotID, stationID);
-        state = RobotState.TO_UNLOADING;
-        startDriving();
+    	long now = System.currentTimeMillis();
+    	
+    	if(now + 5000 > System.currentTimeMillis()) {
+    		packageID = scanner.getPackageID(stationID);
+    		hasPackage = true;
+    		target = location.getUnloadingPositionFromID(packageID);
+    		dispatcher.reportLeaveStation(robotID, stationID);
+    		state = RobotState.TO_UNLOADING;
+    		startDriving();
+    	}
     }
 
     private void handleArriveAtUnloading() {
