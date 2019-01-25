@@ -208,6 +208,10 @@ public class SimulationWorld {
     public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
         return addRobotRunner(() -> sim.addRobotAtWaypoint(pos, facing, target));
     }
+    
+    public Robot addRobotInScenarioHPI2(Position pos, Orientation facing) {
+    	return addRobotRunner(() -> sim.addRobotInScenarioHPI(pos, facing));
+    }
 
     private Robot addRobotRunner(AddRobotRunner runner) {
         try {

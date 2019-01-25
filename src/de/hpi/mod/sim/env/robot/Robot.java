@@ -80,6 +80,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
                 startDriving();
             }
         }
+        startDriving();
         drive.dataRefresh();
     }
 

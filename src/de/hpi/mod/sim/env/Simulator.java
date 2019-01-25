@@ -2,6 +2,7 @@ package de.hpi.mod.sim.env;
 
 import de.hpi.mod.sim.env.model.*;
 import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.*;
 
@@ -70,6 +71,22 @@ public class Simulator implements IRobotController, ILocation, IScanner {
             return robot;
         }
         return null;
+    }
+    
+    public Robot addRobotInScenarioHPI(Position pos, Orientation facing) {
+
+	if (grid.posType(pos) == PositionType.STATION) {
+        int robotID = Robot.incrementID();
+        Robot robot = new Robot(
+                robotID,
+                (int) pos.getX()/SimulatorConfig.getSpaceBetweenChargingStations(),
+                grid, stations, this, this,
+                pos, facing);
+        robots.add(robot);
+        return robot;
+    } else {
+    	throw new IllegalStateException("Illegal initial position for scenario robot. Please contact the mod chair");
+    }
     }
 
     /**
