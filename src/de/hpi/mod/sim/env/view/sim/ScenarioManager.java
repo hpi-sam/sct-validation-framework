@@ -18,9 +18,7 @@ public class ScenarioManager {
 
     private List<Scenario> scenarios = new ArrayList<>();
     private List<TestScenario> tests = new ArrayList<>();
-
     private SimulationWorld world;
-
     private List<ITestListener> listeners = new ArrayList<>();
     private static int maxStations = SimulatorConfig.getChargingStationsInUse();
 
