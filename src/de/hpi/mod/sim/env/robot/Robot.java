@@ -1,6 +1,8 @@
 package de.hpi.mod.sim.env.robot;
 
 import de.hpi.mod.sim.env.model.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Controller for a Robot.
@@ -34,6 +36,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private boolean hasPackage = false;
 
     private boolean hasReservedBattery = false;
+    
+    private long now = 0;
+    private long delay = 0;
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
@@ -69,7 +74,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
             if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
                 handleFinishedCharging();
             } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
-                handleFinishedLoading();
+            	handleFinishedLoading();
             } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
                 handleFinishedUnloading();
             } else if (state == RobotState.TO_STATION) {
@@ -143,16 +148,24 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtLoading() {
-
     }
 
     private void handleFinishedLoading() {
-        packageID = scanner.getPackageID(stationID);
-        hasPackage = true;
-        target = location.getUnloadingPositionFromID(packageID);
-        dispatcher.reportLeaveStation(robotID, stationID);
-        state = RobotState.TO_UNLOADING;
-        startDriving();
+    	if(now == 0) {
+    		delay = ThreadLocalRandom.current().nextLong(500,5000);
+    		now = System.currentTimeMillis();
+    	}
+    	
+    	if(now < System.currentTimeMillis() - delay)
+        {
+    		packageID = scanner.getPackageID(stationID);
+    		hasPackage = true;
+            target = location.getUnloadingPositionFromID(packageID);
+            dispatcher.reportLeaveStation(robotID, stationID);
+            state = RobotState.TO_UNLOADING;
+            startDriving();
+            now = 0;
+        }
     }
 
     private void handleArriveAtUnloading() {
