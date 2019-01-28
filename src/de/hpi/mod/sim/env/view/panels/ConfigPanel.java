@@ -64,8 +64,9 @@ public class ConfigPanel extends JPanel {
                 (int) (maxValue * multiplier), (int) (initValue * multiplier));
         valueSlider.setToolTipText(toolTip);
         valueSlider.addChangeListener(e -> {
-            setter.setValue(valueSlider.getValue() / multiplier);
-            valueField.setText(Float.toString(valueSlider.getValue() / multiplier));
+            //setter.setValue(toLogarithmValue(valueSlider.getValue() / multiplier, minValue, maxValue, discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
+        	setter.setValue(toMagicSpeedValue(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
+            valueField.setText(Integer.toString(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
         });
 
         // Button to reset
@@ -86,7 +87,43 @@ public class ConfigPanel extends JPanel {
         add(root);
     }
 
-    private interface ValueSetter {
+    private float toMagicSpeedValue(int level) {
+    	switch(level) {
+    	case 1:
+    		return 0.0005f;
+    	case 2:
+    		return 0.001f;
+    	case 3:
+    		return 0.0015f;
+    	case 4:
+    		return 0.0025f;
+    	case 5:
+    		return 0.0035f;
+    	case 6:
+    		return 0.0045f;
+    	case 7:
+    		return 0.006f;
+    	case 8:
+    		return 0.0075f;
+    	case 9:
+    		return 0.009f;
+    	case 10:
+    		return 0.011f;
+		default:
+			return (float) 0;
+    	}
+	}
+
+	private int discreteValueOf(float f, float minValue, float maxValue, int maxRange) {
+		for(int i=1; i<=maxRange; i++) {
+			if(f*i >= (maxValue-minValue)) {
+				return maxRange-i+1;
+			}
+		}
+		return 0;
+	}
+
+	private interface ValueSetter {
         void setValue(float value);
     }
 }
