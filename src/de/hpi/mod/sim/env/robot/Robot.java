@@ -36,7 +36,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private boolean hasPackage = false;
 
     private boolean hasReservedBattery = false;
+    
     private long now = 0;
+    private long delay = 0;
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
@@ -149,9 +151,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleFinishedLoading() {
-    	long delay = ThreadLocalRandom.current().nextLong(500,5000);
-    	
     	if(now == 0) {
+    		delay = ThreadLocalRandom.current().nextLong(500,5000);
     		now = System.currentTimeMillis();
     	}
     	
