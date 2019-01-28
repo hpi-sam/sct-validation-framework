@@ -53,8 +53,8 @@ public class ControlPanel extends JPanel implements ITimeListener {
      * Loads all the icons for the panel
      */
     private void loadIcons() {
-        playIcon = new ImageIcon("res/play.png");
-        pauseIcon = new ImageIcon("res/pause.png");
+        playIcon = new ImageIcon("simulator/res/play.png");
+        pauseIcon = new ImageIcon("simulator/res/pause.png");
     }
 
     /**
