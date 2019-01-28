@@ -65,7 +65,7 @@ public class ConfigPanel extends JPanel {
         valueSlider.setToolTipText(toolTip);
         valueSlider.addChangeListener(e -> {
             setter.setValue(valueSlider.getValue() / multiplier);
-            valueField.setText(Float.toString(valueSlider.getValue() / multiplier));
+            valueField.setText(Integer.toString(showDiscreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
         });
 
         // Button to reset
@@ -86,7 +86,16 @@ public class ConfigPanel extends JPanel {
         add(root);
     }
 
-    private interface ValueSetter {
+    private int showDiscreteValueOf(float f, float minValue, float maxValue, int maxRange) {
+		for(int i=0; i<=maxRange; i++) {
+			if(f*i >= (maxValue-minValue)) {
+				return maxRange-i;
+			}
+		}
+		return 0;
+	}
+
+	private interface ValueSetter {
         void setValue(float value);
     }
 }
