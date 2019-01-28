@@ -36,6 +36,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private boolean hasPackage = false;
 
     private boolean hasReservedBattery = false;
+    private long now = 0;
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
@@ -148,16 +149,22 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleFinishedLoading() {
-    	long now = System.currentTimeMillis();
+    	long delay = ThreadLocalRandom.current().nextLong(500,5000);
     	
-    	if(now + 5000 > System.currentTimeMillis()) {
+    	if(now == 0) {
+    		now = System.currentTimeMillis();
+    	}
+    	
+    	if(now < System.currentTimeMillis() - delay)
+        {
     		packageID = scanner.getPackageID(stationID);
     		hasPackage = true;
-    		target = location.getUnloadingPositionFromID(packageID);
-    		dispatcher.reportLeaveStation(robotID, stationID);
-    		state = RobotState.TO_UNLOADING;
-    		startDriving();
-    	}
+            target = location.getUnloadingPositionFromID(packageID);
+            dispatcher.reportLeaveStation(robotID, stationID);
+            state = RobotState.TO_UNLOADING;
+            startDriving();
+            now = 0;
+        }
     }
 
     private void handleArriveAtUnloading() {
