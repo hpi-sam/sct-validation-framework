@@ -4,6 +4,7 @@ import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.IRobotActors;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Calculates the real x and y position, angle and battery
@@ -22,7 +23,7 @@ public class DriveManager implements IRobotActors {
     private DriveListener listener;
 
     private float x, y, angle;
-    private float battery = BATTERY_FULL;
+    private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*BATTERY_FULL), (int) BATTERY_FULL+1);
 
     private Position targetPosition;
     private Orientation targetFacing;

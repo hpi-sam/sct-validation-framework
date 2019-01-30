@@ -16,7 +16,7 @@ import java.awt.*;
  */
 public class ConfigPanel extends JPanel {
 
-
+	int currentLevel = 1;
     /**
      * Initializes the Panel and adds Config Elements
      */
@@ -115,12 +115,16 @@ public class ConfigPanel extends JPanel {
 	}
 
 	private int discreteValueOf(float f, float minValue, float maxValue, int maxRange) {
+		int level = 0; 
+		
 		for(int i=1; i<=maxRange; i++) {
 			if(f*i >= (maxValue-minValue)) {
-				return maxRange-i+1;
+				level = maxRange-i+1;
+				break;
 			}
 		}
-		return 0;
+		currentLevel = level;
+		return currentLevel;
 	}
 
 	private interface ValueSetter {
