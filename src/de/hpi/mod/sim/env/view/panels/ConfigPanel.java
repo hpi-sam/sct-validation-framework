@@ -64,7 +64,6 @@ public class ConfigPanel extends JPanel {
                 (int) (maxValue * multiplier), (int) (initValue * multiplier));
         valueSlider.setToolTipText(toolTip);
         valueSlider.addChangeListener(e -> {
-            //setter.setValue(toLogarithmValue(valueSlider.getValue() / multiplier, minValue, maxValue, discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
         	setter.setValue(toMagicSpeedValue(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
             valueField.setText(Integer.toString(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
         });
