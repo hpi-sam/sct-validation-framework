@@ -235,7 +235,21 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private boolean[] blocked() {
-        return grid.blocked(manager.currentFacing(), manager.currentPosition());
+        boolean[] blockedFieldsFromNewPosition = grid.blocked(manager.currentFacing(), manager.currentPosition());
+        boolean[] blockedFieldsFromOldPosition = grid.blocked(manager.currentFacing(), manager.getOldPosition());
+        
+        if(blockedFieldsFromNewPosition.length == blockedFieldsFromOldPosition.length) {
+        	boolean[] blockedFieldsRes = new boolean[blockedFieldsFromNewPosition.length];
+        	
+        	for(int i=0; i<blockedFieldsFromNewPosition.length; i++) {
+        		blockedFieldsRes[i] = blockedFieldsFromNewPosition[i] || blockedFieldsFromOldPosition[i];
+        	}
+        	
+        	return blockedFieldsRes;
+        	
+        } else {
+        	return blockedFieldsFromNewPosition;
+        }
     }
 
     @Override
@@ -254,17 +268,43 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private boolean[] blockedWaypoint() {
-        return grid.blockedWaypoint(manager.currentFacing(), manager.currentPosition());
+        // return grid.blockedWaypoint(manager.currentFacing(), manager.currentPosition());
+        
+        boolean[] blockedFieldsFromNewPosition = grid.blockedWaypoint(manager.currentFacing(), manager.currentPosition());
+        boolean[] blockedFieldsFromOldPosition = grid.blockedWaypoint(manager.currentFacing(), manager.getOldPosition());
+        
+        if(blockedFieldsFromNewPosition.length == blockedFieldsFromOldPosition.length) {
+        	boolean[] blockedFieldsRes = new boolean[blockedFieldsFromNewPosition.length];
+        	
+        	for(int i=0; i<blockedFieldsFromNewPosition.length; i++) {
+        		blockedFieldsRes[i] = blockedFieldsFromNewPosition[i] || blockedFieldsFromOldPosition[i];
+        	}
+        	
+        	return blockedFieldsRes;
+        	
+        } else {
+        	return blockedFieldsFromNewPosition;
+        }
     }
 
     @Override
     public boolean blockedCrossroadAhead() {
-        return grid.blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
+        // return grid.blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
+        
+        boolean blockedCrossroadAheadNew = grid.blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
+        boolean blockedCrossroadAheadOld = grid.blockedCrossroadAhead(manager.currentFacing(), manager.getOldPosition());
+        
+        return blockedCrossroadAheadNew || blockedCrossroadAheadOld;
     }
 
     @Override
     public boolean blockedCrossroadRight() {
-        return grid.blockedCrossroadRight(manager.currentFacing(), manager.currentPosition());
+        // return grid.blockedCrossroadRight(manager.currentFacing(), manager.currentPosition());
+        
+        boolean blockedCrossroadRightNew = grid.blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
+        boolean blockedCrossroadRightOld = grid.blockedCrossroadAhead(manager.currentFacing(), manager.getOldPosition());
+        
+        return blockedCrossroadRightNew || blockedCrossroadRightOld;
     }
 
     @Override

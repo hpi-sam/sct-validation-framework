@@ -188,6 +188,10 @@ public class DriveManager implements IRobotActors {
     public Orientation currentFacing() {
         return oldFacing;
     }
+    
+    public Position getOldPosition() {
+    	return oldPosition;
+    }
 
     public float getX() {
         return x;
