@@ -16,7 +16,7 @@ import java.awt.*;
  */
 public class ConfigPanel extends JPanel {
 
-	int currentLevel = 1;
+	private static int currentLevel = 1;
     /**
      * Initializes the Panel and adds Config Elements
      */
@@ -85,6 +85,10 @@ public class ConfigPanel extends JPanel {
         root.add(input, BorderLayout.CENTER);
 
         add(root);
+    }
+    
+    public static int getCurrentLevel() {
+    	return currentLevel;
     }
 
     private float toMagicSpeedValue(int level) {

@@ -13,6 +13,7 @@ public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
     private RobotInfoPanel info;
+    private ScenarioPanel scenario;
 
     private ScenarioManager scenarioManager;
 
@@ -37,8 +38,10 @@ public class DriveSimFrame extends JFrame {
         var config = new ConfigPanel();
         var control = new ControlPanel(world);
         var test = new TestPanel(scenarioManager);
-        var scenario = new ScenarioPanel(scenarioManager);
+        var timer = new TimerPanel();
+        scenario = new ScenarioPanel(scenarioManager, timer);
 
+        TimerPanel.setParent(this);
         setJMenuBar(new DriveSimMenu(world));
 
         world.addHighlightedRobotListener(info);
@@ -53,6 +56,8 @@ public class DriveSimFrame extends JFrame {
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
         scenario.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
+        timer.setBorder(BorderFactory.createTitledBorder(
+        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
         side.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
 
         JPanel northPanel = new JPanel(new GridLayout(0, 1));
@@ -61,6 +66,7 @@ public class DriveSimFrame extends JFrame {
         northPanel.add(test);
         northPanel.add(scenario);
         northPanel.add(config);
+        northPanel.add(timer);
 
         side.add(northPanel, BorderLayout.NORTH);
         side.add(info, BorderLayout.CENTER);
@@ -79,6 +85,19 @@ public class DriveSimFrame extends JFrame {
         while (running)
             update();
         close();
+    }
+    
+    public static void make_window() {
+        setSystemLookAndFeel();
+        new DriveSimFrame();
+    }
+    
+    public boolean isRunning() {
+    	return running;
+    }
+    
+    public ScenarioPanel getScenarioPanel() {
+    	return scenario;
     }
 
     private void update() {
@@ -102,11 +121,6 @@ public class DriveSimFrame extends JFrame {
         setVisible(false);
         dispose();
         System.exit(0);
-    }
-
-    public static void make_window() {
-        setSystemLookAndFeel();
-        new DriveSimFrame();
     }
 
     private static void setSystemLookAndFeel() {
