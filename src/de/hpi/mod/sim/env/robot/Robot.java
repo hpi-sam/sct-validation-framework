@@ -268,8 +268,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private boolean[] blockedWaypoint() {
-        // return grid.blockedWaypoint(manager.currentFacing(), manager.currentPosition());
-        
         boolean[] blockedFieldsFromNewPosition = grid.blockedWaypoint(manager.currentFacing(), manager.currentPosition());
         boolean[] blockedFieldsFromOldPosition = grid.blockedWaypoint(manager.currentFacing(), manager.getOldPosition());
         
@@ -289,8 +287,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean blockedCrossroadAhead() {
-        // return grid.blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
-        
         boolean blockedCrossroadAheadNew = grid.blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
         boolean blockedCrossroadAheadOld = grid.blockedCrossroadAhead(manager.currentFacing(), manager.getOldPosition());
         
@@ -299,8 +295,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean blockedCrossroadRight() {
-        // return grid.blockedCrossroadRight(manager.currentFacing(), manager.currentPosition());
-        
         boolean blockedCrossroadRightNew = grid.blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
         boolean blockedCrossroadRightOld = grid.blockedCrossroadAhead(manager.currentFacing(), manager.getOldPosition());
         
