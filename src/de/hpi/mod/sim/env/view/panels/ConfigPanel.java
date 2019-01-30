@@ -16,7 +16,7 @@ import java.awt.*;
  */
 public class ConfigPanel extends JPanel {
 
-	private static int currentLevel = 1;
+	private int currentLevel = 1;
     /**
      * Initializes the Panel and adds Config Elements
      */
@@ -87,7 +87,7 @@ public class ConfigPanel extends JPanel {
         add(root);
     }
     
-    public static int getCurrentLevel() {
+    public int getCurrentLevel() {
     	return currentLevel;
     }
 

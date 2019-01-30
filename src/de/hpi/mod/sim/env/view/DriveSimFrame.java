@@ -14,6 +14,7 @@ public class DriveSimFrame extends JFrame {
     private SimulatorView sim;
     private RobotInfoPanel info;
     private ScenarioPanel scenario;
+    private ConfigPanel config;
 
     private ScenarioManager scenarioManager;
 
@@ -35,7 +36,7 @@ public class DriveSimFrame extends JFrame {
         scenarioManager = new ScenarioManager(world);
 
         info = new RobotInfoPanel(world);
-        var config = new ConfigPanel();
+        config = new ConfigPanel();
         var control = new ControlPanel(world);
         var test = new TestPanel(scenarioManager);
         var timer = new TimerPanel();
@@ -98,6 +99,10 @@ public class DriveSimFrame extends JFrame {
     
     public ScenarioPanel getScenarioPanel() {
     	return scenario;
+    }
+    
+    public ConfigPanel getConfigPanel() {
+    	return config;
     }
 
     private void update() {

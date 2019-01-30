@@ -52,7 +52,7 @@ public class TimerPanel extends JPanel {
 		public void actionPerformed(ActionEvent e)
 		{
 			if(SimulationWorld.isRunning()) {
-		        remainingTime -= 1*ConfigPanel.getCurrentLevel();
+		        remainingTime -= 1*parent.getConfigPanel().getCurrentLevel();
 		        setClockTime();
 		        if(remainingTime<=0) {
 		        	parent.getScenarioPanel().scenarioPassed();
