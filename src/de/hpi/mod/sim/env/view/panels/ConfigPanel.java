@@ -62,6 +62,7 @@ public class ConfigPanel extends JPanel {
         // Slider (with tooltip) to input changes
         JSlider valueSlider = new JSlider((int) (minValue * multiplier),
                 (int) (maxValue * multiplier), (int) (initValue * multiplier));
+        setter.setValue(toMagicSpeedValue(1));
         valueSlider.setToolTipText(toolTip);
         valueSlider.addChangeListener(e -> {
         	setter.setValue(toMagicSpeedValue(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
@@ -73,7 +74,7 @@ public class ConfigPanel extends JPanel {
         button.addActionListener(e -> {
             valueSlider.setValue((int) (initValue * multiplier));
             valueField.setText("1");
-            setter.setValue(initValue);
+            setter.setValue(toMagicSpeedValue(1));
         });
 
         input.add(valueField, BorderLayout.WEST);
