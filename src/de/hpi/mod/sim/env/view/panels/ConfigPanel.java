@@ -57,7 +57,7 @@ public class ConfigPanel extends JPanel {
         JTextField valueField = new JTextField();
         valueField.setEditable(false);
         valueField.setPreferredSize(new Dimension(50, 0));
-        valueField.setText(Float.toString(initValue));
+        valueField.setText("1");
 
         // Slider (with tooltip) to input changes
         JSlider valueSlider = new JSlider((int) (minValue * multiplier),
@@ -73,7 +73,7 @@ public class ConfigPanel extends JPanel {
         JButton button = new JButton("Reset");
         button.addActionListener(e -> {
             valueSlider.setValue((int) (initValue * multiplier));
-            valueField.setText(Float.toString(initValue));
+            valueField.setText("1");
             setter.setValue(initValue);
         });
 
