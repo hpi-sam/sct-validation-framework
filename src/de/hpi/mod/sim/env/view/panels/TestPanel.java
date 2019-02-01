@@ -34,9 +34,41 @@ public class TestPanel extends JPanel implements ITestListener {
 
         for (TestScenario test : scenarioManager.getTests())
             addTest(scenarioManager, test);
+        
+        addTestResetButton(scenarioManager);
     }
     
-    @Override
+    private void addTestResetButton(ScenarioManager scenarioManager) {
+    	JPanel panel = new JPanel();
+        JLabel label = new JLabel("Reset test results");
+        JButton run = new JButton("Reset");
+
+        panel.setLayout(new BorderLayout());
+        run.addActionListener(e -> resetTestFile(SimulatorConfig.getTestFileName(), scenarioManager));
+
+        panel.add(label, BorderLayout.CENTER);
+        panel.add(run, BorderLayout.EAST);
+
+        add(panel);
+		
+	}
+
+	private void resetTestFile(String testFileName, ScenarioManager scenarioManager) {
+		try {
+			changeContent(testFileName, "#y", "#n");
+			resetColours(scenarioManager);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void resetColours(ScenarioManager scenarioManager) {
+		for (TestScenario test : scenarioManager.getTests())
+            tests.get(test).setBackground(UIManager.getColor("Panel.background"));
+		repaint();
+	}
+
+	@Override
     public void onTestCompleted(TestScenario test) {
         tests.get(test).setBackground(Color.green);
         repaint();
@@ -48,15 +80,15 @@ public class TestPanel extends JPanel implements ITestListener {
     }
     
     private void writeTestPassed(TestScenario test) throws IOException {
-		changeLine(SimulatorConfig.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
+		changeContent(SimulatorConfig.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
 	}
 
-	private void changeLine(String fileName, String oldLine, String newLine) throws IOException {
+	private void changeContent(String fileName, String oldContent, String newContent) throws IOException {
 		Path path = Paths.get(fileName);
 		Charset charset = StandardCharsets.UTF_8;
 
 		String content = new String(Files.readAllBytes(path), charset);
-		content = content.replaceAll(oldLine, newLine);
+		content = content.replaceAll(oldContent, newContent);
 		Files.write(path, content.getBytes(charset));
 	}
 
