@@ -16,6 +16,7 @@ public class SimulatorConfig {
     public static final int MAX_ROBOTS_PER_STATION = 3;
     public static final int SCENARIO_PASSING_TIME = 60;
     public static final Position FIRST_CHARGING_STATION_TOP = new Position(0,-2);
+    public static final String TEST_FILE_NAME = "Tests";
 
     private static float robotMoveSpeed = DEFAULT_ROBOT_MOVE_SPEED;
     private static int chargingStationsInUse = CHARGING_STATIONS_IN_USE;
@@ -23,6 +24,7 @@ public class SimulatorConfig {
     private static int maxRobotsPerStation = MAX_ROBOTS_PER_STATION;
     private static int scenarioPassingTime = SCENARIO_PASSING_TIME;
     private static Position firstChargingStationTop = FIRST_CHARGING_STATION_TOP;
+    private static String testFileName = TEST_FILE_NAME;
     
 
     public static float getRobotMoveSpeed() {
@@ -51,5 +53,9 @@ public class SimulatorConfig {
 
 	public static int getScenarioPassingTime() {
 		return scenarioPassingTime;
+	}
+	
+	public static String getTestFileName() {
+		return testFileName;
 	}
 }

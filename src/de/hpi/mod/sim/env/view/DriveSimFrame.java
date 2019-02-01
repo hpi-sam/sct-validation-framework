@@ -1,5 +1,7 @@
 package de.hpi.mod.sim.env.view;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -8,6 +10,15 @@ import de.hpi.mod.sim.env.view.sim.SimulatorView;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
 
 public class DriveSimFrame extends JFrame {
 
@@ -44,6 +55,9 @@ public class DriveSimFrame extends JFrame {
 
         TimerPanel.setParent(this);
         setJMenuBar(new DriveSimMenu(world));
+        
+        createFileIfNotExist(SimulatorConfig.getTestFileName());
+        loadFile(test, SimulatorConfig.getTestFileName());
 
         world.addHighlightedRobotListener(info);
         world.addTimeListener(control);
@@ -88,7 +102,72 @@ public class DriveSimFrame extends JFrame {
         close();
     }
     
-    public static void make_window() {
+    private void loadFile(TestPanel testPanel, String fileName) {
+    	boolean written = true;
+    	TestScenario test;
+    	
+    	for (int i=0; i<scenarioManager.getTests().size(); i++) {
+    		test = scenarioManager.getTests().get(i);
+			written = writeLineIfNeeded(test, fileName);
+    		if(!written && testPassed(test, fileName)) {
+    			testPanel.onTestCompleted(test);
+    		}
+    	}
+	}
+
+	private boolean testPassed(TestScenario test, String fileName) {
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       String[] parts = line.split("#");
+		       if(parts[0].equals(test.getName())) {
+		    	   if(parts[1].equals("n")) {
+		    		   return false;
+		    	   } else if (parts[1].equals("y")) {
+		    		   return true;
+		    	   }
+		       }
+		    }
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	private boolean writeLineIfNeeded(TestScenario test, String fileName) {
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       String[] parts = line.split("#");
+		       if(parts[0].equals(test.getName())) {
+		    	   return false;
+		       }
+		    }
+		    br.close();
+		    BufferedWriter output = new BufferedWriter(new FileWriter(fileName, true));
+		    output.append(test.getName() + "#n" + System.lineSeparator());
+		    output.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+
+	private void createFileIfNotExist(String fileName) {
+    	File file = new File(fileName);
+    	try {
+			file.createNewFile();
+		} catch (IOException e) {
+			System.out.println("Could not write persistence file to file system.");
+			e.printStackTrace();
+		}
+	}
+
+	public static void make_window() {
         setSystemLookAndFeel();
         new DriveSimFrame();
     }
