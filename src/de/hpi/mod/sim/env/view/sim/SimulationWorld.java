@@ -13,6 +13,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Stores the values needed to display the Simulation and gives access to the Simulation
