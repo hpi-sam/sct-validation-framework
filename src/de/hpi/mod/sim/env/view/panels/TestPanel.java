@@ -68,6 +68,10 @@ public class TestPanel extends JPanel implements ITestListener {
         add(panel);
 	}
 
+    /**
+     * Indirectly run all tests. The method manages in cooperation with the method this.onTestCompleted(test) 
+     * a boolean and an ID. With these two things all testCases are run one after another.
+     */
 	private void runAllTests( ) {
 		isRunningAll = true;
 		toggleRunScenarioByID();
