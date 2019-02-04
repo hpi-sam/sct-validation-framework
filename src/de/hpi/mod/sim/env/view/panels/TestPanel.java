@@ -15,19 +15,25 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class TestPanel extends JPanel implements ITestListener {
 
     private Map<TestScenario, JPanel> tests = new HashMap<>();
+    private int currentTestID = 0;
+    private boolean isRunningAll = false;
+    private ScenarioManager scenarioManager;
 
 
-    public TestPanel(ScenarioManager scenarioManager) {
+    public TestPanel(ScenarioManager manager) {
+    	scenarioManager = manager;
         setLayout(new GridLayout(0, 1));
 
-        for (TestScenario test : scenarioManager.getTests())
-            addTest(scenarioManager, test);
+        for (TestScenario test : manager.getTests())
+            addTest(manager, test);
         
-        addTestResetButton(scenarioManager);
+        addRunAllTestButton(manager);
+        addTestResetButton(manager);
     }
     
     public Map<TestScenario, JPanel> getTests() {
@@ -43,7 +49,39 @@ public class TestPanel extends JPanel implements ITestListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+        if(isRunningAll) {
+        	runAllTests(scenarioManager);
+        }
     }
+    
+    private void addRunAllTestButton(ScenarioManager scenarioManager) {
+    	JPanel panel = new JPanel();
+        JLabel label = new JLabel("Run all tests");
+        JButton run = new JButton("Run");
+
+        panel.setLayout(new BorderLayout());
+        run.addActionListener(e -> runAllTests(scenarioManager));
+
+        panel.add(label, BorderLayout.CENTER);
+        panel.add(run, BorderLayout.EAST);
+
+        add(panel);
+	}
+
+	private void runAllTests(ScenarioManager scenarioManager) {
+		isRunningAll = true;
+		toggleRunScenarioByID(scenarioManager);
+		currentTestID += 1;
+		
+		if(currentTestID == scenarioManager.getTests().size()) {
+			isRunningAll = false;
+			currentTestID = 0;
+		}
+	}
+	
+	private void toggleRunScenarioByID(ScenarioManager scenarioManager) {
+		scenarioManager.runScenario(scenarioManager.getTests().get(currentTestID));
+	}
     
     private void writeTestPassed(TestScenario test) throws IOException {
 		changeContent(SimulatorConfig.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
