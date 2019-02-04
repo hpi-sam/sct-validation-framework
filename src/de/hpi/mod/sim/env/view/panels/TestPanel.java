@@ -32,8 +32,8 @@ public class TestPanel extends JPanel implements ITestListener {
         for (TestScenario test : manager.getTests())
             addTest(manager, test);
         
-        addRunAllTestButton(manager);
-        addTestResetButton(manager);
+        addRunAllTestButton();
+        addTestResetButton();
     }
     
     public Map<TestScenario, JPanel> getTests() {
@@ -50,17 +50,17 @@ public class TestPanel extends JPanel implements ITestListener {
 			e.printStackTrace();
 		}
         if(isRunningAll) {
-        	runAllTests(scenarioManager);
+        	runAllTests();
         }
     }
     
-    private void addRunAllTestButton(ScenarioManager scenarioManager) {
+    private void addRunAllTestButton() {
     	JPanel panel = new JPanel();
         JLabel label = new JLabel("Run all tests");
         JButton run = new JButton("Run");
 
         panel.setLayout(new BorderLayout());
-        run.addActionListener(e -> runAllTests(scenarioManager));
+        run.addActionListener(e -> runAllTests());
 
         panel.add(label, BorderLayout.CENTER);
         panel.add(run, BorderLayout.EAST);
@@ -68,9 +68,9 @@ public class TestPanel extends JPanel implements ITestListener {
         add(panel);
 	}
 
-	private void runAllTests(ScenarioManager scenarioManager) {
+	private void runAllTests( ) {
 		isRunningAll = true;
-		toggleRunScenarioByID(scenarioManager);
+		toggleRunScenarioByID();
 		currentTestID += 1;
 		
 		if(currentTestID == scenarioManager.getTests().size()) {
@@ -79,7 +79,7 @@ public class TestPanel extends JPanel implements ITestListener {
 		}
 	}
 	
-	private void toggleRunScenarioByID(ScenarioManager scenarioManager) {
+	private void toggleRunScenarioByID( ) {
 		scenarioManager.runScenario(scenarioManager.getTests().get(currentTestID));
 	}
     
@@ -87,13 +87,13 @@ public class TestPanel extends JPanel implements ITestListener {
 		changeContent(SimulatorConfig.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
 	}
     
-    private void addTestResetButton(ScenarioManager scenarioManager) {
+    private void addTestResetButton( ) {
     	JPanel panel = new JPanel();
         JLabel label = new JLabel("Reset test results");
         JButton run = new JButton("Reset");
 
         panel.setLayout(new BorderLayout());
-        run.addActionListener(e -> resetTestFile(SimulatorConfig.getTestFileName(), scenarioManager));
+        run.addActionListener(e -> resetTestFile(SimulatorConfig.getTestFileName()));
 
         panel.add(label, BorderLayout.CENTER);
         panel.add(run, BorderLayout.EAST);
@@ -102,16 +102,16 @@ public class TestPanel extends JPanel implements ITestListener {
 		
 	}
 
-	private void resetTestFile(String testFileName, ScenarioManager scenarioManager) {
+	private void resetTestFile(String testFileName) {
 		try {
 			changeContent(testFileName, "#y", "#n");
-			resetColours(scenarioManager);
+			resetColours();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void resetColours(ScenarioManager scenarioManager) {
+	private void resetColours( ) {
 		for (TestScenario test : scenarioManager.getTests())
             tests.get(test).setBackground(UIManager.getColor("Panel.background"));
 		repaint();
