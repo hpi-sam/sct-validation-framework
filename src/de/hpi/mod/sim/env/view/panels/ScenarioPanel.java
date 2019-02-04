@@ -23,8 +23,8 @@ public class ScenarioPanel extends JPanel {
     }
     
     public void scenarioPassed() {
-		scenarioPanel.setBackground(Color.green);
-		repaint();
+		// scenarioPanel.setBackground(Color.green);
+		// repaint();
 	}
 
     private void addScenario(ScenarioManager manager, Scenario test, TimerPanel timer){
