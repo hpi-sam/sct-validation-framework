@@ -322,6 +322,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     public Position pos() {
         return manager.currentPosition();
     }
+    
+    public Position oldPos() {
+    	return manager.getOldPosition();
+    }
 
     public void close() {
         drive.close();

@@ -216,7 +216,7 @@ public class SimulationWorld {
 
     private Robot addRobotRunner(AddRobotRunner runner) {
         while (isRefreshing || isUpdating) {
-		    // wait();
+        	//Do nothing while refreshing or updating
 		}
 
 		Robot r = runner.run();
@@ -230,7 +230,7 @@ public class SimulationWorld {
      */
     public void playScenario(Scenario scenario) {
         while (isRefreshing || isUpdating) {
-		    // wait();
+        	//Do nothing while refreshing or updating
 		}
 
 		if (isRunning()) toggleRunning();
