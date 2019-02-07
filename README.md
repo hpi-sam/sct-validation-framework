@@ -34,15 +34,17 @@ Standardmäßig ist der als letzte hinzugefügte Roboter ausgewählt.
 Mit `A` können Roboter hinzugefügt werden.
 Mit den Pfeiltasten kann die Kamera über das Spielfeld bewegt werden.
 
-#Setup
+### Setup
 
 Either download eclipse from YAKINDU website directly or download latest version from https://www.eclipse.org/downloads/. After succesfully installed go to Help->InstallNewSoftware
 and provide the link to the download repository of YAKINDU state chart tools (Install everything and accept every license). Then checkout the Git repository from source with the option in the Eclipse start screen (third option on the left side). After specifying repository and credentials (SSH only) choose "Use new project wizard window".
 
 IMPORTANT NOTICE: You CAN'T use the default workspace location you have to switch to the place, where Eclipse cloned your repository (Usually C://[Local user]/git/[project name]). This is a known bug in Eclipse and maybe will be fixed at some point. But if you get an error, when using the default workspace, do the step specified above.
 
-Name the local project and press finish. The project exactly needs JRE version 10 (validated with version 10.0.2). Please note, that neither JRE 8 or older nor the newer JDKs (11.0.2) will work! We have not tested if it may work with JRE 9.
+Name the local project and press finish. The project needs JRE version 10 or newer (validated with version 10.0.2 and 11.0.2). Please note, that JRE 8 or older will not work! We have not tested if it may work with JRE 9.
 
-After finished these steps you should be able to execute the main in de.hpi.mod.sim.env.view.DriveSimFrame
+NOTICE: It seems like you are only able to use Java 11 either after running the program at least one time with Java 10 or after installed both Java versions. We will do more experiments on this and update this README accordingly
+
+After finished these steps you should be able to execute the main in de.hpi.mod.sim.app.App
 
 NOTE: It is strongly suggested to use the latest Eclipse (current version 2018-12) IDE. If you use other IDEs like IntelliJ the resources may be included in a different hierachy and will cause some errors therefore. Especially InteeliJ is known for using some Macros who interfere with the YAKINDU state chart engine, so we suggest again to not use this IDE.
