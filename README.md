@@ -34,7 +34,7 @@ Standardmäßig ist der als letzte hinzugefügte Roboter ausgewählt.
 Mit `A` können Roboter hinzugefügt werden.
 Mit den Pfeiltasten kann die Kamera über das Spielfeld bewegt werden.
 
-###Setup
+### Setup
 
 Either download eclipse from YAKINDU website directly or download latest version from https://www.eclipse.org/downloads/. After succesfully installed go to Help->InstallNewSoftware
 and provide the link to the download repository of YAKINDU state chart tools (Install everything and accept every license). Then checkout the Git repository from source with the option in the Eclipse start screen (third option on the left side). After specifying repository and credentials (SSH only) choose "Use new project wizard window".
