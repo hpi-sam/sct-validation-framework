@@ -43,6 +43,8 @@ IMPORTANT NOTICE: You CAN'T use the default workspace location you have to switc
 
 Name the local project and press finish. The project needs JRE version 10 or newer (validated with version 10.0.2 and 11.0.2). Please note, that JRE 8 or older will not work! We have not tested if it may work with JRE 9.
 
+NOTICE: It seems like you are only able to use Java 11 either after running the program at least one time with Java 10 or after installed both Java versions. We will do more experiments on this and update this README accordingly
+
 After finished these steps you should be able to execute the main in de.hpi.mod.sim.app.App
 
 NOTE: It is strongly suggested to use the latest Eclipse (current version 2018-12) IDE. If you use other IDEs like IntelliJ the resources may be included in a different hierachy and will cause some errors therefore. Especially InteeliJ is known for using some Macros who interfere with the YAKINDU state chart engine, so we suggest again to not use this IDE.
