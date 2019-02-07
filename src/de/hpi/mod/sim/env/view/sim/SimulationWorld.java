@@ -215,19 +215,13 @@ public class SimulationWorld {
     }
 
     private Robot addRobotRunner(AddRobotRunner runner) {
-        try {
-            while (isRefreshing || isUpdating) {
-                wait();
-            }
+        while (isRefreshing || isUpdating) {
+		    // wait();
+		}
 
-            Robot r = runner.run();
-            setHighlightedRobot(r);
-            return r;
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
+		Robot r = runner.run();
+		setHighlightedRobot(r);
+		return r;
     }
 
     /**
@@ -235,19 +229,14 @@ public class SimulationWorld {
      * @param scenario The Scenario to play
      */
     public void playScenario(Scenario scenario) {
-        try {
-            while (isRefreshing || isUpdating) {
-                wait();
-            }
+        while (isRefreshing || isUpdating) {
+		    // wait();
+		}
 
-            if (isRunning()) toggleRunning();
-            sim.getRobots().clear();
+		if (isRunning()) toggleRunning();
+		sim.getRobots().clear();
 
-            scenario.loadScenario(this);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+		scenario.loadScenario(this);
     }
 
     public void setMousePointer(Position mousePointer) {
