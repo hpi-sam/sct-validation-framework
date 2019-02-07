@@ -105,7 +105,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     @Override
     public boolean isBlockedByRobot(Position pos) {
         for (Robot r : robots) {
-            if (r.pos().equals(pos))
+            if (r.pos().equals(pos) || r.oldPos().equals(pos))
                 return true;
         }
         return false;
