@@ -66,6 +66,7 @@ public class SimulationWorld {
      * The highlighted Robot. Null if none
      */
     private Robot highlightedRobot = null;
+    private Robot highlightedRobot2 = null;
 
     private Simulator sim;
 
@@ -260,9 +261,18 @@ public class SimulationWorld {
         highlightedRobot = r;
         refreshHighlightedRobotListeners();
     }
+    
+    public void setHighlightedRobot2(Robot r) {
+		highlightedRobot2 = r;
+		refreshHighlightedRobotListeners();
+	}
 
     public Robot getHighlightedRobot() {
         return highlightedRobot;
+    }
+    
+    public Robot getHighlightedRobot2() {
+        return highlightedRobot2;
     }
     
     public void toggleRunning() {
