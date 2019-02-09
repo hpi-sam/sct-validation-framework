@@ -10,20 +10,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * Calculates the real x and y position, angle and battery
  */
 public class DriveManager implements IRobotActors {
-
-    public static final float
-            DEFAULT_ROTATION_SPEED = .5f;
-    public static final long DEFAULT_UNLOADING_TIME = 1000;
-
-    public static final float BATTERY_FULL = 100;
-    public static final float BATTERY_LOW = 20;
-    public static final float BATTERY_LOSS = .1f;
-    public static final float BATTERY_LOADING_SPEED = .02f;
-
-    private DriveListener listener;
+	
+	private DriveListener listener;
 
     private float x, y, angle;
-    private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*BATTERY_FULL), (int) BATTERY_FULL+1);
 
     private Position targetPosition;
     private Orientation targetFacing;
@@ -38,8 +28,10 @@ public class DriveManager implements IRobotActors {
     private Position oldPosition;
     private Orientation oldFacing;
 
-    private float rotationSpeed = DEFAULT_ROTATION_SPEED;
-    private long unloadingTime = DEFAULT_UNLOADING_TIME;
+    private float rotationSpeed = SimulatorConfig.getDefaultRotationSpeed();
+    private long unloadingTime = SimulatorConfig.getDefaultUnloadingTime();
+    
+    private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
 
 
     public DriveManager(DriveListener listener, Position pos, Orientation facing) {
@@ -115,7 +107,7 @@ public class DriveManager implements IRobotActors {
         }
 
         if (loading) {
-            battery = Math.min(battery + delta * BATTERY_LOADING_SPEED, 100);
+            battery = Math.min(battery + delta * SimulatorConfig.getBatteryLoadingSpeed(), 100);
         }
     }
 
@@ -125,7 +117,7 @@ public class DriveManager implements IRobotActors {
         if (hasPower()) {
             oldPosition = targetPosition;
             targetPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
-            battery -= BATTERY_LOSS;
+            battery -= SimulatorConfig.getBatteryLoss();
             isMoving = true;
         }
     }
@@ -157,7 +149,7 @@ public class DriveManager implements IRobotActors {
     }
 
     private void decreaseBattery() {
-        battery -= BATTERY_LOSS;
+        battery -= SimulatorConfig.getBatteryLoss();
         if (battery < 0)
             battery = 0;
     }
@@ -166,9 +158,9 @@ public class DriveManager implements IRobotActors {
         return battery > 0;
     }
 
-    public boolean isBatteryLow() { return battery < BATTERY_LOW; }
+    public boolean isBatteryLow() { return battery < SimulatorConfig.getBatteryLow(); }
 
-    public boolean isBatteryFull() { return battery >= BATTERY_FULL; }
+    public boolean isBatteryFull() { return battery >= SimulatorConfig.getBatteryFull(); }
 
     public float getBattery() {
         return battery;

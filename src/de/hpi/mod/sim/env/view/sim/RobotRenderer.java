@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.env.view.sim;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.robot.DriveManager;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -30,9 +31,9 @@ public class RobotRenderer {
 
     private void loadImages() {
         try {
-            robotIcon = ImageIO.read(new File("simulator/res/robot.png"));
-            robotHighlightIcon = ImageIO.read(new File("simulator/res/robot-highlight.png"));
-            batteryIcon = ImageIO.read(new File("simulator/res/battery_empty.png"));
+            robotIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToRobotIcon()));
+            robotHighlightIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToHighlightRobotIcon()));
+            batteryIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToEmptyBattery()));
         } catch (IOException e) {
             e.printStackTrace();
         }
