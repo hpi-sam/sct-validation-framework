@@ -50,7 +50,13 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         Position pos = world.toGridPosition(e.getX(), e.getY());
         for (Robot r : world.getRobots()) {
             if (r.getDriveManager().currentPosition().equals(pos)) {
-                world.setHighlightedRobot(r);
+            	if(e.getButton() == MouseEvent.BUTTON1) {
+            		world.setHighlightedRobot(r);
+            	} else if (e.getButton() == MouseEvent.BUTTON3) {
+            		world.setHighlightedRobot2(r);
+            	} else {
+            		world.setHighlightedRobot(r);
+            	}
                 break;
             }
         }

@@ -8,6 +8,7 @@ import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.Scenario;
+import de.hpi.mod.sim.env.view.panels.RobotInfoPanel;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class SimulationWorld {
      * The highlighted Robot. Null if none
      */
     private Robot highlightedRobot = null;
+    private Robot highlightedRobot2 = null;
 
     private Simulator sim;
 
@@ -76,6 +78,7 @@ public class SimulationWorld {
      * Gets called if the highlighted Robot changes
      */
     private List<IHighlightedRobotListener> highlightedRobotListeners = new ArrayList<>();
+    private List<IHighlightedRobotListener> highlightedRobotListeners2 = new ArrayList<>();
 
     /**
      * List of {@link ITimeListener}s.
@@ -130,6 +133,10 @@ public class SimulationWorld {
     public void addHighlightedRobotListener(IHighlightedRobotListener highlightedRobotListener) {
         highlightedRobotListeners.add(highlightedRobotListener);
     }
+    
+    public void addHighlightedRobotListener2(IHighlightedRobotListener highlightedRobotListener2) {
+    	highlightedRobotListeners2.add(highlightedRobotListener2);
+	}
 
     public void addTimeListener(ITimeListener timeListener) {
         timeListeners.add(timeListener);
@@ -260,9 +267,18 @@ public class SimulationWorld {
         highlightedRobot = r;
         refreshHighlightedRobotListeners();
     }
+    
+    public void setHighlightedRobot2(Robot r) {
+		highlightedRobot2 = r;
+		refreshHighlightedRobotListeners();
+	}
 
     public Robot getHighlightedRobot() {
         return highlightedRobot;
+    }
+    
+    public Robot getHighlightedRobot2() {
+        return highlightedRobot2;
     }
     
     public void toggleRunning() {

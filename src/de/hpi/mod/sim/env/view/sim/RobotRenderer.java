@@ -44,14 +44,14 @@ public class RobotRenderer {
             DriveManager drive = r.getDriveManager();
             Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
 
-            boolean highlighted = r.equals(world.getHighlightedRobot());
+            boolean highlighted = r.equals(world.getHighlightedRobot()) || r.equals(world.getHighlightedRobot2());
 
             drawRobot(g, drawPos, drive.getAngle(), highlighted, r.isHasPackage(), r.getBattery() < .1);
         }
 
         // Render additional Info like Targets
         for (Robot r : world.getRobots()) {
-            if (r.equals(world.getHighlightedRobot())) {
+            if (r.equals(world.getHighlightedRobot()) || r.equals(world.getHighlightedRobot2())) {
                 DriveManager drive = r.getDriveManager();
                 Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
                 Point2D targetPos = world.toDrawPosition(r.getTarget());
