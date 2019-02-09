@@ -198,7 +198,7 @@ public class DriveSimFrame extends JFrame {
             lastRefresh = System.currentTimeMillis();
             sim.getWorld().refresh();
             info.onHighlightedRobotChange();
-            info2.onHighlightedRobotChange2();
+            info2.onHighlightedRobotChange();
             scenarioManager.refresh();
         }
 

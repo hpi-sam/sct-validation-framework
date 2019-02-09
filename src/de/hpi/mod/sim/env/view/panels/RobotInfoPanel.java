@@ -55,11 +55,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
 
         var lref = new LabelRefresher(label, template, refresh);
-        if(isRightClickedRobot) {
-        	refresher2.add(lref);
-        } else {
-        	refresher.add(lref);
-        }
+        refresher.add(lref);
         lref.refresh();
 
         add(label);
@@ -71,13 +67,6 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
     @Override
     public void onHighlightedRobotChange() {
         for (LabelRefresher ref : refresher)
-            ref.refresh();
-        repaint();
-    }
-    
-    @Override
-    public void onHighlightedRobotChange2() {
-        for (LabelRefresher ref : refresher2)
             ref.refresh();
         repaint();
     }

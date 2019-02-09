@@ -270,7 +270,7 @@ public class SimulationWorld {
     
     public void setHighlightedRobot2(Robot r) {
 		highlightedRobot2 = r;
-		refreshHighlightedRobotListeners2();
+		refreshHighlightedRobotListeners();
 	}
 
     public Robot getHighlightedRobot() {
@@ -324,10 +324,6 @@ public class SimulationWorld {
 
     private void refreshHighlightedRobotListeners() {
         highlightedRobotListeners.forEach(IHighlightedRobotListener::onHighlightedRobotChange);
-    }
-    
-    private void refreshHighlightedRobotListeners2() {
-        highlightedRobotListeners2.forEach(IHighlightedRobotListener::onHighlightedRobotChange2);
     }
 
     private void refreshTimeListeners() {
