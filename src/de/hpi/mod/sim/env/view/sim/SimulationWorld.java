@@ -291,7 +291,7 @@ public class SimulationWorld {
     public Position toGridPosition(int x, int y) {
         y = (int) (view.getHeight() - y - blockSize / 2);
         int blockX = (int) Math.floor(x / blockSize + offsetX);
-        int blockY = (int) Math.floor(y / blockSize - ServerGridManagement.QUEUE_SIZE + offsetY);
+        int blockY = (int) Math.floor(y / blockSize - SimulatorConfig.QUEUE_SIZE + offsetY);
 
         return new Position(blockX, blockY);
     }
@@ -308,7 +308,7 @@ public class SimulationWorld {
      */
     public Point2D toDrawPosition(float x, float y) {
         float drawX = (x - offsetX) * blockSize;
-        float drawY = view.getHeight() - (y + ServerGridManagement.QUEUE_SIZE + 1.5f - offsetY) * blockSize;
+        float drawY = view.getHeight() - (y + SimulatorConfig.QUEUE_SIZE + 1.5f - offsetY) * blockSize;
         return new Point2D.Float(drawX, drawY);
     }
 

@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.env.robot;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ThreadLocalRandom;
@@ -173,7 +174,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleFinishedUnloading() {
-        boolean needsLoading = manager.getBattery() < DriveManager.BATTERY_LOW;
+        boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
         target = location.getArrivalPositionAtStation(stationID);
         state = RobotState.TO_STATION;

@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.ServerGridManagement;
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.CellType;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -38,7 +39,7 @@ public class GridRenderer {
         int widthInBlocks = (int) (world.getView().getWidth() / blockSize + 2);
         int heightInBlocks = (int) (world.getView().getHeight() / blockSize + 2);
 
-        int stationDepth = ServerGridManagement.QUEUE_SIZE + 1;
+        int stationDepth = SimulatorConfig.QUEUE_SIZE + 1;
 
         for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
             for (int x = (int) blocksOffsetX; x < widthInBlocks + blocksOffsetX; x++) {

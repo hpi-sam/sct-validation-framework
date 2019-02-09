@@ -10,7 +10,8 @@ import de.hpi.mod.sim.env.model.Position;
  */
 public class SimulatorConfig {
 
-    public static final float DEFAULT_ROBOT_MOVE_SPEED = .005f;
+	//You should also change ROBOT_DEFAULT_SPEED_LEVEL accordingly when changing this
+    public static final float DEFAULT_ROBOT_MOVE_SPEED = 0.0025f;
     public static final int CHARGING_STATIONS_IN_USE = 10;
     public static final int SPACE_BETWEEN_CHARGING_STATIONS = 3;
     public static final int MAX_ROBOTS_PER_STATION = 3;
@@ -37,6 +38,7 @@ public class SimulatorConfig {
 	public static final float MIN_BLOCK_SIZE = 5;
 	public static final float MAX_BLOCK_SIZE = 30;
 	
+	//You should also change DEFAULT_ROBOT_MOVE_SPEED accordingly when changing this
 	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 4;
 	public static final float ROBOT_LEVEL_1_SPEED = 0.0005f;
 	public static final float ROBOT_LEVEL_2_SPEED = 0.001f;
