@@ -24,6 +24,7 @@ public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
     private RobotInfoPanel info;
+    private RobotInfoPanel info2;
     private ScenarioPanel scenario;
     private ConfigPanel config;
 
@@ -46,7 +47,8 @@ public class DriveSimFrame extends JFrame {
 
         scenarioManager = new ScenarioManager(world);
 
-        info = new RobotInfoPanel(world);
+        info = new RobotInfoPanel(world, false);
+        info2 = new RobotInfoPanel(world, true);
         config = new ConfigPanel();
         var control = new ControlPanel(world);
         var test = new TestPanel(scenarioManager);
@@ -60,11 +62,14 @@ public class DriveSimFrame extends JFrame {
         loadFile(test, SimulatorConfig.getTestFileName());
 
         world.addHighlightedRobotListener(info);
+        world.addHighlightedRobotListener2(info2);
         world.addTimeListener(control);
         scenarioManager.addTestListener(test);
 
         info.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info"));
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
+        info2.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
         config.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
         test.setBorder(BorderFactory.createTitledBorder(
@@ -84,7 +89,8 @@ public class DriveSimFrame extends JFrame {
         northPanel.add(timer);
 
         side.add(northPanel, BorderLayout.NORTH);
-        side.add(info, BorderLayout.CENTER);
+        side.add(info, BorderLayout.WEST);
+        side.add(info2, BorderLayout.CENTER);
         side.add(control, BorderLayout.SOUTH);
 
         add(sim, BorderLayout.CENTER);
@@ -192,6 +198,7 @@ public class DriveSimFrame extends JFrame {
             lastRefresh = System.currentTimeMillis();
             sim.getWorld().refresh();
             info.onHighlightedRobotChange();
+            info2.onHighlightedRobotChange2();
             scenarioManager.refresh();
         }
 

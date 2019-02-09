@@ -16,15 +16,21 @@ import java.util.List;
 public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener {
 
     private SimulationWorld world;
+    private boolean isRightClickedRobot = false;
 
     /**
      * List of refreshable information
      */
     private List<LabelRefresher> refresher = new ArrayList<>();
+    private List<LabelRefresher> refresher2 = new ArrayList<>();
 
-
-    public RobotInfoPanel(SimulationWorld world) {
+    /**
+     * @param world We need to ask the world for the reference to the highlighted Robot constantly to be able to react on changes.
+     * @param isLRightClickedRobot If we monitor the right clicked Robot world.highlightedRobot2 is the one to be observed otherwise world.highlightedRobot
+     */
+    public RobotInfoPanel(SimulationWorld world, boolean isRightClickedRobot) {
         this.world = world;
+        this.isRightClickedRobot = isRightClickedRobot;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         setPreferredSize(new Dimension(200, -1));
@@ -49,7 +55,11 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
 
         var lref = new LabelRefresher(label, template, refresh);
-        refresher.add(lref);
+        if(isRightClickedRobot) {
+        	refresher2.add(lref);
+        } else {
+        	refresher.add(lref);
+        }
         lref.refresh();
 
         add(label);
@@ -61,6 +71,13 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
     @Override
     public void onHighlightedRobotChange() {
         for (LabelRefresher ref : refresher)
+            ref.refresh();
+        repaint();
+    }
+    
+    @Override
+    public void onHighlightedRobotChange2() {
+        for (LabelRefresher ref : refresher2)
             ref.refresh();
         repaint();
     }
@@ -105,10 +122,17 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
          * Asks the getter for the value of the highlighted Robot and renders it to the label
          */
         public void refresh() {
-            if (world.getHighlightedRobot() == null)
+        	Robot robot;
+        	
+        	if(isRightClickedRobot) {
+        		robot = world.getHighlightedRobot2();
+        	} else {
+        		robot = world.getHighlightedRobot();
+        	}
+            if (robot == null)
                 label.setText(template + ": -");
             else
-                label.setText(template + ": " + runnable.run(world.getHighlightedRobot()));
+                label.setText(template + ": " + runnable.run(robot));
         }
     }
 
