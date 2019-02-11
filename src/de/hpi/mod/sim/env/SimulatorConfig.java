@@ -2,16 +2,11 @@ package de.hpi.mod.sim.env;
 
 import de.hpi.mod.sim.env.model.Position;
 /**
- * TODO: Configuration data should be removed from Simulator and added here
- * TODO: Should be an Instance and not static
- *
  * Contains all "magic-numbers" set in the Simulation.
  * Can be set by the view.
  */
 public class SimulatorConfig {
 
-	//You should also change ROBOT_DEFAULT_SPEED_LEVEL accordingly when changing this
-    public static final float DEFAULT_ROBOT_MOVE_SPEED = 0.0025f;
     public static final int CHARGING_STATIONS_IN_USE = 10;
     public static final int SPACE_BETWEEN_CHARGING_STATIONS = 3;
     public static final int MAX_ROBOTS_PER_STATION = 3;
@@ -38,8 +33,6 @@ public class SimulatorConfig {
 	public static final float MIN_BLOCK_SIZE = 5;
 	public static final float MAX_BLOCK_SIZE = 30;
 	
-	//You should also change DEFAULT_ROBOT_MOVE_SPEED accordingly when changing this
-	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 4;
 	public static final float ROBOT_LEVEL_1_SPEED = 0.0005f;
 	public static final float ROBOT_LEVEL_2_SPEED = 0.001f;
 	public static final float ROBOT_LEVEL_3_SPEED = 0.0015f;
@@ -50,6 +43,8 @@ public class SimulatorConfig {
 	public static final float ROBOT_LEVEL_8_SPEED = 0.0075f;
 	public static final float ROBOT_LEVEL_9_SPEED = 0.009f;
 	public static final float ROBOT_LEVEL_10_SPEED = 0.011f;
+	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 4;
+	public static final float DEFAULT_ROBOT_MOVE_SPEED = ROBOT_LEVEL_4_SPEED;
 	
 	/**
      * The number of cells in a queue.

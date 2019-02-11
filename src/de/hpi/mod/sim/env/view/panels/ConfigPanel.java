@@ -118,11 +118,11 @@ public class ConfigPanel extends JPanel {
     	}
 	}
 
-	private int discreteValueOf(float f, float minValue, float maxValue, int maxRange) {
+	private int discreteValueOf(float sliderValue, float minValue, float maxValue, int maxRange) {
 		int level = 0; 
 		
 		for(int i=1; i<=maxRange; i++) {
-			if(f*i >= (maxValue-minValue)) {
+			if(sliderValue*i >= (maxValue-minValue)) {
 				level = maxRange-i+1;
 				break;
 			}
