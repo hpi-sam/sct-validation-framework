@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.env.view.sim;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.robot.DriveManager;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -30,23 +31,23 @@ public class RobotRenderer {
 
     private void loadImages() {
         try {
-            robotIcon = ImageIO.read(new File("simulator/res/robot.png"));
-            robotHighlightIcon = ImageIO.read(new File("simulator/res/robot-highlight.png"));
-            batteryIcon = ImageIO.read(new File("simulator/res/battery_empty.png"));
+            robotIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToRobotIcon()));
+            robotHighlightIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToHighlightRobotIcon()));
+            batteryIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToEmptyBattery()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    void render(Graphics g) {
+    void render(Graphics graphic) {
         // Draw Robots
-        for (Robot r : world.getRobots()) {
-            DriveManager drive = r.getDriveManager();
+        for (Robot robot : world.getRobots()) {
+            DriveManager drive = robot.getDriveManager();
             Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
 
-            boolean highlighted = r.equals(world.getHighlightedRobot()) || r.equals(world.getHighlightedRobot2());
+            boolean highlighted = robot.equals(world.getHighlightedRobot()) || robot.equals(world.getHighlightedRobot2());
 
-            drawRobot(g, drawPos, drive.getAngle(), highlighted, r.isHasPackage(), r.getBattery() < .1);
+            drawRobot(graphic, drawPos, drive.getAngle(), highlighted, robot.isHasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets
@@ -56,12 +57,12 @@ public class RobotRenderer {
                 Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
                 Point2D targetPos = world.toDrawPosition(r.getTarget());
 
-                drawTarget(g, drawPos, targetPos);
+                drawTarget(graphic, drawPos, targetPos);
             }
         }
     }
 
-    private void drawRobot(Graphics g, Point2D drawPos, float angle, boolean highlighted, boolean hasPackage, boolean batteryEmpty) {
+    private void drawRobot(Graphics graphic, Point2D drawPos, float angle, boolean highlighted, boolean hasPackage, boolean batteryEmpty) {
         float blockSize = world.getBlockSize();
         int translateX = (int) drawPos.getX();
         int translateY = (int) drawPos.getY();
@@ -74,24 +75,24 @@ public class RobotRenderer {
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
         if (hasPackage) {
-            g.setColor(Color.green);
-            g.fillArc((int) (drawPos.getX() - blockSize * .1), (int) (drawPos.getY() - blockSize * .1),
+            graphic.setColor(Color.green);
+            graphic.fillArc((int) (drawPos.getX() - blockSize * .1), (int) (drawPos.getY() - blockSize * .1),
                     (int) (blockSize * 1.2), (int) (blockSize * 1.2), 0, 360);
         }
 
-        g.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
+        graphic.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
 
         if (batteryEmpty) {
-            g.drawImage(batteryIcon, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
+            graphic.drawImage(batteryIcon, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
         }
     }
 
-    private void drawTarget(Graphics g, Point2D drawPos, Point2D targetPos) {
-        Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.RED);
+    private void drawTarget(Graphics graphic, Point2D drawPos, Point2D targetPos) {
+        Graphics2D Graphic2D = (Graphics2D) graphic;
+        graphic.setColor(Color.RED);
 
         int offset = (int) world.getBlockSize() / 2;
-        g2d.drawLine(
+        Graphic2D.drawLine(
                 (int) drawPos.getX() + offset,
                 (int) drawPos.getY() + offset,
                 (int) targetPos.getX() + offset,

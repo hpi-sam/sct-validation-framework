@@ -9,16 +9,10 @@ import java.util.*;
 
 public class Simulator implements IRobotController, ILocation, IScanner {
 
-    public static final int DEFAULT_UNLOADING_RANGE = 10;
-
     private List<Robot> robots = new ArrayList<>();
     private ServerGridManagement grid;
     private IRobotStationDispatcher stations;
-
-    /**
-     * TODO
-     */
-    private int unloadingRange = DEFAULT_UNLOADING_RANGE;
+    private int unloadingRange = SimulatorConfig.getDefaultUnloadingRange();
 
 
     public Simulator() {
@@ -153,8 +147,8 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     }
 
     private int getRandomUnloadingID() {
-        Random r = new Random();
-        return r.nextInt(unloadingRange);
+        Random randomNumberGenerator = new Random();
+        return randomNumberGenerator.nextInt(unloadingRange);
     }
 
     @Override

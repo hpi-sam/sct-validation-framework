@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.env.view;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.NewRobot;
 import de.hpi.mod.sim.env.view.model.Scenario;
@@ -96,8 +97,8 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
     }
 
     private void loadIcons() {
-        playIcon = new ImageIcon("res/play.png");
-        pauseIcon = new ImageIcon("res/pause.png");
+        playIcon = new ImageIcon(SimulatorConfig.getStringPathToPlayIcon());
+        pauseIcon = new ImageIcon(SimulatorConfig.getStringPathToPauseIcon());
     }
 
     private void openKeyDialog() {
