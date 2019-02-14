@@ -57,7 +57,7 @@ public class DriveSimFrame extends JFrame {
     }
 
 	private void setDesignOfMainWindow() {
-		JPanel northPanel = new JPanel(new GridLayout(0, 1));
+		JPanel northPanel = new JPanel((new GridLayout(0,1)));
 		addPanelsToNorthPanel(northPanel);
         addPanelsToSidePanel(northPanel);
         add(sim, BorderLayout.CENTER);
@@ -82,14 +82,14 @@ public class DriveSimFrame extends JFrame {
 	private void addPanelsToSidePanel(JPanel northPanel) {
 		side.add(northPanel, BorderLayout.NORTH);
         side.add(info, BorderLayout.WEST);
-        side.add(info2, BorderLayout.CENTER);
-        side.add(control, BorderLayout.SOUTH);
+        side.add(info2, BorderLayout.EAST);
 	}
 
 	private void addPanelsToNorthPanel(JPanel northPanel) {
 		northPanel.add(test);
         northPanel.add(scenario);
         northPanel.add(config);
+        northPanel.add(control);
         northPanel.add(timer);
 	}
 
@@ -101,6 +101,7 @@ public class DriveSimFrame extends JFrame {
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
         config.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
+        config.setPreferredSize(new Dimension(10,10));
         test.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
         scenario.setBorder(BorderFactory.createTitledBorder(

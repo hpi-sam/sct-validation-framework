@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env.view.panels;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,9 +24,9 @@ public class ConfigPanel extends JPanel {
     public ConfigPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        addConfigElement("Move Speed", "In cells per milliseconds",
-                0, .05f, 10000,
-                SimulatorConfig.DEFAULT_ROBOT_MOVE_SPEED,
+        addConfigElement("Move Speed", "Recent robot speed level",
+                SimulatorConfig.ROBOT_MIN_SPEED_LEVEL, SimulatorConfig.ROBOT_MAX_SPEED_LEVEL,
+                SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL,
                 SimulatorConfig::setRobotMoveSpeed);
     }
 
@@ -36,8 +37,7 @@ public class ConfigPanel extends JPanel {
      * @param initValue The default Value
      * @param setter The setter to change the value
      */
-    private void addConfigElement(String name, String toolTip, float minValue, float maxValue,
-                                  float multiplier, float initValue, ValueSetter setter) {
+    private void addConfigElement(String name, String toolTip, int minValue, int maxValue, int initValue, ValueSetter setter) {
 
         /*
          * Panel:
@@ -60,19 +60,21 @@ public class ConfigPanel extends JPanel {
         valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
 
         // Slider (with tooltip) to input changes
-        JSlider valueSlider = new JSlider((int) (minValue * multiplier),
-                (int) (maxValue * multiplier), (int) (initValue * multiplier));
+        JSlider valueSlider = new JSlider(minValue, maxValue, initValue);
         setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
         valueSlider.setToolTipText(toolTip);
+        valueSlider.setEnabled(SimulationWorld.isRunning());
         valueSlider.addChangeListener(e -> {
-        	setter.setValue(toMagicSpeedValue(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
-            valueField.setText(Integer.toString(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
+        	valueSlider.setEnabled(SimulationWorld.isRunning());
+        	setter.setValue(toMagicSpeedValue(valueSlider.getValue()));
+            valueField.setText(Integer.toString(valueSlider.getValue()));
         });
 
         // Button to reset
         JButton button = new JButton("Reset");
         button.addActionListener(e -> {
-            valueSlider.setValue((int) (initValue * multiplier));
+        	valueSlider.setEnabled(SimulationWorld.isRunning());
+            valueSlider.setValue(initValue);
             valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
             setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
         });

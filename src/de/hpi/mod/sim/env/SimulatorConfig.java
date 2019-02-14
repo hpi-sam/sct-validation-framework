@@ -43,7 +43,9 @@ public class SimulatorConfig {
 	public static final float ROBOT_LEVEL_8_SPEED = 0.0075f;
 	public static final float ROBOT_LEVEL_9_SPEED = 0.009f;
 	public static final float ROBOT_LEVEL_10_SPEED = 0.011f;
+	public static final int ROBOT_MIN_SPEED_LEVEL = 1;
 	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 4;
+	public static final int ROBOT_MAX_SPEED_LEVEL = 10;
 	public static final float DEFAULT_ROBOT_MOVE_SPEED = ROBOT_LEVEL_4_SPEED;
 	
 	/**
