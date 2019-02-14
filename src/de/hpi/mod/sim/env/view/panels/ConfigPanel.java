@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env.view.panels;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
@@ -15,13 +16,18 @@ import java.awt.*;
  *
  * No other class must change the values, since this class does not listen to changes
  */
-public class ConfigPanel extends JPanel {
+public class ConfigPanel extends JPanel implements ITimeListener{
 
 	private int currentLevel = SimulatorConfig.getRobotDefaultSpeedLevel();
+	private SimulationWorld world;
+	private JButton playButton;
+	private ImageIcon playIcon;
+	private ImageIcon pauseIcon;
     /**
      * Initializes the Panel and adds Config Elements
      */
-    public ConfigPanel() {
+    public ConfigPanel(SimulationWorld world) {
+    	this.world = world;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         addConfigElement("Move Speed", "Recent robot speed level",
@@ -36,6 +42,7 @@ public class ConfigPanel extends JPanel {
      * @param toolTip The tooltip to show on mouse over
      * @param initValue The default Value
      * @param setter The setter to change the value
+     * @param world 
      */
     private void addConfigElement(String name, String toolTip, int minValue, int maxValue, int initValue, ValueSetter setter) {
 
@@ -71,25 +78,44 @@ public class ConfigPanel extends JPanel {
         });
 
         // Button to reset
-        JButton button = new JButton("Reset");
-        button.addActionListener(e -> {
+        JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
         	valueSlider.setEnabled(SimulationWorld.isRunning());
             valueSlider.setValue(initValue);
             valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
             setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
         });
+        
+        //Play/Pause button
+        loadIcons();
+
+        playButton = new JButton();
+        refresh();  // Refresh to set icon
+        playButton.addActionListener(e -> world.toggleRunning());
+        add(playButton);
 
         input.add(valueField, BorderLayout.WEST);
         input.add(valueSlider, BorderLayout.CENTER);
-        input.add(button, BorderLayout.EAST);
+        //input.add(resetButton, BorderLayout.EAST);
+        
+        JPanel buttons = new JPanel(new GridLayout(0,1));
+        buttons.add(resetButton);
+        buttons.add(playButton);
+        input.add(buttons, BorderLayout.EAST);
 
         root.add(label, BorderLayout.NORTH);
         root.add(input, BorderLayout.CENTER);
 
         add(root);
     }
+   
     
-    public int getCurrentLevel() {
+    private void loadIcons() {
+    	playIcon = new ImageIcon(SimulatorConfig.getStringPathToPlayIcon());
+        pauseIcon = new ImageIcon(SimulatorConfig.getStringPathToPauseIcon());
+	}
+
+	public int getCurrentLevel() {
     	return currentLevel;
     }
 
@@ -135,5 +161,14 @@ public class ConfigPanel extends JPanel {
 
 	private interface ValueSetter {
         void setValue(float value);
+    }
+
+	@Override
+    public void refresh() {
+        if (world.isRunning()) {
+        	playButton.setIcon(pauseIcon);
+        } else {
+        	playButton.setIcon(playIcon);
+        }
     }
 }

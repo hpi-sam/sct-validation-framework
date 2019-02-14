@@ -31,7 +31,7 @@ public class DriveSimFrame extends JFrame {
     private long lastFrame;
     private long lastRefresh;
     private boolean running = true;
-	private ControlPanel control;
+	// private ControlPanel control;
 	private TestPanel test;
 	private TimerPanel timer;
 	private JPanel side;
@@ -81,7 +81,7 @@ public class DriveSimFrame extends JFrame {
 
 	private void addPanelsToSidePanel(JPanel northPanel) {
 		side.add(northPanel, BorderLayout.NORTH);
-		side.add(control, BorderLayout.SOUTH);
+		// side.add(control, BorderLayout.SOUTH);
         side.add(info, BorderLayout.WEST);
         side.add(info2, BorderLayout.EAST);
 	}
@@ -114,7 +114,7 @@ public class DriveSimFrame extends JFrame {
 	private void addListeners() {
 		world.addHighlightedRobotListener(info);
         world.addHighlightedRobotListener2(info2);
-        world.addTimeListener(control);
+        world.addTimeListener(config);
         scenarioManager.addTestListener(test);
 	}
 
@@ -122,8 +122,8 @@ public class DriveSimFrame extends JFrame {
 		side = new JPanel();
 		info = new RobotInfoPanel(world, false);
         info2 = new RobotInfoPanel(world, true);
-        config = new ConfigPanel();
-        control = new ControlPanel(world);
+        config = new ConfigPanel(world);
+        // control = new ControlPanel(world);
         test = new TestPanel(scenarioManager);
         timer = new TimerPanel();
         scenario = new ScenarioPanel(scenarioManager, timer);
