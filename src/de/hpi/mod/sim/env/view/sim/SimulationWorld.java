@@ -113,8 +113,8 @@ public class SimulationWorld {
         if (running) {
             try {
                 isUpdating = true;
-                for (Robot r : sim.getRobots()) {
-                    r.getDriveManager().update(delta);
+                for (Robot robot : sim.getRobots()) {
+                    robot.getDriveManager().update(delta);
                 }
                 isUpdating = false;
                 notifyAll();

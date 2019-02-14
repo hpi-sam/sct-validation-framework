@@ -10,7 +10,7 @@ public class SimulatorConfig {
     public static final int CHARGING_STATIONS_IN_USE = 10;
     public static final int SPACE_BETWEEN_CHARGING_STATIONS = 3;
     public static final int MAX_ROBOTS_PER_STATION = 3;
-    public static final int SCENARIO_PASSING_TIME = 60;
+    public static final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
     public static final Position FIRST_CHARGING_STATION_TOP = new Position(0,-2);
     public static final String TEST_FILE_NAME = "Tests";
     public static final String STRING_PATH_TO_ROBOT_ICON = "simulator/res/robot.png";

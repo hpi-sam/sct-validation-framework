@@ -147,8 +147,8 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     }
 
     private int getRandomUnloadingID() {
-        Random r = new Random();
-        return r.nextInt(unloadingRange);
+        Random randomNumberGenerator = new Random();
+        return randomNumberGenerator.nextInt(unloadingRange);
     }
 
     @Override
