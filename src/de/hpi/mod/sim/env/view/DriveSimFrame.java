@@ -81,6 +81,7 @@ public class DriveSimFrame extends JFrame {
 
 	private void addPanelsToSidePanel(JPanel northPanel) {
 		side.add(northPanel, BorderLayout.NORTH);
+		side.add(control, BorderLayout.SOUTH);
         side.add(info, BorderLayout.WEST);
         side.add(info2, BorderLayout.EAST);
 	}
@@ -89,7 +90,6 @@ public class DriveSimFrame extends JFrame {
 		northPanel.add(test);
         northPanel.add(scenario);
         northPanel.add(config);
-        northPanel.add(control);
         northPanel.add(timer);
 	}
 
