@@ -5,6 +5,7 @@ import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Simulator implements IRobotController, ILocation, IScanner {
@@ -146,9 +147,9 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         return grid.getUnloadingPositionFromID(unloadingID);
     }
 
-    private int getRandomUnloadingID() {
-        Random randomNumberGenerator = new Random();
-        return randomNumberGenerator.nextInt(unloadingRange);
+    private int getRandomUnloadingID(Position robotPosition) {
+        int id = ThreadLocalRandom.current().nextInt(unloadingRange);
+        return id;
     }
 
     @Override
@@ -157,8 +158,8 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     }
 
     @Override
-    public int getPackageID(int stationID) {
-        return getRandomUnloadingID();
+    public int getPackageID(int stationID, Position robotPosition) {
+        return getRandomUnloadingID(robotPosition);
     }
 
     public void close() {

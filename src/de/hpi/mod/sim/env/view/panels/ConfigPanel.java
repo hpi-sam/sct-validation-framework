@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Panel that lets the user set und reset configurations.<br>
+ * Panel that lets the user set and reset configurations.<br>
  * Currently supports:
  * <ul>
  *     <li>Move Speed</li>
@@ -23,6 +23,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
 	private JButton playButton;
 	private ImageIcon playIcon;
 	private ImageIcon pauseIcon;
+	private boolean changeable = false;
     /**
      * Initializes the Panel and adds Config Elements
      */
@@ -70,20 +71,21 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         JSlider valueSlider = new JSlider(minValue, maxValue, initValue);
         setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
         valueSlider.setToolTipText(toolTip);
-        valueSlider.setEnabled(SimulationWorld.isRunning());
+        valueSlider.setEnabled(true); //in the begin the speed slider should be changeable, even if not afterwards while paused simulation
         valueSlider.addChangeListener(e -> {
-        	valueSlider.setEnabled(SimulationWorld.isRunning());
         	setter.setValue(toMagicSpeedValue(valueSlider.getValue()));
             valueField.setText(Integer.toString(valueSlider.getValue()));
+            currentLevel = valueSlider.getValue();
         });
 
         // Button to reset
         JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(e -> {
-        	valueSlider.setEnabled(SimulationWorld.isRunning());
+        	valueSlider.setEnabled(true); //after reset the speed slider should be changeable, even if not afterwards while paused simulation
             valueSlider.setValue(initValue);
             valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
             setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
+            currentLevel = SimulatorConfig.getRobotDefaultSpeedLevel();
         });
         
         //Play/Pause button
@@ -91,7 +93,11 @@ public class ConfigPanel extends JPanel implements ITimeListener{
 
         playButton = new JButton();
         refresh();  // Refresh to set icon
-        playButton.addActionListener(e -> world.toggleRunning());
+        playButton.addActionListener(e -> {
+        	world.toggleRunning();
+        	changeable = !changeable;
+        	valueSlider.setEnabled(changeable);
+        });
         add(playButton);
 
         input.add(valueField, BorderLayout.WEST);
@@ -144,19 +150,6 @@ public class ConfigPanel extends JPanel implements ITimeListener{
 		default:
 			return (float) 0;
     	}
-	}
-
-	private int discreteValueOf(float sliderValue, float minValue, float maxValue, int maxRange) {
-		int level = 0; 
-		
-		for(int i=1; i<=maxRange; i++) {
-			if(sliderValue*i >= (maxValue-minValue)) {
-				level = maxRange-i+1;
-				break;
-			}
-		}
-		currentLevel = level;
-		return currentLevel;
 	}
 
 	private interface ValueSetter {

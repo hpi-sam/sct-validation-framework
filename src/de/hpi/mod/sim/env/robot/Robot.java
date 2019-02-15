@@ -159,7 +159,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	
     	if(now < System.currentTimeMillis() - delay)
         {
-    		packageID = scanner.getPackageID(stationID);
+    		packageID = scanner.getPackageID(stationID, this.pos());
     		hasPackage = true;
             target = location.getUnloadingPositionFromID(packageID);
             dispatcher.reportLeaveStation(robotID, stationID);
