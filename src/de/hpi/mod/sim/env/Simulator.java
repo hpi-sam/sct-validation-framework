@@ -160,9 +160,8 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         } else {
         	id = ThreadLocalRandom.current().nextInt(-unloadingRange, 0);
         }
-        System.out.println(id);
         if(id!= 0) {
-        	return -30;
+        	return id;
         } else {
         	return id + 1;
         }

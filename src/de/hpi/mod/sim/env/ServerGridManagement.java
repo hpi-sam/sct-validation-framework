@@ -274,11 +274,6 @@ public class ServerGridManagement implements ISensorDataProvider {
     	
     	y = (Math.abs(unloadingID) % SimulatorConfig.MAP_HEIGHT) * 3 + 4;
     	x = unloadingID / SimulatorConfig.MAP_HEIGHT * 3;
-    	
-    	System.out.print("y-coordinate: ");
-    	System.out.println(y);
-    	System.out.print("x-coordinate: ");
-    	System.out.println(x);
         return new Position(x, y);
     }
 
