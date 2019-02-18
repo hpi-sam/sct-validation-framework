@@ -23,7 +23,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
 	private JButton playButton;
 	private ImageIcon playIcon;
 	private ImageIcon pauseIcon;
-	private boolean changeable = false;
+	private boolean changeable = true;
     /**
      * Initializes the Panel and adds Config Elements
      */
@@ -95,8 +95,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         refresh();  // Refresh to set icon
         playButton.addActionListener(e -> {
         	world.toggleRunning();
-        	changeable = !changeable;
-        	valueSlider.setEnabled(changeable);
+        	valueSlider.setEnabled(world.isRunning());
         });
         add(playButton);
 

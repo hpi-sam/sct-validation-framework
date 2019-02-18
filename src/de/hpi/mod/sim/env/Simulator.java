@@ -148,8 +148,24 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     }
 
     private int getRandomUnloadingID(Position robotPosition) {
-        int id = ThreadLocalRandom.current().nextInt(unloadingRange);
-        return id;
+        int id = ThreadLocalRandom.current().nextInt(100);
+        if(id > 50) {
+        	id = ThreadLocalRandom.current().nextInt(unloadingRange/2, unloadingRange);
+        } else if (id > 25) {
+        	id = ThreadLocalRandom.current().nextInt(unloadingRange/4, unloadingRange/2);
+        } else if (id > 10) {
+        	id = ThreadLocalRandom.current().nextInt(unloadingRange/7, unloadingRange/4);
+        } else if (id > 5) {
+        	id = ThreadLocalRandom.current().nextInt(0, unloadingRange/7);
+        } else {
+        	id = ThreadLocalRandom.current().nextInt(-unloadingRange, 0);
+        }
+        System.out.println(id);
+        if(id!= 0) {
+        	return -30;
+        } else {
+        	return id + 1;
+        }
     }
 
     @Override
