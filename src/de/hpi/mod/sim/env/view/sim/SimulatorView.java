@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.env.view.sim;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 
@@ -19,6 +20,9 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     private RobotRenderer robot;
 
     private SimulationWorld world;
+    
+    private int currentHeight;
+    private int currentWidth;
 
 
     public SimulatorView() {
@@ -43,9 +47,25 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         // Draw Grid
         grid.render(g);
         robot.render(g);
+        
+        //Refresh simulation properties
+        refreshSimulationSize();
+        refreshSimulationProperties();
     }
 
-    @Override
+    private void refreshSimulationProperties() {
+    	float blockSize = SimulatorConfig.getDefaultBlockSize();
+    	int heightBlocks = (int) (currentHeight/blockSize);
+    	int widthBlocks = (int) (currentWidth/blockSize);
+    	
+    	SimulatorConfig.setChargingStationsInUse(widthBlocks/SimulatorConfig.getSpaceBetweenChargingStations());
+    	//SimulatorConfig.setMapHeight(heightBlocks);
+    	int unloadingRange = (widthBlocks/3)*((heightBlocks-SimulatorConfig.getQueueSize())/3);
+    	SimulatorConfig.setUnloadingRange(unloadingRange);
+    	
+	}
+
+	@Override
     public void mouseClicked(MouseEvent e) {
         Position pos = world.toGridPosition(e.getX(), e.getY());
         for (Robot r : world.getRobots()) {
@@ -84,5 +104,11 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     @Override
     public void mouseMoved(MouseEvent e) {
         world.setMousePointer(world.toGridPosition(e.getX(), e.getY()));
+    }
+
+    private void refreshSimulationSize() {
+    	Rectangle r = this.getBounds();
+    	currentHeight = r.height;
+    	currentWidth = r.width;
     }
 }

@@ -20,7 +20,6 @@ public class ScenarioManager {
     private List<TestScenario> tests = new ArrayList<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
-    private static int maxStations = SimulatorConfig.getChargingStationsInUse();
 
 
     public ScenarioManager(SimulationWorld world) {
@@ -81,6 +80,7 @@ public class ScenarioManager {
     	
     	@Override
     	public List<NewRobot> initializeScenario(){
+    		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
     		List<NewRobot> newRobots = new ArrayList<>();
@@ -103,6 +103,7 @@ public class ScenarioManager {
     	
     	@Override
     	public List<NewRobot> initializeScenario(){
+    		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
     		List<NewRobot> newRobots = new ArrayList<>();
@@ -128,6 +129,7 @@ public class ScenarioManager {
     	
     	@Override
     	public List<NewRobot> initializeScenario(){
+    		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
     		List<NewRobot> newRobots = new ArrayList<>();
@@ -153,6 +155,7 @@ public class ScenarioManager {
     	
     	@Override
     	public List<NewRobot> initializeScenario(){
+    		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
     		List<NewRobot> newRobots = new ArrayList<>();

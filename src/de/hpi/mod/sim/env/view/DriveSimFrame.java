@@ -36,6 +36,8 @@ public class DriveSimFrame extends JFrame {
 	private TimerPanel timer;
 	private JPanel side;
 	private SimulationWorld world;
+	
+	
 
 
     public DriveSimFrame() {

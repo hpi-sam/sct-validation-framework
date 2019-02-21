@@ -13,7 +13,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     private List<Robot> robots = new ArrayList<>();
     private ServerGridManagement grid;
     private IRobotStationDispatcher stations;
-    private int unloadingRange = SimulatorConfig.getDefaultUnloadingRange();
+    private int unloadingRange = SimulatorConfig.getUnloadingRange();
 
 
     public Simulator() {
