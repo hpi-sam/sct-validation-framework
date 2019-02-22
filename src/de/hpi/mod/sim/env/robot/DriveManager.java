@@ -10,20 +10,10 @@ import java.util.concurrent.ThreadLocalRandom;
  * Calculates the real x and y position, angle and battery
  */
 public class DriveManager implements IRobotActors {
-
-    public static final float
-            DEFAULT_ROTATION_SPEED = .5f;
-    public static final long DEFAULT_UNLOADING_TIME = 1000;
-
-    public static final float BATTERY_FULL = 100;
-    public static final float BATTERY_LOW = 20;
-    public static final float BATTERY_LOSS = .1f;
-    public static final float BATTERY_LOADING_SPEED = .02f;
-
-    private DriveListener listener;
+	
+	private DriveListener listener;
 
     private float x, y, angle;
-    private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*BATTERY_FULL), (int) BATTERY_FULL+1);
 
     private Position targetPosition;
     private Orientation targetFacing;
@@ -38,8 +28,10 @@ public class DriveManager implements IRobotActors {
     private Position oldPosition;
     private Orientation oldFacing;
 
-    private float rotationSpeed = DEFAULT_ROTATION_SPEED;
-    private long unloadingTime = DEFAULT_UNLOADING_TIME;
+    private float rotationSpeed = SimulatorConfig.getDefaultRotationSpeed();
+    private long unloadingTime = SimulatorConfig.getDefaultUnloadingTime();
+    
+    private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
 
 
     public DriveManager(DriveListener listener, Position pos, Orientation facing) {
@@ -54,70 +46,90 @@ public class DriveManager implements IRobotActors {
     }
 
     public void update(float delta) {
-        if (isMoving) {  // Moving
-            int deltaX = targetPosition.getX() - oldPosition.getX();
-            int deltaY = targetPosition.getY() - oldPosition.getY();
-
-            if (deltaY != 0) {
-                y += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaY);
-
-                // If y moved over target
-                // TODO Remove code repetition (Not DRY enough)
-                if (deltaY > 0 && y >= targetPosition.getY() ||
-                        deltaY < 0 && y <= targetPosition.getY()) {
-                    y = targetPosition.getY();
-                    oldPosition = targetPosition;
-                    isMoving = false;
-                    listener.actionCompleted();
-                }
-            } else if (deltaX != 0) {
-                x += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaX);
-
-                // If x moved over target
-                if (deltaX > 0 && x >= targetPosition.getX() ||
-                        deltaX < 0 && x <= targetPosition.getX()) {
-                    x = targetPosition.getX();
-                    oldPosition = targetPosition;
-                    isMoving = false;
-                    listener.actionCompleted();
-                }
-            }
-        } else if (isTurningLeft) {  // Turning Left
-            float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
-            while (deltaAngle > 0) deltaAngle -= 360;
-
-            angle += Math.copySign(rotationSpeed * delta, deltaAngle);
-
-            if (angle <= targetFacing.getAngle()) {
-                angle = targetFacing.getAngle();
-                oldFacing = targetFacing;
-                isTurningLeft = false;
-                listener.actionCompleted();
-            }
-        } else if (isTurningRight) {  // Turning Right
-            float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
-            while (deltaAngle < 0) deltaAngle += 360;
-
-            angle += Math.copySign(rotationSpeed * delta, deltaAngle);
-            while (angle < 0) angle += 360;
-
-            if (angle >= targetFacing.getAngle()) {
-                angle = targetFacing.getAngle();
-                oldFacing = targetFacing;
-                isTurningRight = false;
-                listener.actionCompleted();
-            }
-        } else if (isUnloading) {  // Unloading
-            if (System.currentTimeMillis() - unloadingStartTime > unloadingTime) {
-                isUnloading = false;
-                listener.unloadingCompleted();
-            }
+        if (isMoving) {
+            move(delta);
+        } else if (isTurningLeft) { 
+            turnLeft(delta);
+        } else if (isTurningRight) {
+            turnRight(delta);
+        } else if (isUnloading) {
+            unload();
         }
 
         if (loading) {
-            battery = Math.min(battery + delta * BATTERY_LOADING_SPEED, 100);
+            loadBattery(delta);
         }
     }
+
+	private void loadBattery(float delta) {
+		battery = Math.min(battery + delta * SimulatorConfig.getBatteryLoadingSpeed(), 100);
+	}
+
+	private void unload() {
+		if (System.currentTimeMillis() - unloadingStartTime > unloadingTime) {
+		    isUnloading = false;
+		    listener.unloadingCompleted();
+		}
+	}
+
+	private void turnRight(float delta) {
+		float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
+		while (deltaAngle < 0) deltaAngle += 360;
+
+		angle += Math.copySign(rotationSpeed * delta, deltaAngle);
+		while (angle < 0) angle += 360;
+
+		if (angle >= targetFacing.getAngle()) {
+		    angle = targetFacing.getAngle();
+		    oldFacing = targetFacing;
+		    isTurningRight = false;
+		    listener.actionCompleted();
+		}
+	}
+
+	private void turnLeft(float delta) {
+		float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
+		while (deltaAngle > 0) deltaAngle -= 360;
+
+		angle += Math.copySign(rotationSpeed * delta, deltaAngle);
+
+		if (angle <= targetFacing.getAngle()) {
+		    angle = targetFacing.getAngle();
+		    oldFacing = targetFacing;
+		    isTurningLeft = false;
+		    listener.actionCompleted();
+		}
+	}
+
+	private void move(float delta) {
+		int deltaX = targetPosition.getX() - oldPosition.getX();
+		int deltaY = targetPosition.getY() - oldPosition.getY();
+
+		if (deltaY != 0) {
+		    y += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaY);
+
+		    // If y moved over target
+		    // TODO Remove code repetition (Not DRY enough)
+		    if (deltaY > 0 && y >= targetPosition.getY() ||
+		            deltaY < 0 && y <= targetPosition.getY()) {
+		        y = targetPosition.getY();
+		        oldPosition = targetPosition;
+		        isMoving = false;
+		        listener.actionCompleted();
+		    }
+		} else if (deltaX != 0) {
+		    x += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaX);
+
+		    // If x moved over target
+		    if (deltaX > 0 && x >= targetPosition.getX() ||
+		            deltaX < 0 && x <= targetPosition.getX()) {
+		        x = targetPosition.getX();
+		        oldPosition = targetPosition;
+		        isMoving = false;
+		        listener.actionCompleted();
+		    }
+		}
+	}
 
     @Override
     public void driveForward() {
@@ -125,7 +137,7 @@ public class DriveManager implements IRobotActors {
         if (hasPower()) {
             oldPosition = targetPosition;
             targetPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
-            battery -= BATTERY_LOSS;
+            battery -= SimulatorConfig.getBatteryLoss();
             isMoving = true;
         }
     }
@@ -157,7 +169,7 @@ public class DriveManager implements IRobotActors {
     }
 
     private void decreaseBattery() {
-        battery -= BATTERY_LOSS;
+        battery -= SimulatorConfig.getBatteryLoss();
         if (battery < 0)
             battery = 0;
     }
@@ -166,9 +178,9 @@ public class DriveManager implements IRobotActors {
         return battery > 0;
     }
 
-    public boolean isBatteryLow() { return battery < BATTERY_LOW; }
+    public boolean isBatteryLow() { return battery < SimulatorConfig.getBatteryLow(); }
 
-    public boolean isBatteryFull() { return battery >= BATTERY_FULL; }
+    public boolean isBatteryFull() { return battery >= SimulatorConfig.getBatteryFull(); }
 
     public float getBattery() {
         return battery;

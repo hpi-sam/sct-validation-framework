@@ -121,7 +121,6 @@ public class StationManager implements IRobotStationDispatcher {
     }
 
     /**
-     * TODO: range = view
      * @param stationFilter
      * @return
      */
@@ -131,10 +130,16 @@ public class StationManager implements IRobotStationDispatcher {
         List<Station> filteredStations = stations.stream()
                 .filter(stationFilter)  // Only get Stations where the predicate is true
                 .collect(Collectors.toList());
-
-        return filteredStations.isEmpty() ?
-                addNewStation() :
-                filteredStations.get(r.nextInt(filteredStations.size()));
+        
+        if (filteredStations.size() > SimulatorConfig.getChargingStationsInUse()) {
+        	return filteredStations.isEmpty() ?
+	                addNewStation() :
+	                filteredStations.get(r.nextInt(SimulatorConfig.getChargingStationsInUse()));
+        } else {
+	        return filteredStations.isEmpty() ?
+	                addNewStation() :
+	                filteredStations.get(r.nextInt(filteredStations.size()));
+        }
     }
 
     private Station addNewStation() {

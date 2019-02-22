@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.env.view.panels;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.KeyManager;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -53,8 +54,8 @@ public class ControlPanel extends JPanel implements ITimeListener {
      * Loads all the icons for the panel
      */
     private void loadIcons() {
-        playIcon = new ImageIcon("simulator/res/play.png");
-        pauseIcon = new ImageIcon("simulator/res/pause.png");
+        playIcon = new ImageIcon(SimulatorConfig.getStringPathToPlayIcon());
+        pauseIcon = new ImageIcon(SimulatorConfig.getStringPathToPauseIcon());
     }
 
     /**

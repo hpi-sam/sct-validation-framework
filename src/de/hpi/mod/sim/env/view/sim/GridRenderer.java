@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.ServerGridManagement;
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.CellType;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -24,9 +25,9 @@ public class GridRenderer {
 
     /**
      * Renders the grid
-     * @param g the Graphics to render on
+     * @param graphic the Graphics to render on
      */
-    public void render(Graphics g) {
+    public void render(Graphics graphic) {
 
         // Shift Viewpoint by offset
         float blocksOffsetX = world.getOffsetX();
@@ -38,7 +39,7 @@ public class GridRenderer {
         int widthInBlocks = (int) (world.getView().getWidth() / blockSize + 2);
         int heightInBlocks = (int) (world.getView().getHeight() / blockSize + 2);
 
-        int stationDepth = ServerGridManagement.QUEUE_SIZE + 1;
+        int stationDepth = SimulatorConfig.QUEUE_SIZE + 1;
 
         for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
             for (int x = (int) blocksOffsetX; x < widthInBlocks + blocksOffsetX; x++) {
@@ -48,40 +49,40 @@ public class GridRenderer {
                 boolean highlight = world.isMousePointing() && world.getMousePointer().equals(current);
 
                 // Draw the block
-                drawBlock(g, grid.cellType(current), world.toDrawPosition(current), highlight);
+                drawBlock(graphic, grid.cellType(current), world.toDrawPosition(current), highlight);
             }
         }
     }
 
     /**
      * Draws a Block
-     * @param g Graphics to render to
+     * @param graphic Graphics to render to
      * @param cell The type of the cell determines how its rendered
      * @param drawPos The draw-position
      * @param highlight Highlighted?
      */
-    private void drawBlock(Graphics g, CellType cell, Point2D drawPos, boolean highlight) {
+    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean highlight) {
         float blockSize = world.getBlockSize();
 
         if (cell == CellType.BLOCK)
-            g.setColor(Color.BLACK);
+            graphic.setColor(Color.BLACK);
         if (cell == CellType.WAYPOINT)
-            g.setColor(Color.WHITE);
+            graphic.setColor(Color.WHITE);
         if (cell == CellType.CROSSROAD)
-            g.setColor(Color.LIGHT_GRAY);
+            graphic.setColor(Color.LIGHT_GRAY);
         if (cell == CellType.BATTERY)
-            g.setColor(Color.YELLOW);
+            graphic.setColor(Color.YELLOW);
         if (cell == CellType.LOADING)
-            g.setColor(Color.BLUE);
+            graphic.setColor(Color.BLUE);
         if (cell == CellType.STATION)
-            g.setColor(Color.GRAY);
+            graphic.setColor(Color.GRAY);
 
-        g.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
+        graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
 
         // Draw Highlight
         if (highlight) {
-            g.setColor(Color.RED);
-            g.fillRect((int) (drawPos.getX() + blockSize / 4),
+            graphic.setColor(Color.RED);
+            graphic.fillRect((int) (drawPos.getX() + blockSize / 4),
                     (int) (drawPos.getY() + blockSize / 4),
                     (int) (blockSize / 2),
                     (int) (blockSize / 2));

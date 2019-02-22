@@ -36,7 +36,7 @@ public class Station {
      * Adds the batteries with IDs 0, 1, 2 to the station
      */
     private void initBatteries() {
-        batteries = new Battery[ServerGridManagement.BATTERIES_PER_STATION];
+        batteries = new Battery[SimulatorConfig.BATTERIES_PER_STATION];
         for (int i = 0; i < batteries.length; i++) {
             batteries[i] = new Battery(i);
         }
@@ -59,7 +59,7 @@ public class Station {
     }
 
     boolean hasFreeQueuePosition() {
-        return getQueueSize() < ServerGridManagement.QUEUE_SIZE;
+        return getQueueSize() < SimulatorConfig.QUEUE_SIZE;
     }
 
     boolean hasFreeBattery() {

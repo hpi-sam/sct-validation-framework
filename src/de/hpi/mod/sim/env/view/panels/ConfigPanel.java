@@ -1,12 +1,14 @@
 package de.hpi.mod.sim.env.view.panels;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.model.ITimeListener;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Panel that lets the user set und reset configurations.<br>
+ * Panel that lets the user set and reset configurations.<br>
  * Currently supports:
  * <ul>
  *     <li>Move Speed</li>
@@ -14,18 +16,24 @@ import java.awt.*;
  *
  * No other class must change the values, since this class does not listen to changes
  */
-public class ConfigPanel extends JPanel {
+public class ConfigPanel extends JPanel implements ITimeListener{
 
-	private int currentLevel = 1;
+	private int currentLevel = SimulatorConfig.getRobotDefaultSpeedLevel();
+	private SimulationWorld world;
+	private JButton playButton;
+	private ImageIcon playIcon;
+	private ImageIcon pauseIcon;
+	private boolean changeable = true;
     /**
      * Initializes the Panel and adds Config Elements
      */
-    public ConfigPanel() {
+    public ConfigPanel(SimulationWorld world) {
+    	this.world = world;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        addConfigElement("Move Speed", "In cells per milliseconds",
-                0, .05f, 10000,
-                SimulatorConfig.DEFAULT_ROBOT_MOVE_SPEED,
+        addConfigElement("Move Speed", "Recent robot speed level",
+                SimulatorConfig.ROBOT_MIN_SPEED_LEVEL, SimulatorConfig.ROBOT_MAX_SPEED_LEVEL,
+                SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL,
                 SimulatorConfig::setRobotMoveSpeed);
     }
 
@@ -35,9 +43,9 @@ public class ConfigPanel extends JPanel {
      * @param toolTip The tooltip to show on mouse over
      * @param initValue The default Value
      * @param setter The setter to change the value
+     * @param world 
      */
-    private void addConfigElement(String name, String toolTip, float minValue, float maxValue,
-                                  float multiplier, float initValue, ValueSetter setter) {
+    private void addConfigElement(String name, String toolTip, int minValue, int maxValue, int initValue, ValueSetter setter) {
 
         /*
          * Panel:
@@ -57,81 +65,102 @@ public class ConfigPanel extends JPanel {
         JTextField valueField = new JTextField();
         valueField.setEditable(false);
         valueField.setPreferredSize(new Dimension(50, 0));
-        valueField.setText("1");
+        valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
 
         // Slider (with tooltip) to input changes
-        JSlider valueSlider = new JSlider((int) (minValue * multiplier),
-                (int) (maxValue * multiplier), (int) (initValue * multiplier));
-        setter.setValue(toMagicSpeedValue(1));
+        JSlider valueSlider = new JSlider(minValue, maxValue, initValue);
+        setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
         valueSlider.setToolTipText(toolTip);
+        valueSlider.setEnabled(true); //in the begin the speed slider should be changeable, even if not afterwards while paused simulation
         valueSlider.addChangeListener(e -> {
-        	setter.setValue(toMagicSpeedValue(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
-            valueField.setText(Integer.toString(discreteValueOf(valueSlider.getValue() / multiplier, minValue, maxValue, 10)));
+        	setter.setValue(toMagicSpeedValue(valueSlider.getValue()));
+            valueField.setText(Integer.toString(valueSlider.getValue()));
+            currentLevel = valueSlider.getValue();
         });
 
         // Button to reset
-        JButton button = new JButton("Reset");
-        button.addActionListener(e -> {
-            valueSlider.setValue((int) (initValue * multiplier));
-            valueField.setText("1");
-            setter.setValue(toMagicSpeedValue(1));
+        JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
+        	valueSlider.setEnabled(true); //after reset the speed slider should be changeable, even if not afterwards while paused simulation
+            valueSlider.setValue(initValue);
+            valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
+            setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
+            currentLevel = SimulatorConfig.getRobotDefaultSpeedLevel();
         });
+        
+        //Play/Pause button
+        loadIcons();
+
+        playButton = new JButton();
+        refresh();  // Refresh to set icon
+        playButton.addActionListener(e -> {
+        	world.toggleRunning();
+        	valueSlider.setEnabled(world.isRunning());
+        });
+        add(playButton);
 
         input.add(valueField, BorderLayout.WEST);
         input.add(valueSlider, BorderLayout.CENTER);
-        input.add(button, BorderLayout.EAST);
+        //input.add(resetButton, BorderLayout.EAST);
+        
+        JPanel buttons = new JPanel(new GridLayout(0,1));
+        buttons.add(resetButton);
+        buttons.add(playButton);
+        input.add(buttons, BorderLayout.EAST);
 
         root.add(label, BorderLayout.NORTH);
         root.add(input, BorderLayout.CENTER);
 
         add(root);
     }
+   
     
-    public int getCurrentLevel() {
+    private void loadIcons() {
+    	playIcon = new ImageIcon(SimulatorConfig.getStringPathToPlayIcon());
+        pauseIcon = new ImageIcon(SimulatorConfig.getStringPathToPauseIcon());
+	}
+
+	public int getCurrentLevel() {
     	return currentLevel;
     }
 
     private float toMagicSpeedValue(int level) {
     	switch(level) {
     	case 1:
-    		return 0.0005f;
+    		return SimulatorConfig.ROBOT_LEVEL_1_SPEED;
     	case 2:
-    		return 0.001f;
+    		return SimulatorConfig.ROBOT_LEVEL_2_SPEED;
     	case 3:
-    		return 0.0015f;
+    		return SimulatorConfig.ROBOT_LEVEL_3_SPEED;
     	case 4:
-    		return 0.0025f;
+    		return SimulatorConfig.ROBOT_LEVEL_4_SPEED;
     	case 5:
-    		return 0.0035f;
+    		return SimulatorConfig.ROBOT_LEVEL_5_SPEED;
     	case 6:
-    		return 0.0045f;
+    		return SimulatorConfig.ROBOT_LEVEL_6_SPEED;
     	case 7:
-    		return 0.006f;
+    		return SimulatorConfig.ROBOT_LEVEL_7_SPEED;
     	case 8:
-    		return 0.0075f;
+    		return SimulatorConfig.ROBOT_LEVEL_8_SPEED;
     	case 9:
-    		return 0.009f;
+    		return SimulatorConfig.ROBOT_LEVEL_9_SPEED;
     	case 10:
-    		return 0.011f;
+    		return SimulatorConfig.ROBOT_LEVEL_10_SPEED;
 		default:
 			return (float) 0;
     	}
 	}
 
-	private int discreteValueOf(float f, float minValue, float maxValue, int maxRange) {
-		int level = 0; 
-		
-		for(int i=1; i<=maxRange; i++) {
-			if(f*i >= (maxValue-minValue)) {
-				level = maxRange-i+1;
-				break;
-			}
-		}
-		currentLevel = level;
-		return currentLevel;
-	}
-
 	private interface ValueSetter {
         void setValue(float value);
+    }
+
+	@Override
+    public void refresh() {
+        if (world.isRunning()) {
+        	playButton.setIcon(pauseIcon);
+        } else {
+        	playButton.setIcon(playIcon);
+        }
     }
 }

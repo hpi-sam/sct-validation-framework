@@ -13,23 +13,6 @@ import java.util.Arrays;
 public class ServerGridManagement implements ISensorDataProvider {
 
     /**
-     * The number of cells in a queue.
-     * Changes to this value require changes in the implementation of the map too.
-     */
-    public static final int QUEUE_SIZE = 5;
-
-    /**
-     * The number of batteries in a station.
-     * Changes to this value require changes in the implementation of the map too.
-     */
-    public static final int BATTERIES_PER_STATION = 3;
-
-    /**
-     * Number of vertical unloading positions.
-     */
-    public static final int MAP_HEIGHT = 4;
-
-    /**
      * Because the Map doesn't have direct access to newRobots,
      * it needs a controller to find out if a cells is blocked by a robot.
      */
@@ -60,7 +43,7 @@ public class ServerGridManagement implements ISensorDataProvider {
         } else {
             if (pos.getX() % 3 == 0 && pos.getY() < -1 && pos.getY() > -5)
                 return CellType.BATTERY;
-            if (pos.getX() % 3 == 0 || pos.getY() < -QUEUE_SIZE)
+            if (pos.getX() % 3 == 0 || pos.getY() < -SimulatorConfig.QUEUE_SIZE)
                 return CellType.BLOCK;
             if (pos.getY() == 0 && Math.floorMod(pos.getX() , 3) == 2)
                 return CellType.LOADING;
@@ -227,7 +210,7 @@ public class ServerGridManagement implements ISensorDataProvider {
             if (current.getX() > target.getX())
                 return Orientation.WEST;
             if (current.getX() < target.getX()) {
-                if (current.getY() > -ServerGridManagement.QUEUE_SIZE)
+                if (current.getY() > -SimulatorConfig.QUEUE_SIZE)
                     return Orientation.SOUTH;
                 return Orientation.EAST;
             }
@@ -272,7 +255,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 
     public Position getQueuePositionAtStation(int stationID) {
         int x = stationID * 3 + 2;
-        return new Position(x, -QUEUE_SIZE);
+        return new Position(x, -SimulatorConfig.QUEUE_SIZE);
     }
 
     public Position getChargerPositionAtStation(int stationID, int chargerID) {
@@ -287,8 +270,10 @@ public class ServerGridManagement implements ISensorDataProvider {
     }
 
     public Position getUnloadingPositionFromID(int unloadingID) {
-        int y = (unloadingID % MAP_HEIGHT) * 3 + 4;
-        int x = unloadingID / MAP_HEIGHT * 3;
+    	int x,y;
+    	
+    	y = (Math.abs(unloadingID) % SimulatorConfig.getMapHeight()) * 3 + 4;
+    	x = unloadingID / SimulatorConfig.getMapHeight() * 3;
         return new Position(x, y);
     }
 

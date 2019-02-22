@@ -2,12 +2,14 @@ package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.Simulator;
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.Scenario;
+import de.hpi.mod.sim.env.view.panels.RobotInfoPanel;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -23,28 +25,21 @@ public class SimulationWorld {
     /**
      * Default values needed to reset
      */
-    private static final float
-            DEFAULT_BLOCK_SIZE = 20,
-            DEFAULT_OFFSET_X = 0,
-            DEFAULT_OFFSET_Y = 0,
-            DEFAULT_SENSOR_REFRESH_INTERVAL = 10,
-            MIN_BLOCK_SIZE = 5,
-            MAX_BLOCK_SIZE = 30;
 
     /**
      * The scaling of a block
      */
-    private float blockSize = DEFAULT_BLOCK_SIZE;
+    private float blockSize = SimulatorConfig.getDefaultBlockSize();
 
     /**
      * Offset in blocks
      */
-    private float offsetX = DEFAULT_OFFSET_X, offsetY = DEFAULT_OFFSET_Y;
+    private float offsetX = SimulatorConfig.getDefaultOffsetX(), offsetY = SimulatorConfig.getDefaultOffsetY();
 
     /**
      * Number of milliseconds between sensor refreshes
      */
-    private float sensorRefreshInterval = DEFAULT_SENSOR_REFRESH_INTERVAL;
+    private float sensorRefreshInterval = SimulatorConfig.getDefaultSensorRefreshInterval();
 
     /**
      * Whether the simulation is running or not
@@ -66,6 +61,7 @@ public class SimulationWorld {
      * The highlighted Robot. Null if none
      */
     private Robot highlightedRobot = null;
+    private Robot highlightedRobot2 = null;
 
     private Simulator sim;
 
@@ -76,6 +72,7 @@ public class SimulationWorld {
      * Gets called if the highlighted Robot changes
      */
     private List<IHighlightedRobotListener> highlightedRobotListeners = new ArrayList<>();
+    private List<IHighlightedRobotListener> highlightedRobotListeners2 = new ArrayList<>();
 
     /**
      * List of {@link ITimeListener}s.
@@ -116,8 +113,8 @@ public class SimulationWorld {
         if (running) {
             try {
                 isUpdating = true;
-                for (Robot r : sim.getRobots()) {
-                    r.getDriveManager().update(delta);
+                for (Robot robot : sim.getRobots()) {
+                    robot.getDriveManager().update(delta);
                 }
                 isUpdating = false;
                 notifyAll();
@@ -130,6 +127,10 @@ public class SimulationWorld {
     public void addHighlightedRobotListener(IHighlightedRobotListener highlightedRobotListener) {
         highlightedRobotListeners.add(highlightedRobotListener);
     }
+    
+    public void addHighlightedRobotListener2(IHighlightedRobotListener highlightedRobotListener2) {
+    	highlightedRobotListeners2.add(highlightedRobotListener2);
+	}
 
     public void addTimeListener(ITimeListener timeListener) {
         timeListeners.add(timeListener);
@@ -154,17 +155,17 @@ public class SimulationWorld {
     }
 
     public void zoomIn(float zoom) {
-        if (blockSize < MAX_BLOCK_SIZE)
+        if (blockSize < SimulatorConfig.getMaxBlockSize())
             blockSize += zoom;
     }
     
     public void zoomOut(float zoom) {
-        if (blockSize > MIN_BLOCK_SIZE)
+        if (blockSize > SimulatorConfig.getMinBlockSize())
             blockSize -= zoom;
     }
 
     public void resetZoom() {
-        blockSize = DEFAULT_BLOCK_SIZE;
+        blockSize = SimulatorConfig.getDefaultBlockSize();
     }
 
     public float getBlockSize() {
@@ -182,8 +183,8 @@ public class SimulationWorld {
     }
 
     public void resetOffset() {
-        offsetX = DEFAULT_OFFSET_X;
-        offsetY = DEFAULT_OFFSET_Y;
+        offsetX = SimulatorConfig.getDefaultOffsetX();
+        offsetY = SimulatorConfig.getDefaultOffsetY();
     }
 
     public float getOffsetX() {
@@ -216,7 +217,7 @@ public class SimulationWorld {
 
     private Robot addRobotRunner(AddRobotRunner runner) {
         while (isRefreshing || isUpdating) {
-		    // wait();
+        	//Do nothing while refreshing or updating
 		}
 
 		Robot r = runner.run();
@@ -230,7 +231,7 @@ public class SimulationWorld {
      */
     public void playScenario(Scenario scenario) {
         while (isRefreshing || isUpdating) {
-		    // wait();
+        	//Do nothing while refreshing or updating
 		}
 
 		if (isRunning()) toggleRunning();
@@ -260,9 +261,18 @@ public class SimulationWorld {
         highlightedRobot = r;
         refreshHighlightedRobotListeners();
     }
+    
+    public void setHighlightedRobot2(Robot r) {
+		highlightedRobot2 = r;
+		refreshHighlightedRobotListeners();
+	}
 
     public Robot getHighlightedRobot() {
         return highlightedRobot;
+    }
+    
+    public Robot getHighlightedRobot2() {
+        return highlightedRobot2;
     }
     
     public void toggleRunning() {
@@ -281,7 +291,7 @@ public class SimulationWorld {
     public Position toGridPosition(int x, int y) {
         y = (int) (view.getHeight() - y - blockSize / 2);
         int blockX = (int) Math.floor(x / blockSize + offsetX);
-        int blockY = (int) Math.floor(y / blockSize - ServerGridManagement.QUEUE_SIZE + offsetY);
+        int blockY = (int) Math.floor(y / blockSize - SimulatorConfig.QUEUE_SIZE + offsetY);
 
         return new Position(blockX, blockY);
     }
@@ -298,7 +308,7 @@ public class SimulationWorld {
      */
     public Point2D toDrawPosition(float x, float y) {
         float drawX = (x - offsetX) * blockSize;
-        float drawY = view.getHeight() - (y + ServerGridManagement.QUEUE_SIZE + 1.5f - offsetY) * blockSize;
+        float drawY = view.getHeight() - (y + SimulatorConfig.QUEUE_SIZE + 1.5f - offsetY) * blockSize;
         return new Point2D.Float(drawX, drawY);
     }
 

@@ -14,16 +14,15 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
 
 public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
     private RobotInfoPanel info;
+    private RobotInfoPanel info2;
     private ScenarioPanel scenario;
     private TestPanel test;
     private ConfigPanel config;
@@ -33,68 +32,24 @@ public class DriveSimFrame extends JFrame {
     private long lastFrame;
     private long lastRefresh;
     private boolean running = true;
+	// private ControlPanel control;
+	private TimerPanel timer;
+	private JPanel side;
+	private SimulationWorld world;
+	
+	
 
 
     public DriveSimFrame() {
         super("Drive System Simulator");
         setLayout(new BorderLayout());
 
-        JPanel side = new JPanel();
-        side.setLayout(new BorderLayout());
-
-        sim = new SimulatorView();
-        SimulationWorld world = sim.getWorld();
-
-        scenarioManager = new ScenarioManager(world);
-
-        info = new RobotInfoPanel(world);
-        config = new ConfigPanel();
-        var control = new ControlPanel(world);
-        test = new TestPanel(scenarioManager);
-        var timer = new TimerPanel();
-        scenario = new ScenarioPanel(scenarioManager, timer);
-
-        TimerPanel.setParent(this);
-        setJMenuBar(new DriveSimMenu(world));
-        
-        createFileIfNotExist(SimulatorConfig.getTestFileName());
-        loadFile(test, SimulatorConfig.getTestFileName());
-
-        world.addHighlightedRobotListener(info);
-        world.addTimeListener(control);
-        scenarioManager.addTestListener(test);
-
-        info.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info"));
-        config.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        test.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        scenario.setBorder(BorderFactory.createTitledBorder(
-        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        timer.setBorder(BorderFactory.createTitledBorder(
-        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
-        side.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
-
-        JPanel northPanel = new JPanel(new GridLayout(0, 1));
-
-
-        northPanel.add(test);
-        northPanel.add(scenario);
-        northPanel.add(config);
-        northPanel.add(timer);
-
-        side.add(northPanel, BorderLayout.NORTH);
-        side.add(info, BorderLayout.CENTER);
-        side.add(control, BorderLayout.SOUTH);
-
-        add(sim, BorderLayout.CENTER);
-        add(side, BorderLayout.EAST);
-
-        setPreferredSize(new Dimension(800, 500));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        pack();
-        setVisible(true);
+        initializeSimulationItems();
+        initializePanels();
+        loadTestFileContent();
+        addListeners();
+        setDesignOfSubpanels();
+        setDesignOfMainWindow();
 
         lastFrame = System.currentTimeMillis();
         lastRefresh = System.currentTimeMillis();
@@ -102,6 +57,81 @@ public class DriveSimFrame extends JFrame {
             update();
         close();
     }
+
+	private void setDesignOfMainWindow() {
+		JPanel northPanel = new JPanel((new GridLayout(0,1)));
+		addPanelsToNorthPanel(northPanel);
+        addPanelsToSidePanel(northPanel);
+        add(sim, BorderLayout.CENTER);
+        add(side, BorderLayout.EAST);
+        setPreferredSize(new Dimension(800, 500));
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
+        setVisible(true);
+	}
+
+	private void loadTestFileContent() {
+		createFileIfNotExist(SimulatorConfig.getTestFileName());
+        loadFile(test, SimulatorConfig.getTestFileName());
+	}
+
+	private void initializeSimulationItems() {
+		sim = new SimulatorView();
+        world = sim.getWorld();
+        scenarioManager = new ScenarioManager(world);
+	}
+
+	private void addPanelsToSidePanel(JPanel northPanel) {
+		side.add(northPanel, BorderLayout.NORTH);
+		// side.add(control, BorderLayout.SOUTH);
+        side.add(info, BorderLayout.WEST);
+        side.add(info2, BorderLayout.EAST);
+	}
+
+	private void addPanelsToNorthPanel(JPanel northPanel) {
+		northPanel.add(test);
+        northPanel.add(scenario);
+        northPanel.add(config);
+        northPanel.add(timer);
+	}
+
+	private void setDesignOfSubpanels() {
+		side.setLayout(new BorderLayout());
+        info.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
+        info2.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
+        config.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
+        config.setPreferredSize(new Dimension(10,10));
+        test.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+        scenario.setBorder(BorderFactory.createTitledBorder(
+        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
+        timer.setBorder(BorderFactory.createTitledBorder(
+        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
+        side.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY));
+	}
+
+	private void addListeners() {
+		world.addHighlightedRobotListener(info);
+        world.addHighlightedRobotListener2(info2);
+        world.addTimeListener(config);
+        scenarioManager.addTestListener(test);
+	}
+
+	private void initializePanels() {
+		side = new JPanel();
+		info = new RobotInfoPanel(world, false);
+        info2 = new RobotInfoPanel(world, true);
+        config = new ConfigPanel(world);
+        // control = new ControlPanel(world);
+        test = new TestPanel(scenarioManager);
+        timer = new TimerPanel();
+        scenario = new ScenarioPanel(world, scenarioManager, timer);
+        TimerPanel.setParent(this);
+        setJMenuBar(new DriveSimMenu(world));
+	}
     
     private void loadFile(TestPanel testPanel, String fileName) {
     	boolean written = true;
@@ -193,6 +223,7 @@ public class DriveSimFrame extends JFrame {
             lastRefresh = System.currentTimeMillis();
             sim.getWorld().refresh();
             info.onHighlightedRobotChange();
+            info2.onHighlightedRobotChange();
             scenarioManager.refresh();
         }
 
