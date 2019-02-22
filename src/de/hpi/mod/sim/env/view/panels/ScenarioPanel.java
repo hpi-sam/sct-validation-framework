@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.panels;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +14,11 @@ public class ScenarioPanel extends JPanel {
 
     private Map<Scenario, JPanel> scenarios = new HashMap<>();
     private JPanel scenarioPanel;
+    private SimulationWorld world;
 
 
-    public ScenarioPanel(ScenarioManager scenarioManager, TimerPanel timer) {
+    public ScenarioPanel(SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer) {
+    	this.world = world;
         setLayout(new GridLayout(0, 1));
 
         for (Scenario scenario : scenarioManager.getScenarios())
@@ -44,6 +47,8 @@ public class ScenarioPanel extends JPanel {
     }
 
 	private void runScenario(ScenarioManager manager, Scenario test, TimerPanel timer) {
+		world.resetZoom();
+		world.resetOffset();
 		timer.startNewClock(SimulatorConfig.getScenarioPassingTime());
 		manager.runScenario(test);
 		scenarioPanel = scenarios.get(test);
