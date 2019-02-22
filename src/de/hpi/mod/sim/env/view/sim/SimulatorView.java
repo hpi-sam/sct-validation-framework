@@ -41,12 +41,12 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintComponent(Graphics graphic) {
+        super.paintComponent(graphic);
 
         // Draw Grid
-        grid.render(g);
-        robot.render(g);
+        grid.render(graphic);
+        robot.render(graphic);
         
         //Refresh simulation properties
         refreshSimulationSize();

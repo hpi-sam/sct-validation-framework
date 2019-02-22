@@ -34,6 +34,8 @@ public class ScenarioManager {
     }
 
     public void runScenario(Scenario scenario) {
+    	world.resetZoom();
+		world.resetOffset();
         world.playScenario(scenario);
         if (scenario instanceof TestScenario)
             world.toggleRunning();

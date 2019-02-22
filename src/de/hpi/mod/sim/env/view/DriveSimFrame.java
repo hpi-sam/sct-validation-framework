@@ -36,6 +36,8 @@ public class DriveSimFrame extends JFrame {
 	private TimerPanel timer;
 	private JPanel side;
 	private SimulationWorld world;
+	private static JPanel messagePanel;
+	private static long messageTime = System.currentTimeMillis();
 	
 	
 
@@ -62,6 +64,15 @@ public class DriveSimFrame extends JFrame {
 		JPanel northPanel = new JPanel((new GridLayout(0,1)));
 		addPanelsToNorthPanel(northPanel);
         addPanelsToSidePanel(northPanel);
+        
+        messagePanel = new JPanel();
+        //text.setOpaque(false);
+        JLabel textField = new JLabel("");
+        messagePanel.add(textField);
+        messagePanel.setBackground(Color.WHITE);
+        messagePanel.setVisible(false);
+        add(messagePanel, BorderLayout.NORTH);
+        
         add(sim, BorderLayout.CENTER);
         add(side, BorderLayout.EAST);
         setPreferredSize(new Dimension(800, 500));
@@ -216,6 +227,10 @@ public class DriveSimFrame extends JFrame {
     }
 
     private void update() {
+    	if(messageTime + 5000 <= System.currentTimeMillis()) {
+    		messagePanel.setVisible(false);
+    	}
+    	
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
 
@@ -257,4 +272,16 @@ public class DriveSimFrame extends JFrame {
     	TestPanel.resetAllBorders();
     	ScenarioPanel.resetAllBorders();
     }
+
+	public static void displayMessage(String string) {
+		if(messagePanel != null) {
+			for (Component jc : messagePanel.getComponents()) {
+			    if ( jc instanceof JLabel) {
+			        ((JLabel) jc).setText(string);
+			    }
+			}
+			messagePanel.setVisible(true);
+			messageTime  = System.currentTimeMillis();
+		}
+	}
 }

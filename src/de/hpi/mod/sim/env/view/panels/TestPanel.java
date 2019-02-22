@@ -53,6 +53,7 @@ public class TestPanel extends JPanel implements ITestListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+        test.notifySuccessToUser();
         if(isRunningAll) {
         	runAllTests();
         }
@@ -64,7 +65,13 @@ public class TestPanel extends JPanel implements ITestListener {
         JButton run = new JButton("Run");
 
         panel.setLayout(new BorderLayout());
-        run.addActionListener(e -> runAllTests());
+        run.addActionListener(e -> {
+        	if (currentTestID != 0 || isRunningAll) {
+        		currentTestID = 0;
+        		isRunningAll = false;
+        	}
+        	runAllTests();
+        });
 
         panel.add(label, BorderLayout.CENTER);
         panel.add(run, BorderLayout.EAST);
@@ -87,8 +94,10 @@ public class TestPanel extends JPanel implements ITestListener {
 		}
 	}
 	
-	private void toggleRunScenarioByID( ) {
-		scenarioManager.runScenario(scenarioManager.getTests().get(currentTestID));
+	private void toggleRunScenarioByID() {
+		TestScenario test = scenarioManager.getTests().get(currentTestID);
+		DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
+		scenarioManager.runScenario(test);
 	}
     
     private void writeTestPassed(TestScenario test) throws IOException {
@@ -114,6 +123,11 @@ public class TestPanel extends JPanel implements ITestListener {
 		try {
 			changeContent(testFileName, "#y", "#n");
 			resetColours();
+			for (Map.Entry<TestScenario, JPanel> entry : tests.entrySet())
+			{
+			    TestScenario test = entry.getKey();
+			    test.resetTest();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -146,6 +160,7 @@ public class TestPanel extends JPanel implements ITestListener {
         	DriveSimFrame.resetBorders();
         	Border blackline = BorderFactory.createLineBorder(Color.black);
         	panel.setBorder(blackline);
+        	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
         });
 
         panel.add(label, BorderLayout.CENTER);
