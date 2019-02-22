@@ -121,7 +121,6 @@ public class StationManager implements IRobotStationDispatcher {
     }
 
     /**
-     * TODO: range = view
      * @param stationFilter
      * @return
      */
