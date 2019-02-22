@@ -7,7 +7,7 @@ import de.hpi.mod.sim.env.model.Position;
  */
 public class SimulatorConfig {
 
-    public static final int CHARGING_STATIONS_IN_USE = 10;
+    public static final int DEFAULT_CHARGING_STATIONS_IN_USE = 10;
     public static final int SPACE_BETWEEN_CHARGING_STATIONS = 3;
     public static final int MAX_ROBOTS_PER_STATION = 3;
     public static final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
@@ -24,7 +24,7 @@ public class SimulatorConfig {
 	public static final float BATTERY_LOW = 20;
 	public static final float BATTERY_LOSS = .1f;
 	public static final float BATTERY_LOADING_SPEED = .02f;
-	public static final int DEFAULT_UNLOADING_RANGE = 10;
+	public static final int DEFAULT_UNLOADING_RANGE = 30;
 	
 	public static final float DEFAULT_BLOCK_SIZE = 20;
 	public static final float DEFAULT_OFFSET_X = 0;
@@ -61,10 +61,10 @@ public class SimulatorConfig {
 	/**
      * Number of vertical unloading positions.
      */
-	public static final int MAP_HEIGHT = 4;
+	public static final int DEFAULT_MAP_HEIGHT = 4;
 
     private static float robotMoveSpeed = DEFAULT_ROBOT_MOVE_SPEED;
-    private static int chargingStationsInUse = CHARGING_STATIONS_IN_USE;
+    private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
     private static int maxRobotsPerStation = MAX_ROBOTS_PER_STATION;
     private static int scenarioPassingTime = SCENARIO_PASSING_TIME;
@@ -104,7 +104,10 @@ public class SimulatorConfig {
    	
    	private static int queueSize = QUEUE_SIZE;
    	private static int batteriesPerStation = BATTERIES_PER_STATION;
-   	private static int mapHeight = MAP_HEIGHT;
+   	private static int defaultMapHeight = DEFAULT_MAP_HEIGHT;
+   	private static int chargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
+    private static int mapHeight = DEFAULT_MAP_HEIGHT;
+    private static int unloadingRange = DEFAULT_UNLOADING_RANGE; 
     
 
     public static float getRobotMoveSpeed() {
@@ -115,8 +118,8 @@ public class SimulatorConfig {
         SimulatorConfig.robotMoveSpeed = robotMoveSpeed;
     }
     
-    public static int getChargingStationsInUse() {
-    	return chargingStationsInUse;
+    public static int getDefaultChargingStationsInUse() {
+    	return defaultChargingStationsInUse;
     }
     
     public static int getSpaceBetweenChargingStations() {
@@ -263,7 +266,31 @@ public class SimulatorConfig {
    		return batteriesPerStation;
    	}
    	
-   	public static int getMapHeight() {
-   		return mapHeight;
+   	public static int getDefaultMapHeight() {
+   		return defaultMapHeight;
    	}
+
+	public static int getMapHeight() {
+		return mapHeight;
+	}
+
+	public static void setMapHeight(int mapHeight) {
+		SimulatorConfig.mapHeight = mapHeight;
+	}
+
+	public static int getUnloadingRange() {
+		return unloadingRange;
+	}
+
+	public static void setUnloadingRange(int unloadingRange) {
+		SimulatorConfig.unloadingRange = unloadingRange;
+	}
+
+	public static int getChargingStationsInUse() {
+		return chargingStationsInUse;
+	}
+
+	public static void setChargingStationsInUse(int chargingStationsInUse) {
+		SimulatorConfig.chargingStationsInUse = chargingStationsInUse;
+	}
 }

@@ -270,8 +270,10 @@ public class ServerGridManagement implements ISensorDataProvider {
     }
 
     public Position getUnloadingPositionFromID(int unloadingID) {
-        int y = (unloadingID % SimulatorConfig.MAP_HEIGHT) * 3 + 4;
-        int x = unloadingID / SimulatorConfig.MAP_HEIGHT * 3;
+    	int x,y;
+    	
+    	y = (Math.abs(unloadingID) % SimulatorConfig.getMapHeight()) * 3 + 4;
+    	x = unloadingID / SimulatorConfig.getMapHeight() * 3;
         return new Position(x, y);
     }
 

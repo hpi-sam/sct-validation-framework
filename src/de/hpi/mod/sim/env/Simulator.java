@@ -5,6 +5,7 @@ import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Simulator implements IRobotController, ILocation, IScanner {
@@ -12,7 +13,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     private List<Robot> robots = new ArrayList<>();
     private ServerGridManagement grid;
     private IRobotStationDispatcher stations;
-    private int unloadingRange = SimulatorConfig.getDefaultUnloadingRange();
+    private int unloadingRange = SimulatorConfig.getUnloadingRange();
 
 
     public Simulator() {
@@ -146,9 +147,24 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         return grid.getUnloadingPositionFromID(unloadingID);
     }
 
-    private int getRandomUnloadingID() {
-        Random randomNumberGenerator = new Random();
-        return randomNumberGenerator.nextInt(unloadingRange);
+    private int getRandomUnloadingID(Position robotPosition) {
+        int id = ThreadLocalRandom.current().nextInt(100);
+        if(id > 50) {
+        	id = ThreadLocalRandom.current().nextInt(unloadingRange/2, unloadingRange);
+        } else if (id > 25) {
+        	id = ThreadLocalRandom.current().nextInt(unloadingRange/4, unloadingRange/2);
+        } else if (id > 10) {
+        	id = ThreadLocalRandom.current().nextInt(unloadingRange/7, unloadingRange/4);
+        } else if (id > 5) {
+        	id = ThreadLocalRandom.current().nextInt(0, unloadingRange/7);
+        } else {
+        	id = ThreadLocalRandom.current().nextInt(-unloadingRange, 0);
+        }
+        if(id!= 0) {
+        	return id;
+        } else {
+        	return id + 1;
+        }
     }
 
     @Override
@@ -157,8 +173,8 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     }
 
     @Override
-    public int getPackageID(int stationID) {
-        return getRandomUnloadingID();
+    public int getPackageID(int stationID, Position robotPosition) {
+        return getRandomUnloadingID(robotPosition);
     }
 
     public void close() {
