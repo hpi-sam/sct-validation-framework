@@ -1,11 +1,15 @@
 package de.hpi.mod.sim.env.view.panels;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
+import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -19,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TestPanel extends JPanel implements ITestListener {
 
-    private Map<TestScenario, JPanel> tests = new HashMap<>();
+    private static Map<TestScenario, JPanel> tests = new HashMap<>();
     private int currentTestID = 0;
     private boolean isRunningAll = false;
     private ScenarioManager scenarioManager;
@@ -137,7 +141,12 @@ public class TestPanel extends JPanel implements ITestListener {
         JButton run = new JButton("run");
 
         panel.setLayout(new BorderLayout());
-        run.addActionListener(e -> manager.runScenario(test));
+        run.addActionListener(e -> {
+        	manager.runScenario(test);
+        	DriveSimFrame.resetBorders();
+        	Border blackline = BorderFactory.createLineBorder(Color.black);
+        	panel.setBorder(blackline);
+        });
 
         panel.add(label, BorderLayout.CENTER);
         panel.add(run, BorderLayout.EAST);
@@ -146,4 +155,13 @@ public class TestPanel extends JPanel implements ITestListener {
 
         add(panel);
     }
+
+	public static void resetAllBorders() {
+		for (Map.Entry<TestScenario, JPanel> entry : tests.entrySet())
+		{
+		    JPanel scenarioPanel = entry.getValue();
+		    Border empty = BorderFactory.createEmptyBorder();
+		    scenarioPanel.setBorder(empty);
+		}
+	}
 }

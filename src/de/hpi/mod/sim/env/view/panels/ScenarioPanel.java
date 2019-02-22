@@ -1,17 +1,20 @@
 package de.hpi.mod.sim.env.view.panels;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScenarioPanel extends JPanel {
 
-    private Map<Scenario, JPanel> scenarios = new HashMap<>();
+    private static Map<Scenario, JPanel> scenarios = new HashMap<>();
     private JPanel scenarioPanel;
 
 
@@ -27,21 +30,36 @@ public class ScenarioPanel extends JPanel {
 		// repaint();
 	}
 
-    private void addScenario(ScenarioManager manager, Scenario test, TimerPanel timer){
+    private void addScenario(ScenarioManager manager, Scenario scenario, TimerPanel timer){
         JPanel panel = new JPanel();
-        JLabel label = new JLabel(test.getName());
+        JLabel label = new JLabel(scenario.getName());
         JButton run = new JButton("run");
 
         panel.setLayout(new BorderLayout());
-        run.addActionListener(e -> runScenario(manager, test, timer));
+        run.addActionListener(e -> {
+        	runScenario(manager, scenario, timer);
+        	DriveSimFrame.resetBorders();
+        	Border blackline = BorderFactory.createLineBorder(Color.black);
+        	panel.setBorder(blackline);
+        });
 
         panel.add(label, BorderLayout.CENTER);
         panel.add(run, BorderLayout.EAST);
 
-        scenarios.put(test, panel);
+        scenarios.put(scenario, panel);
 
         add(panel);
     }
+
+	public static void resetAllBorders() {
+		for (Map.Entry<Scenario, JPanel> entry : scenarios.entrySet())
+		{
+		    JPanel scenarioPanel = entry.getValue();
+		    Border empty = BorderFactory.createEmptyBorder();
+		    scenarioPanel.setBorder(empty);
+		}
+		TestPanel.resetAllBorders();
+	}
 
 	private void runScenario(ScenarioManager manager, Scenario test, TimerPanel timer) {
 		timer.startNewClock(SimulatorConfig.getScenarioPassingTime());

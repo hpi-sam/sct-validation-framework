@@ -25,6 +25,7 @@ public class DriveSimFrame extends JFrame {
     private SimulatorView sim;
     private RobotInfoPanel info;
     private ScenarioPanel scenario;
+    private TestPanel test;
     private ConfigPanel config;
 
     private ScenarioManager scenarioManager;
@@ -49,7 +50,7 @@ public class DriveSimFrame extends JFrame {
         info = new RobotInfoPanel(world);
         config = new ConfigPanel();
         var control = new ControlPanel(world);
-        var test = new TestPanel(scenarioManager);
+        test = new TestPanel(scenarioManager);
         var timer = new TimerPanel();
         scenario = new ScenarioPanel(scenarioManager, timer);
 
@@ -219,5 +220,10 @@ public class DriveSimFrame extends JFrame {
             JOptionPane.showMessageDialog(null, "Could not switch to System Look-And-Feel",
                     "UI Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    public static void resetBorders() {
+    	TestPanel.resetAllBorders();
+    	ScenarioPanel.resetAllBorders();
     }
 }
