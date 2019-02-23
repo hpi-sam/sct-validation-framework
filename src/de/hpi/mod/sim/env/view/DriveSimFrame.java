@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
+import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.view.sim.SimulatorView;
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
+    private DeadlockDetector deadlockDetector;
     private RobotInfoPanel info;
     private RobotInfoPanel info2;
     private ScenarioPanel scenario;
@@ -89,6 +91,7 @@ public class DriveSimFrame extends JFrame {
 	private void initializeSimulationItems() {
 		sim = new SimulatorView();
         world = sim.getWorld();
+        deadlockDetector = new DeadlockDetector(world);
         scenarioManager = new ScenarioManager(world);
 	}
 
@@ -242,6 +245,7 @@ public class DriveSimFrame extends JFrame {
             scenarioManager.refresh();
         }
 
+        deadlockDetector.update();
         sim.getWorld().update(delta);
 
         this.repaint();
