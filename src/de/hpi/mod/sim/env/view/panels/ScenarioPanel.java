@@ -44,6 +44,7 @@ public class ScenarioPanel extends JPanel {
         	DriveSimFrame.resetBorders();
         	Border blackline = BorderFactory.createLineBorder(Color.black);
         	panel.setBorder(blackline);
+        	DriveSimFrame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
         });
 
         panel.add(label, BorderLayout.CENTER);

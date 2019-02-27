@@ -57,4 +57,12 @@ public class Position {
                 throw new IllegalArgumentException();
         }
     }
+
+	public boolean is(Position pos) {
+		if(pos.getX() == x && pos.getY() == y) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
