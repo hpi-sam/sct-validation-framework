@@ -13,11 +13,11 @@ public class SimulatorConfig {
     public static final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
     public static final Position FIRST_CHARGING_STATION_TOP = new Position(0,-2);
     public static final String TEST_FILE_NAME = "Tests";
-    public static final String STRING_PATH_TO_ROBOT_ICON = "simulator/res/robot.png";
-    public static final String STRING_PATH_TO_HIGHLIGHT_ROBOT_ICON = "simulator/res/robot-highlight.png";
-    public static final String STRING_PATH_TO_EMPTY_BATTERY = "simulator/res/battery_empty.png";
-    public static final String STRING_PATH_TO_PLAY_ICON = "simulator/res/play.png";
-    public static final String STRING_PATH_TO_PAUSE_ICON = "simulator/res/pause.png";
+    public static final String STRING_PATH_TO_ROBOT_ICON = "res/robot.png";
+    public static final String STRING_PATH_TO_HIGHLIGHT_ROBOT_ICON = "res/robot-highlight.png";
+    public static final String STRING_PATH_TO_EMPTY_BATTERY = "res/battery_empty.png";
+    public static final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
+    public static final String STRING_PATH_TO_PAUSE_ICON = "res/pause.png";
     public static final float DEFAULT_ROTATION_SPEED = .5f;
 	public static final long DEFAULT_UNLOADING_TIME = 1000;
 	public static final float BATTERY_FULL = 100;
