@@ -111,7 +111,7 @@ public class ScenarioManager {
     		int[] robotsAtStations = new int[maxStations];
     		List<NewRobot> newRobots = new ArrayList<>();
     		
-    		for(int i=0; i<5; i++) {
+    		for(int i=0; i<SimulatorConfig.getChargingStationsInUse(); i++) {
     			do {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
@@ -137,7 +137,8 @@ public class ScenarioManager {
     		int[] robotsAtStations = new int[maxStations];
     		List<NewRobot> newRobots = new ArrayList<>();
     		
-    		for(int i=0; i<10; i++) {
+    		for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*Math.ceil
+    				(((float)SimulatorConfig.getBatteriesPerStation())/2); i++) {
     			do {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
@@ -163,7 +164,7 @@ public class ScenarioManager {
     		int[] robotsAtStations = new int[maxStations];
     		List<NewRobot> newRobots = new ArrayList<>();
     		
-    		for(int i=0; i<20; i++) {
+    		for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*SimulatorConfig.getBatteriesPerStation(); i++) {
     			do {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
