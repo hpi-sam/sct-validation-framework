@@ -67,6 +67,7 @@ public class ScenarioManager {
 
         public EmptyScenario() {
             name = "Empty";
+            resizable = true;
         }
 
         @Override

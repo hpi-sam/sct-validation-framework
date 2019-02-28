@@ -15,6 +15,7 @@ public abstract class Scenario {
      * The name of the Scenario
      */
     protected String name = "Unnamed";
+    protected boolean resizable = false;
 
 
     protected Scenario() {
@@ -31,4 +32,8 @@ public abstract class Scenario {
         List<NewRobot> newRobots = initializeScenario();
         newRobots.forEach(r -> r.register(sim));
     }
+
+	public boolean isResizable() {
+		return resizable;
+	};
 }
