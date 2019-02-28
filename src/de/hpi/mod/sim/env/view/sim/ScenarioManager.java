@@ -30,6 +30,7 @@ public class ScenarioManager {
         scenarios.add(new MediumScenario());
         scenarios.add(new HardScenario());
         tests.add(new FourRobotsOnCrossroadScenario());
+        tests.add(new DriveToLoadingPosition());
         tests.add(new OppositeRobotsScenario());
     }
 
@@ -53,6 +54,10 @@ public class ScenarioManager {
                 }
             }
         }
+    }
+    
+    public SimulationWorld getWorld() {
+    	return world;
     }
 
     public List<Scenario> getScenarios() {
@@ -187,12 +192,26 @@ public class ScenarioManager {
         @Override
         public List<NewRobot> initializeScenario() {
             List<NewRobot> newRobots = new ArrayList<>();
-            newRobots.add(new NewWaypointRobot(new Position(6, 5), Orientation.WEST, new Position(0, 5)));
-            newRobots.add(new NewWaypointRobot(new Position(5, 3), Orientation.NORTH, new Position(5, 9)));
-            newRobots.add(new NewWaypointRobot(new Position(3, 4), Orientation.EAST, new Position(9, 4)));
-            newRobots.add(new NewWaypointRobot(new Position(4, 6), Orientation.SOUTH, new Position(4, 0)));
+            newRobots.add(new NewTestRobot(new Position(6, 5), Orientation.WEST, new Position(0, 5)));
+            newRobots.add(new NewTestRobot(new Position(5, 3), Orientation.NORTH, new Position(5, 9)));
+            newRobots.add(new NewTestRobot(new Position(3, 4), Orientation.EAST, new Position(9, 4)));
+            newRobots.add(new NewTestRobot(new Position(4, 6), Orientation.SOUTH, new Position(4, 0)));
             return newRobots;
         }
+    }
+    
+    private class DriveToLoadingPosition extends TestScenario {
+    	
+    	public DriveToLoadingPosition() {
+    		name = "Drive to loading position";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             newRobots.add(new NewTestRobot(new Position(0, -2), Orientation.EAST, new Position(2, 0)));
+             return newRobots;
+         }
     }
 
     private class OppositeRobotsScenario extends TestScenario {
@@ -201,18 +220,18 @@ public class ScenarioManager {
         @Override
         protected List<NewRobot> initializeScenario() {
             List<NewRobot> newRobots = new ArrayList<>();
-            newRobots.add(new NewWaypointRobot(new Position(3, 4), Orientation.EAST, new Position(1, 0)));
-            newRobots.add(new NewWaypointRobot(new Position(3, 5), Orientation.WEST, new Position(3, 4)));
+            newRobots.add(new NewTestRobot(new Position(3, 4), Orientation.EAST, new Position(1, 0)));
+            newRobots.add(new NewTestRobot(new Position(3, 5), Orientation.WEST, new Position(3, 4)));
             return newRobots;
         }
     }
 
-    private class NewWaypointRobot extends NewRobot {
+    private class NewTestRobot extends NewRobot {
 
         private Position pos, target;
         private Orientation facing;
 
-        public NewWaypointRobot(Position pos, Orientation facing, Position target) {
+        public NewTestRobot(Position pos, Orientation facing, Position target) {
             this.pos = pos;
             this.target = target;
             this.facing = facing;
@@ -220,7 +239,7 @@ public class ScenarioManager {
 
         @Override
         public Robot register(SimulationWorld sim) {
-            return sim.addRobotAtWaypoint(pos, facing, target);
+            return sim.addRobotAtPosition(pos, facing, target);
         }
     }
     

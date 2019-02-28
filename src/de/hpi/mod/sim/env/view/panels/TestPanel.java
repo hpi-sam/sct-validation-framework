@@ -62,7 +62,7 @@ public class TestPanel extends JPanel implements ITestListener {
     private void addRunAllTestButton() {
     	JPanel panel = new JPanel();
         JLabel label = new JLabel("Run all tests");
-        JButton run = new JButton("Run");
+        JButton run = new JButton("run");
 
         panel.setLayout(new BorderLayout());
         run.addActionListener(e -> {
@@ -156,6 +156,7 @@ public class TestPanel extends JPanel implements ITestListener {
 
         panel.setLayout(new BorderLayout());
         run.addActionListener(e -> {
+        	scenarioManager.getWorld().setIsRunningScenario(false);
         	manager.runScenario(test);
         	DriveSimFrame.resetBorders();
         	Border blackline = BorderFactory.createLineBorder(Color.black);

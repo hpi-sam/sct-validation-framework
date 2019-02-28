@@ -84,6 +84,7 @@ public class SimulationWorld {
      * Used for locking while the List of Robots gets traversed
      */
     private boolean isRefreshing = false, isUpdating = false;
+	private boolean isRunningScenario = false;
 
 
     public SimulationWorld(SimulatorView view) {
@@ -207,8 +208,8 @@ public class SimulationWorld {
         return addRobotRunner(() -> sim.addRobot());
     }
 
-    public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
-        return addRobotRunner(() -> sim.addRobotAtWaypoint(pos, facing, target));
+    public Robot addRobotAtPosition(Position pos, Orientation facing, Position target) {
+        return addRobotRunner(() -> sim.addRobotAtPosition(pos, facing, target));
     }
     
     public Robot addRobotInScenarioHPI2(Position pos, Orientation facing) {
@@ -327,4 +328,12 @@ public class SimulationWorld {
     private interface AddRobotRunner {
         Robot run();
     }
+
+	public boolean getIsRunningScenario() {
+		return isRunningScenario;
+	}
+	
+	public void setIsRunningScenario(boolean isRunningScenario) {
+		this.isRunningScenario = isRunningScenario;
+	}
 }

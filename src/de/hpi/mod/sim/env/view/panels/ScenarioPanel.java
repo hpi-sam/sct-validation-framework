@@ -41,6 +41,7 @@ public class ScenarioPanel extends JPanel {
         panel.setLayout(new BorderLayout());
         run.addActionListener(e -> {
         	((JFrame) SwingUtilities.getWindowAncestor(this)).setResizable(scenario.isResizable());
+        	world.setIsRunningScenario(true);
         	runScenario(manager, scenario, timer);
         	DriveSimFrame.resetBorders();
         	Border blackline = BorderFactory.createLineBorder(Color.black);

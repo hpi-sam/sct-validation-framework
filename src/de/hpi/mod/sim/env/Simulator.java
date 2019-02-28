@@ -52,20 +52,16 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtWaypoint(Position pos, Orientation facing, Position target) {
-
-        // Check if Position is a Waypoint
-        if (grid.posType(pos) == PositionType.WAYPOINT) {
-            int robotID = Robot.incrementID();
-            Robot robot = new Robot(
-                    robotID,
-                    0,
-                    grid, stations, this, this,
-                    pos, facing, target);
-            robots.add(robot);
-            return robot;
-        }
-        return null;
+    public Robot addRobotAtPosition(Position pos, Orientation facing, Position target) {
+    	
+        int robotID = Robot.incrementID();
+        Robot robot = new Robot(
+                robotID,
+                0,
+                grid, stations, this, this,
+                pos, facing, target);
+        robots.add(robot);
+        return robot;
     }
     
     public Robot addRobotInScenarioHPI(Position pos, Orientation facing) {
