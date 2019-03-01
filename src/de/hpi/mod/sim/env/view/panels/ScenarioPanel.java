@@ -63,7 +63,7 @@ public class ScenarioPanel extends JPanel {
 		    Border empty = BorderFactory.createEmptyBorder();
 		    scenarioPanel.setBorder(empty);
 		}
-		TestPanel.resetAllBorders();
+		TestListPanel.resetAllBorders();
 	}
 
 	private void runScenario(ScenarioManager manager, Scenario test, TimerPanel timer) {
