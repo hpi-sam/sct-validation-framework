@@ -113,11 +113,12 @@ public class DriveSimFrame extends JFrame {
 		testListConstraints.gridx = 3;
 		testListConstraints.gridy = 0;
 		testListConstraints.gridheight = 5;
+		testListConstraints.fill = GridBagConstraints.HORIZONTAL;
 		testListConstraints.anchor = GridBagConstraints.PAGE_START;
 		testList.setVisible(false);
 		add(testList, testListConstraints);
 		
-		setPreferredSize(new Dimension(1500, 700));
+		setPreferredSize(new Dimension(1000, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
@@ -136,27 +137,31 @@ public class DriveSimFrame extends JFrame {
 	}
 
 	private void setDesignOfSubpanels() {
-        info.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
-        info.setPreferredSize(new Dimension(200, 500));
-        info2.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
-        info2.setPreferredSize(new Dimension(200, 500));
-        config.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        config.setPreferredSize(new Dimension(400,150));
-        testList.setBorder(BorderFactory.createTitledBorder(
+		testOverview.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        testList.setPreferredSize(new Dimension(700,100));
-        testOverview.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        testOverview.setPreferredSize(new Dimension(400, 200));
+        testOverview.setMinimumSize(new Dimension(400, 80));
+        
         scenario.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        scenario.setPreferredSize(new Dimension(400,100));
+        scenario.setMinimumSize(new Dimension(400,150));
+        
+        config.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
+        config.setMinimumSize(new Dimension(400,70));
+        
         timer.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
-        timer.setPreferredSize(new Dimension(400,100));
+        timer.setPreferredSize(new Dimension(400,60));
+        
+        info.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
+        info.setMinimumSize(new Dimension(200, 200));
+        info2.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
+        info2.setMinimumSize(new Dimension(200, 200));
+        
+        testList.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
 	}
 
 	private void addListeners() {

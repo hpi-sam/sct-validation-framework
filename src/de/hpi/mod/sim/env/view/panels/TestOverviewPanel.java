@@ -42,28 +42,38 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	
 	private void createComponents() {
 		progressDisplay = newProgressDisplay();
+		//progressDisplay.setPreferredSize(new Dimension(200, 0));
 		updateProgressDisplay();
 		GridBagConstraints progressDisplayConstraints = new GridBagConstraints();
 		progressDisplayConstraints.gridx = 0;
 		progressDisplayConstraints.gridy = 0;
+		progressDisplayConstraints.weightx = 1.0;
+		progressDisplayConstraints.weighty = 1.0;
 		add(progressDisplay, progressDisplayConstraints);
 		
 		showHideButton = newShowHideButton();
+		//showHideButton.setPreferredSize(new Dimension(100, 50));
 		GridBagConstraints showHideButtonConstraints = new GridBagConstraints();
 		showHideButtonConstraints.gridx = 0;
 		showHideButtonConstraints.gridy = 1;
+		showHideButtonConstraints.weightx = 1.0;
+		showHideButtonConstraints.weighty = 1.0;
 		add(showHideButton, showHideButtonConstraints);
 		
 		runAllButton = newRunAllButton();
 		GridBagConstraints runAllButtonConstraints = new GridBagConstraints();
 		runAllButtonConstraints.gridx = 1;
 		runAllButtonConstraints.gridy = 0;
+		runAllButtonConstraints.weightx = 1.0;
+		runAllButtonConstraints.weighty = 1.0;
 		add(runAllButton, runAllButtonConstraints);
 		
 		resetButton = newResetButton();
 		GridBagConstraints resetButtonConstraints = new GridBagConstraints();
 		resetButtonConstraints.gridx = 1;
 		resetButtonConstraints.gridy = 1;
+		resetButtonConstraints.weightx = 1.0;
+		resetButtonConstraints.weighty = 1.0;
 		add(resetButton, resetButtonConstraints);
 	}
 	
