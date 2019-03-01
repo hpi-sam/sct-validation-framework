@@ -25,7 +25,6 @@ public abstract class TestScenario extends Scenario {
     }
 
     public boolean isPassed() {
-    	System.out.println(hasRun && robots.stream().allMatch(Robot::isTargetReached));
         return hasRun && robots.stream().allMatch(Robot::hasReachedAllTargets);
     }
     
