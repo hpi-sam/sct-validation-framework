@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.robot;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.*;
 import java.util.concurrent.TimeUnit;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -28,6 +29,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private IScanner scanner;
 
     private Position target;
+    private List<Position> testPositionTargets = null;
     private int robotID;
     private int stationID;
     private int packageID;
@@ -40,6 +42,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     
     private long now = 0;
     private long delay = 0;
+
+	private boolean isInTest = false;
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
@@ -58,13 +62,15 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     /**
      * This constructor is only used for test-scenarios and sets the Robots state to Scenario
+     * @param state 
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
-                 Position startPosition, Orientation startFacing, Position target) {
+                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets) {
         this(robotID, stationID, grid, dispatcher, location, scanner, startPosition, startFacing);
-        this.target = target;
-        state = RobotState.SCENARIO;
+        testPositionTargets = targets;
+        isInTest  = true;
+        this.state = initialState;
     }
 
     /**
@@ -72,19 +78,19 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      */
     public void refresh() {
         if (!driving) {
-            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
-                handleFinishedCharging();
-            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
-            	handleFinishedLoading();
-            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
-                handleFinishedUnloading();
-            } else if (state == RobotState.TO_STATION) {
-                handleArriveAtStation();
-            } else if (state == RobotState.TO_QUEUE) {
-                handleArriveAtQueue();
-            } else if (state == RobotState.SCENARIO && !manager.currentPosition().equals(target)) {
-                startDriving();
-            }
+        	if(!isInTest || !testPositionTargets.isEmpty()) {
+	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
+	                handleFinishedCharging();
+	            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
+	            	handleFinishedLoading();
+	            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
+	                handleFinishedUnloading();
+	            } else if (state == RobotState.TO_STATION) {
+	                handleArriveAtStation();
+	            } else if (state == RobotState.TO_QUEUE) {
+	                handleArriveAtQueue();
+	            }
+        	}
         }
         startDriving();
         drive.dataRefresh();
@@ -107,7 +113,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         if (dispatcher.requestEnteringStation(robotID, stationID)) {
 
             if (hasReservedBattery) {
-                target = location.getBatteryPositionAtStation(stationID,
+        		target = location.getBatteryPositionAtStation(stationID,
                         dispatcher.getReservedChargerAtStation(robotID, stationID));
                 state = RobotState.TO_BATTERY;
                 hasReservedBattery = false;
@@ -135,7 +141,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         manager.setLoading(false);
 
         if (dispatcher.requestLeavingBattery(robotID, stationID)) {
-            target = location.getQueuePositionAtStation(stationID);
+        	target = location.getQueuePositionAtStation(stationID);
             state = RobotState.TO_QUEUE;
             startDriving();
         }
@@ -143,7 +149,12 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private void handleArriveAtQueue() {
         dispatcher.reportEnteringQueueAtStation(robotID, stationID);
-        target = location.getLoadingPositionAtStation(stationID);
+        if(!isInTest) {
+        	target = location.getLoadingPositionAtStation(stationID);
+        } else {
+        	target = testPositionTargets.get(0);
+    		testPositionTargets.remove(0);
+        }
         state = RobotState.TO_LOADING;
         startDriving();
     }
@@ -161,7 +172,12 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         {
     		packageID = scanner.getPackageID(stationID, this.pos());
     		hasPackage = true;
-            target = location.getUnloadingPositionFromID(packageID);
+    		if(!isInTest) {
+    			target = location.getUnloadingPositionFromID(packageID);
+    		} else {
+    			target = testPositionTargets.get(0);
+        		testPositionTargets.remove(0);
+    		}
             dispatcher.reportLeaveStation(robotID, stationID);
             state = RobotState.TO_UNLOADING;
             startDriving();
@@ -176,7 +192,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private void handleFinishedUnloading() {
         boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
-        target = location.getArrivalPositionAtStation(stationID);
+        if(!isInTest) {
+        	target = location.getArrivalPositionAtStation(stationID);
+        } else {
+        	target = testPositionTargets.get(0);
+    		testPositionTargets.remove(0);
+    		stationID = dispatcher.getStationIDFromPosition(target);
+        }
         state = RobotState.TO_STATION;
         hasReservedBattery = needsLoading;
         startDriving();
@@ -218,6 +240,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public boolean isTargetReached() {
         return manager.currentPosition().equals(target);
+    }
+    
+    public boolean hasReachedAllTargets() {
+    	return testPositionTargets.isEmpty();
     }
 
     @Override
@@ -330,7 +356,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         return idCount++;
     }
 
-    private enum RobotState {
+    public enum RobotState {
         TO_BATTERY, TO_QUEUE, TO_LOADING, TO_UNLOADING, TO_STATION, SCENARIO
     }
 }

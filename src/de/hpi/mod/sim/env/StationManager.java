@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env;
 
 import de.hpi.mod.sim.env.model.IRobotStationDispatcher;
+import de.hpi.mod.sim.env.model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,11 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public int getReservedChargerAtStation(int robotID, int stationID) {
         return getStationByID(stationID).getBatteryReservedForRobot(robotID);
+    }
+    
+    @Override
+    public int getStationIDFromPosition(Position target) {
+    	return target.getX()/3;
     }
 
     /**

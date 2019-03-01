@@ -2,6 +2,7 @@ package de.hpi.mod.sim.env;
 
 import de.hpi.mod.sim.env.model.*;
 import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.robot.Robot.RobotState;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.*;
@@ -48,18 +49,19 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * since the Robots may be in an invalid state after reaching their targets
      *
      * @param pos The Waypoint where the Robot will be placed
+     * @param state 
      * @param facing The Orientation of the Robot at its starting position
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtPosition(Position pos, Orientation facing, Position target) {
+    public Robot addRobotAtPosition(Position pos, RobotState state, Orientation facing, List<Position> targets) {
     	
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
                 0,
                 grid, stations, this, this,
-                pos, facing, target);
+                pos, state, facing, targets);
         robots.add(robot);
         return robot;
     }

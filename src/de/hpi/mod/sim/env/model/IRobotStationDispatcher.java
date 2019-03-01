@@ -7,6 +7,7 @@ package de.hpi.mod.sim.env.model;
 public interface IRobotStationDispatcher {
     int getReservationNextForStation(int robotID, boolean charge);
     int getReservedChargerAtStation(int robotID, int stationID);
+    int getStationIDFromPosition(Position target);
     boolean requestEnteringStation(int robotID, int stationID);
     boolean requestLeavingBattery(int robotID, int stationID);
     void reportChargingAtStation(int robotID, int stationID);
