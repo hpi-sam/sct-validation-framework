@@ -12,6 +12,7 @@ public abstract class TestScenario extends Scenario {
     private List<Robot> robots = new ArrayList<>();
     private boolean hasRun = false;
     private boolean alreadyPrinted = false;
+    private boolean active = false;
 
 
     @Override
@@ -33,6 +34,14 @@ public abstract class TestScenario extends Scenario {
     		DriveSimFrame.displayMessage("Finished test \"" + name + "\" succesfully");
     		alreadyPrinted = true;
     	}
+    }
+    
+    public void setActive(boolean active) {
+    	this.active = active;
+    }
+    
+    public boolean isActive() {
+    	return active;
     }
 
 	public void resetTest() {
