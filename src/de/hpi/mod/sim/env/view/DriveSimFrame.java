@@ -139,7 +139,6 @@ public class DriveSimFrame extends JFrame {
 	private void setDesignOfSubpanels() {
 		testOverview.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        testOverview.setMinimumSize(new Dimension(400, 80));
         
         scenario.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
