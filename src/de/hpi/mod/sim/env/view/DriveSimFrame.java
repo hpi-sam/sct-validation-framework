@@ -37,6 +37,10 @@ public class DriveSimFrame extends JFrame {
     private boolean running = true;
 	private TimerPanel timer;
 	private SimulationWorld world;
+	
+	public static Color MENU_ORANGE = new Color(0xfff3e2);
+	public static Color MENU_GREEN = new Color(0xdcf3d0);
+	public static Color MENU_RED = new Color(0xffe1d0);
 
     public DriveSimFrame() {
         super("Drive System Simulator");
@@ -57,6 +61,8 @@ public class DriveSimFrame extends JFrame {
     }
 
 	private void setDesignOfMainWindow() {
+		getContentPane().setBackground(MENU_ORANGE);
+		setBackground(MENU_ORANGE);
 		
 		GridBagConstraints simConstraints = new GridBagConstraints();
 		simConstraints.gridx = 0;
@@ -139,28 +145,37 @@ public class DriveSimFrame extends JFrame {
 	private void setDesignOfSubpanels() {
 		testOverview.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+		testOverview.setBackground(MENU_ORANGE);
         
         scenario.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        scenario.setMinimumSize(new Dimension(400,150));
+        scenario.setMinimumSize(new Dimension(400,200));
+        scenario.setBackground(MENU_ORANGE);
         
         config.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
         config.setMinimumSize(new Dimension(400,70));
+        config.setBackground(MENU_ORANGE);
         
         timer.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
         timer.setPreferredSize(new Dimension(400,60));
+        timer.setBackground(MENU_ORANGE);
         
         info.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
-        info.setMinimumSize(new Dimension(200, 200));
+        info.setMinimumSize(new Dimension(200, 130));
+        info.setPreferredSize(new Dimension(200, 130));
+        info.setBackground(MENU_GREEN);
         info2.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
-        info2.setMinimumSize(new Dimension(200, 200));
+        info2.setMinimumSize(new Dimension(200, 130));
+        info2.setPreferredSize(new Dimension(200, 130));
+        info2.setBackground(MENU_RED);
         
         testList.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+        testList.setBackground(MENU_ORANGE);
 	}
 
 	private void addListeners() {
@@ -305,9 +320,9 @@ public class DriveSimFrame extends JFrame {
         }
     }
     
-    public static void resetBorders() {
+    public void clearSelections() {
     	TestListPanel.resetAllBorders();
-    	ScenarioPanel.resetAllBorders();
+    	scenario.clearSelections();
     }
 
 	public static void displayMessage(String string) {

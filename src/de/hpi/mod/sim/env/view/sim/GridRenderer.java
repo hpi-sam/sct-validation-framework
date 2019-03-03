@@ -65,17 +65,17 @@ public class GridRenderer {
         float blockSize = world.getBlockSize();
 
         if (cell == CellType.BLOCK)
-            graphic.setColor(Color.BLACK);
+            graphic.setColor(Color.DARK_GRAY);
         if (cell == CellType.WAYPOINT)
             graphic.setColor(Color.WHITE);
         if (cell == CellType.CROSSROAD)
             graphic.setColor(Color.LIGHT_GRAY);
         if (cell == CellType.BATTERY)
-            graphic.setColor(Color.YELLOW);
+            graphic.setColor(new Color(0xfff1b5));
         if (cell == CellType.LOADING)
-            graphic.setColor(Color.BLUE);
+            graphic.setColor(new Color(0xbae5f2));
         if (cell == CellType.STATION)
-            graphic.setColor(Color.GRAY);
+            graphic.setColor(new Color(0xe0d9f9));
 
         graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
 

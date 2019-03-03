@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
@@ -48,7 +49,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		progressDisplayConstraints.gridy = 0;
 		progressDisplayConstraints.weightx = 1.0;
 		progressDisplayConstraints.weighty = 1.0;
-		add(wrap(progressDisplay, 194, 26), progressDisplayConstraints);
+		add(new MenuWrapper(194, 26, DriveSimFrame.MENU_ORANGE, progressDisplay), progressDisplayConstraints);
 		
 		showHideButton = newShowHideButton();
 		GridBagConstraints showHideButtonConstraints = new GridBagConstraints();
@@ -56,7 +57,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		showHideButtonConstraints.gridy = 1;
 		showHideButtonConstraints.weightx = 1.0;
 		showHideButtonConstraints.weighty = 1.0;
-		add(wrap(showHideButton, 200, 30), showHideButtonConstraints);
+		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, showHideButton), showHideButtonConstraints);
 		
 		runAllButton = newRunAllButton();
 		GridBagConstraints runAllButtonConstraints = new GridBagConstraints();
@@ -64,7 +65,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		runAllButtonConstraints.gridy = 0;
 		runAllButtonConstraints.weightx = 1.0;
 		runAllButtonConstraints.weighty = 1.0;
-		add(wrap(runAllButton, 200, 30), runAllButtonConstraints);
+		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, runAllButton), runAllButtonConstraints);
 		
 		resetButton = newResetButton();
 		GridBagConstraints resetButtonConstraints = new GridBagConstraints();
@@ -72,19 +73,11 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		resetButtonConstraints.gridy = 1;
 		resetButtonConstraints.weightx = 1.0;
 		resetButtonConstraints.weighty = 1.0;
-		add(wrap(resetButton, 200, 30), resetButtonConstraints);
-	}
-	
-	private JPanel wrap(JComponent component, int width, int height) {
-		JPanel wrapper = new JPanel(new BorderLayout());
-		wrapper.add(component);
-		wrapper.setMinimumSize(new Dimension(width, height));
-		wrapper.setPreferredSize(new Dimension(width, height));
-		return wrapper;
+		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
 	}
 	
 	private JTextField newProgressDisplay() {
-		JTextField textField = new JTextField("7/42 green");
+		JTextField textField = new JTextField("0/0 green");
 		textField.setEditable(false);
 		return textField;
 	}

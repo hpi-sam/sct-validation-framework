@@ -33,8 +33,6 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         this.isRightClickedRobot = isRightClickedRobot;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        setPreferredSize(new Dimension(200, 200));
-
         // Add information
         addInfo("ID", r -> Integer.toString(r.getID()));
         addInfo("Battery", r -> Integer.toString((int) r.getBattery()));

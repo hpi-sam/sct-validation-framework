@@ -32,7 +32,7 @@ public class TestListPanel extends JPanel implements ITestListener {
     
     @Override
     public void onTestCompleted(TestScenario test) {
-        tests.get(test).setBackground(Color.green);
+        tests.get(test).setBackground(DriveSimFrame.MENU_GREEN);
         repaint();
     }
 
@@ -50,7 +50,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         panel.setLayout(new BorderLayout());
         run.addActionListener(e -> {
         	scenarioManager.runScenario(test);
-        	DriveSimFrame.resetBorders();
+        	((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
         	Border blackline = BorderFactory.createLineBorder(Color.black);
         	panel.setBorder(blackline);
         	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
