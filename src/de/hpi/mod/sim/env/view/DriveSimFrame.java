@@ -74,7 +74,6 @@ public class DriveSimFrame extends JFrame {
 		add(sim, simConstraints);
 		
 		JPanel spacer = new JPanel();
-		spacer.setMinimumSize(new Dimension(10, 10));
 		spacer.setBackground(Color.DARK_GRAY);
 		GridBagConstraints spacerConstraints = new GridBagConstraints();
 		spacerConstraints.gridx = 1;
@@ -134,7 +133,7 @@ public class DriveSimFrame extends JFrame {
 		testList.setVisible(false);
 		add(testList, testListConstraints);
 		
-		setPreferredSize(new Dimension(1000, 700));
+		setPreferredSize(new Dimension(1250, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
