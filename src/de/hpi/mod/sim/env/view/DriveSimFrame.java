@@ -74,7 +74,7 @@ public class DriveSimFrame extends JFrame {
 		add(sim, simConstraints);
 		
 		JPanel spacer = new JPanel();
-		spacer.setMinimumSize(new Dimension(3, 10));
+		spacer.setMinimumSize(new Dimension(10, 10));
 		spacer.setBackground(Color.DARK_GRAY);
 		GridBagConstraints spacerConstraints = new GridBagConstraints();
 		spacerConstraints.gridx = 1;
@@ -159,17 +159,14 @@ public class DriveSimFrame extends JFrame {
         
         scenario.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        scenario.setMinimumSize(new Dimension(400,180));
         scenario.setBackground(MENU_ORANGE);
         
         config.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        config.setMinimumSize(new Dimension(400,150));
         config.setBackground(MENU_ORANGE);
         
         timer.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
-        timer.setPreferredSize(new Dimension(400,130));
         timer.setBackground(MENU_ORANGE);
         
         info.setBorder(BorderFactory.createTitledBorder(
@@ -331,7 +328,7 @@ public class DriveSimFrame extends JFrame {
     }
     
     public void clearSelections() {
-    	TestListPanel.resetAllBorders();
+    	testList.clearSelections();
     	scenario.clearSelections();
     }
 
