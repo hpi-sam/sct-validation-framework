@@ -71,11 +71,11 @@ public class GridRenderer {
         if (cell == CellType.CROSSROAD)
             graphic.setColor(Color.LIGHT_GRAY);
         if (cell == CellType.BATTERY)
-            graphic.setColor(new Color(0xfff1b5));
+            graphic.setColor(new Color(0xe0d9f9));
         if (cell == CellType.LOADING)
             graphic.setColor(new Color(0xbae5f2));
         if (cell == CellType.STATION)
-            graphic.setColor(new Color(0xe0d9f9));
+            graphic.setColor(new Color(0xfff3e2));
 
         graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
 

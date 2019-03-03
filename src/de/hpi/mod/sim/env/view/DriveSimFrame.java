@@ -73,50 +73,60 @@ public class DriveSimFrame extends JFrame {
 		simConstraints.gridheight = 5;
 		add(sim, simConstraints);
 		
+		JPanel spacer = new JPanel();
+		spacer.setMinimumSize(new Dimension(3, 10));
+		spacer.setBackground(Color.DARK_GRAY);
+		GridBagConstraints spacerConstraints = new GridBagConstraints();
+		spacerConstraints.gridx = 1;
+		spacerConstraints.gridy = 0;
+		spacerConstraints.gridheight = 5;
+		spacerConstraints.fill = GridBagConstraints.VERTICAL;
+		add(spacer, spacerConstraints);
+		
 		GridBagConstraints testOverviewConstraints = new GridBagConstraints();
-		testOverviewConstraints.gridx = 1;
+		testOverviewConstraints.gridx = 2;
 		testOverviewConstraints.gridy = 0;
 		testOverviewConstraints.gridwidth = 2;
 		testOverviewConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(testOverview, testOverviewConstraints);
 		
 		GridBagConstraints scenarioConstraints = new GridBagConstraints();
-		scenarioConstraints.gridx = 1;
+		scenarioConstraints.gridx = 2;
 		scenarioConstraints.gridy = 1;
 		scenarioConstraints.gridwidth = 2;
 		scenarioConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(scenario, scenarioConstraints);
 		
 		GridBagConstraints configConstraints = new GridBagConstraints();
-		configConstraints.gridx = 1;
+		configConstraints.gridx = 2;
 		configConstraints.gridy = 2;
 		configConstraints.gridwidth = 2;
 		configConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(config, configConstraints);
 		
 		GridBagConstraints timerConstraints = new GridBagConstraints();
-		timerConstraints.gridx = 1;
+		timerConstraints.gridx = 2;
 		timerConstraints.gridy = 3;
 		timerConstraints.gridwidth = 2;
 		timerConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(timer, timerConstraints);
 		
 		GridBagConstraints infoConstraints = new GridBagConstraints();
-		infoConstraints.gridx = 1;
+		infoConstraints.gridx = 2;
 		infoConstraints.gridy = 4;
 		infoConstraints.fill = GridBagConstraints.HORIZONTAL;
 		infoConstraints.anchor = GridBagConstraints.PAGE_START;
 		add(info, infoConstraints);
 		
 		GridBagConstraints info2Constraints = new GridBagConstraints();
-		info2Constraints.gridx = 2;
+		info2Constraints.gridx = 3;
 		info2Constraints.gridy = 4;
 		info2Constraints.fill = GridBagConstraints.HORIZONTAL;
 		info2Constraints.anchor = GridBagConstraints.PAGE_START;
 		add(info2, info2Constraints);
 		
 		GridBagConstraints testListConstraints = new GridBagConstraints();
-		testListConstraints.gridx = 3;
+		testListConstraints.gridx = 4;
 		testListConstraints.gridy = 0;
 		testListConstraints.gridheight = 5;
 		testListConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -149,17 +159,17 @@ public class DriveSimFrame extends JFrame {
         
         scenario.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        scenario.setMinimumSize(new Dimension(400,200));
+        scenario.setMinimumSize(new Dimension(400,180));
         scenario.setBackground(MENU_ORANGE);
         
         config.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        config.setMinimumSize(new Dimension(400,70));
+        config.setMinimumSize(new Dimension(400,150));
         config.setBackground(MENU_ORANGE);
         
         timer.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
-        timer.setPreferredSize(new Dimension(400,60));
+        timer.setPreferredSize(new Dimension(400,130));
         timer.setBackground(MENU_ORANGE);
         
         info.setBorder(BorderFactory.createTitledBorder(
