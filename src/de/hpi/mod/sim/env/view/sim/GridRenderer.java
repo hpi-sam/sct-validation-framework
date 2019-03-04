@@ -73,7 +73,7 @@ public class GridRenderer {
         if (cell == CellType.BATTERY)
             graphic.setColor(new Color(0xe0d9f9));
         if (cell == CellType.LOADING)
-            graphic.setColor(new Color(0xbae5f2));
+            graphic.setColor(new Color(0xc0e8ed));
         if (cell == CellType.STATION)
             graphic.setColor(new Color(0xfff3e2));
 
