@@ -6,6 +6,7 @@ import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.robot.Robot.RobotState;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.Scenario;
@@ -44,7 +45,7 @@ public class SimulationWorld {
     /**
      * Whether the simulation is running or not
      */
-    private static boolean running = false;
+    private boolean running = false;
 
     /**
      * The Position of the mouse in blocks
@@ -208,8 +209,8 @@ public class SimulationWorld {
         return addRobotRunner(() -> sim.addRobot());
     }
 
-    public Robot addRobotAtPosition(Position pos, Orientation facing, Position target) {
-        return addRobotRunner(() -> sim.addRobotAtPosition(pos, facing, target));
+    public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets) {
+        return addRobotRunner(() -> sim.addRobotAtPosition(pos, initialState, facing, targets));
     }
     
     public Robot addRobotInScenarioHPI2(Position pos, Orientation facing) {
@@ -281,7 +282,7 @@ public class SimulationWorld {
         refreshTimeListeners();
     }
     
-    public static boolean isRunning() {
+    public boolean isRunning() {
         return running;
     }
 

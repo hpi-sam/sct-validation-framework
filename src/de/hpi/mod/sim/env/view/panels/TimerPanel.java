@@ -2,6 +2,8 @@ package de.hpi.mod.sim.env.view.panels;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +18,7 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 public class TimerPanel extends JPanel {
 	private Timer timer;
+	private SimulationWorld world;
 	private int originalTime;
 	private int remainingTime;
 	private int passedMinutes = 0;
@@ -23,24 +26,30 @@ public class TimerPanel extends JPanel {
 	private JTextField valueField;
 	private static DriveSimFrame parent;
 	
-	public TimerPanel(){
-		setLayout(new GridLayout(0, 1));
-		JPanel root = new JPanel(new BorderLayout());
+	public TimerPanel(SimulationWorld world){
+		this.world = world;
 		
-		// Label shows the name
-        JLabel label = new JLabel("Clock");
-        label.setFont(label.getFont().deriveFont(Font.PLAIN));
+		setLayout(new GridBagLayout());
 
         // TextField to show values
         valueField = new JTextField();
         valueField.setEditable(false);
         valueField.setPreferredSize(new Dimension(50, 0));
+        valueField.setHorizontalAlignment(JTextField.CENTER);
         valueField.setText("0:00");
+        GridBagConstraints valueFieldConstraints = new GridBagConstraints();
+        valueFieldConstraints.gridx = 0;
+        valueFieldConstraints.gridy = 1;
+        valueFieldConstraints.anchor = GridBagConstraints.LINE_START;
+        add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, valueField), valueFieldConstraints);
         
-        root.add(label);
-        root.add(valueField, BorderLayout.CENTER);
-        
-        add(root);
+        JPanel spacer = new JPanel();
+        spacer.setBackground(DriveSimFrame.MENU_ORANGE);
+        GridBagConstraints spacerConstraints = new GridBagConstraints();
+        spacerConstraints.gridx = 1;
+        spacerConstraints.gridy = 1;
+        spacerConstraints.weightx = 1.0;
+        add(new MenuWrapper(100, 60, DriveSimFrame.MENU_ORANGE, spacer), spacerConstraints);
 	}
 	
 	public void startNewClock(int countdown) {
@@ -51,7 +60,7 @@ public class TimerPanel extends JPanel {
 		timer=new Timer(1000,new ActionListener(){
 		public void actionPerformed(ActionEvent e)
 		{
-			if(SimulationWorld.isRunning()) {
+			if(world.isRunning()) {
 		        remainingTime -= 1*parent.getConfigPanel().getCurrentLevel();
 		        setClockTime();
 		        if(remainingTime<=0) {

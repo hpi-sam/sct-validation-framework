@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.sim;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.robot.Robot.RobotState;
 import de.hpi.mod.sim.env.view.model.ITestListener;
 import de.hpi.mod.sim.env.view.model.NewRobot;
 import de.hpi.mod.sim.env.view.model.Scenario;
@@ -20,6 +21,7 @@ public class ScenarioManager {
     private List<TestScenario> tests = new ArrayList<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
+    
 
 
     public ScenarioManager(SimulationWorld world) {
@@ -30,7 +32,11 @@ public class ScenarioManager {
         scenarios.add(new MediumScenario());
         scenarios.add(new HardScenario());
         tests.add(new FourRobotsOnCrossroadScenario());
+        tests.add(new DriveToQueueEnd());
         tests.add(new DriveToLoadingPosition());
+        tests.add(new DriveToUnloadingPosition());
+        tests.add(new MiddleRoute());
+        tests.add(new HandleThreeRobotsInStation());
         tests.add(new OppositeRobotsScenario());
     }
 
@@ -38,8 +44,10 @@ public class ScenarioManager {
     	world.resetZoom();
 		world.resetOffset();
         world.playScenario(scenario);
-        if (scenario instanceof TestScenario)
-            world.toggleRunning();
+        if (scenario instanceof TestScenario) {
+        	((TestScenario)scenario).setActive(true);
+        	world.toggleRunning();
+        }
     }
 
     public void addTestListener(ITestListener listener) {
@@ -48,7 +56,8 @@ public class ScenarioManager {
 
     public void refresh() {
         for (TestScenario test : tests) {
-            if (test.isPassed()) {
+            if (test.isPassed() && test.isActive()) {
+            	test.setActive(false);
                 for (ITestListener listener : listeners) {
                     listener.onTestCompleted(test);
                 }
@@ -192,12 +201,36 @@ public class ScenarioManager {
         @Override
         public List<NewRobot> initializeScenario() {
             List<NewRobot> newRobots = new ArrayList<>();
-            newRobots.add(new NewTestRobot(new Position(6, 5), Orientation.WEST, new Position(0, 5)));
-            newRobots.add(new NewTestRobot(new Position(5, 3), Orientation.NORTH, new Position(5, 9)));
-            newRobots.add(new NewTestRobot(new Position(3, 4), Orientation.EAST, new Position(9, 4)));
-            newRobots.add(new NewTestRobot(new Position(4, 6), Orientation.SOUTH, new Position(4, 0)));
+            List<Position> targetsRobotOne = new ArrayList<>();
+            targetsRobotOne.add(new Position(0,5));
+            List<Position> targetsRobotTwo = new ArrayList<>();
+            targetsRobotTwo.add(new Position(5,9));
+            List<Position> targetsRobotThree = new ArrayList<>();
+            targetsRobotThree.add(new Position(9,4));
+            List<Position> targetsRobotFour = new ArrayList<>();
+            targetsRobotFour.add(new Position(4,0));
+            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
+            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
+            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
+            newRobots.add(new NewTestRobot(new Position(4, 6), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotFour));
             return newRobots;
         }
+    }
+    
+    private class DriveToQueueEnd extends TestScenario {
+    	
+    	public DriveToQueueEnd() {
+    		name = "Drive to end of the queue";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targets = new ArrayList<>();
+             targets.add(new Position(2,-5));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             return newRobots;
+         }
     }
     
     private class DriveToLoadingPosition extends TestScenario {
@@ -209,7 +242,72 @@ public class ScenarioManager {
     	 @Override
          public List<NewRobot> initializeScenario() {
              List<NewRobot> newRobots = new ArrayList<>();
-             newRobots.add(new NewTestRobot(new Position(0, -2), Orientation.EAST, new Position(2, 0)));
+             List<Position> targets = new ArrayList<>();
+             targets.add(new Position(2,0));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             return newRobots;
+         }
+    }
+    
+    
+    private class DriveToUnloadingPosition extends TestScenario {
+    	
+    	public DriveToUnloadingPosition() {
+    		name = "Drive to unloading position";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targets = new ArrayList<>();
+             targets.add(new Position(2,0));
+             targets.add(new Position(3,10));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             return newRobots;
+         }
+    }
+    
+    private class MiddleRoute extends TestScenario {
+    	
+    	public MiddleRoute() {
+    		name = "Can handle medium long route";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targets = new ArrayList<>();
+             targets.add(new Position(2,0));
+             targets.add(new Position(3,10));
+             targets.add(new Position(1,0));
+             targets.add(new Position(2,0));
+             targets.add(new Position(6,10));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             return newRobots;
+         }
+    }
+    
+    private class HandleThreeRobotsInStation extends TestScenario {
+    	
+    	public HandleThreeRobotsInStation() {
+    		name = "Handle three robots in station";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targetsRobotOne = new ArrayList<>();
+             List<Position> targetsRobotTwo = new ArrayList<>();
+             List<Position> targetsRobotThree = new ArrayList<>();
+             targetsRobotOne.add(new Position(2,0));
+             targetsRobotOne.add(new Position(3,10));
+             targetsRobotTwo.add(new Position(2,0));
+             targetsRobotTwo.add(new Position(3,13));
+             targetsRobotThree.add(new Position(2,0));
+             targetsRobotThree.add(new Position(3,16));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne));
+             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo));
+             newRobots.add(new NewTestRobot(new Position(0, -4), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotThree));
              return newRobots;
          }
     }
@@ -220,26 +318,33 @@ public class ScenarioManager {
         @Override
         protected List<NewRobot> initializeScenario() {
             List<NewRobot> newRobots = new ArrayList<>();
-            newRobots.add(new NewTestRobot(new Position(3, 4), Orientation.EAST, new Position(1, 0)));
-            newRobots.add(new NewTestRobot(new Position(3, 5), Orientation.WEST, new Position(3, 4)));
+            List<Position> targetsRobotOne = new ArrayList<>();
+            List<Position> targetsRobotTwo = new ArrayList<>();
+            targetsRobotOne.add(new Position(1,0));
+            targetsRobotTwo.add(new Position(3,4));
+            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotOne));
+            newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotTwo));
             return newRobots;
         }
     }
 
     private class NewTestRobot extends NewRobot {
 
-        private Position pos, target;
+        private Position pos;
+        private RobotState state;
+        private List<Position> targets = new ArrayList<Position>();
         private Orientation facing;
 
-        public NewTestRobot(Position pos, Orientation facing, Position target) {
+        public NewTestRobot(Position pos, RobotState startingState, Orientation facing, List<Position> targets) {
             this.pos = pos;
-            this.target = target;
+            this.state = startingState;
+            this.targets = targets;
             this.facing = facing;
         }
 
         @Override
         public Robot register(SimulationWorld sim) {
-            return sim.addRobotAtPosition(pos, facing, target);
+            return sim.addRobotAtPosition(pos, state, facing, targets);
         }
     }
     

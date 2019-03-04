@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env;
 
 import de.hpi.mod.sim.env.model.IRobotStationDispatcher;
+import de.hpi.mod.sim.env.model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,11 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public int getReservedChargerAtStation(int robotID, int stationID) {
         return getStationByID(stationID).getBatteryReservedForRobot(robotID);
+    }
+    
+    @Override
+    public int getStationIDFromPosition(Position target) {
+    	return target.getX()/3;
     }
 
     /**
@@ -131,7 +137,7 @@ public class StationManager implements IRobotStationDispatcher {
                 .filter(stationFilter)  // Only get Stations where the predicate is true
                 .collect(Collectors.toList());
         
-        if (filteredStations.size() > SimulatorConfig.getChargingStationsInUse()) {
+        if (filteredStations.size() < SimulatorConfig.getChargingStationsInUse()) {
         	return filteredStations.isEmpty() ?
 	                addNewStation() :
 	                filteredStations.get(r.nextInt(SimulatorConfig.getChargingStationsInUse()));
@@ -149,10 +155,18 @@ public class StationManager implements IRobotStationDispatcher {
     }
 
     private Station getStationByID(int stationID) {
-        Optional<Station> station = stations.stream()
-                .filter(s -> s.getStationID() == stationID).findFirst();
-
-        if (station.isPresent()) return station.get();
-        throw new NullPointerException("No Station with id " + stationID);
+    	while(stations.size() <= stationID) {
+    		addNewStation();
+    	}
+    	Station station = null;
+    	for(int i = 0; i<stations.size(); i++) {
+    		if(stations.get(i).getStationID() == stationID) {
+    			station = stations.get(i);
+    		}
+    	}
+    	if(station != null) {
+    		return station;
+    	}
+    	throw new IllegalStateException("Can't create station with ID: " + stationID);
     }
 }
