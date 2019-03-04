@@ -137,7 +137,7 @@ public class StationManager implements IRobotStationDispatcher {
                 .filter(stationFilter)  // Only get Stations where the predicate is true
                 .collect(Collectors.toList());
         
-        if (filteredStations.size() < SimulatorConfig.getChargingStationsInUse()) {
+        if (filteredStations.size() > SimulatorConfig.getChargingStationsInUse()) {
         	return filteredStations.isEmpty() ?
 	                addNewStation() :
 	                filteredStations.get(r.nextInt(SimulatorConfig.getChargingStationsInUse()));
