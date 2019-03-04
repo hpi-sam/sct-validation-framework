@@ -44,7 +44,7 @@ public class SimulationWorld {
     /**
      * Whether the simulation is running or not
      */
-    private static boolean running = false;
+    private boolean running = false;
 
     /**
      * The Position of the mouse in blocks
@@ -280,7 +280,7 @@ public class SimulationWorld {
         refreshTimeListeners();
     }
     
-    public static boolean isRunning() {
+    public boolean isRunning() {
         return running;
     }
 

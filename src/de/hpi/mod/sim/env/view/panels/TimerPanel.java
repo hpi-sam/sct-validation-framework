@@ -18,6 +18,7 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 public class TimerPanel extends JPanel {
 	private Timer timer;
+	private SimulationWorld world;
 	private int originalTime;
 	private int remainingTime;
 	private int passedMinutes = 0;
@@ -25,7 +26,9 @@ public class TimerPanel extends JPanel {
 	private JTextField valueField;
 	private static DriveSimFrame parent;
 	
-	public TimerPanel(){
+	public TimerPanel(SimulationWorld world){
+		this.world = world;
+		
 		setLayout(new GridBagLayout());
 
         // TextField to show values
@@ -57,7 +60,7 @@ public class TimerPanel extends JPanel {
 		timer=new Timer(1000,new ActionListener(){
 		public void actionPerformed(ActionEvent e)
 		{
-			if(SimulationWorld.isRunning()) {
+			if(world.isRunning()) {
 		        remainingTime -= 1*parent.getConfigPanel().getCurrentLevel();
 		        setClockTime();
 		        if(remainingTime<=0) {

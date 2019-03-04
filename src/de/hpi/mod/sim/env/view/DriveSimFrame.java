@@ -29,6 +29,10 @@ public class DriveSimFrame extends JFrame {
     private TestListPanel testList;
     private TestOverviewPanel testOverview;
     private ConfigPanel config;
+    private static DriveSimFrame popupFrame;
+    private static long popupTime;
+    private static Popup popup;
+    private static boolean popupActive = false;
 
     private ScenarioManager scenarioManager;
 
@@ -41,6 +45,7 @@ public class DriveSimFrame extends JFrame {
 	public static Color MENU_ORANGE = new Color(0xfff3e2);
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
 	public static Color MENU_RED = new Color(0xffe1d0);
+	public static Color MENU_GRAY = new Color(0xefefef);
 
     public DriveSimFrame() {
         super("Drive System Simulator");
@@ -52,6 +57,7 @@ public class DriveSimFrame extends JFrame {
         addListeners();
         setDesignOfSubpanels();
         setDesignOfMainWindow();
+        popupFrame = this;
 		
         lastFrame = System.currentTimeMillis();
         lastRefresh = System.currentTimeMillis();
@@ -198,7 +204,7 @@ public class DriveSimFrame extends JFrame {
         config = new ConfigPanel(world);
         testList = new TestListPanel(scenarioManager);
         testOverview = new TestOverviewPanel(scenarioManager, testList);
-        timer = new TimerPanel();
+        timer = new TimerPanel(world);
         scenario = new ScenarioPanel(world, scenarioManager, timer);
         TimerPanel.setParent(this);
         setJMenuBar(new DriveSimMenu(world));
@@ -287,6 +293,11 @@ public class DriveSimFrame extends JFrame {
     }
 
     private void update() {
+    	if(popupActive && popupTime + 5000 < System.currentTimeMillis()) {
+    		popupActive = false;
+    		popup.hide();
+    	}
+
     	
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
@@ -330,8 +341,29 @@ public class DriveSimFrame extends JFrame {
     	testList.clearSelections();
     	scenario.clearSelections();
     }
-
-	public static void displayMessage(String string) {
+    
+    private static Popup createPopup(String message) {
+		JPanel popupPanel = new JPanel(new BorderLayout());
+		popupPanel.setMinimumSize(new Dimension(300, 100));
+		popupPanel.setPreferredSize(new Dimension(300, 100));
+		popupPanel.setBackground(MENU_GRAY);
+		JLabel popupLabel = new JLabel(message, JLabel.CENTER);
+		Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
+		popupLabel.setFont(original.deriveFont(Font.BOLD));
+		popupPanel.add(popupLabel);
 		
+		PopupFactory pf = PopupFactory.getSharedInstance();
+		Popup popup = pf.getPopup(popupFrame, popupPanel, 400, 300);
+		return popup;
+	}
+
+    //TODO: having this as static is really bad. Because the popup needs to know in which frame to be displayed. But when this call is static then we can't use "this". Instead we need a static variable for the frame...
+	public static void displayMessage(String message) {
+		if(popupActive)
+			popup.hide();
+		popup = createPopup(message);
+		popup.show();
+		popupTime = System.currentTimeMillis();
+		popupActive = true;
 	}
 }
