@@ -151,27 +151,10 @@ public class StationManager implements IRobotStationDispatcher {
     private Station addNewStation() {
         Station created = new Station(stations.size());
         stations.add(created);
-        System.out.println("ID of created Stations: " + Integer.toString(created.getStationID()));
         return created;
     }
 
     private Station getStationByID(int stationID) {
-        /*Optional<Station> station = stations.stream()
-                .filter(s -> s.getStationID() == stationID).findFirst();
-
-        while (!station.isPresent()) {
-        	for (int i=0; i<stations.size(); i++) {
-            	System.out.println(i + "th station has ID: " + stations.get(i).getStationID());
-            }
-        	System.out.println(stationID);
-        	System.out.println("Size of stations: " + Integer.toString(stations.size()));
-        	System.out.println("Charging stations in Use: " + SimulatorConfig.getChargingStationsInUse());
-        	addNewStation();
-        }
-        if(station.isPresent()) {
-        	return station.get();
-        }
-        throw new NullPointerException("No Station with id " + stationID);*/
     	while(stations.size() <= stationID) {
     		addNewStation();
     	}

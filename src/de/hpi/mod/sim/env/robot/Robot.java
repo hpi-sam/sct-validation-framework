@@ -243,7 +243,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
     
     public boolean hasReachedAllTargets() {
-    	return testPositionTargets.isEmpty();
+    	return testPositionTargets.isEmpty() && this.isTargetReached();
     }
 
     @Override
