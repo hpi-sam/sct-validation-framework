@@ -29,6 +29,10 @@ public class DriveSimFrame extends JFrame {
     private TestListPanel testList;
     private TestOverviewPanel testOverview;
     private ConfigPanel config;
+    private static DriveSimFrame popupFrame;
+    private static long popupTime;
+    private static Popup popup;
+    private static boolean popupActive = false;
 
     private ScenarioManager scenarioManager;
 
@@ -37,6 +41,11 @@ public class DriveSimFrame extends JFrame {
     private boolean running = true;
 	private TimerPanel timer;
 	private SimulationWorld world;
+	
+	public static Color MENU_ORANGE = new Color(0xfff3e2);
+	public static Color MENU_GREEN = new Color(0xdcf3d0);
+	public static Color MENU_RED = new Color(0xffe1d0);
+	public static Color MENU_GRAY = new Color(0xefefef);
 
     public DriveSimFrame() {
         super("Drive System Simulator");
@@ -48,6 +57,7 @@ public class DriveSimFrame extends JFrame {
         addListeners();
         setDesignOfSubpanels();
         setDesignOfMainWindow();
+        popupFrame = this;
 		
         lastFrame = System.currentTimeMillis();
         lastRefresh = System.currentTimeMillis();
@@ -57,6 +67,8 @@ public class DriveSimFrame extends JFrame {
     }
 
 	private void setDesignOfMainWindow() {
+		getContentPane().setBackground(MENU_ORANGE);
+		setBackground(MENU_ORANGE);
 		
 		GridBagConstraints simConstraints = new GridBagConstraints();
 		simConstraints.gridx = 0;
@@ -67,57 +79,67 @@ public class DriveSimFrame extends JFrame {
 		simConstraints.gridheight = 5;
 		add(sim, simConstraints);
 		
+		JPanel spacer = new JPanel();
+		spacer.setBackground(Color.DARK_GRAY);
+		GridBagConstraints spacerConstraints = new GridBagConstraints();
+		spacerConstraints.gridx = 1;
+		spacerConstraints.gridy = 0;
+		spacerConstraints.gridheight = 5;
+		spacerConstraints.fill = GridBagConstraints.VERTICAL;
+		add(spacer, spacerConstraints);
+		
 		GridBagConstraints testOverviewConstraints = new GridBagConstraints();
-		testOverviewConstraints.gridx = 1;
+		testOverviewConstraints.gridx = 2;
 		testOverviewConstraints.gridy = 0;
 		testOverviewConstraints.gridwidth = 2;
 		testOverviewConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(testOverview, testOverviewConstraints);
 		
 		GridBagConstraints scenarioConstraints = new GridBagConstraints();
-		scenarioConstraints.gridx = 1;
+		scenarioConstraints.gridx = 2;
 		scenarioConstraints.gridy = 1;
 		scenarioConstraints.gridwidth = 2;
 		scenarioConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(scenario, scenarioConstraints);
 		
 		GridBagConstraints configConstraints = new GridBagConstraints();
-		configConstraints.gridx = 1;
+		configConstraints.gridx = 2;
 		configConstraints.gridy = 2;
 		configConstraints.gridwidth = 2;
 		configConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(config, configConstraints);
 		
 		GridBagConstraints timerConstraints = new GridBagConstraints();
-		timerConstraints.gridx = 1;
+		timerConstraints.gridx = 2;
 		timerConstraints.gridy = 3;
 		timerConstraints.gridwidth = 2;
 		timerConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(timer, timerConstraints);
 		
 		GridBagConstraints infoConstraints = new GridBagConstraints();
-		infoConstraints.gridx = 1;
+		infoConstraints.gridx = 2;
 		infoConstraints.gridy = 4;
 		infoConstraints.fill = GridBagConstraints.HORIZONTAL;
 		infoConstraints.anchor = GridBagConstraints.PAGE_START;
 		add(info, infoConstraints);
 		
 		GridBagConstraints info2Constraints = new GridBagConstraints();
-		info2Constraints.gridx = 2;
+		info2Constraints.gridx = 3;
 		info2Constraints.gridy = 4;
 		info2Constraints.fill = GridBagConstraints.HORIZONTAL;
 		info2Constraints.anchor = GridBagConstraints.PAGE_START;
 		add(info2, info2Constraints);
 		
 		GridBagConstraints testListConstraints = new GridBagConstraints();
-		testListConstraints.gridx = 3;
+		testListConstraints.gridx = 4;
 		testListConstraints.gridy = 0;
 		testListConstraints.gridheight = 5;
+		testListConstraints.fill = GridBagConstraints.HORIZONTAL;
 		testListConstraints.anchor = GridBagConstraints.PAGE_START;
 		testList.setVisible(false);
 		add(testList, testListConstraints);
 		
-		setPreferredSize(new Dimension(1500, 700));
+		setPreferredSize(new Dimension(1250, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
@@ -136,27 +158,36 @@ public class DriveSimFrame extends JFrame {
 	}
 
 	private void setDesignOfSubpanels() {
-        info.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
-        info.setPreferredSize(new Dimension(200, 500));
-        info2.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
-        info2.setPreferredSize(new Dimension(200, 500));
-        config.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        config.setPreferredSize(new Dimension(400,150));
-        testList.setBorder(BorderFactory.createTitledBorder(
+		testOverview.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        testList.setPreferredSize(new Dimension(700,100));
-        testOverview.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        testOverview.setPreferredSize(new Dimension(400, 200));
+		testOverview.setBackground(MENU_ORANGE);
+        
         scenario.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        scenario.setPreferredSize(new Dimension(400,100));
+        scenario.setBackground(MENU_ORANGE);
+        
+        config.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
+        config.setBackground(MENU_ORANGE);
+        
         timer.setBorder(BorderFactory.createTitledBorder(
         		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
-        timer.setPreferredSize(new Dimension(400,100));
+        timer.setBackground(MENU_ORANGE);
+        
+        info.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
+        info.setMinimumSize(new Dimension(200, 130));
+        info.setPreferredSize(new Dimension(200, 130));
+        info.setBackground(MENU_GREEN);
+        info2.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
+        info2.setMinimumSize(new Dimension(200, 130));
+        info2.setPreferredSize(new Dimension(200, 130));
+        info2.setBackground(MENU_RED);
+        
+        testList.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+        testList.setBackground(MENU_ORANGE);
 	}
 
 	private void addListeners() {
@@ -173,7 +204,7 @@ public class DriveSimFrame extends JFrame {
         config = new ConfigPanel(world);
         testList = new TestListPanel(scenarioManager);
         testOverview = new TestOverviewPanel(scenarioManager, testList);
-        timer = new TimerPanel();
+        timer = new TimerPanel(world);
         scenario = new ScenarioPanel(world, scenarioManager, timer);
         TimerPanel.setParent(this);
         setJMenuBar(new DriveSimMenu(world));
@@ -262,6 +293,11 @@ public class DriveSimFrame extends JFrame {
     }
 
     private void update() {
+    	if(popupActive && popupTime + 5000 < System.currentTimeMillis()) {
+    		popupActive = false;
+    		popup.hide();
+    	}
+
     	
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
@@ -301,12 +337,33 @@ public class DriveSimFrame extends JFrame {
         }
     }
     
-    public static void resetBorders() {
-    	TestListPanel.resetAllBorders();
-    	ScenarioPanel.resetAllBorders();
+    public void clearSelections() {
+    	testList.clearSelections();
+    	scenario.clearSelections();
     }
-
-	public static void displayMessage(String string) {
+    
+    private static Popup createPopup(String message) {
+		JPanel popupPanel = new JPanel(new BorderLayout());
+		popupPanel.setMinimumSize(new Dimension(300, 100));
+		popupPanel.setPreferredSize(new Dimension(300, 100));
+		popupPanel.setBackground(MENU_GRAY);
+		JLabel popupLabel = new JLabel(message, JLabel.CENTER);
+		Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
+		popupLabel.setFont(original.deriveFont(Font.BOLD));
+		popupPanel.add(popupLabel);
 		
+		PopupFactory pf = PopupFactory.getSharedInstance();
+		Popup popup = pf.getPopup(popupFrame, popupPanel, 400, 300);
+		return popup;
+	}
+
+    //TODO: having this as static is really bad. Because the popup needs to know in which frame to be displayed. But when this call is static then we can't use "this". Instead we need a static variable for the frame...
+	public static void displayMessage(String message) {
+		if(popupActive)
+			popup.hide();
+		popup = createPopup(message);
+		popup.show();
+		popupTime = System.currentTimeMillis();
+		popupActive = true;
 	}
 }

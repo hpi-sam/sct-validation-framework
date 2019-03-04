@@ -20,7 +20,7 @@ import java.io.IOException;
 public class RobotRenderer {
 
     private SimulationWorld world;
-    private BufferedImage robotIcon, robotHighlightIcon, batteryIcon;
+    private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon;
 
 
     public RobotRenderer(SimulationWorld world) {
@@ -32,7 +32,8 @@ public class RobotRenderer {
     private void loadImages() {
         try {
             robotIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToRobotIcon()));
-            robotHighlightIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToHighlightRobotIcon()));
+            leftClickedRobotIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToLeftClickedRobotIcon()));
+            rightClickedRobotIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToRightClickedRobotIcon()));
             batteryIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToEmptyBattery()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,9 +46,10 @@ public class RobotRenderer {
             DriveManager drive = robot.getDriveManager();
             Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
 
-            boolean highlighted = robot.equals(world.getHighlightedRobot()) || robot.equals(world.getHighlightedRobot2());
+            boolean leftClicked = robot.equals(world.getHighlightedRobot());
+            boolean rightClicked = robot.equals(world.getHighlightedRobot2());
 
-            drawRobot(graphic, drawPos, drive.getAngle(), highlighted, robot.isHasPackage(), robot.getBattery() < .1);
+            drawRobot(graphic, drawPos, drive.getAngle(), leftClicked, rightClicked, robot.isHasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets
@@ -62,12 +64,16 @@ public class RobotRenderer {
         }
     }
 
-    private void drawRobot(Graphics graphic, Point2D drawPos, float angle, boolean highlighted, boolean hasPackage, boolean batteryEmpty) {
+    private void drawRobot(Graphics graphic, Point2D drawPos, float angle, boolean leftClicked, boolean rightClicked, boolean hasPackage, boolean batteryEmpty) {
         float blockSize = world.getBlockSize();
         int translateX = (int) drawPos.getX();
         int translateY = (int) drawPos.getY();
 
-        var image = highlighted ? robotHighlightIcon : robotIcon;
+        BufferedImage image = robotIcon;
+        if(leftClicked)
+        	image = leftClickedRobotIcon;
+        else if(rightClicked)
+        	image = rightClickedRobotIcon;
 
         // Rotate
         AffineTransform tx = AffineTransform.getRotateInstance(Math.toRadians(angle),
