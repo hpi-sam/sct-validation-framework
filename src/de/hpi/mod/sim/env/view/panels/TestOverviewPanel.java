@@ -37,11 +37,25 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		this.scenarioManager = scenarioManager;
 		this.testListPanel = testListPanel;
 		
+		// -----------------------------------
+    	// |  -----------	---------------	 |
+    	// |  |Progress |	|  Run All    |	 |
+    	// |  -----------	---------------	 |	
+    	// |  -----------	---------------	 |					
+    	// |  |Show/Hide|	|Reset Results|	 |						
+    	// |  -----------	---------------	 |
+    	// -----------------------------------
+    	
+    	//We use a GridBagLayout for flexibility
 		setLayout(new GridBagLayout());
-		createComponents();
+		
+		addProgressDisplay();
+		addShowHideButton();
+		addRunAllButton();
+		addResetButton();
 	}
 	
-	private void createComponents() {
+	private void addProgressDisplay() {
 		progressDisplay = newProgressDisplay();
 		updateProgressDisplay();
 		GridBagConstraints progressDisplayConstraints = new GridBagConstraints();
@@ -50,7 +64,9 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		progressDisplayConstraints.weightx = 1.0;
 		progressDisplayConstraints.weighty = 1.0;
 		add(new MenuWrapper(194, 26, DriveSimFrame.MENU_ORANGE, progressDisplay), progressDisplayConstraints);
-		
+	}
+
+	private void addShowHideButton() {
 		showHideButton = newShowHideButton();
 		GridBagConstraints showHideButtonConstraints = new GridBagConstraints();
 		showHideButtonConstraints.gridx = 0;
@@ -58,7 +74,9 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		showHideButtonConstraints.weightx = 1.0;
 		showHideButtonConstraints.weighty = 1.0;
 		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, showHideButton), showHideButtonConstraints);
-		
+	}
+
+	private void addRunAllButton() {
 		runAllButton = newRunAllButton();
 		GridBagConstraints runAllButtonConstraints = new GridBagConstraints();
 		runAllButtonConstraints.gridx = 1;
@@ -66,7 +84,9 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		runAllButtonConstraints.weightx = 1.0;
 		runAllButtonConstraints.weighty = 1.0;
 		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, runAllButton), runAllButtonConstraints);
-		
+	}
+
+	private void addResetButton() {
 		resetButton = newResetButton();
 		GridBagConstraints resetButtonConstraints = new GridBagConstraints();
 		resetButtonConstraints.gridx = 1;
@@ -154,7 +174,8 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
         return button;
 	}
 	
-	private void runAllTests( ) {
+	private void runAllTests() {
+		DriveSimFrame.displayMessage("Running all Tests");
 		testsToRun.addAll(scenarioManager.getTests());
 		runNextTest();
 	}

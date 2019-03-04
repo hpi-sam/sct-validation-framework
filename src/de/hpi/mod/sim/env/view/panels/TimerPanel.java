@@ -1,14 +1,10 @@
 package de.hpi.mod.sim.env.view.panels;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
@@ -24,15 +20,20 @@ public class TimerPanel extends JPanel {
 	private int passedMinutes = 0;
 	private int passedSeconds = 0;
 	private JTextField valueField;
-	private static DriveSimFrame parent;
+	private DriveSimFrame frame;
 	
-	public TimerPanel(SimulationWorld world){
+	public TimerPanel(SimulationWorld world, DriveSimFrame frame){
 		this.world = world;
+		this.frame = frame;
 		
 		setLayout(new GridBagLayout());
-
-        // TextField to show values
-        valueField = new JTextField();
+		
+		addValueField();
+		addSpacer();
+	}
+	
+	private void addValueField() {
+		valueField = new JTextField();
         valueField.setEditable(false);
         valueField.setPreferredSize(new Dimension(50, 0));
         valueField.setHorizontalAlignment(JTextField.CENTER);
@@ -42,8 +43,11 @@ public class TimerPanel extends JPanel {
         valueFieldConstraints.gridy = 1;
         valueFieldConstraints.anchor = GridBagConstraints.LINE_START;
         add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, valueField), valueFieldConstraints);
-        
-        JPanel spacer = new JPanel();
+	}
+
+	private void addSpacer() {
+		//The spacer takes up additional space and pushed the timer field to the left
+		JPanel spacer = new JPanel();
         spacer.setBackground(DriveSimFrame.MENU_ORANGE);
         GridBagConstraints spacerConstraints = new GridBagConstraints();
         spacerConstraints.gridx = 1;
@@ -51,7 +55,7 @@ public class TimerPanel extends JPanel {
         spacerConstraints.weightx = 1.0;
         add(new MenuWrapper(100, 60, DriveSimFrame.MENU_ORANGE, spacer), spacerConstraints);
 	}
-	
+
 	public void startNewClock(int countdown) {
 		originalTime = countdown;
 		remainingTime = countdown;
@@ -61,10 +65,10 @@ public class TimerPanel extends JPanel {
 		public void actionPerformed(ActionEvent e)
 		{
 			if(world.isRunning()) {
-		        remainingTime -= 1*parent.getConfigPanel().getCurrentLevel();
+		        remainingTime -= 1*frame.getConfigPanel().getCurrentLevel();
 		        setClockTime();
 		        if(remainingTime<=0) {
-		        	parent.getScenarioPanel().scenarioPassed();
+		        	frame.getScenarioPanel().scenarioPassed();
 		        }
 			}
 		}
@@ -103,10 +107,4 @@ public class TimerPanel extends JPanel {
 			valueField.setText(Integer.toString(passedMinutes) + ":0" + Integer.toString(passedSeconds));
 		}
 	}
-
-	public static void setParent(DriveSimFrame driveSimFrame) {
-		parent = driveSimFrame;
-		
-	}
-
 }
