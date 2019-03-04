@@ -22,7 +22,6 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
      * List of refreshable information
      */
     private List<LabelRefresher> refresher = new ArrayList<>();
-    private List<LabelRefresher> refresher2 = new ArrayList<>();
 
     /**
      * @param world We need to ask the world for the reference to the highlighted Robot constantly to be able to react on changes.

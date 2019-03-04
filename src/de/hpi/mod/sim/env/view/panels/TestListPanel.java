@@ -32,17 +32,26 @@ public class TestListPanel extends JPanel implements ITestListener {
     
     @Override
     public void onTestCompleted(TestScenario test) {
+    	//set the background of the menu wrapper of the label to green
         tests.get(test).getParent().setBackground(DriveSimFrame.MENU_GREEN);
         repaint();
     }
 
-	public void resetColors( ) {
+	public void resetColors() {
+		//set the background off the menu wrappers of all test labels to the generic menu color
 		for (JLabel label : tests.values())
             label.getParent().setBackground(DriveSimFrame.MENU_ORANGE);
 		repaint();
 	}
 
-    private void addTest(TestScenario test){
+    private void addTest(TestScenario test) {
+    	
+    	// --------------------------
+    	// | -------------	-------	|
+    	// | | Test Name | 	| run |	|
+    	// | -------------  ------- |
+    	// --------------------------
+    	
         JLabel label = new JLabel(test.getName());
         GridBagConstraints labelConstraints = new GridBagConstraints();
         labelConstraints.gridx = 0;
@@ -67,6 +76,10 @@ public class TestListPanel extends JPanel implements ITestListener {
         tests.put(test, label);
     }
     
+    /*
+     * Gets called when a test is run.
+     * Turns the text of the label italic and bold.
+     */
     private void select(JLabel label) {
 		((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
 		Font oldFont = label.getFont();
@@ -75,6 +88,9 @@ public class TestListPanel extends JPanel implements ITestListener {
 		
 	}
 
+    /*
+	 * Turns all scenario labels to plain text.
+	 */
     public void clearSelections() {
 		for(JLabel l: tests.values()) {
 			Font oldFont = l.getFont();

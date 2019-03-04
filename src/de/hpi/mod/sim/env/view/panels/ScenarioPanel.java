@@ -7,7 +7,6 @@ import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -28,10 +27,17 @@ public class ScenarioPanel extends JPanel {
     }
     
     public void scenarioPassed() {
-		
+
 	}
 
     private void addScenario(ScenarioManager manager, Scenario scenario, TimerPanel timer){
+    	
+    	// ------------------------------
+    	// | -----------------	-------	|
+    	// | | Scenario Name | 	| run |	|
+    	// | -----------------  ------- |
+    	// ------------------------------
+    	
         JLabel label = new JLabel(scenario.getName());
         JButton run = new JButton("run");
 
@@ -59,6 +65,10 @@ public class ScenarioPanel extends JPanel {
         scenarios.put(scenario, label);
     }
 
+    /*
+     * Gets called when a scenario is run.
+     * Turns the text of the label italic and bold.
+     */
 	private void select(JLabel label) {
 		((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
 		Font oldFont = label.getFont();
@@ -67,6 +77,9 @@ public class ScenarioPanel extends JPanel {
 		
 	}
 	
+	/*
+	 * Turns all scenario labels to plain text.
+	 */
 	public void clearSelections() {
 		for(JLabel l: scenarios.values()) {
 			Font oldFont = l.getFont();
