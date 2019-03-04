@@ -15,56 +15,64 @@ import java.util.Map;
 
 public class ScenarioPanel extends JPanel {
 
-    private static Map<Scenario, JPanel> scenarios = new HashMap<>();
-    private JPanel scenarioPanel;
+    private static Map<Scenario, JLabel> scenarios = new HashMap<>();
     private SimulationWorld world;
 
 
     public ScenarioPanel(SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer) {
     	this.world = world;
-        setLayout(new GridLayout(0, 1));
+        setLayout(new GridBagLayout());
 
         for (Scenario scenario : scenarioManager.getScenarios())
             addScenario(scenarioManager, scenario, timer);
     }
     
     public void scenarioPassed() {
-		// scenarioPanel.setBackground(Color.green);
-		// repaint();
+		
 	}
 
     private void addScenario(ScenarioManager manager, Scenario scenario, TimerPanel timer){
-        JPanel panel = new JPanel();
         JLabel label = new JLabel(scenario.getName());
         JButton run = new JButton("run");
 
-        panel.setLayout(new BorderLayout());
         run.addActionListener(e -> {
         	((JFrame) SwingUtilities.getWindowAncestor(this)).setResizable(scenario.isResizable());
         	world.setIsRunningScenario(true);
         	runScenario(manager, scenario, timer);
-        	DriveSimFrame.resetBorders();
-        	Border blackline = BorderFactory.createLineBorder(Color.black);
-        	panel.setBorder(blackline);
+        	select(label);
         	DriveSimFrame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
         });
+        
+        GridBagConstraints labelConstraints = new GridBagConstraints();
+        labelConstraints.gridx = 0;
+        labelConstraints.gridy = scenarios.size();
+        labelConstraints.fill = GridBagConstraints.HORIZONTAL;
+        labelConstraints.weightx = 1.0;
+        add(new MenuWrapper(300, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
 
-        panel.add(label, BorderLayout.CENTER);
-        panel.add(run, BorderLayout.EAST);
-
-        scenarios.put(scenario, panel);
-
-        add(panel);
+        GridBagConstraints runConstraints = new GridBagConstraints();
+        runConstraints.gridx = 1;
+        runConstraints.gridy = scenarios.size();
+        runConstraints.fill = GridBagConstraints.HORIZONTAL;
+        add(new MenuWrapper(80, 30, DriveSimFrame.MENU_ORANGE, run), runConstraints);
+        
+        scenarios.put(scenario, label);
     }
 
-	public static void resetAllBorders() {
-		for (Map.Entry<Scenario, JPanel> entry : scenarios.entrySet())
-		{
-		    JPanel scenarioPanel = entry.getValue();
-		    Border empty = BorderFactory.createEmptyBorder();
-		    scenarioPanel.setBorder(empty);
+	private void select(JLabel label) {
+		((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
+		Font oldFont = label.getFont();
+		Font newFont = new Font(oldFont.getName(), Font.ITALIC | Font.BOLD, oldFont.getSize());
+		label.setFont(newFont);
+		
+	}
+	
+	public void clearSelections() {
+		for(JLabel l: scenarios.values()) {
+			Font oldFont = l.getFont();
+			Font newFont = new Font(oldFont.getName(), Font.PLAIN, oldFont.getSize());
+			l.setFont(newFont);
 		}
-		TestListPanel.resetAllBorders();
 	}
 
 	private void runScenario(ScenarioManager manager, Scenario test, TimerPanel timer) {
@@ -72,6 +80,5 @@ public class ScenarioPanel extends JPanel {
 		world.resetOffset();
 		timer.startNewClock(SimulatorConfig.getScenarioPassingTime());
 		manager.runScenario(test);
-		scenarioPanel = scenarios.get(test);
 	}
 }

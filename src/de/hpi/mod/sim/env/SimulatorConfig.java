@@ -14,7 +14,8 @@ public class SimulatorConfig {
     public static final Position FIRST_CHARGING_STATION_TOP = new Position(0,-2);
     public static final String TEST_FILE_NAME = "Tests";
     public static final String STRING_PATH_TO_ROBOT_ICON = "res/robot.png";
-    public static final String STRING_PATH_TO_HIGHLIGHT_ROBOT_ICON = "res/robot-highlight.png";
+    public static final String STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON = "res/robot-left-clicked.png";
+    public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON = "res/robot-right-clicked.png";
     public static final String STRING_PATH_TO_EMPTY_BATTERY = "res/battery_empty.png";
     public static final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
     public static final String STRING_PATH_TO_PAUSE_ICON = "res/pause.png";
@@ -71,7 +72,8 @@ public class SimulatorConfig {
     private static Position firstChargingStationTop = FIRST_CHARGING_STATION_TOP;
     private static String testFileName = TEST_FILE_NAME;
     private static String stringPathToRobotIcon = STRING_PATH_TO_ROBOT_ICON;
-    private static String stringPathToHighlightRobotIcon = STRING_PATH_TO_HIGHLIGHT_ROBOT_ICON;
+    private static String stringPathToLeftClickedRobotIcon = STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON;
+    private static String stringPathToRightClickedRobotIcon = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON;
     private static String stringPathToEmptyBattery = STRING_PATH_TO_EMPTY_BATTERY;
     private static String stringPathToPlayIcon = STRING_PATH_TO_PLAY_ICON;
     private static String stringPathToPauseIcon = STRING_PATH_TO_PAUSE_ICON;
@@ -146,8 +148,12 @@ public class SimulatorConfig {
 		return stringPathToRobotIcon;
 	}
 	
-	public static String getStringPathToHighlightRobotIcon() {
-		return stringPathToHighlightRobotIcon;
+	public static String getStringPathToLeftClickedRobotIcon() {
+		return stringPathToLeftClickedRobotIcon;
+	}
+	
+	public static String getStringPathToRightClickedRobotIcon() {
+		return stringPathToRightClickedRobotIcon;
 	}
 	
 	public static String getStringPathToEmptyBattery() {

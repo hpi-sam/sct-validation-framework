@@ -14,62 +14,72 @@ import java.util.Map;
 
 public class TestListPanel extends JPanel implements ITestListener {
 
-    private static Map<TestScenario, JPanel> tests = new HashMap<>();
+    private static Map<TestScenario, JLabel> tests = new HashMap<>();
     private ScenarioManager scenarioManager;
 
 
     public TestListPanel(ScenarioManager scenarioManager) {
     	this.scenarioManager = scenarioManager;
-        setLayout(new GridLayout(0, 1));
+        setLayout(new GridBagLayout());
 
         for (TestScenario test : scenarioManager.getTests())
             addTest(test);
     }
     
-    public Map<TestScenario, JPanel> getTests() {
+    public Map<TestScenario, JLabel> getTests() {
     	return tests;
     }
     
     @Override
     public void onTestCompleted(TestScenario test) {
-        tests.get(test).setBackground(Color.green);
+        tests.get(test).getParent().setBackground(DriveSimFrame.MENU_GREEN);
         repaint();
     }
 
 	public void resetColors( ) {
-		for (TestScenario test : scenarioManager.getTests())
-            tests.get(test).setBackground(UIManager.getColor("Panel.background"));
+		for (JLabel label : tests.values())
+            label.getParent().setBackground(DriveSimFrame.MENU_ORANGE);
 		repaint();
 	}
 
     private void addTest(TestScenario test){
-        JPanel panel = new JPanel();
         JLabel label = new JLabel(test.getName());
+        GridBagConstraints labelConstraints = new GridBagConstraints();
+        labelConstraints.gridx = 0;
+        labelConstraints.gridy = tests.size();
+        labelConstraints.fill = GridBagConstraints.HORIZONTAL;
+        labelConstraints.anchor = GridBagConstraints.LINE_START;
+        labelConstraints.weightx = 1.0;
+        add(new MenuWrapper(150, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
+        
         JButton run = new JButton("run");
-
-        panel.setLayout(new BorderLayout());
         run.addActionListener(e -> {
         	scenarioManager.runScenario(test);
-        	DriveSimFrame.resetBorders();
-        	Border blackline = BorderFactory.createLineBorder(Color.black);
-        	panel.setBorder(blackline);
+        	select(label);
         	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
         });
-
-        panel.add(label, BorderLayout.CENTER);
-        panel.add(run, BorderLayout.EAST);
-
-        tests.put(test, panel);
-
-        add(panel);
+        GridBagConstraints runConstraints = new GridBagConstraints();
+        runConstraints.gridx = 1;
+        runConstraints.gridy = tests.size();
+        runConstraints.fill = GridBagConstraints.HORIZONTAL;
+        add(new MenuWrapper(80, 30, DriveSimFrame.MENU_ORANGE, run), runConstraints);
+        
+        tests.put(test, label);
     }
+    
+    private void select(JLabel label) {
+		((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
+		Font oldFont = label.getFont();
+		Font newFont = new Font(oldFont.getName(), Font.ITALIC | Font.BOLD, oldFont.getSize());
+		label.setFont(newFont);
+		
+	}
 
-	public static void resetAllBorders() {
-		for (Map.Entry<TestScenario, JPanel> entry : tests.entrySet())
-		{
-		    JPanel scenarioPanel = entry.getValue();
-		    Border empty = BorderFactory.createEmptyBorder();
-		    scenarioPanel.setBorder(empty);
+    public void clearSelections() {
+		for(JLabel l: tests.values()) {
+			Font oldFont = l.getFont();
+			Font newFont = new Font(oldFont.getName(), Font.PLAIN, oldFont.getSize());
+			l.setFont(newFont);
 		}
 	}
 }

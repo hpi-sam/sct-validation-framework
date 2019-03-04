@@ -21,6 +21,7 @@ public class ScenarioManager {
     private List<TestScenario> tests = new ArrayList<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
+    
 
 
     public ScenarioManager(SimulationWorld world) {
@@ -43,8 +44,10 @@ public class ScenarioManager {
     	world.resetZoom();
 		world.resetOffset();
         world.playScenario(scenario);
-        if (scenario instanceof TestScenario)
-            world.toggleRunning();
+        if (scenario instanceof TestScenario) {
+        	((TestScenario)scenario).setActive(true);
+        	world.toggleRunning();
+        }
     }
 
     public void addTestListener(ITestListener listener) {
@@ -53,7 +56,8 @@ public class ScenarioManager {
 
     public void refresh() {
         for (TestScenario test : tests) {
-            if (test.isPassed()) {
+            if (test.isPassed() && test.isActive()) {
+            	test.setActive(false);
                 for (ITestListener listener : listeners) {
                     listener.onTestCompleted(test);
                 }

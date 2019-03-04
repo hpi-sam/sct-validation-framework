@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
@@ -46,29 +47,37 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		GridBagConstraints progressDisplayConstraints = new GridBagConstraints();
 		progressDisplayConstraints.gridx = 0;
 		progressDisplayConstraints.gridy = 0;
-		add(progressDisplay, progressDisplayConstraints);
+		progressDisplayConstraints.weightx = 1.0;
+		progressDisplayConstraints.weighty = 1.0;
+		add(new MenuWrapper(194, 26, DriveSimFrame.MENU_ORANGE, progressDisplay), progressDisplayConstraints);
 		
 		showHideButton = newShowHideButton();
 		GridBagConstraints showHideButtonConstraints = new GridBagConstraints();
 		showHideButtonConstraints.gridx = 0;
 		showHideButtonConstraints.gridy = 1;
-		add(showHideButton, showHideButtonConstraints);
+		showHideButtonConstraints.weightx = 1.0;
+		showHideButtonConstraints.weighty = 1.0;
+		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, showHideButton), showHideButtonConstraints);
 		
 		runAllButton = newRunAllButton();
 		GridBagConstraints runAllButtonConstraints = new GridBagConstraints();
 		runAllButtonConstraints.gridx = 1;
 		runAllButtonConstraints.gridy = 0;
-		add(runAllButton, runAllButtonConstraints);
+		runAllButtonConstraints.weightx = 1.0;
+		runAllButtonConstraints.weighty = 1.0;
+		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, runAllButton), runAllButtonConstraints);
 		
 		resetButton = newResetButton();
 		GridBagConstraints resetButtonConstraints = new GridBagConstraints();
 		resetButtonConstraints.gridx = 1;
 		resetButtonConstraints.gridy = 1;
-		add(resetButton, resetButtonConstraints);
+		resetButtonConstraints.weightx = 1.0;
+		resetButtonConstraints.weighty = 1.0;
+		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
 	}
 	
 	private JTextField newProgressDisplay() {
-		JTextField textField = new JTextField("7/42 green");
+		JTextField textField = new JTextField("0/0 green");
 		textField.setEditable(false);
 		return textField;
 	}
