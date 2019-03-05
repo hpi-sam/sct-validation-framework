@@ -17,6 +17,7 @@ public class SimulatorConfig {
     public static final String STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON = "res/robot-left-clicked.png";
     public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON = "res/robot-right-clicked.png";
     public static final String STRING_PATH_TO_EMPTY_BATTERY = "res/battery_empty.png";
+    public static final String STRING_PATH_TO_PACKAGE = "res/package.png";
     public static final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
     public static final String STRING_PATH_TO_PAUSE_ICON = "res/pause.png";
     public static final float DEFAULT_ROTATION_SPEED = .5f;
@@ -75,6 +76,7 @@ public class SimulatorConfig {
     private static String stringPathToLeftClickedRobotIcon = STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON;
     private static String stringPathToRightClickedRobotIcon = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON;
     private static String stringPathToEmptyBattery = STRING_PATH_TO_EMPTY_BATTERY;
+    private static String stringPathToPackage = STRING_PATH_TO_PACKAGE;
     private static String stringPathToPlayIcon = STRING_PATH_TO_PLAY_ICON;
     private static String stringPathToPauseIcon = STRING_PATH_TO_PAUSE_ICON;
     private static float defaultRotationSpeed = DEFAULT_ROTATION_SPEED;
@@ -158,6 +160,10 @@ public class SimulatorConfig {
 	
 	public static String getStringPathToEmptyBattery() {
 		return stringPathToEmptyBattery;
+	}
+	
+	public static String getStringPathToPackage() {
+		return stringPathToPackage;
 	}
 	
 	public static String getStringPathToPlayIcon() {
