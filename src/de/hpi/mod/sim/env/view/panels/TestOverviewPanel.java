@@ -175,9 +175,14 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	}
 	
 	private void runAllTests() {
+		stopRunAllSequenz();
 		DriveSimFrame.displayMessage("Running all Tests");
 		testsToRun.addAll(scenarioManager.getTests());
 		runNextTest();
+	}
+	
+	public void stopRunAllSequenz() {
+		testsToRun.clear();
 	}
 	
 	private void runNextTest() {

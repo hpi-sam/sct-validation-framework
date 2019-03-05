@@ -16,10 +16,12 @@ public class ScenarioPanel extends JPanel {
 
     private static Map<Scenario, JLabel> scenarios = new HashMap<>();
     private SimulationWorld world;
+    private TestOverviewPanel testOverview;
 
-
-    public ScenarioPanel(SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer) {
+    public ScenarioPanel(SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer, TestOverviewPanel testOverview) {
     	this.world = world;
+    	this.testOverview = testOverview;
+    	
         setLayout(new GridBagLayout());
 
         for (Scenario scenario : scenarioManager.getScenarios())
@@ -42,6 +44,7 @@ public class ScenarioPanel extends JPanel {
         JButton run = new JButton("run");
 
         run.addActionListener(e -> {
+        	testOverview.stopRunAllSequenz();
         	((JFrame) SwingUtilities.getWindowAncestor(this)).setResizable(scenario.isResizable());
         	world.setIsRunningScenario(true);
         	runScenario(manager, scenario, timer);
