@@ -72,7 +72,8 @@ public class TestListPanel extends JPanel implements ITestListener {
         runConstraints.gridx = 1;
         runConstraints.gridy = tests.size();
         runConstraints.fill = GridBagConstraints.HORIZONTAL;
-        add(new MenuWrapper(80, 30, DriveSimFrame.MENU_ORANGE, run), runConstraints);
+        runConstraints.insets = new Insets(3, 3, 3, 3);
+        add(new MenuWrapper(74, 24, DriveSimFrame.MENU_ORANGE, run), runConstraints);
         
         tests.put(test, label);
     }

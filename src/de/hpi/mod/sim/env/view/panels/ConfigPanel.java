@@ -61,7 +61,6 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         GridBagConstraints valueFieldConstraints = new GridBagConstraints();
         valueFieldConstraints.gridx = 0;
         valueFieldConstraints.gridy = 1;
-        valueFieldConstraints.fill = GridBagConstraints.HORIZONTAL;
         add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, valueField), valueFieldConstraints);
 	}
 
@@ -81,6 +80,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         sliderConstraints.gridy = 1;
         sliderConstraints.fill = GridBagConstraints.HORIZONTAL;
         sliderConstraints.weightx = 1.0; //the slider gets all the additional space
+        sliderConstraints.insets = new Insets(0, 3, 0, 3);
         add(new MenuWrapper(200, 60, DriveSimFrame.MENU_ORANGE, valueSlider), sliderConstraints);
 	}
 
@@ -96,7 +96,8 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         GridBagConstraints resetButtonConstraints = new GridBagConstraints();
         resetButtonConstraints.gridx = 0;
         resetButtonConstraints.gridy = 2;
-        add(new MenuWrapper(60, 30, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
+        resetButtonConstraints.insets = new Insets(3, 3, 3, 3);        
+        add(new MenuWrapper(60, 24, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
 	}
 
 	private void addPlayButton() {
@@ -111,6 +112,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         GridBagConstraints playButtonConstraints = new GridBagConstraints();
         playButtonConstraints.gridx = 2;
         playButtonConstraints.gridy = 1;
+        playButtonConstraints.insets = new Insets(3, 3, 3, 3);
         add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, playButton), playButtonConstraints);
 	}
 

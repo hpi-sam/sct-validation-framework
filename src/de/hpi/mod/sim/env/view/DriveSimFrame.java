@@ -340,7 +340,6 @@ public class DriveSimFrame extends JFrame {
     }
 
     private static void setSystemLookAndFeel() {
-    	
   
     	try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -351,12 +350,6 @@ public class DriveSimFrame extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	
-   		
-		
-		
-		
-
 		
         /*try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -379,16 +372,16 @@ public class DriveSimFrame extends JFrame {
     //create a new popup with the provided text 
     private static Popup createPopup(String message) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
-		popupPanel.setMinimumSize(new Dimension(300, 100));
-		popupPanel.setPreferredSize(new Dimension(300, 100));
-		popupPanel.setBackground(MENU_GRAY);
+		popupPanel.setMinimumSize(new Dimension(500, 100));
+		popupPanel.setPreferredSize(new Dimension(500, 100));
+		popupPanel.setBackground(new Color(MENU_ORANGE.getRed(), MENU_ORANGE.getGreen(), MENU_ORANGE.getBlue(), 192));
 		JLabel popupLabel = new JLabel(message, JLabel.CENTER);
-		Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
-		popupLabel.setFont(original.deriveFont(Font.BOLD));
+		Font original = (Font) UIManager.get("Label.font");
+		popupLabel.setFont(original.deriveFont(Font.BOLD, 16));
 		popupPanel.add(popupLabel);
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
-		Popup popup = pf.getPopup(popupFrame, popupPanel, 400, 300);
+		Popup popup = pf.getPopup(popupFrame, popupPanel, 300, 300);
 		return popup;
 	}
 
