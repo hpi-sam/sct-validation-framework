@@ -340,17 +340,15 @@ public class DriveSimFrame extends JFrame {
     }
 
     private static void setSystemLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            if (UIManager.getSystemLookAndFeelClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
-                Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
-                UIManager.put("MenuItem.acceleratorFont", original.deriveFont(Font.PLAIN, 10));
-                UIManager.put("MenuItem.acceleratorForeground", new Color(100, 150, 255));
-            }
-        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
-            JOptionPane.showMessageDialog(null, "Could not switch to System Look-And-Feel",
-                    "UI Error", JOptionPane.ERROR_MESSAGE);
-        }
+  
+    	try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.put("Button.background", Color.white);
+			UIManager.put("TextField.background", Color.white);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			System.out.println("The look and feel could not be loaded. The Application will work fine but look different.");
+		}
     }
     
     public void clearSelections() {
@@ -361,16 +359,16 @@ public class DriveSimFrame extends JFrame {
     //create a new popup with the provided text 
     private static Popup createPopup(String message) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
-		popupPanel.setMinimumSize(new Dimension(300, 100));
-		popupPanel.setPreferredSize(new Dimension(300, 100));
-		popupPanel.setBackground(MENU_GRAY);
+		popupPanel.setMinimumSize(new Dimension(500, 100));
+		popupPanel.setPreferredSize(new Dimension(500, 100));
+		popupPanel.setBackground(new Color(MENU_ORANGE.getRed(), MENU_ORANGE.getGreen(), MENU_ORANGE.getBlue(), 192));
 		JLabel popupLabel = new JLabel(message, JLabel.CENTER);
-		Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
-		popupLabel.setFont(original.deriveFont(Font.BOLD));
+		Font original = (Font) UIManager.get("Label.font");
+		popupLabel.setFont(original.deriveFont(Font.BOLD, 16));
 		popupPanel.add(popupLabel);
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
-		Popup popup = pf.getPopup(popupFrame, popupPanel, 400, 300);
+		Popup popup = pf.getPopup(popupFrame, popupPanel, 300, 300);
 		return popup;
 	}
 

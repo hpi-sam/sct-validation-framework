@@ -73,7 +73,8 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		showHideButtonConstraints.gridy = 1;
 		showHideButtonConstraints.weightx = 1.0;
 		showHideButtonConstraints.weighty = 1.0;
-		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, showHideButton), showHideButtonConstraints);
+		showHideButtonConstraints.insets = new Insets(3, 3, 3, 3);
+		add(new MenuWrapper(194, 24, DriveSimFrame.MENU_ORANGE, showHideButton), showHideButtonConstraints);
 	}
 
 	private void addRunAllButton() {
@@ -83,7 +84,8 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		runAllButtonConstraints.gridy = 0;
 		runAllButtonConstraints.weightx = 1.0;
 		runAllButtonConstraints.weighty = 1.0;
-		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, runAllButton), runAllButtonConstraints);
+		runAllButtonConstraints.insets = new Insets(3, 3, 3, 3);
+		add(new MenuWrapper(194, 24, DriveSimFrame.MENU_ORANGE, runAllButton), runAllButtonConstraints);
 	}
 
 	private void addResetButton() {
@@ -93,7 +95,8 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		resetButtonConstraints.gridy = 1;
 		resetButtonConstraints.weightx = 1.0;
 		resetButtonConstraints.weighty = 1.0;
-		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
+		resetButtonConstraints.insets = new Insets(3, 3, 3, 3);
+		add(new MenuWrapper(194, 24, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
 	}
 	
 	private JTextField newProgressDisplay() {

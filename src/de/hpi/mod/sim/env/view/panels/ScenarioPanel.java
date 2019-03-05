@@ -63,7 +63,8 @@ public class ScenarioPanel extends JPanel {
         runConstraints.gridx = 1;
         runConstraints.gridy = scenarios.size();
         runConstraints.fill = GridBagConstraints.HORIZONTAL;
-        add(new MenuWrapper(80, 30, DriveSimFrame.MENU_ORANGE, run), runConstraints);
+        runConstraints.insets = new Insets(3, 3, 3, 3);
+        add(new MenuWrapper(74, 24, DriveSimFrame.MENU_ORANGE, run), runConstraints);
         
         scenarios.put(scenario, label);
     }
