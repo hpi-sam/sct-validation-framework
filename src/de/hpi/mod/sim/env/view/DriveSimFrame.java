@@ -347,21 +347,8 @@ public class DriveSimFrame extends JFrame {
 			UIManager.put("TextField.background", Color.white);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("The look and feel could not be loaded. The Application will work fine but look different.");
 		}
-		
-        /*try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            if (UIManager.getSystemLookAndFeelClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
-                Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
-                UIManager.put("MenuItem.acceleratorFont", original.deriveFont(Font.PLAIN, 10));
-                UIManager.put("MenuItem.acceleratorForeground", new Color(100, 150, 255));
-            }
-        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
-            JOptionPane.showMessageDialog(null, "Could not switch to System Look-And-Feel",
-                    "UI Error", JOptionPane.ERROR_MESSAGE);
-        }*/
     }
     
     public void clearSelections() {
