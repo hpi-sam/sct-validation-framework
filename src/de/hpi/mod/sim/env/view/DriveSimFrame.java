@@ -344,7 +344,15 @@ public class DriveSimFrame extends JFrame {
     		System.out.println(lafi.getClassName());
     	System.out.println();
     	System.out.println(UIManager.getSystemLookAndFeelClassName());
-        try {
+    	
+    	try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        /*try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             if (UIManager.getSystemLookAndFeelClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
                 Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
@@ -354,7 +362,7 @@ public class DriveSimFrame extends JFrame {
         } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
             JOptionPane.showMessageDialog(null, "Could not switch to System Look-And-Feel",
                     "UI Error", JOptionPane.ERROR_MESSAGE);
-        }
+        }*/
     }
     
     public void clearSelections() {
