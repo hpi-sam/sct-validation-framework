@@ -342,6 +342,8 @@ public class DriveSimFrame extends JFrame {
     private static void setSystemLookAndFeel() {
     	for(UIManager.LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels())
     		System.out.println(lafi.getClassName());
+    	System.out.println();
+    	System.out.println(UIManager.getSystemLookAndFeelClassName());
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             if (UIManager.getSystemLookAndFeelClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
