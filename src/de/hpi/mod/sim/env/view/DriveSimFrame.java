@@ -81,8 +81,9 @@ public class DriveSimFrame extends JFrame {
         config = new ConfigPanel(world);
         testList = new TestListPanel(scenarioManager);
         testOverview = new TestOverviewPanel(scenarioManager, testList);
+        testList.setTestOverview(testOverview);
         timer = new TimerPanel(world, this);
-        scenario = new ScenarioPanel(world, scenarioManager, timer);
+        scenario = new ScenarioPanel(world, scenarioManager, timer, testOverview);
         setJMenuBar(new DriveSimMenu(world));
 	}
     

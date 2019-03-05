@@ -6,7 +6,6 @@ import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ public class TestListPanel extends JPanel implements ITestListener {
 
     private static Map<TestScenario, JLabel> tests = new HashMap<>();
     private ScenarioManager scenarioManager;
+    private TestOverviewPanel testOverview;
 
 
     public TestListPanel(ScenarioManager scenarioManager) {
@@ -63,6 +63,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         
         JButton run = new JButton("run");
         run.addActionListener(e -> {
+        	testOverview.stopRunAllSequenz();
         	scenarioManager.runScenario(test);
         	select(label);
         	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
@@ -97,5 +98,9 @@ public class TestListPanel extends JPanel implements ITestListener {
 			Font newFont = new Font(oldFont.getName(), Font.PLAIN, oldFont.getSize());
 			l.setFont(newFont);
 		}
+	}
+
+	public void setTestOverview(TestOverviewPanel testOverview) {
+		this.testOverview = testOverview;
 	}
 }
