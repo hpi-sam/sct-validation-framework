@@ -340,18 +340,24 @@ public class DriveSimFrame extends JFrame {
     }
 
     private static void setSystemLookAndFeel() {
-    	for(UIManager.LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels())
-    		System.out.println(lafi.getClassName());
-    	System.out.println();
-    	System.out.println(UIManager.getSystemLookAndFeelClassName());
     	
+  
     	try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.put("Button.background", Color.white);
+			UIManager.put("TextField.background", Color.white);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	
+   		
+		
+		
+		
+
+		
         /*try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             if (UIManager.getSystemLookAndFeelClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
