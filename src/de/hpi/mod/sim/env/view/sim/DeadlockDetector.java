@@ -31,7 +31,7 @@ public class DeadlockDetector {
 	private void checkForDeadlock() {
 		List<Robot> robotList = simulationWorld.getRobots();
 		
-		if(!simulationWorld.getIsRunningScenario()) {
+		if(!simulationWorld.getIsRunningScenario() || !simulationWorld.isRunning()) {
 			return;
 		}
 		if(robotList.isEmpty()) {
