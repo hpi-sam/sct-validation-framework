@@ -44,12 +44,16 @@ public class GridRenderer {
         for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
             for (int x = (int) blocksOffsetX; x < widthInBlocks + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
+                CellType cellType = grid.cellType(current);
+                
+                // Some cells need a border on the left
+                boolean borderLeft = (cellType == CellType.BATTERY || cellType == CellType.QUEUE || cellType == CellType.LOADING);
 
                 // Highlighted Cells are special
                 boolean highlight = world.isMousePointing() && world.getMousePointer().equals(current);
 
                 // Draw the block
-                drawBlock(graphic, grid.cellType(current), world.toDrawPosition(current), highlight);
+                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight);
             }
         }
     }
@@ -61,7 +65,7 @@ public class GridRenderer {
      * @param drawPos The draw-position
      * @param highlight Highlighted?
      */
-    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean highlight) {
+    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight) {
         float blockSize = world.getBlockSize();
 
         if (cell == CellType.BLOCK)
@@ -74,10 +78,16 @@ public class GridRenderer {
             graphic.setColor(new Color(0xe0d9f9));
         if (cell == CellType.LOADING)
             graphic.setColor(new Color(0xc0e8ed));
-        if (cell == CellType.STATION)
+        if (cell == CellType.STATION || cell == CellType.QUEUE)
             graphic.setColor(new Color(0xfff3e2));
 
         graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
+        
+        
+        if (borderLeft) {
+        	graphic.setColor(Color.DARK_GRAY);
+        	graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), 1, (int) blockSize);
+        }
 
         // Draw Highlight
         if (highlight) {

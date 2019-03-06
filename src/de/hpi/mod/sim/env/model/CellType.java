@@ -5,7 +5,7 @@ package de.hpi.mod.sim.env.model;
  * Is used in the {@link de.hpi.mod.sim.env.ServerGridManagement} and when drawing in the view
  */
 public enum CellType {
-    WAYPOINT, CROSSROAD, BLOCK, BATTERY, LOADING, STATION;
+    WAYPOINT, CROSSROAD, BLOCK, BATTERY, LOADING, STATION, QUEUE;
 
     private PositionType posType;
 
@@ -16,6 +16,7 @@ public enum CellType {
         BATTERY.posType = PositionType.STATION;
         LOADING.posType = PositionType.WAYPOINT;
         STATION.posType = PositionType.STATION;
+        QUEUE.posType = PositionType.STATION;
     }
 
     public PositionType toPositionType() {
