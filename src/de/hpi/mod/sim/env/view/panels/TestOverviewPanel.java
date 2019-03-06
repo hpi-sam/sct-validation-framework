@@ -28,14 +28,16 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	private JButton resetButton;
 	
 	private TestListPanel testListPanel;
+	private JFrame frame;
 	
 	private Queue<TestScenario> testsToRun = new LinkedList<TestScenario>();
 	
 	private boolean listVisible = false;
 	
-	public TestOverviewPanel(ScenarioManager scenarioManager, TestListPanel testListPanel) {
+	public TestOverviewPanel(ScenarioManager scenarioManager, TestListPanel testListPanel, JFrame frame) {
 		this.scenarioManager = scenarioManager;
 		this.testListPanel = testListPanel;
+		this.frame = frame;
 		
 		// -----------------------------------
     	// |  -----------	---------------	 |
@@ -118,9 +120,21 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 			listVisible = !listVisible;
 			updateShowHideButton();
 			testListPanel.setVisible(listVisible);
+			updateFrameSize();
 		});
 		
 		return button;
+	}
+	
+	private void updateFrameSize() {
+		int height = frame .getHeight();
+		int width = frame.getWidth();
+		if (listVisible)
+			width += testListPanel.getPreferredSize().width;
+		else
+			width -= testListPanel.getPreferredSize().width;
+		frame.setPreferredSize(new Dimension(width, height));
+		frame.pack();
 	}
 	
 	private void updateShowHideButton() {
