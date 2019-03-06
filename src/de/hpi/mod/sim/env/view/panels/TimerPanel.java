@@ -9,14 +9,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld; 
 
 public class TimerPanel extends JPanel {
 	private Timer timer;
 	private SimulationWorld world;
-	private int originalTime;
-	private int remainingTime;
+	private float originalTime;
+	private float remainingTime;
 	private int passedMinutes = 0;
 	private int passedSeconds = 0;
 	private JTextField valueField;
@@ -30,6 +31,8 @@ public class TimerPanel extends JPanel {
 		
 		addValueField();
 		addSpacer();
+		
+		initializeTimer();
 	}
 	
 	private void addValueField() {
@@ -55,49 +58,51 @@ public class TimerPanel extends JPanel {
         spacerConstraints.weightx = 1.0;
         add(new MenuWrapper(100, 60, DriveSimFrame.MENU_ORANGE, spacer), spacerConstraints);
 	}
+	
+	private void initializeTimer() {
+		timer = new Timer(1000,new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				if(world.isRunning()) {
+			        remainingTime -= (float)frame.getConfigPanel().getCurrentLevel()/(float)SimulatorConfig.getRobotDefaultSpeedLevel();
+			        setClockTime();
+			        if(remainingTime<=0) {
+			        	frame.getScenarioPanel().scenarioPassed();
+			        }
+				}
+			}
+		});
+		stopTimer();
+	}
 
 	public void startNewClock(int countdown) {
 		originalTime = countdown;
 		remainingTime = countdown;
 		setClockTime();
-		
-		timer=new Timer(1000,new ActionListener(){
-		public void actionPerformed(ActionEvent e)
-		{
-			if(world.isRunning()) {
-		        remainingTime -= 1*frame.getConfigPanel().getCurrentLevel();
-		        setClockTime();
-		        if(remainingTime<=0) {
-		        	frame.getScenarioPanel().scenarioPassed();
-		        }
-			}
-		}
-		});
 		startTimer();
 	}
 
 	public void startTimer() {
-		timer.start();
+		timer.restart();
 	}
 	
 	public void stopTimer() {
 		timer.stop();
 	}
 	
-	public int getRemainingTime() {
+	public float getRemainingTime() {
 		return remainingTime;
 	}
 	
 	private void setClockTime() {
-		calculateNewPassedtime(originalTime, remainingTime);
+		calculateNewPassedtime();
         displayNewTime();
 	}
 	
-	private void calculateNewPassedtime(int originalTime, int remainingTime) {
-		int deltaTime = originalTime-remainingTime;
+	private void calculateNewPassedtime() {
+		float deltaTime = originalTime-remainingTime;
 		
-		passedMinutes = deltaTime/60;
-		passedSeconds = deltaTime%60;
+		passedMinutes = ((int) deltaTime)/60;
+		passedSeconds = ((int) deltaTime)%60;
 	}
 	
 	private void displayNewTime() {
