@@ -80,7 +80,7 @@ public class DriveSimFrame extends JFrame {
         info2 = new RobotInfoPanel(world, true);
         config = new ConfigPanel(world);
         testList = new TestListPanel(scenarioManager);
-        testOverview = new TestOverviewPanel(scenarioManager, testList);
+        testOverview = new TestOverviewPanel(scenarioManager, testList, this);
         testList.setTestOverview(testOverview);
         timer = new TimerPanel(world, this);
         scenario = new ScenarioPanel(world, scenarioManager, timer, testOverview);
@@ -219,7 +219,7 @@ public class DriveSimFrame extends JFrame {
 		//Set up the color and size of the whole window
 		getContentPane().setBackground(MENU_ORANGE);
 		setBackground(MENU_ORANGE);
-		setPreferredSize(new Dimension(1250, 700));
+		setPreferredSize(new Dimension(1000, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
@@ -368,7 +368,7 @@ public class DriveSimFrame extends JFrame {
 		popupPanel.add(popupLabel);
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
-		Popup popup = pf.getPopup(popupFrame, popupPanel, 300, 300);
+		Popup popup = pf.getPopup(popupFrame, popupPanel, 200, 300);
 		return popup;
 	}
 
