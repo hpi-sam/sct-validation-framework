@@ -53,15 +53,17 @@ public class TestListPanel extends JPanel implements ITestListener {
     	// --------------------------
     	
         JLabel label = new JLabel(test.getName());
+        label.setToolTipText("Tooltip");
         GridBagConstraints labelConstraints = new GridBagConstraints();
         labelConstraints.gridx = 0;
         labelConstraints.gridy = tests.size();
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.weightx = 1.0;
-        add(new MenuWrapper(150, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
+        add(new MenuWrapper(220, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
         
         JButton run = new JButton("run");
+        run.setToolTipText("Tooltip");
         run.addActionListener(e -> {
         	testOverview.stopRunAllSequenz();
         	scenarioManager.runScenario(test);
