@@ -322,7 +322,7 @@ public class SimulationWorld {
         timeListeners.forEach(ITimeListener::refresh);
     }
 
-    private interface AddRobotRunner {
+	private interface AddRobotRunner {
         Robot run();
     }
 }

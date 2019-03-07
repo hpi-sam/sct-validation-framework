@@ -8,9 +8,11 @@ import de.hpi.mod.sim.env.view.DriveSimFrame;
 public class CollisionDetector {
 	SimulationWorld world;
 	DriveSimFrame frame;
+	ScenarioManager scenarioManager;
 	boolean collisionReported = false;
 	
-	public CollisionDetector(SimulationWorld world, DriveSimFrame frame) {
+	public CollisionDetector(ScenarioManager scenarioManager, SimulationWorld world, DriveSimFrame frame) {
+		this.scenarioManager = scenarioManager;
 		this.world = world;
 		this.frame = frame;
 	}
@@ -36,5 +38,8 @@ public class CollisionDetector {
 	private void reportCollision(Robot r1, Robot r2) {
 		collisionReported = true;
 		frame.reportCollision(r1, r2);
+		if(scenarioManager.isRunningTest()) {
+			scenarioManager.failCurrentTest();
+		}
 	}
 }

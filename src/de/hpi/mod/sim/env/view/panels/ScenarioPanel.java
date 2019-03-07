@@ -49,8 +49,6 @@ public class ScenarioPanel extends JPanel {
         run.addActionListener(e -> {
         	testOverview.stopRunAllSequenz();
         	((JFrame) SwingUtilities.getWindowAncestor(this)).setResizable(scenario.isResizable());
-        	deadlockDetector.reactivate();
-        	deadlockDetector.setIsRunningTest(false);
         	runScenario(manager, scenario, timer);
         	select(label);
         	DriveSimFrame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
