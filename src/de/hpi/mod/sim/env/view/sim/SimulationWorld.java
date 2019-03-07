@@ -85,7 +85,6 @@ public class SimulationWorld {
      * Used for locking while the List of Robots gets traversed
      */
     private boolean isRefreshing = false, isUpdating = false;
-	private boolean isRunningScenario = false;
 
 
     public SimulationWorld(SimulatorView view) {
@@ -329,12 +328,4 @@ public class SimulationWorld {
     private interface AddRobotRunner {
         Robot run();
     }
-
-	public boolean getIsRunningScenario() {
-		return isRunningScenario;
-	}
-	
-	public void setIsRunningScenario(boolean isRunningScenario) {
-		this.isRunningScenario = isRunningScenario;
-	}
 }

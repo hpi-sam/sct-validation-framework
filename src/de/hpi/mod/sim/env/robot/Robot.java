@@ -67,7 +67,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
                  Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets) {
-        this(robotID, stationID, grid, dispatcher, location, scanner, startPosition, startFacing);
+        this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
         this.state = initialState;
