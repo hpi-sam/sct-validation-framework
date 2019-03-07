@@ -51,9 +51,11 @@ public class GridRenderer {
 
                 // Highlighted Cells are special
                 boolean highlight = world.isMousePointing() && world.getMousePointer().equals(current);
+                
+                boolean isZeroZero = current.is(new Position(0, 0));
 
                 // Draw the block
-                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight);
+                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight, isZeroZero);
             }
         }
     }
@@ -65,7 +67,7 @@ public class GridRenderer {
      * @param drawPos The draw-position
      * @param highlight Highlighted?
      */
-    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight) {
+    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight, boolean isZeroZero) {
         float blockSize = world.getBlockSize();
 
         if (cell == CellType.BLOCK)
@@ -87,6 +89,14 @@ public class GridRenderer {
         if (borderLeft) {
         	graphic.setColor(Color.DARK_GRAY);
         	graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), 1, (int) blockSize);
+        }
+        
+        if(isZeroZero) {
+        	graphic.setColor(Color.GREEN);
+            graphic.fillRect((int) (drawPos.getX() + blockSize / 4),
+                    (int) (drawPos.getY() + blockSize / 4),
+                    (int) (blockSize / 2),
+                    (int) (blockSize / 2));
         }
 
         // Draw Highlight
