@@ -239,7 +239,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean isTargetReached() {
-        return manager.currentPosition().equals(target);
+        return manager.currentPosition().equals(target) && this.pos().equals(this.oldPos());
     }
     
     public boolean hasReachedAllTargets() {
