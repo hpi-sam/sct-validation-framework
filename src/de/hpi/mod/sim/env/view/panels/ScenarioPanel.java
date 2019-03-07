@@ -18,11 +18,11 @@ public class ScenarioPanel extends JPanel {
     private static Map<Scenario, JLabel> scenarios = new HashMap<>();
     private SimulationWorld world;
     private DeadlockDetector deadlockDetector;
-    private TestOverviewDetector testOverview
+    private TestOverviewPanel testOverview;
 
-    public ScenarioPanel(DeadlockDetector deadlockDetector, SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer) {
+    public ScenarioPanel(DeadlockDetector deadlockDetector, SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer, TestOverviewPanel testOverview) {
     	this.deadlockDetector = deadlockDetector;
-	this.world = world;
+    	this.world = world;
     	this.testOverview = testOverview;
     	
         setLayout(new GridBagLayout());
