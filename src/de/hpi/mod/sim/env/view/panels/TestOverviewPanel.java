@@ -148,6 +148,8 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
         JButton button = new JButton("Run All");
 
         button.addActionListener(e -> {
+        	testListPanel.useDeadlockDetection();
+        	testListPanel.notifyDeadlockDetectorAboutRunningTest();
         	runAllTests();
         });
 
@@ -191,9 +193,18 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(testsToRun.isEmpty()) {
+			testListPanel.endDeadlockDetection();
+		}
         test.notifySuccessToUser();
         updateProgressDisplay();
         runNextTest();
 	}
-
+	
+	@Override
+	public void failTest(TestScenario test) {
+		testListPanel.failTest(test);
+		test.notifyFailToUser();
+		runNextTest();
+	}
 }

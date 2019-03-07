@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.panels;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
 import de.hpi.mod.sim.env.view.model.TestScenario;
+import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 import javax.swing.*;
@@ -16,9 +17,11 @@ public class TestListPanel extends JPanel implements ITestListener {
 
     private static Map<TestScenario, JLabel> tests = new HashMap<>();
     private ScenarioManager scenarioManager;
+    private DeadlockDetector deadlockDetector;
 
 
-    public TestListPanel(ScenarioManager scenarioManager) {
+    public TestListPanel(DeadlockDetector deadlockDetector, ScenarioManager scenarioManager) {
+    	this.deadlockDetector = deadlockDetector;
     	this.scenarioManager = scenarioManager;
         setLayout(new GridBagLayout());
 
@@ -33,8 +36,15 @@ public class TestListPanel extends JPanel implements ITestListener {
     @Override
     public void onTestCompleted(TestScenario test) {
         tests.get(test).getParent().setBackground(DriveSimFrame.MENU_GREEN);
+        endDeadlockDetection();
         repaint();
     }
+    
+    @Override
+	public void failTest(TestScenario test) {
+    	tests.get(test).getParent().setBackground(DriveSimFrame.MENU_RED);	
+    	repaint();
+	}
 
 	public void resetColors( ) {
 		for (JLabel label : tests.values())
@@ -54,6 +64,8 @@ public class TestListPanel extends JPanel implements ITestListener {
         
         JButton run = new JButton("run");
         run.addActionListener(e -> {
+        	useDeadlockDetection();
+        	notifyDeadlockDetectorAboutRunningTest();
         	scenarioManager.runScenario(test);
         	select(label);
         	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
@@ -81,5 +93,17 @@ public class TestListPanel extends JPanel implements ITestListener {
 			Font newFont = new Font(oldFont.getName(), Font.PLAIN, oldFont.getSize());
 			l.setFont(newFont);
 		}
+	}
+
+	public void useDeadlockDetection() {
+		deadlockDetector.reactivate();
+	}
+
+	public void endDeadlockDetection() {
+		deadlockDetector.deactivate();
+	}
+	
+	public void notifyDeadlockDetectorAboutRunningTest() {
+		deadlockDetector.setIsRunningTest(true);
 	}
 }

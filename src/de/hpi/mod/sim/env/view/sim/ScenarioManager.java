@@ -21,6 +21,7 @@ public class ScenarioManager {
     private List<TestScenario> tests = new ArrayList<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
+	private boolean currentTestFailed = false;
     
 
 
@@ -65,6 +66,13 @@ public class ScenarioManager {
             	test.setActive(false);
                 for (ITestListener listener : listeners) {
                     listener.onTestCompleted(test);
+                }
+            }
+            if(currentTestFailed && test.isActive()) {
+            	test.setActive(false);
+            	currentTestFailed = false;
+            	for (ITestListener listener : listeners) {
+                    listener.failTest(test);
                 }
             }
         }
@@ -546,4 +554,8 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     		return sim.addRobotInScenarioHPI2(pos, facing);
     	}
     }
+
+	public void failCurrentTest() {
+		currentTestFailed = true;
+	}
 }

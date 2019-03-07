@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.panels;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.Scenario;
+import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
@@ -17,9 +18,11 @@ public class ScenarioPanel extends JPanel {
 
     private static Map<Scenario, JLabel> scenarios = new HashMap<>();
     private SimulationWorld world;
+    private DeadlockDetector deadlockDetector;
 
 
-    public ScenarioPanel(SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer) {
+    public ScenarioPanel(DeadlockDetector deadlockDetector, SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer) {
+    	this.deadlockDetector = deadlockDetector;
     	this.world = world;
         setLayout(new GridBagLayout());
 
@@ -37,7 +40,8 @@ public class ScenarioPanel extends JPanel {
 
         run.addActionListener(e -> {
         	((JFrame) SwingUtilities.getWindowAncestor(this)).setResizable(scenario.isResizable());
-        	world.setIsRunningScenario(true);
+        	deadlockDetector.reactivate();
+        	deadlockDetector.setIsRunningTest(false);
         	runScenario(manager, scenario, timer);
         	select(label);
         	DriveSimFrame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
