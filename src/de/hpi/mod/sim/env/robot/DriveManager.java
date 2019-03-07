@@ -15,7 +15,7 @@ public class DriveManager implements IRobotActors {
 
     private float x, y, angle;
 
-    private Position targetPosition;
+    private Position currentPosition;
     private Orientation targetFacing;
 
     private boolean loading = false;
@@ -36,7 +36,7 @@ public class DriveManager implements IRobotActors {
 
     public DriveManager(DriveListener listener, Position pos, Orientation facing) {
         this.listener = listener;
-        targetPosition = pos;
+        currentPosition = pos;
         oldPosition = pos;
         targetFacing = facing;
         oldFacing = facing;
@@ -102,18 +102,18 @@ public class DriveManager implements IRobotActors {
 	}
 
 	private void move(float delta) {
-		int deltaX = targetPosition.getX() - oldPosition.getX();
-		int deltaY = targetPosition.getY() - oldPosition.getY();
+		int deltaX = currentPosition.getX() - oldPosition.getX();
+		int deltaY = currentPosition.getY() - oldPosition.getY();
 
 		if (deltaY != 0) {
 		    y += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaY);
 
 		    // If y moved over target
 		    // TODO Remove code repetition (Not DRY enough)
-		    if (deltaY > 0 && y >= targetPosition.getY() ||
-		            deltaY < 0 && y <= targetPosition.getY()) {
-		        y = targetPosition.getY();
-		        oldPosition = targetPosition;
+		    if (deltaY > 0 && y >= currentPosition.getY() ||
+		            deltaY < 0 && y <= currentPosition.getY()) {
+		        y = currentPosition.getY();
+		        oldPosition = currentPosition;
 		        isMoving = false;
 		        listener.actionCompleted();
 		    }
@@ -121,10 +121,10 @@ public class DriveManager implements IRobotActors {
 		    x += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaX);
 
 		    // If x moved over target
-		    if (deltaX > 0 && x >= targetPosition.getX() ||
-		            deltaX < 0 && x <= targetPosition.getX()) {
-		        x = targetPosition.getX();
-		        oldPosition = targetPosition;
+		    if (deltaX > 0 && x >= currentPosition.getX() ||
+		            deltaX < 0 && x <= currentPosition.getX()) {
+		        x = currentPosition.getX();
+		        oldPosition = currentPosition;
 		        isMoving = false;
 		        listener.actionCompleted();
 		    }
@@ -135,8 +135,8 @@ public class DriveManager implements IRobotActors {
     public void driveForward() {
         decreaseBattery();
         if (hasPower()) {
-            oldPosition = targetPosition;
-            targetPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
+            oldPosition = currentPosition;
+            currentPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
             battery -= SimulatorConfig.getBatteryLoss();
             isMoving = true;
         }
@@ -194,7 +194,7 @@ public class DriveManager implements IRobotActors {
      * @return The ceiling of the Position of the robot
      */
     public Position currentPosition() {
-        return targetPosition;
+        return currentPosition;
     }
 
     public Orientation currentFacing() {

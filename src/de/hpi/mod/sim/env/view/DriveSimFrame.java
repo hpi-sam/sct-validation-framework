@@ -1,8 +1,10 @@
 package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
+import de.hpi.mod.sim.env.view.sim.CollisionDetector;
 import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -23,6 +25,7 @@ public class DriveSimFrame extends JFrame {
 
     private SimulatorView sim;
     private DeadlockDetector deadlockDetector;
+    private CollisionDetector collisionDetector;
     private RobotInfoPanel info;
     private RobotInfoPanel info2;
     private ScenarioPanel scenario;
@@ -71,8 +74,14 @@ public class DriveSimFrame extends JFrame {
     private void initializeSimulationItems() {
 		sim = new SimulatorView();
         world = sim.getWorld();
+<<<<<<< simulator/src/de/hpi/mod/sim/env/view/DriveSimFrame.java
         scenarioManager = new ScenarioManager(world);
         deadlockDetector = new DeadlockDetector(world, scenarioManager);
+=======
+        deadlockDetector = new DeadlockDetector(world);
+        collisionDetector = new CollisionDetector(world, this);
+        scenarioManager = new ScenarioManager(world, collisionDetector);
+>>>>>>> simulator/src/de/hpi/mod/sim/env/view/DriveSimFrame.java
 	}
     
     private void initializePanels() {
@@ -327,6 +336,7 @@ public class DriveSimFrame extends JFrame {
         }
 
         deadlockDetector.update();
+        collisionDetector.update();
         sim.getWorld().update(delta);
 
         this.repaint();
@@ -376,8 +386,12 @@ public class DriveSimFrame extends JFrame {
 		if(popupActive)
 			popup.hide();
 		popup = createPopup(message);
+		popupActive = true;
 		popup.show();
 		popupTime = System.currentTimeMillis();
-		popupActive = true;
+	}
+
+	public void reportCollision(Robot r1, Robot r2) {
+		displayMessage("Collision detected!");
 	}
 }
