@@ -28,7 +28,6 @@ public class DriveManager implements IRobotActors {
     private Position oldPosition;
     private Orientation oldFacing;
 
-    private float rotationSpeed = SimulatorConfig.getDefaultRotationSpeed();
     private long unloadingTime = SimulatorConfig.getDefaultUnloadingTime();
     
     private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
@@ -76,7 +75,7 @@ public class DriveManager implements IRobotActors {
 		float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
 		while (deltaAngle < 0) deltaAngle += 360;
 
-		angle += Math.copySign(rotationSpeed * delta, deltaAngle);
+		angle += Math.copySign(getRotationSpeed() * delta, deltaAngle);
 		while (angle < 0) angle += 360;
 
 		if (angle >= targetFacing.getAngle()) {
@@ -91,7 +90,7 @@ public class DriveManager implements IRobotActors {
 		float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
 		while (deltaAngle > 0) deltaAngle -= 360;
 
-		angle += Math.copySign(rotationSpeed * delta, deltaAngle);
+		angle += Math.copySign(getRotationSpeed() * delta, deltaAngle);
 
 		if (angle <= targetFacing.getAngle()) {
 		    angle = targetFacing.getAngle();
@@ -238,11 +237,7 @@ public class DriveManager implements IRobotActors {
     }
 
     public float getRotationSpeed() {
-        return rotationSpeed;
-    }
-
-    public void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
+        return SimulatorConfig.getDefaultRotationSpeed() * SimulatorConfig.getRobotMoveSpeed() / SimulatorConfig.getRobotLevel5Speed();
     }
 
     public long getUnloadingTime() {

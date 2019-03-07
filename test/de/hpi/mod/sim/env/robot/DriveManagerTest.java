@@ -55,7 +55,6 @@ public class DriveManagerTest {
         DummyDriveHandler handler = new DummyDriveHandler();
         DriveManager drive = new DriveManager(
                 handler, initPosition, initFacing);
-        drive.setRotationSpeed(.09f);  // Turn 90 degrees in 1 second
 
         Orientation shouldFace = initFacing.getTurnedLeft();
         for (int i = 0; i < 10; i++) {
@@ -79,7 +78,6 @@ public class DriveManagerTest {
         DummyDriveHandler handler = new DummyDriveHandler();
         DriveManager drive = new DriveManager(
                 handler, initPosition, initFacing);
-        drive.setRotationSpeed(.09f);  // Turn 90 degrees in 1 second
 
         Orientation shouldFace = initFacing.getTurnedRight();
         for (int i = 0; i < 10; i++) {
