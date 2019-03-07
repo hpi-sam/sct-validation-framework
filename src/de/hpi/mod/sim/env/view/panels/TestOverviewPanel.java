@@ -203,8 +203,11 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	}
 	
 	private void runNextTest() {
-		if (!testsToRun.isEmpty())
-			scenarioManager.runScenario(testsToRun.remove());
+		if (!testsToRun.isEmpty()) {
+			TestScenario test = testsToRun.remove();
+			testListPanel.select(test);
+			scenarioManager.runScenario(test);
+		}
 	}
 	
 	private void writeTestPassed(TestScenario test) throws IOException {
