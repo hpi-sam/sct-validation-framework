@@ -74,9 +74,9 @@ public class DriveSimFrame extends JFrame {
     private void initializeSimulationItems() {
 		sim = new SimulatorView();
         world = sim.getWorld();
-        deadlockDetector = new DeadlockDetector(world, scenarioManager);
         collisionDetector = new CollisionDetector(world, this);
         scenarioManager = new ScenarioManager(world, collisionDetector);
+        deadlockDetector = new DeadlockDetector(world, scenarioManager);
 	}
     
     private void initializePanels() {
