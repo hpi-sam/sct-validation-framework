@@ -4,6 +4,7 @@ import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.CellType;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import java.awt.*;
@@ -93,10 +94,10 @@ public class GridRenderer {
         
         if(isZeroZero) {
         	graphic.setColor(Color.GREEN);
-            graphic.fillRect((int) (drawPos.getX() + blockSize / 4),
-                    (int) (drawPos.getY() + blockSize / 4),
-                    (int) (blockSize / 2),
-                    (int) (blockSize / 2));
+            graphic.fillOval((int) (drawPos.getX() + blockSize / 4),
+            		(int) (drawPos.getY() + blockSize / 4),
+            		(int) blockSize / 2, 
+            		(int) blockSize / 2);
         }
 
         // Draw Highlight
