@@ -26,6 +26,10 @@ public abstract class Scenario {
     public String getName() {
         return name;
     }
+    
+    public String getDescription() {
+    	return description;
+    }
 
     protected abstract List<NewRobot> initializeScenario();
 
