@@ -74,14 +74,9 @@ public class DriveSimFrame extends JFrame {
     private void initializeSimulationItems() {
 		sim = new SimulatorView();
         world = sim.getWorld();
-<<<<<<< simulator/src/de/hpi/mod/sim/env/view/DriveSimFrame.java
-        scenarioManager = new ScenarioManager(world);
         deadlockDetector = new DeadlockDetector(world, scenarioManager);
-=======
-        deadlockDetector = new DeadlockDetector(world);
         collisionDetector = new CollisionDetector(world, this);
         scenarioManager = new ScenarioManager(world, collisionDetector);
->>>>>>> simulator/src/de/hpi/mod/sim/env/view/DriveSimFrame.java
 	}
     
     private void initializePanels() {
@@ -386,9 +381,9 @@ public class DriveSimFrame extends JFrame {
 		if(popupActive)
 			popup.hide();
 		popup = createPopup(message);
-		popupActive = true;
 		popup.show();
 		popupTime = System.currentTimeMillis();
+		popupActive = true; //moving this line 2 lines up makes the first popup appear gray. Who knows why
 	}
 
 	public void reportCollision(Robot r1, Robot r2) {
