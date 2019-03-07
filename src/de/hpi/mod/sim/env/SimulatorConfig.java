@@ -17,6 +17,7 @@ public class SimulatorConfig {
     public static final String STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON = "res/robot-left-clicked.png";
     public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON = "res/robot-right-clicked.png";
     public static final String STRING_PATH_TO_EMPTY_BATTERY = "res/battery_empty.png";
+    public static final String STRING_PATH_TO_PACKAGE = "res/package.png";
     public static final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
     public static final String STRING_PATH_TO_PAUSE_ICON = "res/pause.png";
     public static final float DEFAULT_ROTATION_SPEED = .5f;
@@ -36,16 +37,16 @@ public class SimulatorConfig {
 	
 	public static final float ROBOT_LEVEL_1_SPEED = 0.0005f;
 	public static final float ROBOT_LEVEL_2_SPEED = 0.001f;
-	public static final float ROBOT_LEVEL_3_SPEED = 0.0015f;
-	public static final float ROBOT_LEVEL_4_SPEED = 0.0025f;
-	public static final float ROBOT_LEVEL_5_SPEED = 0.0035f;
-	public static final float ROBOT_LEVEL_6_SPEED = 0.0045f;
+	public static final float ROBOT_LEVEL_3_SPEED = 0.002f;
+	public static final float ROBOT_LEVEL_4_SPEED = 0.003f;
+	public static final float ROBOT_LEVEL_5_SPEED = 0.004f;
+	public static final float ROBOT_LEVEL_6_SPEED = 0.005f;
 	public static final float ROBOT_LEVEL_7_SPEED = 0.006f;
-	public static final float ROBOT_LEVEL_8_SPEED = 0.0075f;
-	public static final float ROBOT_LEVEL_9_SPEED = 0.009f;
-	public static final float ROBOT_LEVEL_10_SPEED = 0.011f;
+	public static final float ROBOT_LEVEL_8_SPEED = 0.008f;
+	public static final float ROBOT_LEVEL_9_SPEED = 0.01f;
+	public static final float ROBOT_LEVEL_10_SPEED = 0.012f;
 	public static final int ROBOT_MIN_SPEED_LEVEL = 1;
-	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 4;
+	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 5;
 	public static final int ROBOT_MAX_SPEED_LEVEL = 10;
 	public static final float DEFAULT_ROBOT_MOVE_SPEED = ROBOT_LEVEL_4_SPEED;
 	
@@ -75,6 +76,7 @@ public class SimulatorConfig {
     private static String stringPathToLeftClickedRobotIcon = STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON;
     private static String stringPathToRightClickedRobotIcon = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON;
     private static String stringPathToEmptyBattery = STRING_PATH_TO_EMPTY_BATTERY;
+    private static String stringPathToPackage = STRING_PATH_TO_PACKAGE;
     private static String stringPathToPlayIcon = STRING_PATH_TO_PLAY_ICON;
     private static String stringPathToPauseIcon = STRING_PATH_TO_PAUSE_ICON;
     private static float defaultRotationSpeed = DEFAULT_ROTATION_SPEED;
@@ -158,6 +160,10 @@ public class SimulatorConfig {
 	
 	public static String getStringPathToEmptyBattery() {
 		return stringPathToEmptyBattery;
+	}
+	
+	public static String getStringPathToPackage() {
+		return stringPathToPackage;
 	}
 	
 	public static String getStringPathToPlayIcon() {

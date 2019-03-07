@@ -28,20 +28,36 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	private JButton resetButton;
 	
 	private TestListPanel testListPanel;
+	private JFrame frame;
 	
 	private Queue<TestScenario> testsToRun = new LinkedList<TestScenario>();
 	
 	private boolean listVisible = false;
 	
-	public TestOverviewPanel(ScenarioManager scenarioManager, TestListPanel testListPanel) {
+	public TestOverviewPanel(ScenarioManager scenarioManager, TestListPanel testListPanel, JFrame frame) {
 		this.scenarioManager = scenarioManager;
 		this.testListPanel = testListPanel;
+		this.frame = frame;
 		
+		// -----------------------------------
+    	// |  -----------	---------------	 |
+    	// |  |Progress |	|  Run All    |	 |
+    	// |  -----------	---------------	 |	
+    	// |  -----------	---------------	 |					
+    	// |  |Show/Hide|	|Reset Results|	 |						
+    	// |  -----------	---------------	 |
+    	// -----------------------------------
+    	
+    	//We use a GridBagLayout for flexibility
 		setLayout(new GridBagLayout());
-		createComponents();
+		
+		addProgressDisplay();
+		addShowHideButton();
+		addRunAllButton();
+		addResetButton();
 	}
 	
-	private void createComponents() {
+	private void addProgressDisplay() {
 		progressDisplay = newProgressDisplay();
 		updateProgressDisplay();
 		GridBagConstraints progressDisplayConstraints = new GridBagConstraints();
@@ -50,30 +66,39 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		progressDisplayConstraints.weightx = 1.0;
 		progressDisplayConstraints.weighty = 1.0;
 		add(new MenuWrapper(194, 26, DriveSimFrame.MENU_ORANGE, progressDisplay), progressDisplayConstraints);
-		
+	}
+
+	private void addShowHideButton() {
 		showHideButton = newShowHideButton();
 		GridBagConstraints showHideButtonConstraints = new GridBagConstraints();
 		showHideButtonConstraints.gridx = 0;
 		showHideButtonConstraints.gridy = 1;
 		showHideButtonConstraints.weightx = 1.0;
 		showHideButtonConstraints.weighty = 1.0;
-		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, showHideButton), showHideButtonConstraints);
-		
+		showHideButtonConstraints.insets = new Insets(3, 3, 3, 3);
+		add(new MenuWrapper(194, 24, DriveSimFrame.MENU_ORANGE, showHideButton), showHideButtonConstraints);
+	}
+
+	private void addRunAllButton() {
 		runAllButton = newRunAllButton();
 		GridBagConstraints runAllButtonConstraints = new GridBagConstraints();
 		runAllButtonConstraints.gridx = 1;
 		runAllButtonConstraints.gridy = 0;
 		runAllButtonConstraints.weightx = 1.0;
 		runAllButtonConstraints.weighty = 1.0;
-		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, runAllButton), runAllButtonConstraints);
-		
+		runAllButtonConstraints.insets = new Insets(3, 3, 3, 3);
+		add(new MenuWrapper(194, 24, DriveSimFrame.MENU_ORANGE, runAllButton), runAllButtonConstraints);
+	}
+
+	private void addResetButton() {
 		resetButton = newResetButton();
 		GridBagConstraints resetButtonConstraints = new GridBagConstraints();
 		resetButtonConstraints.gridx = 1;
 		resetButtonConstraints.gridy = 1;
 		resetButtonConstraints.weightx = 1.0;
 		resetButtonConstraints.weighty = 1.0;
-		add(new MenuWrapper(200, 30, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
+		resetButtonConstraints.insets = new Insets(3, 3, 3, 3);
+		add(new MenuWrapper(194, 24, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
 	}
 	
 	private JTextField newProgressDisplay() {
@@ -95,9 +120,21 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 			listVisible = !listVisible;
 			updateShowHideButton();
 			testListPanel.setVisible(listVisible);
+			updateFrameSize();
 		});
 		
 		return button;
+	}
+	
+	private void updateFrameSize() {
+		int height = frame .getHeight();
+		int width = frame.getWidth();
+		if (listVisible)
+			width += testListPanel.getPreferredSize().width;
+		else
+			width -= testListPanel.getPreferredSize().width;
+		frame.setPreferredSize(new Dimension(width, height));
+		frame.pack();
 	}
 	
 	private void updateShowHideButton() {
@@ -156,9 +193,15 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
         return button;
 	}
 	
-	private void runAllTests( ) {
+	private void runAllTests() {
+		stopRunAllSequenz();
+		DriveSimFrame.displayMessage("Running all Tests");
 		testsToRun.addAll(scenarioManager.getTests());
 		runNextTest();
+	}
+	
+	public void stopRunAllSequenz() {
+		testsToRun.clear();
 	}
 	
 	private void runNextTest() {

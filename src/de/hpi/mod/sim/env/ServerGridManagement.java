@@ -47,6 +47,8 @@ public class ServerGridManagement implements ISensorDataProvider {
                 return CellType.BLOCK;
             if (pos.getY() == 0 && Math.floorMod(pos.getX() , 3) == 2)
                 return CellType.LOADING;
+            if (pos.getY() < 0 && pos.getY() > - SimulatorConfig.QUEUE_SIZE && Math.floorMod(pos.getX() , 3) == 2)
+                return CellType.QUEUE;
             return CellType.STATION;
         }
     }

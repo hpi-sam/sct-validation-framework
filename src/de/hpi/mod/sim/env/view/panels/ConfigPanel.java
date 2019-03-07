@@ -8,31 +8,42 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Panel that lets the user set and reset configurations.<br>
- * Currently supports:
- * <ul>
- *     <li>Move Speed</li>
- * </ul>
- *
- * No other class must change the values, since this class does not listen to changes
- */
 public class ConfigPanel extends JPanel implements ITimeListener{
 
 	private int currentLevel = SimulatorConfig.getRobotDefaultSpeedLevel();
 	private SimulationWorld world;
+	private JTextField valueField;
 	private JButton playButton;
+	private JSlider valueSlider;
+	private ValueSetter setter;
 	private ImageIcon playIcon;
 	private ImageIcon pauseIcon;
 	
-    /**
-     * Initializes the Panel and adds Config Elements
-     */
     public ConfigPanel(SimulationWorld world) {
     	this.world = world;
+    	
+    	// --------------------------------------
+    	// | Move Speed							|
+    	// |  -------					 ------	|
+    	// |  |Value|   -------O-------- | |> |	|
+    	// |  -------					 ------	|
+    	// |  -------							|
+    	// |  |Reset|							|
+    	// |  -------							|
+    	// --------------------------------------
+    	
+    	//We use a GridBagLayout for flexibility
         setLayout(new GridBagLayout());
         
-        JLabel label = new JLabel("Move Speed");
+        addLabel();
+        addValueField();
+        addSlider();
+        addResetButton();
+        addPlayButton();
+    }
+
+    private void addLabel() {
+    	JLabel label = new JLabel("Move Speed");
         GridBagConstraints labelConstraints = new GridBagConstraints();
         labelConstraints.gridx = 0;
         labelConstraints.gridy = 0;
@@ -40,19 +51,22 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         add(new MenuWrapper(390, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
-        
-        JTextField valueField = new JTextField();
+	}
+
+	private void addValueField() {
+		valueField = new JTextField();
         valueField.setEditable(false);
         valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
         valueField.setHorizontalAlignment(JTextField.CENTER);
         GridBagConstraints valueFieldConstraints = new GridBagConstraints();
         valueFieldConstraints.gridx = 0;
         valueFieldConstraints.gridy = 1;
-        valueFieldConstraints.fill = GridBagConstraints.HORIZONTAL;
         add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, valueField), valueFieldConstraints);
-        
-        JSlider valueSlider = new JSlider(SimulatorConfig.ROBOT_MIN_SPEED_LEVEL, SimulatorConfig.ROBOT_MAX_SPEED_LEVEL, SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
-        ValueSetter setter = SimulatorConfig::setRobotMoveSpeed;
+	}
+
+	private void addSlider() {
+		valueSlider = new JSlider(SimulatorConfig.ROBOT_MIN_SPEED_LEVEL, SimulatorConfig.ROBOT_MAX_SPEED_LEVEL, SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
+        setter = SimulatorConfig::setRobotMoveSpeed;
         setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
         valueSlider.setToolTipText("Adjust Robot Speed");
         valueSlider.setEnabled(true); //in the begin the speed slider should be changeable, even if not afterwards while paused simulation
@@ -65,24 +79,13 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         sliderConstraints.gridx = 1;
         sliderConstraints.gridy = 1;
         sliderConstraints.fill = GridBagConstraints.HORIZONTAL;
-        sliderConstraints.weightx = 1.0;
+        sliderConstraints.weightx = 1.0; //the slider gets all the additional space
+        sliderConstraints.insets = new Insets(0, 3, 0, 3);
         add(new MenuWrapper(200, 60, DriveSimFrame.MENU_ORANGE, valueSlider), sliderConstraints);
-        
-        //Play/Pause button
-        loadIcons();
+	}
 
-        playButton = new JButton();
-        refresh();  // Refresh to set icon
-        playButton.addActionListener(e -> {
-        	world.toggleRunning();
-        	valueSlider.setEnabled(world.isRunning());
-        });
-        GridBagConstraints playButtonConstraints = new GridBagConstraints();
-        playButtonConstraints.gridx = 2;
-        playButtonConstraints.gridy = 1;
-        add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, playButton), playButtonConstraints);
-        
-        JButton resetButton = new JButton("Reset");
+	private void addResetButton() {
+		JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(e -> {
         	valueSlider.setEnabled(true); //after reset the speed slider should be changeable, even if not afterwards while paused simulation
             valueSlider.setValue(SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
@@ -93,11 +96,27 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         GridBagConstraints resetButtonConstraints = new GridBagConstraints();
         resetButtonConstraints.gridx = 0;
         resetButtonConstraints.gridy = 2;
-        add(new MenuWrapper(60, 30, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
+        resetButtonConstraints.insets = new Insets(3, 3, 3, 3);        
+        add(new MenuWrapper(60, 24, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
+	}
 
-    }
+	private void addPlayButton() {
+		loadIcons();
 
-    private void loadIcons() {
+        playButton = new JButton();
+        refresh();  // Refresh to set icon
+        playButton.addActionListener(e -> {
+        	world.toggleRunning();
+        	valueSlider.setEnabled(world.isRunning());
+        });
+        GridBagConstraints playButtonConstraints = new GridBagConstraints();
+        playButtonConstraints.gridx = 2;
+        playButtonConstraints.gridy = 1;
+        playButtonConstraints.insets = new Insets(3, 3, 3, 3);
+        add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, playButton), playButtonConstraints);
+	}
+
+	private void loadIcons() {
     	playIcon = new ImageIcon(SimulatorConfig.getStringPathToPlayIcon());
         pauseIcon = new ImageIcon(SimulatorConfig.getStringPathToPauseIcon());
 	}

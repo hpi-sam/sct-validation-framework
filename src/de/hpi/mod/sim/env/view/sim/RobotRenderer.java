@@ -20,7 +20,7 @@ import java.io.IOException;
 public class RobotRenderer {
 
     private SimulationWorld world;
-    private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon;
+    private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
 
 
     public RobotRenderer(SimulationWorld world) {
@@ -35,6 +35,7 @@ public class RobotRenderer {
             leftClickedRobotIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToLeftClickedRobotIcon()));
             rightClickedRobotIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToRightClickedRobotIcon()));
             batteryIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToEmptyBattery()));
+            packageIcon = ImageIO.read(new File(SimulatorConfig.getStringPathToPackage()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,17 +81,13 @@ public class RobotRenderer {
                 image.getWidth() / 2f, image.getHeight() / 2f);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
-        if (hasPackage) {
-            graphic.setColor(Color.green);
-            graphic.fillArc((int) (drawPos.getX() - blockSize * .1), (int) (drawPos.getY() - blockSize * .1),
-                    (int) (blockSize * 1.2), (int) (blockSize * 1.2), 0, 360);
-        }
-
         graphic.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
 
-        if (batteryEmpty) {
+        if (hasPackage) 
+        	graphic.drawImage(op.filter(packageIcon, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
+        
+        if (batteryEmpty)
             graphic.drawImage(batteryIcon, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
-        }
     }
 
     private void drawTarget(Graphics graphic, Point2D drawPos, Point2D targetPos) {

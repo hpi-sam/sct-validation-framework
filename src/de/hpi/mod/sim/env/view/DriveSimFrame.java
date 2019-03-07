@@ -57,6 +57,8 @@ public class DriveSimFrame extends JFrame {
         addListeners();
         setDesignOfSubpanels();
         setDesignOfMainWindow();
+        
+        //this can be removed once displayMessage is no longer static
         popupFrame = this;
 		
         lastFrame = System.currentTimeMillis();
@@ -65,11 +67,85 @@ public class DriveSimFrame extends JFrame {
             update();
         close();
     }
+    
+    private void initializeSimulationItems() {
+		sim = new SimulatorView();
+        world = sim.getWorld();
+        deadlockDetector = new DeadlockDetector(world);
+        scenarioManager = new ScenarioManager(world);
+	}
+    
+    private void initializePanels() {
+		info = new RobotInfoPanel(world, false);
+        info2 = new RobotInfoPanel(world, true);
+        config = new ConfigPanel(world);
+        testList = new TestListPanel(scenarioManager);
+        testOverview = new TestOverviewPanel(scenarioManager, testList, this);
+        testList.setTestOverview(testOverview);
+        timer = new TimerPanel(world, this);
+        scenario = new ScenarioPanel(world, scenarioManager, timer, testOverview);
+        setJMenuBar(new DriveSimMenu(world));
+	}
+    
+    private void loadTestFileContent() {
+		createFileIfNotExist(SimulatorConfig.getTestFileName());
+        loadFile(testList, SimulatorConfig.getTestFileName());
+	}
+    
+    private void addListeners() {
+		world.addHighlightedRobotListener(info);
+        world.addHighlightedRobotListener2(info2);
+        world.addTimeListener(config);
+        scenarioManager.addTestListener(testList);
+        scenarioManager.addTestListener(testOverview);
+	}
+    
+    private void setDesignOfSubpanels() {
+		testOverview.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+		testOverview.setBackground(MENU_ORANGE);
+        
+        scenario.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
+        scenario.setBackground(MENU_ORANGE);
+        
+        config.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
+        config.setBackground(MENU_ORANGE);
+        
+        timer.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
+        timer.setBackground(MENU_ORANGE);
+        
+        //info panels work with a different layout than all other panels and need a specified size
+        info.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
+        info.setMinimumSize(new Dimension(200, 130));
+        info.setPreferredSize(new Dimension(200, 130));
+        info.setBackground(MENU_GREEN);
+        
+        info2.setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
+        info2.setMinimumSize(new Dimension(200, 130));
+        info2.setPreferredSize(new Dimension(200, 130));
+        info2.setBackground(MENU_RED);
+        
+        testList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+        testList.setBackground(MENU_ORANGE);
+	}
 
 	private void setDesignOfMainWindow() {
-		getContentPane().setBackground(MENU_ORANGE);
-		setBackground(MENU_ORANGE);
 		
+		// Uses a Grid Bag Layout with the following panel
+		// --------------------------------------------------------------
+		// |						||	Test Overview	|	Test List	|
+		// |						||------------------|				|
+		// |						||	Scenarios		|				|
+		// |						||------------------|				|
+		// |		Simulation		|| 	Speed Config	|				|
+		// |						||------------------|				|
+		// |						||	Timer			|				|
+		// |						||------------------|				|
+		// |						||	Info1  |  Info2 |				|
+		// --------------------------------------------------------------
+		
+		//add the different Panels. This is lengthy because lots of GridBagLayout setup takes place here. This gives us a lot of flexibility though
+		
+		//add the main simulation panel, which gets all of the additional space when the window is resized
 		GridBagConstraints simConstraints = new GridBagConstraints();
 		simConstraints.gridx = 0;
 		simConstraints.gridy = 0;
@@ -79,6 +155,7 @@ public class DriveSimFrame extends JFrame {
 		simConstraints.gridheight = 5;
 		add(sim, simConstraints);
 		
+		//add the gray spacer to the right of the simulation panel (TODO: consider moving this into the simulation renderer)
 		JPanel spacer = new JPanel();
 		spacer.setBackground(Color.DARK_GRAY);
 		GridBagConstraints spacerConstraints = new GridBagConstraints();
@@ -139,82 +216,20 @@ public class DriveSimFrame extends JFrame {
 		testList.setVisible(false);
 		add(testList, testListConstraints);
 		
-		setPreferredSize(new Dimension(1250, 700));
+		//Set up the color and size of the whole window
+		getContentPane().setBackground(MENU_ORANGE);
+		setBackground(MENU_ORANGE);
+		setPreferredSize(new Dimension(1000, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
-	}
-
-	private void loadTestFileContent() {
-		createFileIfNotExist(SimulatorConfig.getTestFileName());
-        loadFile(testList, SimulatorConfig.getTestFileName());
-	}
-
-	private void initializeSimulationItems() {
-		sim = new SimulatorView();
-        world = sim.getWorld();
-        scenarioManager = new ScenarioManager(world);
-        deadlockDetector = new DeadlockDetector(world, scenarioManager);
-	}
-
-	private void setDesignOfSubpanels() {
-		testOverview.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-		testOverview.setBackground(MENU_ORANGE);
-        
-        scenario.setBorder(BorderFactory.createTitledBorder(
-        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        scenario.setBackground(MENU_ORANGE);
-        
-        config.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        config.setBackground(MENU_ORANGE);
-        
-        timer.setBorder(BorderFactory.createTitledBorder(
-        		BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
-        timer.setBackground(MENU_ORANGE);
-        
-        info.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
-        info.setMinimumSize(new Dimension(200, 130));
-        info.setPreferredSize(new Dimension(200, 130));
-        info.setBackground(MENU_GREEN);
-        info2.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
-        info2.setMinimumSize(new Dimension(200, 130));
-        info2.setPreferredSize(new Dimension(200, 130));
-        info2.setBackground(MENU_RED);
-        
-        testList.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        testList.setBackground(MENU_ORANGE);
-	}
-
-	private void addListeners() {
-		world.addHighlightedRobotListener(info);
-        world.addHighlightedRobotListener2(info2);
-        world.addTimeListener(config);
-        scenarioManager.addTestListener(testList);
-        scenarioManager.addTestListener(testOverview);
-	}
-
-	private void initializePanels() {
-		info = new RobotInfoPanel(world, false);
-        info2 = new RobotInfoPanel(world, true);
-        config = new ConfigPanel(world);
-        testList = new TestListPanel(deadlockDetector, scenarioManager);
-        testOverview = new TestOverviewPanel(scenarioManager, testList);
-        timer = new TimerPanel(world);
-        scenario = new ScenarioPanel(deadlockDetector, world, scenarioManager, timer);
-        TimerPanel.setParent(this);
-        setJMenuBar(new DriveSimMenu(world));
 	}
     
     private void loadFile(TestListPanel testPanel, String fileName) {
     	boolean written = true;
     	TestScenario test;
     	
-    	for (int i=0; i<scenarioManager.getTests().size(); i++) {
+    	for (int i = 0; i < scenarioManager.getTests().size(); i++) {
     		test = scenarioManager.getTests().get(i);
 			written = writeLineIfNeeded(test, fileName);
     		if(!written && testPassed(test, fileName)) {
@@ -293,11 +308,12 @@ public class DriveSimFrame extends JFrame {
     }
 
     private void update() {
-    	if(popupActive && popupTime + 5000 < System.currentTimeMillis()) {
+    	//remove the popup if it has been active for more than 5 seconds
+    	//the boolean popupActive exists because you are not supposed to invoke hide() on a popup multiple times because the PopupFactory may reuse popups which have been hidden
+    	if(popupActive && popupTime + 5000 <= System.currentTimeMillis()) {
     		popupActive = false;
     		popup.hide();
     	}
-
     	
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
@@ -324,17 +340,15 @@ public class DriveSimFrame extends JFrame {
     }
 
     private static void setSystemLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            if (UIManager.getSystemLookAndFeelClassName().equals("com.sun.java.swing.plaf.windows.WindowsLookAndFeel")) {
-                Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
-                UIManager.put("MenuItem.acceleratorFont", original.deriveFont(Font.PLAIN, 10));
-                UIManager.put("MenuItem.acceleratorForeground", new Color(100, 150, 255));
-            }
-        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
-            JOptionPane.showMessageDialog(null, "Could not switch to System Look-And-Feel",
-                    "UI Error", JOptionPane.ERROR_MESSAGE);
-        }
+  
+    	try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.put("Button.background", Color.white);
+			UIManager.put("TextField.background", Color.white);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			System.out.println("The look and feel could not be loaded. The Application will work fine but look different.");
+		}
     }
     
     public void clearSelections() {
@@ -342,23 +356,23 @@ public class DriveSimFrame extends JFrame {
     	scenario.clearSelections();
     }
     
+    //create a new popup with the provided text 
     private static Popup createPopup(String message) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
-		popupPanel.setMinimumSize(new Dimension(300, 100));
-		popupPanel.setPreferredSize(new Dimension(300, 100));
-		popupPanel.setBackground(MENU_GRAY);
+		popupPanel.setPreferredSize(new Dimension(600, 100));
+		popupPanel.setBackground(new Color(MENU_ORANGE.getRed(), MENU_ORANGE.getGreen(), MENU_ORANGE.getBlue(), 192));
 		JLabel popupLabel = new JLabel(message, JLabel.CENTER);
-		Font original = (Font) UIManager.get("MenuItem.acceleratorFont");
-		popupLabel.setFont(original.deriveFont(Font.BOLD));
+		Font original = (Font) UIManager.get("Label.font");
+		popupLabel.setFont(original.deriveFont(Font.BOLD, 16));
 		popupPanel.add(popupLabel);
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
-		Popup popup = pf.getPopup(popupFrame, popupPanel, 400, 300);
+		Popup popup = pf.getPopup(popupFrame, popupPanel, 150, 300);
 		return popup;
 	}
 
     //TODO: having this as static is really bad. Because the popup needs to know in which frame to be displayed. But when this call is static then we can't use "this". Instead we need a static variable for the frame...
-	public static void displayMessage(String message) {
+    public static void displayMessage(String message) {
 		if(popupActive)
 			popup.hide();
 		popup = createPopup(message);
