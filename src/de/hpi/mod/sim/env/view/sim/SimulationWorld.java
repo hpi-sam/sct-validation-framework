@@ -1,6 +1,5 @@
 package de.hpi.mod.sim.env.view.sim;
 
-import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.Simulator;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Orientation;
@@ -10,13 +9,11 @@ import de.hpi.mod.sim.env.robot.Robot.RobotState;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.model.Scenario;
-import de.hpi.mod.sim.env.view.panels.RobotInfoPanel;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Stores the values needed to display the Simulation and gives access to the Simulation
