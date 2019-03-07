@@ -6,12 +6,13 @@ import de.hpi.mod.sim.env.robot.Robot.RobotState;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Simulator implements IRobotController, ILocation, IScanner {
 
-    private List<Robot> robots = new ArrayList<>();
+    private List<Robot> robots = new CopyOnWriteArrayList<>();
     private ServerGridManagement grid;
     private IRobotStationDispatcher stations;
     private int unloadingRange = SimulatorConfig.getUnloadingRange();

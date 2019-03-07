@@ -21,6 +21,7 @@ public class ScenarioManager {
     private List<TestScenario> tests = new ArrayList<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
+	private boolean currentTestFailed = false;
     CollisionDetector collisionDetector;
 
 
@@ -37,8 +38,13 @@ public class ScenarioManager {
         tests.add(new DriveToLoadingPosition());
         tests.add(new DriveToUnloadingPosition());
         tests.add(new MiddleRoute());
+        tests.add(new LongRoute());
+        tests.add(new MiddleRouteTwoRobots());
+        tests.add(new MiddleRouteTwoRobots2());
         tests.add(new HandleThreeRobotsInStation());
         tests.add(new OppositeRobotsScenario());
+        tests.add(new MiddleRouteThreeRobots());
+        tests.add(new MiddleRouteTwoRobots3());
     }
 
     public void runScenario(Scenario scenario) {
@@ -62,6 +68,13 @@ public class ScenarioManager {
             	test.setActive(false);
                 for (ITestListener listener : listeners) {
                     listener.onTestCompleted(test);
+                }
+            }
+            if(currentTestFailed && test.isActive()) {
+            	test.setActive(false);
+            	currentTestFailed = false;
+            	for (ITestListener listener : listeners) {
+                    listener.failTest(test);
                 }
             }
         }
@@ -272,7 +285,7 @@ public class ScenarioManager {
     private class MiddleRoute extends TestScenario {
     	
     	public MiddleRoute() {
-    		name = "Can handle medium long route";
+    		name = "Drive medium long route";
     	}
     	
     	 @Override
@@ -284,6 +297,185 @@ public class ScenarioManager {
              targets.add(new Position(1,0));
              targets.add(new Position(2,0));
              targets.add(new Position(6,10));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             return newRobots;
+         }
+    }
+    
+	private class MiddleRouteTwoRobots extends TestScenario {
+	    	
+	    	public MiddleRouteTwoRobots() {
+	    		name = "2 Robots same station to same destination";
+	    	}
+	    	
+	    	 @Override
+	         public List<NewRobot> initializeScenario() {
+	             List<NewRobot> newRobots = new ArrayList<>();
+	             List<Position> targets = new ArrayList<>();
+	             List<Position> targets2 = new ArrayList<>();
+	             targets.add(new Position(2,0));
+	             targets.add(new Position(3,10));
+	             targets.add(new Position(1,0));
+	             targets.add(new Position(2,0));
+	             targets.add(new Position(6,10));
+	             targets.add(new Position(4,0));
+	             targets.add(new Position(5,0));
+	
+	             targets2.add(new Position(2,0));
+	             targets2.add(new Position(3,10));
+	             targets2.add(new Position(1,0));
+	             targets2.add(new Position(2,0));
+	             targets2.add(new Position(6,10));
+	             targets2.add(new Position(7,0));
+	             targets2.add(new Position(8,0));
+	             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+	             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targets2));
+	             return newRobots;
+	         }
+	    }
+
+	private class MiddleRouteTwoRobots2 extends TestScenario {
+		
+		public MiddleRouteTwoRobots2() {
+			name = "2 Robots different station to same destination";
+		}
+		
+		 @Override
+	     public List<NewRobot> initializeScenario() {
+	         List<NewRobot> newRobots = new ArrayList<>();
+	         List<Position> targets = new ArrayList<>();
+	         List<Position> targets2 = new ArrayList<>();
+	         targets.add(new Position(2,0));
+	         targets.add(new Position(3,10));
+	         targets.add(new Position(1,0));
+	         targets.add(new Position(2,0));
+	         targets.add(new Position(6,10));
+	         targets.add(new Position(4,0));
+	         targets.add(new Position(5,0));
+	
+	         targets2.add(new Position(5,0));
+	         targets2.add(new Position(3,10));
+	         targets2.add(new Position(4,0));
+	         targets2.add(new Position(5,0));
+	         targets2.add(new Position(6,10));
+	         targets2.add(new Position(7,0));
+	         targets2.add(new Position(8,0));
+	         newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+	         newRobots.add(new NewTestRobot(new Position(3, -2), RobotState.TO_BATTERY, Orientation.EAST, targets2));
+	         return newRobots;
+	     }
+	}
+	
+private class MiddleRouteThreeRobots extends TestScenario {
+		
+		public MiddleRouteThreeRobots() {
+			name = "3 Robots different station to same destination";
+		}
+		
+		 @Override
+	     public List<NewRobot> initializeScenario() {
+	         List<NewRobot> newRobots = new ArrayList<>();
+	         List<Position> targets = new ArrayList<>();
+	         List<Position> targets2 = new ArrayList<>();
+	         List<Position> targets3 = new ArrayList<>();
+	         targets.add(new Position(2,0));
+	         targets.add(new Position(3,10));
+	         targets.add(new Position(1,0));
+	         targets.add(new Position(2,0));
+	         targets.add(new Position(6,10));
+	         targets.add(new Position(4,0));
+	         targets.add(new Position(5,0));
+	
+	         targets2.add(new Position(5,0));
+	         targets2.add(new Position(3,10));
+	         targets2.add(new Position(4,0));
+	         targets2.add(new Position(5,0));
+	         targets2.add(new Position(6,10));
+	         targets2.add(new Position(7,0));
+	         targets2.add(new Position(8,0));
+	         
+	         targets3.add(new Position(8,0));
+	         targets3.add(new Position(3,10));
+	         targets3.add(new Position(7,0));
+	         targets3.add(new Position(8,0));
+	         targets3.add(new Position(6,10));
+	         targets3.add(new Position(10,0));
+	         targets3.add(new Position(11,0));
+	         newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+	         newRobots.add(new NewTestRobot(new Position(3, -2), RobotState.TO_BATTERY, Orientation.EAST, targets2));
+	         newRobots.add(new NewTestRobot(new Position(6, -2), RobotState.TO_BATTERY, Orientation.EAST, targets3));
+	         return newRobots;
+	     }
+	}
+	
+private class MiddleRouteTwoRobots3 extends TestScenario {
+		
+		public MiddleRouteTwoRobots3() {
+			name = "2x2 Robots different station to same destination";
+		}
+		
+		 @Override
+	     public List<NewRobot> initializeScenario() {
+	         List<NewRobot> newRobots = new ArrayList<>();
+	         List<Position> targets = new ArrayList<>();
+	         List<Position> targets2 = new ArrayList<>();
+	         List<Position> targets3 = new ArrayList<>();
+	         List<Position> targets4 = new ArrayList<>();
+	         targets.add(new Position(2,0));
+	         targets.add(new Position(3,10));
+	         targets.add(new Position(1,0));
+	         targets.add(new Position(2,0));
+	         targets.add(new Position(6,10));
+	         targets.add(new Position(4,0));
+	         targets.add(new Position(5,0));
+	         targets2.add(new Position(2,0));
+	         targets2.add(new Position(3,10));
+	         targets2.add(new Position(1,0));
+	         targets2.add(new Position(2,0));
+	         targets2.add(new Position(6,10));
+	         targets2.add(new Position(4,0));
+	         targets2.add(new Position(5,0));
+	
+	         targets3.add(new Position(5,0));
+	         targets3.add(new Position(3,10));
+	         targets3.add(new Position(4,0));
+	         targets3.add(new Position(5,0));
+	         targets3.add(new Position(6,10));
+	         targets3.add(new Position(7,0));
+	         targets3.add(new Position(8,0));
+	         targets4.add(new Position(5,0));
+	         targets4.add(new Position(3,10));
+	         targets4.add(new Position(4,0));
+	         targets4.add(new Position(5,0));
+	         targets4.add(new Position(6,10));
+	         targets4.add(new Position(7,0));
+	         targets4.add(new Position(8,0));
+	         newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+	         newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targets2));
+	         newRobots.add(new NewTestRobot(new Position(3, -2), RobotState.TO_BATTERY, Orientation.EAST, targets3));
+	         newRobots.add(new NewTestRobot(new Position(3, -3), RobotState.TO_BATTERY, Orientation.EAST, targets4));
+	         return newRobots;
+	     }
+	}
+    
+    private class LongRoute extends TestScenario {
+    	
+    	public LongRoute() {
+    		name = "Drive long route";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targets = new ArrayList<>();
+             targets.add(new Position(2,0));
+             targets.add(new Position(3,10));
+             targets.add(new Position(1,0));
+             targets.add(new Position(2,0));
+             targets.add(new Position(6,10));
+             targets.add(new Position(7,0));
+             targets.add(new Position(8,0));
+             targets.add(new Position(12,10));
              newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
              return newRobots;
          }
@@ -364,4 +556,8 @@ public class ScenarioManager {
     		return sim.addRobotInScenarioHPI2(pos, facing);
     	}
     }
+
+	public void failCurrentTest() {
+		currentTestFailed = true;
+	}
 }

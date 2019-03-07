@@ -48,4 +48,11 @@ public abstract class TestScenario extends Scenario {
 		hasRun = false;
 		alreadyPrinted = false;
 	}
+
+	public void notifyFailToUser() {
+		if(!alreadyPrinted) {
+    		DriveSimFrame.displayMessage("Test \"" + name + "\" failed!");
+    		alreadyPrinted = true;
+    	}
+	}
 }

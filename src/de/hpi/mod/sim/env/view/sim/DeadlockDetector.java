@@ -13,9 +13,13 @@ public class DeadlockDetector {
 	private long currentTime = System.currentTimeMillis();
 	private int offset = 5000;
 	private SimulationWorld simulationWorld;
+	private ScenarioManager scenarioManager;
 	private Map<Integer, Position> robotPositions = new HashMap<>();
+	private boolean deactivated = true;
+	private boolean isRunningTest = false;
 
-	public DeadlockDetector(SimulationWorld simulationWorld) {
+	public DeadlockDetector(SimulationWorld simulationWorld, ScenarioManager scenarioManager) {
+		this.scenarioManager = scenarioManager;
 		this.simulationWorld = simulationWorld;
 		getRobotPositions();
 	}
@@ -27,11 +31,23 @@ public class DeadlockDetector {
 			getCurrentTime();
 		}
 	}
+	
+	public void deactivate() {
+		deactivated = true;
+	}
+	
+	public void reactivate() {
+		deactivated = false;
+	}
+	
+	public void setIsRunningTest(boolean isRunningTest) {
+		this.isRunningTest = isRunningTest;
+	}
 
 	private void checkForDeadlock() {
 		List<Robot> robotList = simulationWorld.getRobots();
 		
-		if(!simulationWorld.getIsRunningScenario() || !simulationWorld.isRunning()) {
+		if(!simulationWorld.isRunning() || deactivated) {
 			return;
 		}
 		if(robotList.isEmpty()) {
@@ -50,7 +66,11 @@ public class DeadlockDetector {
 	}
 
 	private void reportDeadlock() {
+		deactivate();
 		DriveSimFrame.displayMessage("Deadlock detected!");
+		if(isRunningTest) {
+			scenarioManager.failCurrentTest();
+		}
 	}
 
 	private void getCurrentTime() {

@@ -74,20 +74,25 @@ public class DriveSimFrame extends JFrame {
     private void initializeSimulationItems() {
 		sim = new SimulatorView();
         world = sim.getWorld();
+<<<<<<< simulator/src/de/hpi/mod/sim/env/view/DriveSimFrame.java
+        scenarioManager = new ScenarioManager(world);
+        deadlockDetector = new DeadlockDetector(world, scenarioManager);
+=======
         deadlockDetector = new DeadlockDetector(world);
         collisionDetector = new CollisionDetector(world, this);
         scenarioManager = new ScenarioManager(world, collisionDetector);
+>>>>>>> simulator/src/de/hpi/mod/sim/env/view/DriveSimFrame.java
 	}
     
     private void initializePanels() {
 		info = new RobotInfoPanel(world, false);
         info2 = new RobotInfoPanel(world, true);
         config = new ConfigPanel(world);
-        testList = new TestListPanel(scenarioManager);
+        testList = new TestListPanel(deadlockDetector, scenarioManager);
         testOverview = new TestOverviewPanel(scenarioManager, testList, this);
         testList.setTestOverview(testOverview);
         timer = new TimerPanel(world, this);
-        scenario = new ScenarioPanel(world, scenarioManager, timer, testOverview);
+        scenario = new ScenarioPanel(deadlockDetector, world, scenarioManager, timer, testOverview);
         setJMenuBar(new DriveSimMenu(world));
 	}
     

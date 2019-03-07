@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.panels;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
 import de.hpi.mod.sim.env.view.model.TestScenario;
+import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 import javax.swing.*;
@@ -15,10 +16,12 @@ public class TestListPanel extends JPanel implements ITestListener {
 
     private static Map<TestScenario, JLabel> tests = new HashMap<>();
     private ScenarioManager scenarioManager;
+    private DeadlockDetector deadlockDetector;
     private TestOverviewPanel testOverview;
 
 
-    public TestListPanel(ScenarioManager scenarioManager) {
+    public TestListPanel(DeadlockDetector deadlockDetector, ScenarioManager scenarioManager) {
+    	this.deadlockDetector = deadlockDetector;
     	this.scenarioManager = scenarioManager;
         setLayout(new GridBagLayout());
 
@@ -34,8 +37,15 @@ public class TestListPanel extends JPanel implements ITestListener {
     public void onTestCompleted(TestScenario test) {
     	//set the background of the menu wrapper of the label to green
         tests.get(test).getParent().setBackground(DriveSimFrame.MENU_GREEN);
+        endDeadlockDetection();
         repaint();
     }
+    
+    @Override
+	public void failTest(TestScenario test) {
+    	tests.get(test).getParent().setBackground(DriveSimFrame.MENU_RED);	
+    	repaint();
+	}
 
 	public void resetColors() {
 		//set the background off the menu wrappers of all test labels to the generic menu color
@@ -65,6 +75,8 @@ public class TestListPanel extends JPanel implements ITestListener {
         JButton run = new JButton("run");
         run.setToolTipText("Tooltip");
         run.addActionListener(e -> {
+        	useDeadlockDetection();
+        	notifyDeadlockDetectorAboutRunningTest();
         	testOverview.stopRunAllSequenz();
         	scenarioManager.runScenario(test);
         	select(label);
@@ -101,6 +113,18 @@ public class TestListPanel extends JPanel implements ITestListener {
 			Font newFont = new Font(oldFont.getName(), Font.PLAIN, oldFont.getSize());
 			l.setFont(newFont);
 		}
+	}
+
+	public void useDeadlockDetection() {
+		deadlockDetector.reactivate();
+	}
+
+	public void endDeadlockDetection() {
+		deadlockDetector.deactivate();
+	}
+	
+	public void notifyDeadlockDetectorAboutRunningTest() {
+		deadlockDetector.setIsRunningTest(true);
 	}
 
 	public void setTestOverview(TestOverviewPanel testOverview) {
