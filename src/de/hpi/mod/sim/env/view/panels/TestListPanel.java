@@ -90,6 +90,10 @@ public class TestListPanel extends JPanel implements ITestListener {
         tests.put(test, label);
     }
     
+    public void select(TestScenario test) {
+    	select(tests.get(test));
+    }
+    
     /*
      * Gets called when a test is run.
      * Turns the text of the label italic and bold.
