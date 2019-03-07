@@ -53,10 +53,15 @@ public class GridRenderer {
                 // Highlighted Cells are special
                 boolean highlight = world.isMousePointing() && world.getMousePointer().equals(current);
                 
+                // The Zero Zero Cell should be marked
                 boolean isZeroZero = current.is(new Position(0, 0));
+                
+                // Unused stations should be drawn differently
+                boolean isUnusedStationBlock = (cellType == CellType.BATTERY || cellType == CellType.STATION || cellType == CellType.LOADING || cellType == CellType.QUEUE) 
+                		&& (current.getX() >= SimulatorConfig.getChargingStationsInUse() * 3 || current.getX() < 0);
 
                 // Draw the block
-                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight, isZeroZero);
+                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight, isZeroZero, isUnusedStationBlock);
             }
         }
     }
@@ -68,20 +73,20 @@ public class GridRenderer {
      * @param drawPos The draw-position
      * @param highlight Highlighted?
      */
-    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight, boolean isZeroZero) {
+    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean isUnusedStationBlock) {
         float blockSize = world.getBlockSize();
 
-        if (cell == CellType.BLOCK)
+        if (cell == CellType.BLOCK || isUnusedStationBlock)
             graphic.setColor(Color.DARK_GRAY);
-        if (cell == CellType.WAYPOINT)
+        else if (cell == CellType.WAYPOINT)
             graphic.setColor(Color.WHITE);
-        if (cell == CellType.CROSSROAD)
+        else if (cell == CellType.CROSSROAD)
             graphic.setColor(Color.LIGHT_GRAY);
-        if (cell == CellType.BATTERY)
+        else if (cell == CellType.BATTERY)
             graphic.setColor(new Color(0xe0d9f9));
-        if (cell == CellType.LOADING)
+        else if (cell == CellType.LOADING)
             graphic.setColor(new Color(0xc0e8ed));
-        if (cell == CellType.STATION || cell == CellType.QUEUE)
+        else if (cell == CellType.STATION || cell == CellType.QUEUE)
             graphic.setColor(new Color(0xfff3e2));
 
         graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
