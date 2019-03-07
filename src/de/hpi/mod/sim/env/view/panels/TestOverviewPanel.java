@@ -185,8 +185,6 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
         JButton button = new JButton("Run All");
 
         button.addActionListener(e -> {
-        	testListPanel.useDeadlockDetection();
-        	testListPanel.notifyDeadlockDetectorAboutRunningTest();
         	runAllTests();
         });
 

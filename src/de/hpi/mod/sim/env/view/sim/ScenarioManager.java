@@ -22,7 +22,9 @@ public class ScenarioManager {
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
 	private boolean currentTestFailed = false;
+	private boolean isRunningTest = false;
     CollisionDetector collisionDetector;
+    DeadlockDetector deadlockDetector;
 
 
     public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector) {
@@ -51,10 +53,14 @@ public class ScenarioManager {
     	world.resetZoom();
 		world.resetOffset();
         world.playScenario(scenario);
+        deadlockDetector.reactivate();
         collisionDetector.reset();
         if (scenario instanceof TestScenario) {
         	((TestScenario)scenario).setActive(true);
         	world.toggleRunning();
+        	isRunningTest = true;
+        } else {
+        	isRunningTest = false;
         }
     }
 
@@ -90,6 +96,10 @@ public class ScenarioManager {
 
     public List<TestScenario> getTests() {
         return tests;
+    }
+    
+    public void setDeadlockDetector(DeadlockDetector deadlockDetector){
+    	this.deadlockDetector = deadlockDetector;
     }
 
     private class EmptyScenario extends Scenario {
@@ -559,5 +569,13 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 
 	public void failCurrentTest() {
 		currentTestFailed = true;
+	}
+
+	public boolean isRunningTest() {
+		return isRunningTest;
+	}
+
+	public void setCollisionDetector(CollisionDetector collisionDetector) {
+		this.collisionDetector = collisionDetector;
 	}
 }
