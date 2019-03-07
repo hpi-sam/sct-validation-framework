@@ -15,6 +15,7 @@ public abstract class Scenario {
      * The name of the Scenario
      */
     protected String name = "Unnamed";
+    protected String description = "No description available";
     protected boolean resizable = false;
 
 

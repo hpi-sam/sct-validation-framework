@@ -221,6 +221,7 @@ public class ScenarioManager {
 
         public FourRobotsOnCrossroadScenario() {
             name = "4 Robots on Crossroad";
+            description = "4 Robots on Crossroad";
         }
 
         @Override
@@ -246,6 +247,7 @@ public class ScenarioManager {
     	
     	public DriveToQueueEnd() {
     		name = "Drive to end of the queue";
+    		description = "Drive to end of the queue";
     	}
     	
     	 @Override
@@ -262,6 +264,7 @@ public class ScenarioManager {
     	
     	public DriveToLoadingPosition() {
     		name = "Drive to loading position";
+    		description = "Drive to loading position";
     	}
     	
     	 @Override
@@ -279,6 +282,7 @@ public class ScenarioManager {
     	
     	public DriveToUnloadingPosition() {
     		name = "Drive to unloading position";
+    		description = "Drive to unloading position";
     	}
     	
     	 @Override
@@ -296,6 +300,7 @@ public class ScenarioManager {
     	
     	public MiddleRoute() {
     		name = "Drive medium long route";
+    		description = "Drive medium long route";
     	}
     	
     	 @Override
@@ -315,7 +320,8 @@ public class ScenarioManager {
 	private class MiddleRouteTwoRobots extends TestScenario {
 	    	
 	    	public MiddleRouteTwoRobots() {
-	    		name = "2 Robots same station to same destination";
+	    		name = "2 Robots same to same";
+	    		description = "2 Robots from same stations to same destinations";
 	    	}
 	    	
 	    	 @Override
@@ -347,7 +353,8 @@ public class ScenarioManager {
 	private class MiddleRouteTwoRobots2 extends TestScenario {
 		
 		public MiddleRouteTwoRobots2() {
-			name = "2 Robots different station to same destination";
+			name = "2 Robots different to same";
+			description = "2 Robots from different stations to same destinations";
 		}
 		
 		 @Override
@@ -379,7 +386,8 @@ public class ScenarioManager {
 private class MiddleRouteThreeRobots extends TestScenario {
 		
 		public MiddleRouteThreeRobots() {
-			name = "3 Robots different station to same destination";
+			name = "3 Robots different to same";
+			description = "3 Robots from different stations to same destinations";
 		}
 		
 		 @Override
@@ -421,7 +429,8 @@ private class MiddleRouteThreeRobots extends TestScenario {
 private class MiddleRouteTwoRobots3 extends TestScenario {
 		
 		public MiddleRouteTwoRobots3() {
-			name = "2x2 Robots different station to same destination";
+			name = "4 Robots different to same";
+			description = "2x2 Robots from different stations to same destinations";
 		}
 		
 		 @Override
@@ -472,6 +481,7 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     	
     	public LongRoute() {
     		name = "Drive long route";
+    		description = "Drive long route";
     	}
     	
     	 @Override
@@ -494,7 +504,8 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     private class HandleThreeRobotsInStation extends TestScenario {
     	
     	public HandleThreeRobotsInStation() {
-    		name = "Handle three robots in station";
+    		name = "Three robots in station";
+    		description = "Handle three robots in the same station";
     	}
     	
     	 @Override
@@ -517,7 +528,10 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     }
 
     private class OppositeRobotsScenario extends TestScenario {
-        public OppositeRobotsScenario() { name = "Opposite Robots"; }
+        public OppositeRobotsScenario() { 
+        	name = "Opposite Robots"; 
+        	description = "Opposite Robots (typical Deadlock)";
+        }
 
         @Override
         protected List<NewRobot> initializeScenario() {
