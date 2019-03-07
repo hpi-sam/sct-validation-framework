@@ -21,11 +21,12 @@ public class ScenarioManager {
     private List<TestScenario> tests = new ArrayList<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
-    
+    CollisionDetector collisionDetector;
 
 
-    public ScenarioManager(SimulationWorld world) {
+    public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector) {
         this.world = world;
+        this.collisionDetector = collisionDetector;
         scenarios.add(new EmptyScenario());
         scenarios.add(new OneRobotScenario());
         scenarios.add(new EasyScenario());
@@ -44,6 +45,7 @@ public class ScenarioManager {
     	world.resetZoom();
 		world.resetOffset();
         world.playScenario(scenario);
+        collisionDetector.reset();
         if (scenario instanceof TestScenario) {
         	((TestScenario)scenario).setActive(true);
         	world.toggleRunning();
@@ -327,7 +329,7 @@ public class ScenarioManager {
             return newRobots;
         }
     }
-
+    
     private class NewTestRobot extends NewRobot {
 
         private Position pos;

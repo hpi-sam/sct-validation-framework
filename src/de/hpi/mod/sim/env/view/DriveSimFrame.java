@@ -76,7 +76,7 @@ public class DriveSimFrame extends JFrame {
         world = sim.getWorld();
         deadlockDetector = new DeadlockDetector(world);
         collisionDetector = new CollisionDetector(world, this);
-        scenarioManager = new ScenarioManager(world);
+        scenarioManager = new ScenarioManager(world, collisionDetector);
 	}
     
     private void initializePanels() {
@@ -381,9 +381,9 @@ public class DriveSimFrame extends JFrame {
 		if(popupActive)
 			popup.hide();
 		popup = createPopup(message);
+		popupActive = true;
 		popup.show();
 		popupTime = System.currentTimeMillis();
-		popupActive = true;
 	}
 
 	public void reportCollision(Robot r1, Robot r2) {
