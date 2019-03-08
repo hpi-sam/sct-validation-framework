@@ -4,12 +4,12 @@ import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class TestScenario extends Scenario {
 
-    private List<Robot> robots = new ArrayList<>();
+    private List<Robot> robots = new CopyOnWriteArrayList<>();
     private boolean hasRun = false;
     private boolean alreadyPrinted = false;
     private boolean active = false;
