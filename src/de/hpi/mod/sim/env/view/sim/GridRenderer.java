@@ -4,7 +4,6 @@ import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.CellType;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import java.awt.*;
@@ -14,6 +13,8 @@ import java.awt.geom.Point2D;
  * Renders the Grid of the Simulation
  */
 public class GridRenderer {
+	
+	private static float GRID_DARKEN_FACTOR = (float) 0.95;
 
     private ServerGridManagement grid;
     private SimulationWorld world;
@@ -91,10 +92,16 @@ public class GridRenderer {
 
         graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
         
+        Color color = graphic.getColor();
+        color = new Color((int) (color.getRed() * GRID_DARKEN_FACTOR), 
+        		(int) (color.getGreen() * GRID_DARKEN_FACTOR), 
+        		(int) (color.getBlue() * GRID_DARKEN_FACTOR));
+        graphic.setColor(color);
+        graphic.drawRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
         
         if (borderLeft) {
         	graphic.setColor(Color.DARK_GRAY);
-        	graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), 1, (int) blockSize);
+        	graphic.drawRect((int) drawPos.getX(), (int) drawPos.getY(), 0, (int) blockSize);
         }
         
         if(isZeroZero) {
