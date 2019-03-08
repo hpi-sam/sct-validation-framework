@@ -18,6 +18,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     private GridRenderer grid;
     private RobotRenderer robot;
+    private ExplosionRenderer explosion;
 
     private SimulationWorld world;
     
@@ -29,6 +30,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         world = new SimulationWorld(this);
         grid = new GridRenderer(world, world.getSimulator().getGrid());
         robot = new RobotRenderer(world);
+        explosion = new ExplosionRenderer(world);
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -47,6 +49,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         // Draw Grid
         grid.render(graphic);
         robot.render(graphic);
+        explosion.render(graphic);
         
         //Refresh simulation properties
         refreshSimulationSize();
@@ -111,4 +114,12 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     	currentHeight = r.height;
     	currentWidth = r.width;
     }
+
+	public void renderExplosion(Robot robot) {
+		explosion.showExplosion(robot);
+	}
+
+	public void reset() {
+		explosion.reset();
+	}
 }
