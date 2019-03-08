@@ -33,9 +33,6 @@ public class DriveSimFrame extends JFrame {
     private TestOverviewPanel testOverview;
     private ConfigPanel config;
     private static DriveSimFrame popupFrame;
-    private static long popupTime;
-    private static Popup popup;
-    private static boolean popupActive = false;
 
     private ScenarioManager scenarioManager;
 
@@ -314,13 +311,6 @@ public class DriveSimFrame extends JFrame {
     }
 
     private void update() {
-    	//remove the popup if it has been active for more than 5 seconds
-    	//the boolean popupActive exists because you are not supposed to invoke hide() on a popup multiple times because the PopupFactory may reuse popups which have been hidden
-    	if(popupActive && popupTime + 5000 <= System.currentTimeMillis()) {
-    		popupActive = false;
-    		popup.hide();
-    	}
-    	
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
 
@@ -380,12 +370,24 @@ public class DriveSimFrame extends JFrame {
 
     //TODO: having this as static is really bad. Because the popup needs to know in which frame to be displayed. But when this call is static then we can't use "this". Instead we need a static variable for the frame...
     public static void displayMessage(String message) {
-		if(popupActive)
-			popup.hide();
-		popup = createPopup(message);
+    	System.out.println(message);
+		Popup popup = createPopup(message);
 		popup.show();
-		popupTime = System.currentTimeMillis();
-		popupActive = true; //moving this line 2 lines up makes the first popup appear gray. Who knows why
+		
+		Thread popupHider = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				popup.hide();
+			}
+		};
+		popupHider.start();
+		
+		//popupTime = System.currentTimeMillis();
+		//popupActive = true; //moving this line 2 lines up makes the first popup appear gray. Who knows why
 	}
 
 	public void reportCollision(Robot r1, Robot r2) {
