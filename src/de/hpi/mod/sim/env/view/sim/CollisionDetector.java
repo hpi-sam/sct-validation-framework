@@ -40,7 +40,7 @@ public class CollisionDetector {
 
 	private void reportCollision(Robot r1, Robot r2) {
 		frame.reportCollision(r1, r2);
-		world.setHighlightedRobot(r1);
+		world.setHighlightedRobot1(r1);
 		world.setHighlightedRobot2(r2);
 		if(world.isRunning())
 			world.toggleRunning();

@@ -47,7 +47,7 @@ public class RobotRenderer {
             DriveManager drive = robot.getDriveManager();
             Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
 
-            boolean leftClicked = robot.equals(world.getHighlightedRobot());
+            boolean leftClicked = robot.equals(world.getHighlightedRobot1());
             boolean rightClicked = robot.equals(world.getHighlightedRobot2());
 
             drawRobot(graphic, drawPos, drive.getAngle(), leftClicked, rightClicked, robot.isHasPackage(), robot.getBattery() < .1);
@@ -55,7 +55,7 @@ public class RobotRenderer {
 
         // Render additional Info like Targets
         for (Robot r : world.getRobots()) {
-            if (r.equals(world.getHighlightedRobot()) || r.equals(world.getHighlightedRobot2())) {
+            if (r.equals(world.getHighlightedRobot1()) || r.equals(world.getHighlightedRobot2())) {
                 DriveManager drive = r.getDriveManager();
                 Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
                 Point2D targetPos = world.toDrawPosition(r.getTarget());
