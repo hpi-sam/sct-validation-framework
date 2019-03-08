@@ -24,7 +24,10 @@ public class CollisionDetector {
 				for (Robot r2: robots) {
 					if (r1 != r2) {
 						if (r1.pos().is(r2.pos()) || r1.oldPos().is(r2.pos()) || r1.oldPos().is(r2.oldPos()))
-							reportCollision(r1, r2);
+							if(!collisionReported) {
+								collisionReported = true;
+								reportCollision(r1, r2);
+							}	
 					}
 				}
 			}
@@ -36,8 +39,11 @@ public class CollisionDetector {
 	}
 
 	private void reportCollision(Robot r1, Robot r2) {
-		collisionReported = true;
 		frame.reportCollision(r1, r2);
+		world.setHighlightedRobot(r1);
+		world.setHighlightedRobot2(r2);
+		if(world.isRunning())
+			world.toggleRunning();
 		if(scenarioManager.isRunningTest()) {
 			scenarioManager.failCurrentTest();
 		}

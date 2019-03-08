@@ -74,7 +74,7 @@ public class DriveSimFrame extends JFrame {
     private void initializeSimulationItems() {
 		sim = new SimulatorView();
         world = sim.getWorld();
-        scenarioManager = new ScenarioManager(world, collisionDetector);
+        scenarioManager = new ScenarioManager(world, collisionDetector, this);
         deadlockDetector = new DeadlockDetector(world, scenarioManager);
         collisionDetector = new CollisionDetector(scenarioManager, world, this);
         scenarioManager.setDeadlockDetector(deadlockDetector);
@@ -390,5 +390,10 @@ public class DriveSimFrame extends JFrame {
 
 	public void reportCollision(Robot r1, Robot r2) {
 		displayMessage("Collision detected!");
+		sim.renderExplosion(r1);
+	}
+	
+	public void resetSimulationView() {
+		sim.reset();
 	}
 }

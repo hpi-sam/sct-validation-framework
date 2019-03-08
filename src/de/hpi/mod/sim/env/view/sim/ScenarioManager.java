@@ -4,6 +4,7 @@ import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.robot.Robot.RobotState;
+import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
 import de.hpi.mod.sim.env.view.model.NewRobot;
 import de.hpi.mod.sim.env.view.model.Scenario;
@@ -25,11 +26,13 @@ public class ScenarioManager {
 	private boolean isRunningTest = false;
     CollisionDetector collisionDetector;
     DeadlockDetector deadlockDetector;
+    DriveSimFrame frame;
 
 
-    public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector) {
+    public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector, DriveSimFrame frame) {
         this.world = world;
         this.collisionDetector = collisionDetector;
+        this.frame = frame;
         scenarios.add(new EmptyScenario());
         scenarios.add(new OneRobotScenario());
         scenarios.add(new EasyScenario());
@@ -51,6 +54,7 @@ public class ScenarioManager {
         tests.add(new OppositeRobotsScenario());
         tests.add(new MiddleRouteThreeRobots());
         tests.add(new MiddleRouteTwoRobots3());
+        tests.add(new ExplosionTest());
     }
 
     public void runScenario(Scenario scenario) {
@@ -59,9 +63,10 @@ public class ScenarioManager {
         world.playScenario(scenario);
         deadlockDetector.reactivate();
         collisionDetector.reset();
+        world.toggleRunning();
+        frame.resetSimulationView();
         if (scenario instanceof TestScenario) {
         	((TestScenario)scenario).setActive(true);
-        	world.toggleRunning();
         	isRunningTest = true;
         } else {
         	isRunningTest = false;
@@ -630,6 +635,25 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
             targetsRobotOne.add(new Position(1,0));
             targetsRobotTwo.add(new Position(3,4));
             newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotOne));
+            newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotTwo));
+            return newRobots;
+        }
+    }
+    
+    private class ExplosionTest extends TestScenario {
+        public ExplosionTest() { 
+        	name = "Explosion Test"; 
+        	description = "Test scenario to test the explosion animation";
+        }
+
+        @Override
+        protected List<NewRobot> initializeScenario() {
+            List<NewRobot> newRobots = new ArrayList<>();
+            List<Position> targetsRobotOne = new ArrayList<>();
+            List<Position> targetsRobotTwo = new ArrayList<>();
+            targetsRobotOne.add(new Position(1,0));
+            targetsRobotTwo.add(new Position(3,4));
+            newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotOne));
             newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotTwo));
             return newRobots;
         }
