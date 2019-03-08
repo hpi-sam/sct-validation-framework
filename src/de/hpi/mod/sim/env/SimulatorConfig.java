@@ -16,6 +16,8 @@ public class SimulatorConfig {
     public static final String STRING_PATH_TO_ROBOT_ICON = "res/robot.png";
     public static final String STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON = "res/robot-left-clicked.png";
     public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON = "res/robot-right-clicked.png";
+    public static final String STRING_PATH_TO_LEFT_CLICKED_ROBOT_BLOCKING = "res/robot-left-blocking.png";
+    public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_BLOCKING = "res/robot-right-blocking.png";
     public static final String STRING_PATH_TO_EMPTY_BATTERY = "res/battery_empty.png";
     public static final String STRING_PATH_TO_PACKAGE = "res/package.png";
     public static final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
@@ -76,6 +78,8 @@ public class SimulatorConfig {
     private static String stringPathToRobotIcon = STRING_PATH_TO_ROBOT_ICON;
     private static String stringPathToLeftClickedRobotIcon = STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON;
     private static String stringPathToRightClickedRobotIcon = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON;
+    private static String stringPathToLeftClickedRobotBlocking = STRING_PATH_TO_LEFT_CLICKED_ROBOT_BLOCKING;
+    private static String stringPathToRightClickedRobotBlocking = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_BLOCKING;
     private static String stringPathToEmptyBattery = STRING_PATH_TO_EMPTY_BATTERY;
     private static String stringPathToPackage = STRING_PATH_TO_PACKAGE;
     private static String stringPathToPlayIcon = STRING_PATH_TO_PLAY_ICON;
@@ -158,6 +162,14 @@ public class SimulatorConfig {
 	
 	public static String getStringPathToRightClickedRobotIcon() {
 		return stringPathToRightClickedRobotIcon;
+	}
+	
+	public static String getStringPathToLeftClickedRobotBlocking() {
+		return stringPathToLeftClickedRobotBlocking;
+	}
+	
+	public static String getStringPathToRightClickedRobotBlocking() {
+		return stringPathToRightClickedRobotBlocking;
 	}
 	
 	public static String getStringPathToEmptyBattery() {

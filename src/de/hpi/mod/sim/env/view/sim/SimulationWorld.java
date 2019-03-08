@@ -309,6 +309,18 @@ public class SimulationWorld {
         float drawY = view.getHeight() - (y + SimulatorConfig.QUEUE_SIZE + 1.5f - offsetY) * blockSize;
         return new Point2D.Float(drawX, drawY);
     }
+    
+    public boolean isBlockedByHighlightedRobot1(Position position) {
+    	if (highlightedRobot == null)
+    		return false;
+    	return position.is(highlightedRobot.pos()) || position.is(highlightedRobot.oldPos());
+    }
+    
+    public boolean isBlockedByHighlightedRobot2(Position position) {
+    	if (highlightedRobot2 == null)
+    		return false;
+    	return position.is(highlightedRobot2.pos()) || position.is(highlightedRobot2.oldPos());
+    }
 
     public void dispose() {
         sim.close();

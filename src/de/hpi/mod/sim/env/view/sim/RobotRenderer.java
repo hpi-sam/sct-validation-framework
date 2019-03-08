@@ -81,10 +81,10 @@ public class RobotRenderer {
                 image.getWidth() / 2f, image.getHeight() / 2f);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
-        graphic.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
+        graphic.drawImage(op.filter(image, null), translateX, translateY, (int) blockSize, (int) blockSize, null);
 
         if (hasPackage) 
-        	graphic.drawImage(op.filter(packageIcon, null), translateX, translateY, (int) blockSize, (int) blockSize,null);
+        	graphic.drawImage(op.filter(packageIcon, null), translateX, translateY, (int) blockSize, (int) blockSize, null);
         
         if (batteryEmpty)
             graphic.drawImage(batteryIcon, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);

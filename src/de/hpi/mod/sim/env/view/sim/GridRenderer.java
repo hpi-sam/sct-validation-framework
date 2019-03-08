@@ -8,6 +8,11 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 /**
  * Renders the Grid of the Simulation
@@ -18,11 +23,24 @@ public class GridRenderer {
 
     private ServerGridManagement grid;
     private SimulationWorld world;
+    
+    private BufferedImage leftClickedRobotBlocking, rightClickedRobotBlocking;
 
 
     public GridRenderer(SimulationWorld world, ServerGridManagement grid) {
         this.world = world;
         this.grid = grid;
+        
+        loadImages();
+    }
+    
+    private void loadImages() {
+        try {
+        	leftClickedRobotBlocking = ImageIO.read(new File(SimulatorConfig.getStringPathToLeftClickedRobotBlocking()));
+        	rightClickedRobotBlocking = ImageIO.read(new File(SimulatorConfig.getStringPathToRightClickedRobotBlocking()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -60,9 +78,12 @@ public class GridRenderer {
                 // Unused stations should be drawn differently
                 boolean isUnusedStationBlock = (cellType == CellType.BATTERY || cellType == CellType.STATION || cellType == CellType.LOADING || cellType == CellType.QUEUE) 
                 		&& (current.getX() >= SimulatorConfig.getChargingStationsInUse() * 3 || current.getX() < 0);
+                
+                boolean blockedBy1 = world.isBlockedByHighlightedRobot1(current);
+                boolean blockedBy2 = world.isBlockedByHighlightedRobot2(current);
 
                 // Draw the block
-                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight, isZeroZero, isUnusedStationBlock);
+                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight, isZeroZero, isUnusedStationBlock, blockedBy1, blockedBy2);
             }
         }
     }
@@ -74,7 +95,7 @@ public class GridRenderer {
      * @param drawPos The draw-position
      * @param highlight Highlighted?
      */
-    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean isUnusedStationBlock) {
+    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean isUnusedStationBlock, boolean blockedBy1, boolean blockedBy2) {
         float blockSize = world.getBlockSize();
 
         if (cell == CellType.BLOCK || isUnusedStationBlock)
@@ -104,7 +125,7 @@ public class GridRenderer {
         	graphic.drawRect((int) drawPos.getX(), (int) drawPos.getY(), 0, (int) blockSize);
         }
         
-        if(isZeroZero) {
+        if (isZeroZero) {
         	graphic.setColor(Color.GREEN);
             graphic.fillOval((int) (drawPos.getX() + blockSize / 4),
             		(int) (drawPos.getY() + blockSize / 4),
@@ -119,6 +140,14 @@ public class GridRenderer {
                     (int) (drawPos.getY() + blockSize / 4),
                     (int) (blockSize / 2),
                     (int) (blockSize / 2));
+        }
+        
+        if (blockedBy1) {
+        	graphic.drawImage(leftClickedRobotBlocking, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
+        }
+        
+        if (blockedBy2) {
+        	graphic.drawImage(rightClickedRobotBlocking, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
         }
     }
 }
