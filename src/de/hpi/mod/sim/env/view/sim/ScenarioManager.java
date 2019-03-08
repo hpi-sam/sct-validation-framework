@@ -42,11 +42,12 @@ public class ScenarioManager {
         tests.add(new DriveToQueueEnd());
         tests.add(new DriveToLoadingPosition());
         tests.add(new DriveToUnloadingPosition());
+        tests.add(new HandleTwoRobotsInStation());
+        tests.add(new HandleThreeRobotsInStation());
         tests.add(new MiddleRoute());
         tests.add(new LongRoute());
         tests.add(new MiddleRouteTwoRobots());
         tests.add(new MiddleRouteTwoRobots2());
-        tests.add(new HandleThreeRobotsInStation());
         tests.add(new OppositeRobotsScenario());
         tests.add(new MiddleRouteThreeRobots());
         tests.add(new MiddleRouteTwoRobots3());
@@ -563,6 +564,28 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
              targets.add(new Position(8,0));
              targets.add(new Position(12,10));
              newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             return newRobots;
+         }
+    }
+    
+    private class HandleTwoRobotsInStation extends TestScenario {
+    	
+    	public HandleTwoRobotsInStation() {
+    		name = "Two robots in station";
+    		description = "Handle two robots in the same station";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targetsRobotOne = new ArrayList<>();
+             List<Position> targetsRobotTwo = new ArrayList<>();
+             targetsRobotOne.add(new Position(2,0));
+             targetsRobotOne.add(new Position(3,10));
+             targetsRobotTwo.add(new Position(2,0));
+             targetsRobotTwo.add(new Position(3,13));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne));
+             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo));
              return newRobots;
          }
     }
