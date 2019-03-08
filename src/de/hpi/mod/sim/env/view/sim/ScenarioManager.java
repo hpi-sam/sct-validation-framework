@@ -60,6 +60,7 @@ public class ScenarioManager {
     public void runScenario(Scenario scenario) {
     	world.resetZoom();
 		world.resetOffset();
+		world.resetHighlightedRobots();
         world.playScenario(scenario);
         deadlockDetector.reactivate();
         collisionDetector.reset();

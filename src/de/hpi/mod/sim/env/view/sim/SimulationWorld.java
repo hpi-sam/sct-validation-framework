@@ -58,7 +58,7 @@ public class SimulationWorld {
     /**
      * The highlighted Robot. Null if none
      */
-    private Robot highlightedRobot = null;
+    private Robot highlightedRobot1 = null;
     private Robot highlightedRobot2 = null;
 
     private Simulator sim;
@@ -219,7 +219,10 @@ public class SimulationWorld {
 		}
 
 		Robot r = runner.run();
-		setHighlightedRobot(r);
+		if (highlightedRobot1 == null)
+			setHighlightedRobot1(r);
+		else 
+			setHighlightedRobot2(r);
 		return r;
     }
 
@@ -255,8 +258,8 @@ public class SimulationWorld {
         return isMousePointing;
     }
 
-    public void setHighlightedRobot(Robot r) {
-        highlightedRobot = r;
+    public void setHighlightedRobot1(Robot r) {
+        highlightedRobot1 = r;
         refreshHighlightedRobotListeners();
     }
     
@@ -265,8 +268,8 @@ public class SimulationWorld {
 		refreshHighlightedRobotListeners();
 	}
 
-    public Robot getHighlightedRobot() {
-        return highlightedRobot;
+    public Robot getHighlightedRobot1() {
+        return highlightedRobot1;
     }
     
     public Robot getHighlightedRobot2() {
@@ -311,9 +314,9 @@ public class SimulationWorld {
     }
     
     public boolean isBlockedByHighlightedRobot1(Position position) {
-    	if (highlightedRobot == null)
+    	if (highlightedRobot1 == null)
     		return false;
-    	return position.is(highlightedRobot.pos()) || position.is(highlightedRobot.oldPos());
+    	return position.is(highlightedRobot1.pos()) || position.is(highlightedRobot1.oldPos());
     }
     
     public boolean isBlockedByHighlightedRobot2(Position position) {
@@ -337,4 +340,9 @@ public class SimulationWorld {
 	private interface AddRobotRunner {
         Robot run();
     }
+
+	public void resetHighlightedRobots() {
+		highlightedRobot1 = null;
+		highlightedRobot2 = null;
+	}
 }

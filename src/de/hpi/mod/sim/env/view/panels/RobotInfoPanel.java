@@ -113,7 +113,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         	if(isRightClickedRobot) {
         		robot = world.getHighlightedRobot2();
         	} else {
-        		robot = world.getHighlightedRobot();
+        		robot = world.getHighlightedRobot1();
         	}
             if (robot == null)
                 label.setText(template + ": -");
