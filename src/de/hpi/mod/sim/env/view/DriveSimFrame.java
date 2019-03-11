@@ -93,11 +93,10 @@ public class DriveSimFrame extends JFrame {
 		info = new RobotInfoPanel(world, false);
         info2 = new RobotInfoPanel(world, true);
         config = new ConfigPanel(world);
-        testList = new TestListPanel(deadlockDetector, scenarioManager, this);
-        testOverview = new TestOverviewPanel(scenarioManager, testList, this);
-        testList.setTestOverview(testOverview);
+        testList = new TestListPanel(scenarioManager);
+        testOverview = new TestOverviewPanel(scenarioManager, this);
         timer = new TimerPanel(world, this);
-        scenario = new ScenarioPanel(deadlockDetector, world, scenarioManager, timer, testOverview, this);
+        scenario = new ScenarioPanel(scenarioManager);
         setJMenuBar(new DriveSimMenu(world));
 	}
     
@@ -318,6 +317,10 @@ public class DriveSimFrame extends JFrame {
     
     public TestListPanel getTestListPanel() {
     	return testList;
+    }
+    
+    public TimerPanel getTimerPanel() {
+    	return timer;
     }
 
     private void update() {

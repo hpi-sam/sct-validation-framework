@@ -16,10 +16,7 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 public class TimerPanel extends JPanel {
 	private Timer timer;
 	private SimulationWorld world;
-	private float originalTime;
-	private float remainingTime;
-	private int passedMinutes = 0;
-	private int passedSeconds = 0;
+	private float time;
 	private JTextField valueField;
 	private DriveSimFrame frame;
 	
@@ -36,16 +33,21 @@ public class TimerPanel extends JPanel {
 	}
 	
 	private void addValueField() {
-		valueField = new JTextField();
-        valueField.setEditable(false);
-        valueField.setPreferredSize(new Dimension(50, 0));
-        valueField.setHorizontalAlignment(JTextField.CENTER);
-        valueField.setText("0:00");
+		valueField = newValueField();
         GridBagConstraints valueFieldConstraints = new GridBagConstraints();
         valueFieldConstraints.gridx = 0;
         valueFieldConstraints.gridy = 1;
         valueFieldConstraints.anchor = GridBagConstraints.LINE_START;
         add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, valueField), valueFieldConstraints);
+	}
+	
+	private JTextField newValueField() {
+		JTextField valueField = new JTextField();
+        valueField.setEditable(false);
+        valueField.setPreferredSize(new Dimension(50, 0));
+        valueField.setHorizontalAlignment(JTextField.CENTER);
+        valueField.setText("0:00");
+        return valueField;
 	}
 
 	private void addSpacer() {
@@ -63,21 +65,17 @@ public class TimerPanel extends JPanel {
 		timer = new Timer(1000,new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				if(world.isRunning()) {
-			        remainingTime -= (float)frame.getConfigPanel().getCurrentLevel()/(float)SimulatorConfig.getRobotDefaultSpeedLevel();
-			        setClockTime();
-			        if(remainingTime<=0) {
-			        	frame.getScenarioPanel().scenarioPassed();
-			        }
+			        time += (float)frame.getConfigPanel().getCurrentLevel()/(float)SimulatorConfig.getRobotDefaultSpeedLevel();
+			        displayNewTime();
 				}
 			}
 		});
 		stopTimer();
 	}
 
-	public void startNewClock(int countdown) {
-		originalTime = countdown;
-		remainingTime = countdown;
-		setClockTime();
+	public void startNewClock() {
+		time = 0.0f;
+		displayNewTime();
 		startTimer();
 	}
 
@@ -89,23 +87,9 @@ public class TimerPanel extends JPanel {
 		timer.stop();
 	}
 	
-	public float getRemainingTime() {
-		return remainingTime;
-	}
-	
-	private void setClockTime() {
-		calculateNewPassedtime();
-        displayNewTime();
-	}
-	
-	private void calculateNewPassedtime() {
-		float deltaTime = originalTime-remainingTime;
-		
-		passedMinutes = ((int) deltaTime)/60;
-		passedSeconds = ((int) deltaTime)%60;
-	}
-	
 	private void displayNewTime() {
+		int passedMinutes = ((int) time)/60;
+		int passedSeconds = ((int) time)%60;
 		if (passedSeconds >= 10) {
 			valueField.setText(Integer.toString(passedMinutes) + ":" + Integer.toString(passedSeconds));
 		} else {

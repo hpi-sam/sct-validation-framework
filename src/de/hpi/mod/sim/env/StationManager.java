@@ -5,7 +5,6 @@ import de.hpi.mod.sim.env.model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;

@@ -4,9 +4,7 @@ import de.hpi.mod.sim.env.ServerGridManagement;
 import de.hpi.mod.sim.env.model.ISensorDataProvider;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 public class RobotTest {
 

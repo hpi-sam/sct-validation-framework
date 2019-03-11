@@ -66,6 +66,7 @@ public class ScenarioManager {
     }
 
     private void runScenario(Scenario scenario, boolean isTest) {
+    	frame.setResizable(scenario.isResizable());
     	world.resetZoom();
 		world.resetOffset();
 		world.resetHighlightedRobots();
@@ -91,6 +92,7 @@ public class ScenarioManager {
     	runningAllTests = false;
     	test.resetTest();
     	frame.getTestListPanel().select(test);
+    	frame.displayMessage("Starting test \"" + test.getName() + "\"");
     	runScenario(test, true);
     }
     
@@ -98,6 +100,8 @@ public class ScenarioManager {
     	testsToRun.clear();
     	runningAllTests = false;
     	frame.getScenarioPanel().select(scenario);
+    	frame.getTimerPanel().startNewClock();
+    	frame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
     	runScenario(scenario, false);
     }
     
@@ -130,15 +134,18 @@ public class ScenarioManager {
     			for (ITestListener listener : listeners) {
                     listener.failTest(activeTest);
                 }
+    			activeTest.notifyFailToUser(frame);
     			currentTestFailed = false;
     			isRunningTest = false;
     			activeTest = null;
     			if (runningAllTests)
     				runNextTest();
     		} else if (activeTest.isPassed()) {
+    			deadlockDetector.deactivate();
     			for (ITestListener listener : listeners) {
                     listener.onTestCompleted(activeTest);
                 }
+    			activeTest.notifySuccessToUser(frame);
     			isRunningTest = false;
     			activeTest = null;
     			if (runningAllTests)
