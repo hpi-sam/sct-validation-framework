@@ -159,9 +159,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         startDriving();
     }
 
-    private void handleArriveAtLoading() {
-    }
-
     private void handleFinishedLoading() {
     	if(now == 0) {
     		long minWaitTime = (long) (500 * SimulatorConfig.getRobotLevel5Speed() / SimulatorConfig.getRobotMoveSpeed());
@@ -356,6 +353,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     public static int incrementID() {
         return idCount++;
+    }
+    
+    public String getMachineState() {
+    	return drive.getMachineState();
     }
 
     public enum RobotState {

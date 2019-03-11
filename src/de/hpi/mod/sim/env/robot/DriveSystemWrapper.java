@@ -1,5 +1,8 @@
 package de.hpi.mod.sim.env.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hpi.mod.sim.TimerService;
 import de.hpi.mod.sim.drivesystem.DrivesystemStatemachine;
 import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
@@ -209,5 +212,22 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     @Override
     public void close() {
         timer.cancel();
+    }
+    
+    @Override
+    public String getMachineState() {
+    	List<String> activeStates = new ArrayList<>();
+    	for(DrivesystemStatemachine.State state : DrivesystemStatemachine.State.values()) {
+    		/*
+    		* This is not intended by the YAKINDU implementation and source generation. 
+    		* Thus the interface does not support this. 
+    		* This is why we have to cast to the actual DrivesystemStatemachine object.
+    		*/
+    		if(((DrivesystemStatemachine) machine).isStateActive(state)) {
+    			activeStates.add(state.toString());
+    		}
+    	}
+
+    	return activeStates.get(activeStates.size() - 1);
     }
 }
