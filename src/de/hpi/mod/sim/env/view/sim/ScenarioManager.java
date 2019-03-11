@@ -109,13 +109,13 @@ public class ScenarioManager {
     	testsToRun.clear();
     	testsToRun.addAll(tests);
     	runningAllTests = true;
+    	frame.displayMessage("Running all tests.");
     	runNextTest();
     }
 
     private void runNextTest() {
     	if(testsToRun.isEmpty()) {
     		runningAllTests = false;
-    		deadlockDetector.deactivate();
     	} else {
     		TestScenario nextTest = testsToRun.poll();
     		nextTest.resetTest();
@@ -131,6 +131,7 @@ public class ScenarioManager {
     public void refresh() {
     	if (isRunningTest) {
     		if(currentTestFailed) {
+    			deadlockDetector.deactivate();
     			for (ITestListener listener : listeners) {
                     listener.failTest(activeTest);
                 }
