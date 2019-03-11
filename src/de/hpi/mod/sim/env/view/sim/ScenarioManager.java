@@ -24,6 +24,7 @@ public class ScenarioManager {
     private List<ITestListener> listeners = new ArrayList<>();
 	private boolean currentTestFailed = false;
 	private boolean isRunningTest = false;
+	private TestScenario activeTest = null;
     CollisionDetector collisionDetector;
     DeadlockDetector deadlockDetector;
     DriveSimFrame frame;
@@ -57,21 +58,33 @@ public class ScenarioManager {
         tests.add(new ExplosionTest());
     }
 
-    public void runScenario(Scenario scenario) {
+    private void runScenario(Scenario scenario, boolean isTest) {
     	world.resetZoom();
 		world.resetOffset();
 		world.resetHighlightedRobots();
         world.playScenario(scenario);
         deadlockDetector.reactivate();
         collisionDetector.reset();
-        world.toggleRunning();
+        if(!world.isRunning()) 
+        	world.toggleRunning();
+        
         frame.resetSimulationView();
-        if (scenario instanceof TestScenario) {
-        	((TestScenario)scenario).setActive(true);
+        
+        if (isTest) {
+        	activeTest = (TestScenario) scenario;
         	isRunningTest = true;
         } else {
+        	activeTest = null;
         	isRunningTest = false;
         }
+    }
+    
+    public void runTest(TestScenario test) {
+    	runScenario(test, true);
+    }
+    
+    public void runScenario(Scenario scenario) {
+    	runScenario(scenario, false);
     }
 
     public void addTestListener(ITestListener listener) {
@@ -79,21 +92,24 @@ public class ScenarioManager {
     }
 
     public void refresh() {
-        for (TestScenario test : tests) {
-            if (test.isPassed() && test.isActive()) {
-            	test.setActive(false);
-                for (ITestListener listener : listeners) {
-                    listener.onTestCompleted(test);
+    	if (isRunningTest) {
+    		if(currentTestFailed) {
+    			for (ITestListener listener : listeners) {
+                    listener.failTest(activeTest);
                 }
-            }
-            if(currentTestFailed && test.isActive()) {
-            	test.setActive(false);
-            	currentTestFailed = false;
-            	for (ITestListener listener : listeners) {
-                    listener.failTest(test);
+    			currentTestFailed = false;
+    			isRunningTest = false;
+    			activeTest = null;
+    			return;
+    		}
+    		if (activeTest.isPassed()) {
+    			for (ITestListener listener : listeners) {
+                    listener.onTestCompleted(activeTest);
                 }
-            }
-        }
+    			isRunningTest = false;
+    			activeTest = null;
+    		}
+    	}
     }
     
     public SimulationWorld getWorld() {

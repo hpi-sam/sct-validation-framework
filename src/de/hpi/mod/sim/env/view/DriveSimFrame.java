@@ -370,7 +370,6 @@ public class DriveSimFrame extends JFrame {
 
     //TODO: having this as static is really bad. Because the popup needs to know in which frame to be displayed. But when this call is static then we can't use "this". Instead we need a static variable for the frame...
     public static void displayMessage(String message) {
-    	System.out.println(message);
 		Popup popup = createPopup(message);
 		popup.show();
 		
@@ -385,9 +384,6 @@ public class DriveSimFrame extends JFrame {
 			}
 		};
 		popupHider.start();
-		
-		//popupTime = System.currentTimeMillis();
-		//popupActive = true; //moving this line 2 lines up makes the first popup appear gray. Who knows why
 	}
 
 	public void reportCollision(Robot r1, Robot r2) {
