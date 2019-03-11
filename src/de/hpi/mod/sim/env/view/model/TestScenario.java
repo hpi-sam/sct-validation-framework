@@ -12,8 +12,6 @@ public abstract class TestScenario extends Scenario {
     private List<Robot> robots = new CopyOnWriteArrayList<>();
     private boolean hasRun = false;
     private boolean alreadyPrinted = false;
-    private boolean active = false;
-
 
     @Override
     public void loadScenario(SimulationWorld sim) {
@@ -36,14 +34,6 @@ public abstract class TestScenario extends Scenario {
     	}
     }
     
-    public void setActive(boolean active) {
-    	this.active = active;
-    }
-    
-    public boolean isActive() {
-    	return active;
-    }
-
 	public void resetTest() {
 		hasRun = false;
 		alreadyPrinted = false;

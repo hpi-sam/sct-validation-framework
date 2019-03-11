@@ -76,7 +76,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         run.setToolTipText(test.getDescription());
         run.addActionListener(e -> {
         	testOverview.stopRunAllSequenz();
-        	scenarioManager.runScenario(test);
+        	scenarioManager.runTest(test);
         	select(label);
         	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
         });

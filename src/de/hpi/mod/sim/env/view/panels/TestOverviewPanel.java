@@ -206,7 +206,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		if (!testsToRun.isEmpty()) {
 			TestScenario test = testsToRun.remove();
 			testListPanel.select(test);
-			scenarioManager.runScenario(test);
+			scenarioManager.runTest(test);
 		}
 	}
 	

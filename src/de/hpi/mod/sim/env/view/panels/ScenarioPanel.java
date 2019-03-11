@@ -94,10 +94,10 @@ public class ScenarioPanel extends JPanel {
 		}
 	}
 
-	private void runScenario(ScenarioManager manager, Scenario test, TimerPanel timer) {
+	private void runScenario(ScenarioManager manager, Scenario scenario, TimerPanel timer) {
 		world.resetZoom();
 		world.resetOffset();
 		timer.startNewClock(SimulatorConfig.getScenarioPassingTime());
-		manager.runScenario(test);
+		manager.runScenario(scenario);
 	}
 }
