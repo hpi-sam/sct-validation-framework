@@ -54,18 +54,34 @@ public class ConfigPanel extends JPanel implements ITimeListener{
 	}
 
 	private void addValueField() {
-		valueField = new JTextField();
-        valueField.setEditable(false);
-        valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
-        valueField.setHorizontalAlignment(JTextField.CENTER);
+		valueField = newValueField();
         GridBagConstraints valueFieldConstraints = new GridBagConstraints();
         valueFieldConstraints.gridx = 0;
         valueFieldConstraints.gridy = 1;
         add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, valueField), valueFieldConstraints);
 	}
+	
+	private JTextField newValueField() {
+		JTextField valueField = new JTextField();
+        valueField.setEditable(false);
+        valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
+        valueField.setHorizontalAlignment(JTextField.CENTER);
+        return valueField;
+	}
 
 	private void addSlider() {
-		valueSlider = new JSlider(SimulatorConfig.ROBOT_MIN_SPEED_LEVEL, SimulatorConfig.ROBOT_MAX_SPEED_LEVEL, SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
+		valueSlider = newSpeedSlider();
+        GridBagConstraints sliderConstraints = new GridBagConstraints();
+        sliderConstraints.gridx = 1;
+        sliderConstraints.gridy = 1;
+        sliderConstraints.fill = GridBagConstraints.HORIZONTAL;
+        sliderConstraints.weightx = 1.0; //the slider gets all the additional space
+        sliderConstraints.insets = new Insets(0, 3, 0, 3);
+        add(new MenuWrapper(200, 60, DriveSimFrame.MENU_ORANGE, valueSlider), sliderConstraints);
+	}
+	
+	private JSlider newSpeedSlider() {
+		JSlider valueSlider = new JSlider(SimulatorConfig.ROBOT_MIN_SPEED_LEVEL, SimulatorConfig.ROBOT_MAX_SPEED_LEVEL, SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
         setter = SimulatorConfig::setRobotMoveSpeed;
         setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
         valueSlider.setToolTipText("Adjust Robot Speed");
@@ -75,45 +91,47 @@ public class ConfigPanel extends JPanel implements ITimeListener{
             valueField.setText(Integer.toString(valueSlider.getValue()));
             currentLevel = valueSlider.getValue();
         });
-        GridBagConstraints sliderConstraints = new GridBagConstraints();
-        sliderConstraints.gridx = 1;
-        sliderConstraints.gridy = 1;
-        sliderConstraints.fill = GridBagConstraints.HORIZONTAL;
-        sliderConstraints.weightx = 1.0; //the slider gets all the additional space
-        sliderConstraints.insets = new Insets(0, 3, 0, 3);
-        add(new MenuWrapper(200, 60, DriveSimFrame.MENU_ORANGE, valueSlider), sliderConstraints);
+        return valueSlider;
 	}
 
 	private void addResetButton() {
-		JButton resetButton = new JButton("Reset");
-        resetButton.addActionListener(e -> {
-        	valueSlider.setEnabled(true); //after reset the speed slider should be changeable, even if not afterwards while paused simulation
-            valueSlider.setValue(SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
-            valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
-            setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
-            currentLevel = SimulatorConfig.getRobotDefaultSpeedLevel();
-        });
+		JButton resetButton = newResetButton();
         GridBagConstraints resetButtonConstraints = new GridBagConstraints();
         resetButtonConstraints.gridx = 0;
         resetButtonConstraints.gridy = 2;
         resetButtonConstraints.insets = new Insets(3, 3, 3, 3);        
         add(new MenuWrapper(60, 24, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
 	}
+	
+	private JButton newResetButton() {
+		JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
+            valueSlider.setValue(SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
+            valueField.setText(Integer.toString(SimulatorConfig.getRobotDefaultSpeedLevel()));
+            setter.setValue(toMagicSpeedValue(SimulatorConfig.getRobotDefaultSpeedLevel()));
+            currentLevel = SimulatorConfig.getRobotDefaultSpeedLevel();
+        });
+        return resetButton;
+	}
 
 	private void addPlayButton() {
-		loadIcons();
-
-        playButton = new JButton();
-        refresh();  // Refresh to set icon
-        playButton.addActionListener(e -> {
-        	world.toggleRunning();
-        	valueSlider.setEnabled(world.isRunning());
-        });
+		playButton = newPlayButton();
+		refresh();  // Refresh to set icon
         GridBagConstraints playButtonConstraints = new GridBagConstraints();
         playButtonConstraints.gridx = 2;
         playButtonConstraints.gridy = 1;
         playButtonConstraints.insets = new Insets(3, 3, 3, 3);
         add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, playButton), playButtonConstraints);
+	}
+	
+	private JButton newPlayButton() {
+		loadIcons();
+
+        JButton playButton = new JButton();
+        playButton.addActionListener(e -> {
+        	world.toggleRunning();
+        });
+        return playButton;
 	}
 
 	private void loadIcons() {
