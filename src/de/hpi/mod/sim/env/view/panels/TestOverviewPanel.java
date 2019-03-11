@@ -28,13 +28,13 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	private JButton resetButton;
 	
 	private TestListPanel testListPanel;
-	private JFrame frame;
+	private DriveSimFrame frame;
 	
 	private Queue<TestScenario> testsToRun = new LinkedList<TestScenario>();
 	
 	private boolean listVisible = false;
 	
-	public TestOverviewPanel(ScenarioManager scenarioManager, TestListPanel testListPanel, JFrame frame) {
+	public TestOverviewPanel(ScenarioManager scenarioManager, TestListPanel testListPanel, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
 		this.testListPanel = testListPanel;
 		this.frame = frame;
@@ -127,7 +127,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	}
 	
 	private void updateFrameSize() {
-		int height = frame .getHeight();
+		int height = frame.getHeight();
 		int width = frame.getWidth();
 		if (listVisible)
 			width += testListPanel.getPreferredSize().width;
@@ -193,7 +193,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	
 	private void runAllTests() {
 		stopRunAllSequenz();
-		DriveSimFrame.displayMessage("Running all Tests");
+		frame.displayMessage("Running all Tests");
 		testsToRun.addAll(scenarioManager.getTests());
 		runNextTest();
 	}
@@ -240,7 +240,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		if(testsToRun.isEmpty()) {
 			testListPanel.endDeadlockDetection();
 		}
-        test.notifySuccessToUser();
+        test.notifySuccessToUser(frame);
         updateProgressDisplay();
         runNextTest();
 	}
@@ -248,7 +248,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	@Override
 	public void failTest(TestScenario test) {
 		testListPanel.failTest(test);
-		test.notifyFailToUser();
+		test.notifyFailToUser(frame);
 		runNextTest();
 	}
 }

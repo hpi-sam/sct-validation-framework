@@ -18,11 +18,12 @@ public class TestListPanel extends JPanel implements ITestListener {
     private ScenarioManager scenarioManager;
     private DeadlockDetector deadlockDetector;
     private TestOverviewPanel testOverview;
+    private DriveSimFrame frame;
 
-
-    public TestListPanel(DeadlockDetector deadlockDetector, ScenarioManager scenarioManager) {
+    public TestListPanel(DeadlockDetector deadlockDetector, ScenarioManager scenarioManager, DriveSimFrame frame) {
     	this.deadlockDetector = deadlockDetector;
     	this.scenarioManager = scenarioManager;
+    	this.frame = frame;
         setLayout(new GridBagLayout());
 
         for (TestScenario test : scenarioManager.getTests())
@@ -78,7 +79,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         	testOverview.stopRunAllSequenz();
         	scenarioManager.runTest(test);
         	select(label);
-        	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
+        	frame.displayMessage("Starting test \"" + test.getName() + "\"");
         });
         GridBagConstraints runConstraints = new GridBagConstraints();
         runConstraints.gridx = 1;

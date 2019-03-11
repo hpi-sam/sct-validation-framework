@@ -19,11 +19,13 @@ public class ScenarioPanel extends JPanel {
     private SimulationWorld world;
     private DeadlockDetector deadlockDetector;
     private TestOverviewPanel testOverview;
+    private DriveSimFrame frame;
 
-    public ScenarioPanel(DeadlockDetector deadlockDetector, SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer, TestOverviewPanel testOverview) {
+    public ScenarioPanel(DeadlockDetector deadlockDetector, SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer, TestOverviewPanel testOverview, DriveSimFrame frame) {
     	this.deadlockDetector = deadlockDetector;
     	this.world = world;
     	this.testOverview = testOverview;
+    	this.frame = frame;
     	
         setLayout(new GridBagLayout());
 
@@ -51,7 +53,7 @@ public class ScenarioPanel extends JPanel {
         	((JFrame) SwingUtilities.getWindowAncestor(this)).setResizable(scenario.isResizable());
         	runScenario(manager, scenario, timer);
         	select(label);
-        	DriveSimFrame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
+        	frame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
         });
         
         GridBagConstraints labelConstraints = new GridBagConstraints();
