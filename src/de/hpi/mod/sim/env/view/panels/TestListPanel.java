@@ -3,7 +3,6 @@ package de.hpi.mod.sim.env.view.panels;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
 import de.hpi.mod.sim.env.view.model.TestScenario;
-import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 import javax.swing.*;
@@ -16,12 +15,8 @@ public class TestListPanel extends JPanel implements ITestListener {
 
     private static Map<TestScenario, JLabel> tests = new HashMap<>();
     private ScenarioManager scenarioManager;
-    private DeadlockDetector deadlockDetector;
-    private TestOverviewPanel testOverview;
 
-
-    public TestListPanel(DeadlockDetector deadlockDetector, ScenarioManager scenarioManager) {
-    	this.deadlockDetector = deadlockDetector;
+    public TestListPanel(ScenarioManager scenarioManager) {
     	this.scenarioManager = scenarioManager;
         setLayout(new GridBagLayout());
 
@@ -29,15 +24,10 @@ public class TestListPanel extends JPanel implements ITestListener {
             addTest(test);
     }
     
-    public Map<TestScenario, JLabel> getTests() {
-    	return tests;
-    }
-    
     @Override
     public void onTestCompleted(TestScenario test) {
     	//set the background of the menu wrapper of the label to green
         tests.get(test).getParent().setBackground(DriveSimFrame.MENU_GREEN);
-        endDeadlockDetection();
         repaint();
     }
     
@@ -62,8 +52,7 @@ public class TestListPanel extends JPanel implements ITestListener {
     	// | -------------  ------- |
     	// --------------------------
     	
-        JLabel label = new JLabel(test.getName());
-        label.setToolTipText(test.getDescription());
+        JLabel label = newTestLabel(test);
         GridBagConstraints labelConstraints = new GridBagConstraints();
         labelConstraints.gridx = 0;
         labelConstraints.gridy = tests.size();
@@ -72,14 +61,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         labelConstraints.weightx = 1.0;
         add(new MenuWrapper(180, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
         
-        JButton run = new JButton("run");
-        run.setToolTipText(test.getDescription());
-        run.addActionListener(e -> {
-        	testOverview.stopRunAllSequenz();
-        	scenarioManager.runTest(test);
-        	select(label);
-        	DriveSimFrame.displayMessage("Starting test \"" + test.getName() + "\"");
-        });
+        JButton run = newRunButton(test);
         GridBagConstraints runConstraints = new GridBagConstraints();
         runConstraints.gridx = 1;
         runConstraints.gridy = tests.size();
@@ -90,21 +72,28 @@ public class TestListPanel extends JPanel implements ITestListener {
         tests.put(test, label);
     }
     
-    public void select(TestScenario test) {
-    	select(tests.get(test));
+    private JLabel newTestLabel(TestScenario test) {
+    	JLabel label = new JLabel(test.getName());
+        label.setToolTipText(test.getDescription());
+        return label;
     }
     
-    /*
-     * Gets called when a test is run.
-     * Turns the text of the label italic and bold.
-     */
-    private void select(JLabel label) {
-		((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
+    private JButton newRunButton(TestScenario test) {
+    	JButton run = new JButton("run");
+        run.setToolTipText(test.getDescription());
+        run.addActionListener(e -> {
+        	scenarioManager.runTest(test);
+        });
+        return run;
+    }
+    
+    public void select(TestScenario test) {
+    	JLabel label = tests.get(test);
+    	((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
 		Font oldFont = label.getFont();
 		Font newFont = new Font(oldFont.getName(), Font.ITALIC | Font.BOLD, oldFont.getSize());
 		label.setFont(newFont);
-		
-	}
+    }
 
     /*
 	 * Turns all scenario labels to plain text.
@@ -115,13 +104,5 @@ public class TestListPanel extends JPanel implements ITestListener {
 			Font newFont = new Font(oldFont.getName(), Font.PLAIN, oldFont.getSize());
 			l.setFont(newFont);
 		}
-	}
-
-	public void endDeadlockDetection() {
-		deadlockDetector.deactivate();
-	}
-
-	public void setTestOverview(TestOverviewPanel testOverview) {
-		this.testOverview = testOverview;
 	}
 }

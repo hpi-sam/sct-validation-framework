@@ -13,7 +13,9 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ScenarioManager {
@@ -22,8 +24,13 @@ public class ScenarioManager {
     private List<TestScenario> tests = new ArrayList<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
+    
+    private Queue<TestScenario> testsToRun = new LinkedList<>();
+    private boolean runningAllTests = false;
+    
 	private boolean currentTestFailed = false;
 	private boolean isRunningTest = false;
+	
 	private TestScenario activeTest = null;
     CollisionDetector collisionDetector;
     DeadlockDetector deadlockDetector;
@@ -59,6 +66,7 @@ public class ScenarioManager {
     }
 
     private void runScenario(Scenario scenario, boolean isTest) {
+    	frame.setResizable(scenario.isResizable());
     	world.resetZoom();
 		world.resetOffset();
 		world.resetHighlightedRobots();
@@ -80,34 +88,69 @@ public class ScenarioManager {
     }
     
     public void runTest(TestScenario test) {
+    	testsToRun.clear();
+    	runningAllTests = false;
+    	test.resetTest();
+    	frame.getTestListPanel().select(test);
+    	frame.displayMessage("Starting test \"" + test.getName() + "\"");
     	runScenario(test, true);
     }
     
     public void runScenario(Scenario scenario) {
+    	testsToRun.clear();
+    	runningAllTests = false;
+    	frame.getScenarioPanel().select(scenario);
+    	frame.getTimerPanel().startNewClock();
+    	frame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
     	runScenario(scenario, false);
     }
+    
+    public void runAllTests() {
+    	testsToRun.clear();
+    	testsToRun.addAll(tests);
+    	runningAllTests = true;
+    	frame.displayMessage("Running all tests.");
+    	runNextTest();
+    }
 
-    public void addTestListener(ITestListener listener) {
+    private void runNextTest() {
+    	if(testsToRun.isEmpty()) {
+    		runningAllTests = false;
+    	} else {
+    		TestScenario nextTest = testsToRun.poll();
+    		nextTest.resetTest();
+    		frame.getTestListPanel().select(nextTest);
+    		runScenario(nextTest, true);
+    	}
+	}
+
+	public void addTestListener(ITestListener listener) {
         listeners.add(listener);
     }
 
     public void refresh() {
     	if (isRunningTest) {
     		if(currentTestFailed) {
+    			deadlockDetector.deactivate();
     			for (ITestListener listener : listeners) {
                     listener.failTest(activeTest);
                 }
+    			activeTest.notifyFailToUser(frame);
     			currentTestFailed = false;
     			isRunningTest = false;
     			activeTest = null;
-    			return;
-    		}
-    		if (activeTest.isPassed()) {
+    			if (runningAllTests)
+    				runNextTest();
+    		} else if (activeTest.isPassed()) {
+    			deadlockDetector.deactivate();
     			for (ITestListener listener : listeners) {
                     listener.onTestCompleted(activeTest);
                 }
+    			activeTest.notifySuccessToUser(frame);
     			isRunningTest = false;
     			activeTest = null;
+    			if (runningAllTests)
+    				runNextTest();
     		}
     	}
     }

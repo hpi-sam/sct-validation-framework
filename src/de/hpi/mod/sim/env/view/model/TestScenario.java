@@ -27,9 +27,9 @@ public abstract class TestScenario extends Scenario {
         return hasRun && robots.stream().allMatch(Robot::hasReachedAllTargets);
     }
     
-    public void notifySuccessToUser() {
+    public void notifySuccessToUser(DriveSimFrame frame) {
     	if(!alreadyPrinted) {
-    		DriveSimFrame.displayMessage("Finished test \"" + name + "\" succesfully");
+    		frame.displayMessage("Finished test \"" + name + "\" succesfully");
     		alreadyPrinted = true;
     	}
     }
@@ -39,9 +39,9 @@ public abstract class TestScenario extends Scenario {
 		alreadyPrinted = false;
 	}
 
-	public void notifyFailToUser() {
+	public void notifyFailToUser(DriveSimFrame frame) {
 		if(!alreadyPrinted) {
-    		DriveSimFrame.displayMessage("Test \"" + name + "\" failed!");
+    		frame.displayMessage("Test \"" + name + "\" failed!");
     		alreadyPrinted = true;
     	}
 	}

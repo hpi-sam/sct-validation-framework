@@ -14,12 +14,14 @@ public class DeadlockDetector {
 	private int offset = 5000;
 	private SimulationWorld simulationWorld;
 	private ScenarioManager scenarioManager;
+	private DriveSimFrame frame;
 	private Map<Integer, Position> robotPositions = new HashMap<>();
 	private boolean deactivated = true;
 
-	public DeadlockDetector(SimulationWorld simulationWorld, ScenarioManager scenarioManager) {
+	public DeadlockDetector(SimulationWorld simulationWorld, ScenarioManager scenarioManager, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
 		this.simulationWorld = simulationWorld;
+		this.frame = frame;
 		getRobotPositions();
 	}
 	
@@ -62,7 +64,7 @@ public class DeadlockDetector {
 
 	private void reportDeadlock() {
 		deactivate();
-		DriveSimFrame.displayMessage("Deadlock detected!");
+		frame.displayMessage("Deadlock detected!");
 		if(scenarioManager.isRunningTest()) {
 			scenarioManager.failCurrentTest();
 		}

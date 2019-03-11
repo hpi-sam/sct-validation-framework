@@ -23,6 +23,7 @@ import java.io.IOException;
 
 public class DriveSimFrame extends JFrame {
 
+	private SimulationWorld world;
     private SimulatorView sim;
     private DeadlockDetector deadlockDetector;
     private CollisionDetector collisionDetector;
@@ -32,20 +33,17 @@ public class DriveSimFrame extends JFrame {
     private TestListPanel testList;
     private TestOverviewPanel testOverview;
     private ConfigPanel config;
-    private static DriveSimFrame popupFrame;
+    private TimerPanel timer;
 
     private ScenarioManager scenarioManager;
 
     private long lastFrame;
     private long lastRefresh;
     private boolean running = true;
-	private TimerPanel timer;
-	private SimulationWorld world;
-	
+
 	public static Color MENU_ORANGE = new Color(0xfff3e2);
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
 	public static Color MENU_RED = new Color(0xffe1d0);
-	public static Color MENU_GRAY = new Color(0xefefef);
 
     public DriveSimFrame() {
         super("Drive System Simulator");
@@ -57,9 +55,6 @@ public class DriveSimFrame extends JFrame {
         addListeners();
         setDesignOfSubpanels();
         setDesignOfMainWindow();
-        
-        //this can be removed once displayMessage is no longer static
-        popupFrame = this;
 		
         lastFrame = System.currentTimeMillis();
         lastRefresh = System.currentTimeMillis();
@@ -68,11 +63,27 @@ public class DriveSimFrame extends JFrame {
         close();
     }
     
+    public static void make_window() {
+        setSystemLookAndFeel();
+        new DriveSimFrame();
+    }
+    
+    private static void setSystemLookAndFeel() {
+    	try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.put("Button.background", Color.white);
+			UIManager.put("TextField.background", Color.white);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			System.out.println("The look and feel could not be loaded. The Application will work fine but look different.");
+		}
+    }
+    
     private void initializeSimulationItems() {
 		sim = new SimulatorView();
         world = sim.getWorld();
         scenarioManager = new ScenarioManager(world, collisionDetector, this);
-        deadlockDetector = new DeadlockDetector(world, scenarioManager);
+        deadlockDetector = new DeadlockDetector(world, scenarioManager, this);
         collisionDetector = new CollisionDetector(scenarioManager, world, this);
         scenarioManager.setDeadlockDetector(deadlockDetector);
         scenarioManager.setCollisionDetector(collisionDetector);
@@ -82,11 +93,10 @@ public class DriveSimFrame extends JFrame {
 		info = new RobotInfoPanel(world, false);
         info2 = new RobotInfoPanel(world, true);
         config = new ConfigPanel(world);
-        testList = new TestListPanel(deadlockDetector, scenarioManager);
-        testOverview = new TestOverviewPanel(scenarioManager, testList, this);
-        testList.setTestOverview(testOverview);
+        testList = new TestListPanel(scenarioManager);
+        testOverview = new TestOverviewPanel(scenarioManager, this);
         timer = new TimerPanel(world, this);
-        scenario = new ScenarioPanel(deadlockDetector, world, scenarioManager, timer, testOverview);
+        scenario = new ScenarioPanel(scenarioManager);
         setJMenuBar(new DriveSimMenu(world));
 	}
     
@@ -292,11 +302,6 @@ public class DriveSimFrame extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
-	public static void make_window() {
-        setSystemLookAndFeel();
-        new DriveSimFrame();
-    }
     
     public boolean isRunning() {
     	return running;
@@ -308,6 +313,14 @@ public class DriveSimFrame extends JFrame {
     
     public ConfigPanel getConfigPanel() {
     	return config;
+    }
+    
+    public TestListPanel getTestListPanel() {
+    	return testList;
+    }
+    
+    public TimerPanel getTimerPanel() {
+    	return timer;
     }
 
     private void update() {
@@ -335,18 +348,6 @@ public class DriveSimFrame extends JFrame {
         dispose();
         System.exit(0);
     }
-
-    private static void setSystemLookAndFeel() {
-  
-    	try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-			UIManager.put("Button.background", Color.white);
-			UIManager.put("TextField.background", Color.white);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-			System.out.println("The look and feel could not be loaded. The Application will work fine but look different.");
-		}
-    }
     
     public void clearSelections() {
     	testList.clearSelections();
@@ -354,7 +355,7 @@ public class DriveSimFrame extends JFrame {
     }
     
     //create a new popup with the provided text 
-    private static Popup createPopup(String message) {
+    private Popup createPopup(String message) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
 		popupPanel.setPreferredSize(new Dimension(600, 100));
 		popupPanel.setBackground(new Color(MENU_ORANGE.getRed(), MENU_ORANGE.getGreen(), MENU_ORANGE.getBlue(), 192));
@@ -364,12 +365,11 @@ public class DriveSimFrame extends JFrame {
 		popupPanel.add(popupLabel);
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
-		Popup popup = pf.getPopup(popupFrame, popupPanel, 150, 300);
+		Popup popup = pf.getPopup(this, popupPanel, 150, 300);
 		return popup;
 	}
 
-    //TODO: having this as static is really bad. Because the popup needs to know in which frame to be displayed. But when this call is static then we can't use "this". Instead we need a static variable for the frame...
-    public static void displayMessage(String message) {
+    public void displayMessage(String message) {
 		Popup popup = createPopup(message);
 		popup.show();
 		

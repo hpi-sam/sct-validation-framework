@@ -9,8 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
@@ -27,16 +25,12 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	private JButton runAllButton;
 	private JButton resetButton;
 	
-	private TestListPanel testListPanel;
-	private JFrame frame;
-	
-	private Queue<TestScenario> testsToRun = new LinkedList<TestScenario>();
-	
+	private DriveSimFrame frame;
+		
 	private boolean listVisible = false;
 	
-	public TestOverviewPanel(ScenarioManager scenarioManager, TestListPanel testListPanel, JFrame frame) {
+	public TestOverviewPanel(ScenarioManager scenarioManager, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
-		this.testListPanel = testListPanel;
 		this.frame = frame;
 		
 		// -----------------------------------
@@ -119,7 +113,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		button.addActionListener(e -> {
 			listVisible = !listVisible;
 			updateShowHideButton();
-			testListPanel.setVisible(listVisible);
+			frame.getTestListPanel().setVisible(listVisible);
 			updateFrameSize();
 		});
 		
@@ -127,12 +121,12 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	}
 	
 	private void updateFrameSize() {
-		int height = frame .getHeight();
+		int height = frame.getHeight();
 		int width = frame.getWidth();
 		if (listVisible)
-			width += testListPanel.getPreferredSize().width;
+			width += frame.getTestListPanel().getPreferredSize().width;
 		else
-			width -= testListPanel.getPreferredSize().width;
+			width -= frame.getTestListPanel().getPreferredSize().width;
 		frame.setPreferredSize(new Dimension(width, height));
 		frame.pack();
 	}
@@ -152,7 +146,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 			resetTestFile(SimulatorConfig.getTestFileName());
 			resetTests();
 			updateProgressDisplay();
-			testListPanel.resetColors();
+			frame.getTestListPanel().resetColors();
 		});
 		
 		return button;
@@ -185,29 +179,10 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
         JButton button = new JButton("Run All");
 
         button.addActionListener(e -> {
-        	runAllTests();
+        	scenarioManager.runAllTests();
         });
 
         return button;
-	}
-	
-	private void runAllTests() {
-		stopRunAllSequenz();
-		DriveSimFrame.displayMessage("Running all Tests");
-		testsToRun.addAll(scenarioManager.getTests());
-		runNextTest();
-	}
-	
-	public void stopRunAllSequenz() {
-		testsToRun.clear();
-	}
-	
-	private void runNextTest() {
-		if (!testsToRun.isEmpty()) {
-			TestScenario test = testsToRun.remove();
-			testListPanel.select(test);
-			scenarioManager.runTest(test);
-		}
 	}
 	
 	private void writeTestPassed(TestScenario test) throws IOException {
@@ -237,18 +212,11 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(testsToRun.isEmpty()) {
-			testListPanel.endDeadlockDetection();
-		}
-        test.notifySuccessToUser();
         updateProgressDisplay();
-        runNextTest();
 	}
 	
 	@Override
 	public void failTest(TestScenario test) {
-		testListPanel.failTest(test);
-		test.notifyFailToUser();
-		runNextTest();
+		
 	}
 }
