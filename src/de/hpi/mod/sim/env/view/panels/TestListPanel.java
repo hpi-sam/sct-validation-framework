@@ -76,7 +76,6 @@ public class TestListPanel extends JPanel implements ITestListener {
         JButton run = new JButton("run");
         run.setToolTipText(test.getDescription());
         run.addActionListener(e -> {
-        	testOverview.stopRunAllSequenz();
         	scenarioManager.runTest(test);
         	select(label);
         	frame.displayMessage("Starting test \"" + test.getName() + "\"");

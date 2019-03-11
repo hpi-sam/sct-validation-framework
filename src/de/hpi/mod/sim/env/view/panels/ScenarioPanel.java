@@ -17,14 +17,10 @@ public class ScenarioPanel extends JPanel {
 
     private static Map<Scenario, JLabel> scenarios = new HashMap<>();
     private SimulationWorld world;
-    private DeadlockDetector deadlockDetector;
-    private TestOverviewPanel testOverview;
     private DriveSimFrame frame;
 
     public ScenarioPanel(DeadlockDetector deadlockDetector, SimulationWorld world, ScenarioManager scenarioManager, TimerPanel timer, TestOverviewPanel testOverview, DriveSimFrame frame) {
-    	this.deadlockDetector = deadlockDetector;
     	this.world = world;
-    	this.testOverview = testOverview;
     	this.frame = frame;
     	
         setLayout(new GridBagLayout());
@@ -49,10 +45,8 @@ public class ScenarioPanel extends JPanel {
         JButton run = new JButton("run");
 
         run.addActionListener(e -> {
-        	testOverview.stopRunAllSequenz();
         	((JFrame) SwingUtilities.getWindowAncestor(this)).setResizable(scenario.isResizable());
         	runScenario(manager, scenario, timer);
-        	select(label);
         	frame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
         });
         
@@ -72,18 +66,14 @@ public class ScenarioPanel extends JPanel {
         
         scenarios.put(scenario, label);
     }
-
-    /*
-     * Gets called when a scenario is run.
-     * Turns the text of the label italic and bold.
-     */
-	private void select(JLabel label) {
-		((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
+    
+    public void select(Scenario scenario) {
+    	JLabel label = scenarios.get(scenario);
+    	((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
 		Font oldFont = label.getFont();
 		Font newFont = new Font(oldFont.getName(), Font.ITALIC | Font.BOLD, oldFont.getSize());
 		label.setFont(newFont);
-		
-	}
+    }
 	
 	/*
 	 * Turns all scenario labels to plain text.

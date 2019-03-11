@@ -315,6 +315,10 @@ public class DriveSimFrame extends JFrame {
     public ConfigPanel getConfigPanel() {
     	return config;
     }
+    
+    public TestListPanel getTestListPanel() {
+    	return testList;
+    }
 
     private void update() {
         float delta = System.currentTimeMillis() - lastFrame;
