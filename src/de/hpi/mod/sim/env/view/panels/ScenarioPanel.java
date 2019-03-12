@@ -37,7 +37,7 @@ public class ScenarioPanel extends JPanel {
         labelConstraints.gridy = scenarios.size();
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.weightx = 1.0;
-        add(new MenuWrapper(300, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
+        add(new MenuWrapper(300, 30, DriveSimFrame.MAIN_MENU_COLOR, label), labelConstraints);
 
         JButton run = newRunButton(scenario);
         GridBagConstraints runConstraints = new GridBagConstraints();
@@ -45,7 +45,7 @@ public class ScenarioPanel extends JPanel {
         runConstraints.gridy = scenarios.size();
         runConstraints.fill = GridBagConstraints.HORIZONTAL;
         runConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(74, 24, DriveSimFrame.MENU_ORANGE, run), runConstraints);
+        add(new MenuWrapper(74, 24, DriveSimFrame.MAIN_MENU_COLOR, run), runConstraints);
         
         scenarios.put(scenario, label);
     }

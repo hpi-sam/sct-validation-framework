@@ -27,13 +27,13 @@ public class DriveSimFrame extends JFrame {
     private SimulatorView sim;
     private DeadlockDetector deadlockDetector;
     private CollisionDetector collisionDetector;
-    private RobotInfoPanel info;
-    private RobotInfoPanel info2;
-    private ScenarioPanel scenario;
-    private TestListPanel testList;
-    private TestOverviewPanel testOverview;
-    private ConfigPanel config;
-    private TimerPanel timer;
+    private RobotInfoPanel robotInfoPanel1;
+    private RobotInfoPanel robotInfoPanel2;
+    private ScenarioPanel scenarioPanel;
+    private TestListPanel testListPanel;
+    private TestOverviewPanel testOverviewPanel;
+    private ConfigPanel configPanel;
+    private TimerPanel timerPanel;
 
     private ScenarioManager scenarioManager;
 
@@ -41,7 +41,7 @@ public class DriveSimFrame extends JFrame {
     private long lastRefresh;
     private boolean running = true;
 
-	public static Color MENU_ORANGE = new Color(0xfff3e2);
+	public static Color MAIN_MENU_COLOR = new Color(0xfff3e2);
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
 	public static Color MENU_RED = new Color(0xffe1d0);
 
@@ -90,55 +90,55 @@ public class DriveSimFrame extends JFrame {
 	}
     
     private void initializePanels() {
-		info = new RobotInfoPanel(world, false);
-        info2 = new RobotInfoPanel(world, true);
-        config = new ConfigPanel(world);
-        testList = new TestListPanel(scenarioManager);
-        testOverview = new TestOverviewPanel(scenarioManager, this);
-        timer = new TimerPanel(world, this);
-        scenario = new ScenarioPanel(scenarioManager);
+		robotInfoPanel1 = new RobotInfoPanel(world, false);
+        robotInfoPanel2 = new RobotInfoPanel(world, true);
+        configPanel = new ConfigPanel(world);
+        testListPanel = new TestListPanel(scenarioManager);
+        testOverviewPanel = new TestOverviewPanel(scenarioManager, this);
+        timerPanel = new TimerPanel(world, this);
+        scenarioPanel = new ScenarioPanel(scenarioManager);
         setJMenuBar(new DriveSimMenu(world));
 	}
     
     private void loadTestFileContent() {
 		createFileIfNotExist(SimulatorConfig.getTestFileName());
-        loadFile(testList, SimulatorConfig.getTestFileName());
+        loadFile(SimulatorConfig.getTestFileName());
 	}
     
     private void addListeners() {
-		world.addHighlightedRobotListener(info);
-        world.addHighlightedRobotListener2(info2);
-        world.addTimeListener(config);
-        scenarioManager.addTestListener(testList);
-        scenarioManager.addTestListener(testOverview);
+		world.addHighlightedRobotListener(robotInfoPanel1);
+        world.addHighlightedRobotListener2(robotInfoPanel2);
+        world.addTimeListener(configPanel);
+        scenarioManager.addTestListener(testListPanel);
+        scenarioManager.addTestListener(testOverviewPanel);
 	}
     
     private void setDesignOfSubpanels() {
-		testOverview.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-		testOverview.setBackground(MENU_ORANGE);
+		testOverviewPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+		testOverviewPanel.setBackground(MAIN_MENU_COLOR);
         
-        scenario.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
-        scenario.setBackground(MENU_ORANGE);
+        scenarioPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
+        scenarioPanel.setBackground(MAIN_MENU_COLOR);
         
-        config.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        config.setBackground(MENU_ORANGE);
+        configPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
+        configPanel.setBackground(MAIN_MENU_COLOR);
         
-        timer.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
-        timer.setBackground(MENU_ORANGE);
+        timerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
+        timerPanel.setBackground(MAIN_MENU_COLOR);
         
         //info panels work with a different layout than all other panels and need a specified size
-        info.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
-        info.setMinimumSize(new Dimension(200, 130));
-        info.setPreferredSize(new Dimension(200, 130));
-        info.setBackground(MENU_GREEN);
+        robotInfoPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
+        robotInfoPanel1.setMinimumSize(new Dimension(200, 130));
+        robotInfoPanel1.setPreferredSize(new Dimension(200, 130));
+        robotInfoPanel1.setBackground(MENU_GREEN);
         
-        info2.setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
-        info2.setMinimumSize(new Dimension(200, 130));
-        info2.setPreferredSize(new Dimension(200, 130));
-        info2.setBackground(MENU_RED);
+        robotInfoPanel2.setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
+        robotInfoPanel2.setMinimumSize(new Dimension(200, 130));
+        robotInfoPanel2.setPreferredSize(new Dimension(200, 130));
+        robotInfoPanel2.setBackground(MENU_RED);
         
-        testList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
-        testList.setBackground(MENU_ORANGE);
+        testListPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
+        testListPanel.setBackground(MAIN_MENU_COLOR);
 	}
 
 	private void setDesignOfMainWindow() {
@@ -183,42 +183,42 @@ public class DriveSimFrame extends JFrame {
 		testOverviewConstraints.gridy = 0;
 		testOverviewConstraints.gridwidth = 2;
 		testOverviewConstraints.fill = GridBagConstraints.HORIZONTAL;
-		add(testOverview, testOverviewConstraints);
+		add(testOverviewPanel, testOverviewConstraints);
 		
 		GridBagConstraints scenarioConstraints = new GridBagConstraints();
 		scenarioConstraints.gridx = 2;
 		scenarioConstraints.gridy = 1;
 		scenarioConstraints.gridwidth = 2;
 		scenarioConstraints.fill = GridBagConstraints.HORIZONTAL;
-		add(scenario, scenarioConstraints);
+		add(scenarioPanel, scenarioConstraints);
 		
 		GridBagConstraints configConstraints = new GridBagConstraints();
 		configConstraints.gridx = 2;
 		configConstraints.gridy = 2;
 		configConstraints.gridwidth = 2;
 		configConstraints.fill = GridBagConstraints.HORIZONTAL;
-		add(config, configConstraints);
+		add(configPanel, configConstraints);
 		
 		GridBagConstraints timerConstraints = new GridBagConstraints();
 		timerConstraints.gridx = 2;
 		timerConstraints.gridy = 3;
 		timerConstraints.gridwidth = 2;
 		timerConstraints.fill = GridBagConstraints.HORIZONTAL;
-		add(timer, timerConstraints);
+		add(timerPanel, timerConstraints);
 		
 		GridBagConstraints infoConstraints = new GridBagConstraints();
 		infoConstraints.gridx = 2;
 		infoConstraints.gridy = 4;
 		infoConstraints.fill = GridBagConstraints.HORIZONTAL;
 		infoConstraints.anchor = GridBagConstraints.PAGE_START;
-		add(info, infoConstraints);
+		add(robotInfoPanel1, infoConstraints);
 		
 		GridBagConstraints info2Constraints = new GridBagConstraints();
 		info2Constraints.gridx = 3;
 		info2Constraints.gridy = 4;
 		info2Constraints.fill = GridBagConstraints.HORIZONTAL;
 		info2Constraints.anchor = GridBagConstraints.PAGE_START;
-		add(info2, info2Constraints);
+		add(robotInfoPanel2, info2Constraints);
 		
 		GridBagConstraints testListConstraints = new GridBagConstraints();
 		testListConstraints.gridx = 4;
@@ -226,19 +226,19 @@ public class DriveSimFrame extends JFrame {
 		testListConstraints.gridheight = 5;
 		testListConstraints.fill = GridBagConstraints.HORIZONTAL;
 		testListConstraints.anchor = GridBagConstraints.PAGE_START;
-		testList.setVisible(false);
-		add(testList, testListConstraints);
+		testListPanel.setVisible(false);
+		add(testListPanel, testListConstraints);
 		
 		//Set up the color and size of the whole window
-		getContentPane().setBackground(MENU_ORANGE);
-		setBackground(MENU_ORANGE);
+		getContentPane().setBackground(MAIN_MENU_COLOR);
+		setBackground(MAIN_MENU_COLOR);
 		setPreferredSize(new Dimension(1000, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
 	}
     
-    private void loadFile(TestListPanel testPanel, String fileName) {
+    private void loadFile(String fileName) {
     	boolean written = true;
     	TestScenario test;
     	
@@ -246,7 +246,7 @@ public class DriveSimFrame extends JFrame {
     		test = scenarioManager.getTests().get(i);
 			written = writeLineIfNeeded(test, fileName);
     		if(!written && testPassed(test, fileName)) {
-    			testPanel.onTestCompleted(test);
+    			testListPanel.onTestCompleted(test);
     		}
     	}
 	}
@@ -308,19 +308,19 @@ public class DriveSimFrame extends JFrame {
     }
     
     public ScenarioPanel getScenarioPanel() {
-    	return scenario;
+    	return scenarioPanel;
     }
     
     public ConfigPanel getConfigPanel() {
-    	return config;
+    	return configPanel;
     }
     
     public TestListPanel getTestListPanel() {
-    	return testList;
+    	return testListPanel;
     }
     
     public TimerPanel getTimerPanel() {
-    	return timer;
+    	return timerPanel;
     }
 
     private void update() {
@@ -330,8 +330,8 @@ public class DriveSimFrame extends JFrame {
         if (System.currentTimeMillis() - lastRefresh > sim.getWorld().getSensorRefreshInterval()) {
             lastRefresh = System.currentTimeMillis();
             sim.getWorld().refresh();
-            info.onHighlightedRobotChange();
-            info2.onHighlightedRobotChange();
+            robotInfoPanel1.onHighlightedRobotChange();
+            robotInfoPanel2.onHighlightedRobotChange();
             scenarioManager.refresh();
         }
 
@@ -350,15 +350,15 @@ public class DriveSimFrame extends JFrame {
     }
     
     public void clearSelections() {
-    	testList.clearSelections();
-    	scenario.clearSelections();
+    	testListPanel.clearSelections();
+    	scenarioPanel.clearSelections();
     }
     
     //create a new popup with the provided text 
     private Popup createPopup(String message) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
 		popupPanel.setPreferredSize(new Dimension(600, 100));
-		popupPanel.setBackground(new Color(MENU_ORANGE.getRed(), MENU_ORANGE.getGreen(), MENU_ORANGE.getBlue(), 192));
+		popupPanel.setBackground(new Color(MAIN_MENU_COLOR.getRed(), MAIN_MENU_COLOR.getGreen(), MAIN_MENU_COLOR.getBlue(), 192));
 		JLabel popupLabel = new JLabel(message, JLabel.CENTER);
 		Font original = (Font) UIManager.get("Label.font");
 		popupLabel.setFont(original.deriveFont(Font.BOLD, 16));

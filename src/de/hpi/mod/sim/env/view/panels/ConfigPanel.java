@@ -50,7 +50,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         labelConstraints.gridwidth = 3;
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
-        add(new MenuWrapper(390, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
+        add(new MenuWrapper(390, 30, DriveSimFrame.MAIN_MENU_COLOR, label), labelConstraints);
 	}
 
 	private void addValueField() {
@@ -58,7 +58,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         GridBagConstraints valueFieldConstraints = new GridBagConstraints();
         valueFieldConstraints.gridx = 0;
         valueFieldConstraints.gridy = 1;
-        add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, valueField), valueFieldConstraints);
+        add(new MenuWrapper(60, 60, DriveSimFrame.MAIN_MENU_COLOR, valueField), valueFieldConstraints);
 	}
 	
 	private JTextField newValueField() {
@@ -77,7 +77,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         sliderConstraints.fill = GridBagConstraints.HORIZONTAL;
         sliderConstraints.weightx = 1.0; //the slider gets all the additional space
         sliderConstraints.insets = new Insets(0, 3, 0, 3);
-        add(new MenuWrapper(200, 60, DriveSimFrame.MENU_ORANGE, valueSlider), sliderConstraints);
+        add(new MenuWrapper(200, 60, DriveSimFrame.MAIN_MENU_COLOR, valueSlider), sliderConstraints);
 	}
 	
 	private JSlider newSpeedSlider() {
@@ -100,7 +100,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         resetButtonConstraints.gridx = 0;
         resetButtonConstraints.gridy = 2;
         resetButtonConstraints.insets = new Insets(3, 3, 3, 3);        
-        add(new MenuWrapper(60, 24, DriveSimFrame.MENU_ORANGE, resetButton), resetButtonConstraints);
+        add(new MenuWrapper(60, 24, DriveSimFrame.MAIN_MENU_COLOR, resetButton), resetButtonConstraints);
 	}
 	
 	private JButton newResetButton() {
@@ -121,7 +121,7 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         playButtonConstraints.gridx = 2;
         playButtonConstraints.gridy = 1;
         playButtonConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(60, 60, DriveSimFrame.MENU_ORANGE, playButton), playButtonConstraints);
+        add(new MenuWrapper(60, 60, DriveSimFrame.MAIN_MENU_COLOR, playButton), playButtonConstraints);
 	}
 	
 	private JButton newPlayButton() {

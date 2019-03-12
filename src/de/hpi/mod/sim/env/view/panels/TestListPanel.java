@@ -40,7 +40,7 @@ public class TestListPanel extends JPanel implements ITestListener {
 	public void resetColors() {
 		//set the background off the menu wrappers of all test labels to the generic menu color
 		for (JLabel label : tests.values())
-            label.getParent().setBackground(DriveSimFrame.MENU_ORANGE);
+            label.getParent().setBackground(DriveSimFrame.MAIN_MENU_COLOR);
 		repaint();
 	}
 
@@ -59,7 +59,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.weightx = 1.0;
-        add(new MenuWrapper(180, 30, DriveSimFrame.MENU_ORANGE, label), labelConstraints);
+        add(new MenuWrapper(180, 30, DriveSimFrame.MAIN_MENU_COLOR, label), labelConstraints);
         
         JButton run = newRunButton(test);
         GridBagConstraints runConstraints = new GridBagConstraints();
@@ -67,7 +67,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         runConstraints.gridy = tests.size();
         runConstraints.fill = GridBagConstraints.HORIZONTAL;
         runConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(74, 24, DriveSimFrame.MENU_ORANGE, run), runConstraints);
+        add(new MenuWrapper(74, 24, DriveSimFrame.MAIN_MENU_COLOR, run), runConstraints);
         
         tests.put(test, label);
     }
