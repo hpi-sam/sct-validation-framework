@@ -108,13 +108,10 @@ public class DriveManager implements IRobotActors {
 		    y += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaY);
 
 		    // If y moved over target
-		    // TODO Remove code repetition (Not DRY enough)
 		    if (deltaY > 0 && y >= currentPosition.getY() ||
 		            deltaY < 0 && y <= currentPosition.getY()) {
 		        y = currentPosition.getY();
-		        oldPosition = currentPosition;
-		        isMoving = false;
-		        listener.actionCompleted();
+		        finishMovement();
 		    }
 		} else if (deltaX != 0) {
 		    x += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaX);
@@ -123,11 +120,15 @@ public class DriveManager implements IRobotActors {
 		    if (deltaX > 0 && x >= currentPosition.getX() ||
 		            deltaX < 0 && x <= currentPosition.getX()) {
 		        x = currentPosition.getX();
-		        oldPosition = currentPosition;
-		        isMoving = false;
-		        listener.actionCompleted();
+		        finishMovement();
 		    }
 		}
+	}
+	
+	private void finishMovement() {
+		oldPosition = currentPosition;
+        isMoving = false;
+        listener.actionCompleted();
 	}
 
     @Override
