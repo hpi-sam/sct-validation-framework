@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
@@ -26,7 +27,7 @@ public class DeadlockDetector {
 	}
 	
 	public void update(){
-		if(currentTime + offset <= System.currentTimeMillis()) {
+		if(currentTime + (long) (offset * SimulatorConfig.getRobotLevel5Speed() / SimulatorConfig.getRobotMoveSpeed()) <= System.currentTimeMillis()) {
 			checkForDeadlock();
 			getRobotPositions();
 			getCurrentTime();
