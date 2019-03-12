@@ -168,7 +168,7 @@ public class DriveSimFrame extends JFrame {
 		simConstraints.gridheight = 5;
 		add(sim, simConstraints);
 		
-		//add the gray spacer to the right of the simulation panel (TODO: consider moving this into the simulation renderer)
+		//add the gray spacer to the right of the simulation panel
 		JPanel spacer = new JPanel();
 		spacer.setBackground(Color.DARK_GRAY);
 		GridBagConstraints spacerConstraints = new GridBagConstraints();
