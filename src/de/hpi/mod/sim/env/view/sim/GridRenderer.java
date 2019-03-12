@@ -18,8 +18,6 @@ import javax.imageio.ImageIO;
  * Renders the Grid of the Simulation
  */
 public class GridRenderer {
-	
-	private static float GRID_DARKEN_FACTOR = (float) 0.95;
 
     private ServerGridManagement grid;
     private SimulationWorld world;
@@ -93,7 +91,12 @@ public class GridRenderer {
      * @param graphic Graphics to render to
      * @param cell The type of the cell determines how its rendered
      * @param drawPos The draw-position
+     * @param borderLeft should a border be drawn on the left of the block?
      * @param highlight Highlighted?
+     * @param isZeroZero should the zero-zero highlight be drawn?
+     * @param isUnusedStationBlock is this block part of an unused station?
+ 	 * @param blockedBy1 is this block blocked by the first highlighted robot?
+ 	 * @param blockedBy2 is this block blocked by the second highlighted robot?
      */
     private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean isUnusedStationBlock, boolean blockedBy1, boolean blockedBy2) {
         float blockSize = world.getBlockSize();
@@ -111,20 +114,20 @@ public class GridRenderer {
         else if (cell == CellType.STATION || cell == CellType.QUEUE)
             graphic.setColor(new Color(0xfff3e2));
 
+        //draw the block
         graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
         
-        Color color = graphic.getColor();
-        color = new Color((int) (color.getRed() * GRID_DARKEN_FACTOR), 
-        		(int) (color.getGreen() * GRID_DARKEN_FACTOR), 
-        		(int) (color.getBlue() * GRID_DARKEN_FACTOR));
-        graphic.setColor(color);
+        //draw the grid pattern around the block
+        graphic.setColor(darken(graphic.getColor()));
         graphic.drawRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
         
+        //draw the border to the left of the block
         if (borderLeft) {
         	graphic.setColor(Color.DARK_GRAY);
         	graphic.drawRect((int) drawPos.getX(), (int) drawPos.getY(), 0, (int) blockSize);
         }
         
+        //draw the zero-zero highlight
         if (isZeroZero) {
         	graphic.setColor(Color.GREEN);
             graphic.fillOval((int) (drawPos.getX() + blockSize / 4),
@@ -133,7 +136,7 @@ public class GridRenderer {
             		(int) blockSize / 2);
         }
 
-        // Draw Highlight
+        //draw the mouse highlight
         if (highlight) {
             graphic.setColor(Color.RED);
             graphic.fillRect((int) (drawPos.getX() + blockSize / 4),
@@ -142,6 +145,7 @@ public class GridRenderer {
                     (int) (blockSize / 2));
         }
         
+        //draw the robot blocking
         if (blockedBy1) {
         	graphic.drawImage(leftClickedRobotBlocking, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
         }
@@ -149,5 +153,15 @@ public class GridRenderer {
         if (blockedBy2) {
         	graphic.drawImage(rightClickedRobotBlocking, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
         }
+    }
+    
+    /*
+     * darkens a color for the grid pattern
+     */
+    private Color darken(Color color) {
+    	float darken = 0.95f;
+    	return new Color((int) (color.getRed() * darken), 
+        		(int) (color.getGreen() * darken), 
+        		(int) (color.getBlue() * darken));
     }
 }

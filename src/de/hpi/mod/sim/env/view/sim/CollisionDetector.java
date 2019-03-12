@@ -22,12 +22,11 @@ public class CollisionDetector {
 			List<Robot> robots = world.getRobots();
 			for (Robot r1 : robots) {
 				for (Robot r2: robots) {
-					if (r1 != r2) {
-						if (r1.pos().is(r2.pos()) || r1.oldPos().is(r2.pos()) || r1.oldPos().is(r2.oldPos()))
-							if(!collisionReported) {
-								collisionReported = true;
-								reportCollision(r1, r2);
-							}	
+					if (r1 != r2
+						&& (r1.pos().is(r2.pos()) || r1.oldPos().is(r2.pos()) || r1.oldPos().is(r2.oldPos()))
+						&& !collisionReported) {
+						collisionReported = true;
+						reportCollision(r1, r2);
 					}
 				}
 			}
