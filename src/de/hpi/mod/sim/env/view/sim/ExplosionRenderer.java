@@ -42,7 +42,7 @@ public class ExplosionRenderer {
 		if (shouldRender) {
 			DriveManager drive = robot.getDriveManager();
 	        Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
-	        int x = (int) drawPos.getX() - explosion.getWidth(null) / 2 + 15; //the explosion gif we use doesn't start its explosion in the exact center. Thus we add 15
+	        int x = (int) drawPos.getX() - explosion.getWidth(null) / 2 + 15; //the explosion gif we use doesn't start its explosion in the exact center. Thus we add 15 to center it
 	        int y = (int) drawPos.getY() - explosion.getHeight(null) / 2;
 	        
 	        graphic.drawImage(explosion, x, y, null);

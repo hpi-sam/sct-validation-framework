@@ -16,9 +16,9 @@ import java.awt.event.MouseMotionListener;
  */
 public class SimulatorView extends JPanel implements MouseListener, MouseMotionListener {
 
-    private GridRenderer grid;
-    private RobotRenderer robot;
-    private ExplosionRenderer explosion;
+    private GridRenderer gridRenderer;
+    private RobotRenderer robotRenderer;
+    private ExplosionRenderer explosionRenderer;
 
     private SimulationWorld world;
     
@@ -28,9 +28,9 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     public SimulatorView() {
         world = new SimulationWorld(this);
-        grid = new GridRenderer(world, world.getSimulator().getGrid());
-        robot = new RobotRenderer(world);
-        explosion = new ExplosionRenderer(world);
+        gridRenderer = new GridRenderer(world, world.getSimulator().getGrid());
+        robotRenderer = new RobotRenderer(world);
+        explosionRenderer = new ExplosionRenderer(world);
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -47,9 +47,9 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         super.paintComponent(graphic);
 
         // Draw Grid
-        grid.render(graphic);
-        robot.render(graphic);
-        explosion.render(graphic);
+        gridRenderer.render(graphic);
+        robotRenderer.render(graphic);
+        explosionRenderer.render(graphic);
         
         //Refresh simulation properties
         refreshSimulationSize();
@@ -116,10 +116,10 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     }
 
 	public void renderExplosion(Robot robot) {
-		explosion.showExplosion(robot);
+		explosionRenderer.showExplosion(robot);
 	}
 
 	public void reset() {
-		explosion.reset();
+		explosionRenderer.reset();
 	}
 }
