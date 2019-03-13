@@ -128,13 +128,13 @@ public class DriveSimFrame extends JFrame {
         
         //info panels work with a different layout than all other panels and need a specified size
         robotInfoPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
-        robotInfoPanel1.setMinimumSize(new Dimension(200, 130));
-        robotInfoPanel1.setPreferredSize(new Dimension(200, 130));
+        robotInfoPanel1.setMinimumSize(new Dimension(200, 150));
+        robotInfoPanel1.setPreferredSize(new Dimension(200, 150));
         robotInfoPanel1.setBackground(MENU_GREEN);
         
         robotInfoPanel2.setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
-        robotInfoPanel2.setMinimumSize(new Dimension(200, 130));
-        robotInfoPanel2.setPreferredSize(new Dimension(200, 130));
+        robotInfoPanel2.setMinimumSize(new Dimension(200, 150));
+        robotInfoPanel2.setPreferredSize(new Dimension(200, 150));
         robotInfoPanel2.setBackground(MENU_RED);
         
         testListPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
