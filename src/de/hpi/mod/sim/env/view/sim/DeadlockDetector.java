@@ -12,7 +12,8 @@ import de.hpi.mod.sim.env.view.DriveSimFrame;
 public class DeadlockDetector {
 	
 	private long currentTime = System.currentTimeMillis();
-	private int offset = 5000;
+	private long defaultOffset = 7000;
+	private long offset = 7000;
 	private SimulationWorld simulationWorld;
 	private ScenarioManager scenarioManager;
 	private DriveSimFrame frame;
@@ -27,7 +28,8 @@ public class DeadlockDetector {
 	}
 	
 	public void update(){
-		if(currentTime + (long) (offset * SimulatorConfig.getRobotLevel5Speed() / SimulatorConfig.getRobotMoveSpeed()) <= System.currentTimeMillis()) {
+		offset = (long) Math.max(defaultOffset, defaultOffset * SimulatorConfig.getRobotLevel5Speed() / SimulatorConfig.getRobotMoveSpeed());
+		if(currentTime + offset <= System.currentTimeMillis()) {
 			checkForDeadlock();
 			getRobotPositions();
 			getCurrentTime();
