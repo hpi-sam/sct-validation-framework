@@ -1,6 +1,5 @@
 package de.hpi.mod.sim.env.robot;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import org.junit.Test;
@@ -32,7 +31,7 @@ public class DriveManagerTest {
         DummyDriveHandler handler = new DummyDriveHandler();
         DriveManager drive = new DriveManager(
                 handler, initPosition, initFacing);
-        SimulatorConfig.setRobotMoveSpeed(.001f);  // Move 1 cell per second
+        //SimulatorConfig.setRobotSpeedLevel(.001f);  // Move 1 cell per second
 
         for (int i = 0; i < 10; i++) {
             drive.driveForward();

@@ -54,7 +54,6 @@ public class SimulatorConfig {
 	public static final int ROBOT_MIN_SPEED_LEVEL = 1;
 	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 5;
 	public static final int ROBOT_MAX_SPEED_LEVEL = 10;
-	public static final float DEFAULT_ROBOT_MOVE_SPEED = ROBOT_LEVEL_4_SPEED;
 	
 	/**
      * The number of cells in a queue.
@@ -71,7 +70,6 @@ public class SimulatorConfig {
      */
 	public static final int DEFAULT_MAP_HEIGHT = 4;
 
-    private static float robotMoveSpeed = DEFAULT_ROBOT_MOVE_SPEED;
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
     private static int maxRobotsPerStation = MAX_ROBOTS_PER_STATION;
@@ -93,7 +91,7 @@ public class SimulatorConfig {
    	private static float batteryFull = BATTERY_FULL;
    	private static float batteryLow = BATTERY_LOW;
    	private static float batteryLoss = BATTERY_LOSS;
-   	private static float batteryLoadingSpeed = BATTERY_LOADING_SPEED;
+   	private static float batteryChargingSpeed = BATTERY_LOADING_SPEED;
    	
    	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
    	private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
@@ -103,17 +101,8 @@ public class SimulatorConfig {
    	private static float minBlockSize = MIN_BLOCK_SIZE;
    	private static float maxBlockSize = MAX_BLOCK_SIZE;
    	
-   	private static int robotDefaultSpeedLevel = ROBOT_DEFAULT_SPEED_LEVEL;
-   	private static float robotLevel1Speed = ROBOT_LEVEL_1_SPEED;
-   	private static float robotLevel2Speed = ROBOT_LEVEL_2_SPEED;
-   	private static float robotLevel3Speed = ROBOT_LEVEL_3_SPEED;
-   	private static float robotLevel4Speed = ROBOT_LEVEL_4_SPEED;
-   	private static float robotLevel5Speed = ROBOT_LEVEL_5_SPEED;
-   	private static float robotLevel6Speed = ROBOT_LEVEL_6_SPEED;
-   	private static float robotLevel7Speed = ROBOT_LEVEL_7_SPEED;
-   	private static float robotLevel8Speed = ROBOT_LEVEL_8_SPEED;
-   	private static float robotLevel9Speed = ROBOT_LEVEL_9_SPEED;
-   	private static float robotLevel10Speed = ROBOT_LEVEL_10_SPEED;
+   	private static int robotSpeedLevel = ROBOT_DEFAULT_SPEED_LEVEL;
+   	private static int defaultRobotSpeedLevel = ROBOT_DEFAULT_SPEED_LEVEL;
    	
    	private static int queueSize = QUEUE_SIZE;
    	private static int batteriesPerStation = BATTERIES_PER_STATION;
@@ -124,25 +113,40 @@ public class SimulatorConfig {
     private static Map<Integer,Float> robotSpeedsMap = null;
     static {
     	robotSpeedsMap = new HashMap<Integer,Float>();
-    	robotSpeedsMap.put(1, robotLevel1Speed);
-    	robotSpeedsMap.put(2, robotLevel2Speed);
-    	robotSpeedsMap.put(3, robotLevel3Speed);
-    	robotSpeedsMap.put(4, robotLevel4Speed);
-    	robotSpeedsMap.put(5, robotLevel5Speed);
-    	robotSpeedsMap.put(6, robotLevel6Speed);
-    	robotSpeedsMap.put(7, robotLevel7Speed);
-    	robotSpeedsMap.put(8, robotLevel8Speed);
-    	robotSpeedsMap.put(9, robotLevel9Speed);
-    	robotSpeedsMap.put(10, robotLevel10Speed);
+    	robotSpeedsMap.put(1, ROBOT_LEVEL_1_SPEED);
+    	robotSpeedsMap.put(2, ROBOT_LEVEL_2_SPEED);
+    	robotSpeedsMap.put(3, ROBOT_LEVEL_3_SPEED);
+    	robotSpeedsMap.put(4, ROBOT_LEVEL_4_SPEED);
+    	robotSpeedsMap.put(5, ROBOT_LEVEL_5_SPEED);
+    	robotSpeedsMap.put(6, ROBOT_LEVEL_6_SPEED);
+    	robotSpeedsMap.put(7, ROBOT_LEVEL_7_SPEED);
+    	robotSpeedsMap.put(8, ROBOT_LEVEL_8_SPEED);
+    	robotSpeedsMap.put(9, ROBOT_LEVEL_9_SPEED);
+    	robotSpeedsMap.put(10, ROBOT_LEVEL_10_SPEED);
     }
     
-
-    public static float getRobotMoveSpeed() {
-        return robotMoveSpeed;
+	public static int getDefaultRobotSpeedLevel() {
+		return defaultRobotSpeedLevel;
+	}
+	
+	public static float getDefaultRobotSpeed() {
+		return robotSpeedsMap.get(getDefaultRobotSpeedLevel());
+	}
+    
+    public static float getRobotSpeed() {
+        return robotSpeedsMap.get(getRobotSpeedLevel());
+    }
+    
+    public static int getRobotSpeedLevel() {
+    	return robotSpeedLevel;
     }
 
-    public static void setRobotMoveSpeed(float robotMoveSpeed) {
-        SimulatorConfig.robotMoveSpeed = robotMoveSpeed;
+    public static void setRobotSpeedLevel(int robotSpeedLevel) {
+        SimulatorConfig.robotSpeedLevel = robotSpeedLevel;
+    }
+    
+    public static float getRobotSpeedFactor() {
+    	return getRobotSpeed() / getDefaultRobotSpeed();
     }
     
     public static int getDefaultChargingStationsInUse() {
@@ -229,8 +233,8 @@ public class SimulatorConfig {
 		return batteryLoss;
 	}
 	
-	public static float getBatteryLoadingSpeed() {
-		return batteryLoadingSpeed;
+	public static float getBatteryChargingSpeed() {
+		return batteryChargingSpeed;
 	}
 	
 	public static int getDefaultUnloadingRange() {
@@ -259,55 +263,6 @@ public class SimulatorConfig {
    	
    	public static float getMaxBlockSize() {
    		return maxBlockSize;
-   	}
-   	
-   	public static int getRobotDefaultSpeedLevel() {
-		return robotDefaultSpeedLevel;
-	}
-   	
-   	public static float getRobotLevel1Speed() {
-   		return robotLevel1Speed;
-   	}
-   	
-   	public static float getRobotLevel2Speed() {
-   		return robotLevel2Speed;
-   	}
-   	
-   	public static float getRobotLevel3Speed() {
-   		return robotLevel3Speed;
-   	}
-   	
-   	public static float getRobotLevel4Speed() {
-   		return robotLevel4Speed;
-   	}
-   	
-   	public static float getRobotLevel5Speed() {
-   		return robotLevel5Speed;
-   	}
-   	
-   	public static float getRobotLevel6Speed() {
-   		return robotLevel6Speed;
-   	}
-   	
-   	public static float getRobotLevel7Speed() {
-   		return robotLevel7Speed;
-   	}
-   	
-   	public static float getRobotLevel8Speed() {
-   		return robotLevel8Speed;
-   	}
-   	
-   	public static float getRobotLevel9Speed() {
-   		return robotLevel9Speed;
-   	}
-   	
-   	public static float getRobotLevel10Speed() {
-   		return robotLevel10Speed;
-   	}
-   	
-   	public static Map<Integer,Float> getRobotSpeedMap(){
-   		System.out.println(robotSpeedsMap.get(5));
-   		return robotSpeedsMap;
    	}
    	
    	public static int getQueueSize() {
