@@ -49,9 +49,10 @@ public class DriveSimFrame extends JFrame {
         super("Drive System Simulator");
         setLayout(new GridBagLayout());
         
+        createFileIfNotExist(SimulatorConfig.getTestFileName());
         initializeSimulationItems();
         initializePanels();
-        loadTestFileContent();
+        loadTestFileContent(SimulatorConfig.getTestFileName());
         addListeners();
         setDesignOfSubpanels();
         setDesignOfMainWindow();
@@ -98,11 +99,6 @@ public class DriveSimFrame extends JFrame {
         timerPanel = new TimerPanel(world, this);
         scenarioPanel = new ScenarioPanel(scenarioManager);
         setJMenuBar(new DriveSimMenu(world));
-	}
-    
-    private void loadTestFileContent() {
-		createFileIfNotExist(SimulatorConfig.getTestFileName());
-        loadFile(SimulatorConfig.getTestFileName());
 	}
     
     private void addListeners() {
@@ -238,7 +234,7 @@ public class DriveSimFrame extends JFrame {
         setVisible(true);
 	}
     
-    private void loadFile(String fileName) {
+    private void loadTestFileContent(String fileName) {
     	boolean written = true;
     	TestScenario test;
     	
