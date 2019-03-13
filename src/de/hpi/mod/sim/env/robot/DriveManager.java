@@ -61,7 +61,7 @@ public class DriveManager implements IRobotActors {
     }
 
 	private void loadBattery(float delta) {
-		battery = Math.min(battery + delta * SimulatorConfig.getBatteryLoadingSpeed(), 100);
+		battery = Math.min(battery + delta * SimulatorConfig.getBatteryChargingSpeed(), 100);
 	}
 
 	private void unload() {
@@ -105,7 +105,7 @@ public class DriveManager implements IRobotActors {
 		int deltaY = currentPosition.getY() - oldPosition.getY();
 
 		if (deltaY != 0) {
-		    y += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaY);
+		    y += Math.copySign(SimulatorConfig.getRobotSpeed() * delta, deltaY);
 
 		    // If y moved over target
 		    if (deltaY > 0 && y >= currentPosition.getY() ||
@@ -114,7 +114,7 @@ public class DriveManager implements IRobotActors {
 		        finishMovement();
 		    }
 		} else if (deltaX != 0) {
-		    x += Math.copySign(SimulatorConfig.getRobotMoveSpeed() * delta, deltaX);
+		    x += Math.copySign(SimulatorConfig.getRobotSpeed() * delta, deltaX);
 
 		    // If x moved over target
 		    if (deltaX > 0 && x >= currentPosition.getX() ||
@@ -238,7 +238,7 @@ public class DriveManager implements IRobotActors {
     }
 
     public float getRotationSpeed() {
-        return SimulatorConfig.getDefaultRotationSpeed() * SimulatorConfig.getRobotMoveSpeed() / SimulatorConfig.getRobotLevel5Speed();
+        return SimulatorConfig.getDefaultRotationSpeed() * SimulatorConfig.getRobotSpeedFactor();
     }
 
     public long getUnloadingTime() {

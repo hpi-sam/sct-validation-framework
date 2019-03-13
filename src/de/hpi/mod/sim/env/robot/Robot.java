@@ -160,7 +160,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private void handleFinishedLoading() {
     	if(now == 0) {
-    		long minWaitTime = (long) (500 * SimulatorConfig.getRobotLevel5Speed() / SimulatorConfig.getRobotMoveSpeed());
+    		long minWaitTime = (long) (500 / SimulatorConfig.getRobotSpeedFactor());
     		long maxWaitTime = 10 * minWaitTime;
     		delay = ThreadLocalRandom.current().nextLong(minWaitTime, maxWaitTime);
     		now = System.currentTimeMillis();

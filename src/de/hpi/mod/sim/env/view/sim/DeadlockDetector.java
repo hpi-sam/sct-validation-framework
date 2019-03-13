@@ -28,7 +28,7 @@ public class DeadlockDetector {
 	}
 	
 	public void update(){
-		offset = (long) Math.max(defaultOffset, defaultOffset * SimulatorConfig.getRobotLevel5Speed() / SimulatorConfig.getRobotMoveSpeed());
+		offset = (long) Math.max(defaultOffset, defaultOffset / SimulatorConfig.getRobotSpeedFactor());
 		if(currentTime + offset <= System.currentTimeMillis()) {
 			checkForDeadlock();
 			getRobotPositions();
