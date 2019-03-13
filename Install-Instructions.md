@@ -25,3 +25,5 @@
 ##Anmerkungen
 
 Eclipse hat manchmal kleine Bugs mit Java 11. Falls der Error 'Polling news feed' immer mal wieder ein kleines Fenster öffnet empfehlen wir den folgenden Artikel als work around: https://stackoverflow.com/questions/52528693/eclipse-internal-error-polling-news-feeds
+
+Yakindus Lizenzen funktionieren nicht in virtuellen Maschinen!
