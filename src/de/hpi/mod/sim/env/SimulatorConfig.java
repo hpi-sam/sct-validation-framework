@@ -1,5 +1,8 @@
 package de.hpi.mod.sim.env;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hpi.mod.sim.env.model.Position;
 /**
  * Contains all "magic-numbers" set in the Simulation.
@@ -117,7 +120,21 @@ public class SimulatorConfig {
    	private static int defaultMapHeight = DEFAULT_MAP_HEIGHT;
    	private static int chargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int mapHeight = DEFAULT_MAP_HEIGHT;
-    private static int unloadingRange = DEFAULT_UNLOADING_RANGE; 
+    private static int unloadingRange = DEFAULT_UNLOADING_RANGE;
+    private static Map<Integer,Float> robotSpeedsMap = null;
+    static {
+    	robotSpeedsMap = new HashMap<Integer,Float>();
+    	robotSpeedsMap.put(1, robotLevel1Speed);
+    	robotSpeedsMap.put(2, robotLevel2Speed);
+    	robotSpeedsMap.put(3, robotLevel3Speed);
+    	robotSpeedsMap.put(4, robotLevel4Speed);
+    	robotSpeedsMap.put(5, robotLevel5Speed);
+    	robotSpeedsMap.put(6, robotLevel6Speed);
+    	robotSpeedsMap.put(7, robotLevel7Speed);
+    	robotSpeedsMap.put(8, robotLevel8Speed);
+    	robotSpeedsMap.put(9, robotLevel9Speed);
+    	robotSpeedsMap.put(10, robotLevel10Speed);
+    }
     
 
     public static float getRobotMoveSpeed() {
@@ -286,6 +303,11 @@ public class SimulatorConfig {
    	
    	public static float getRobotLevel10Speed() {
    		return robotLevel10Speed;
+   	}
+   	
+   	public static Map<Integer,Float> getRobotSpeedMap(){
+   		System.out.println(robotSpeedsMap.get(5));
+   		return robotSpeedsMap;
    	}
    	
    	public static int getQueueSize() {
