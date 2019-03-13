@@ -10,11 +10,17 @@
 7. Wenn das zip fertig entpackt wurde, im entpackten Ordner die SCT.exe ausführen. (Auch das Starten kann leider ein wenig dauern, da Yakindu ein gesamtes Eclipse mit sich bringt...)
 8. Yakindu zeigt zuerst einen Welcome Screen an. Diesen schließen und dann links im Project Explorer einen Rechtsklick machen und Import auswählen.
 9. "Projects from Folder or Archive" auswählen. Dann oben rechts aus Directory klicken und geklonten Ordner auswählen. Dabei bis in den Ordner simulator navigieren. Dann Finish klicken.
-10. Yakindu sollte nun mit der Probelizenz schon voll funktionsfähig sein. Wir wollen aber noch eine Lizenz hinzufügen, damit es nach 30 Tagen weiter verwendet werden kann. Dazu unter Window Preferences auswählen. Dann auf "YAKINDU Licenses" und dort auf "Import License File" klicken. Jetzt die Lizenzdatei auswählen und auf OK und dann Apply klicken.
+10. Yakindu sollte nun mit der Probelizenz schon voll funktionsfähig sein. Wir wollen aber noch eine Lizenz hinzufügen, damit es nach 30 Tagen weiter verwendet werden kann. Dazu unter "Window" "Preferences" auswählen. Dann auf "YAKINDU Licenses" und dort auf "Import License File" klicken. Jetzt die Lizenzdatei auswählen und auf OK und dann Apply klicken.
 
 ##MacOS X
 
-
+1. Java 11 herunterladen (https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
+2. Die heruntergeladene .dmg öffnen und den Installationsanweisungen folgen.
+3. Yakindu herunterladen (https://www.itemis.com/en/yakindu/state-machine/download-options/). Professional Edition auswählen.
+4. Heruntergeladene .app in den Programme Ordner verschieben und öffnen.
+5. Yakindu zeigt zuerst einen Welcome Screen an. Diesen schließen und dann links im Project Explorer einen Rechtsklick machen und Import auswählen.
+6. "Projects from Folder or Archive" auswählen. Dann oben rechts aus Directory klicken und geklonten Ordner auswählen. Dabei bis in den Ordner simulator navigieren. Dann Finish klicken.
+7. Yakindu sollte nun mit der Probelizenz schon voll funktionsfähig sein. Wir wollen aber noch eine Lizenz hinzufügen, damit es nach 30 Tagen weiter verwendet werden kann. Dazu unter "YAKINDU SCT Professional Edition" "Einstellungen" auswählen. Dann auf "YAKINDU Licenses" und dort auf "Import License File" klicken. Jetzt die Lizenzdatei auswählen und auf OK und dann Apply klicken.
 
 ##Anmerkungen
 
