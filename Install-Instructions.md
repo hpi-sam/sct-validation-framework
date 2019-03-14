@@ -48,6 +48,11 @@ Hinweis 3: Die Darstellung bis hierhin folgt: http://ubuntuhandbook.org/index.ph
 
 ##Allgemeine Anmerkungen
 
-Eclipse hat manchmal kleine Bugs mit Java 11. Falls der Error 'Polling news feed' immer mal wieder ein kleines Fenster öffnet empfehlen wir den folgenden Artikel als work around: https://stackoverflow.com/questions/52528693/eclipse-internal-error-polling-news-feeds . Solltet ihr die clone-repository Funktion von Eclipse/Yakindu nutzen, so müsst ihr in den Ort als Workspace auswählen, in der das Repsoitory geklont wurde und nicht den Standardworkspace. Dies ist ein weiterer bekannter Eclipse/Yakindu-Bug. Achtet immer darauf, dass euer Eclipse/Yakindu tatsächlich Java 10/11 nutzt (einsehbar unter Run Configurations), da ihr ansonsten die Simulation nicht ausführen könnt. Die Mainmethode liegt in src/de/hpi/mod/sim/app/App.java . Yakindu baut auf Eclipse, daher könnt ihr viele Funktionen wie gewohnt aus einem reinen Eclipse benutzen. Wir empfehlen explizit nicht, ein normales Eclipse über den Marketplace mit Yakindu nachzurüsten, da dies bei uns zu mehreren massiven Installationsproblemen führte.
+Eclipse hat manchmal kleine Bugs mit Java 11. Falls der Error 'Polling news feed' immer mal wieder ein kleines Fenster öffnet empfehlen wir den folgenden Artikel als work around:
+https://stackoverflow.com/questions/52528693/eclipse-internal-error-polling-news-feeds . Solltet ihr die clone-repository Funktion von Eclipse/Yakindu nutzen, so müsst ihr in
+den Ort als Workspace auswählen, in der das Repsoitory geklont wurde und nicht den Standardworkspace. Dies ist ein weiterer bekannter Eclipse/Yakindu-Bug. Achtet immer darauf,
+dass euer Eclipse/Yakindu tatsächlich Java 10/11 nutzt (einsehbar unter Run Configurations), da ihr ansonsten die Simulation nicht ausführen könnt. Die Mainmethode liegt in
+src/de/hpi/mod/sim/app/App.java . Yakindu baut auf Eclipse, daher könnt ihr viele Funktionen wie gewohnt aus einem reinen Eclipse benutzen. Wir empfehlen explizit nicht, ein 
+normales Eclipse über den Marketplace mit Yakindu nachzurüsten, da dies bei uns zu mehreren massiven Installationsproblemen führte.
 
 Yakindus Lizenzen funktionieren nicht in virtuellen Maschinen!
