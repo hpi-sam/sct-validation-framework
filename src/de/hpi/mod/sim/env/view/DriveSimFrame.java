@@ -38,7 +38,6 @@ public class DriveSimFrame extends JFrame {
     private ScenarioManager scenarioManager;
 
     private long lastFrame;
-    private long lastRefresh;
     private boolean running = true;
 
 	public static Color MAIN_MENU_COLOR = new Color(0xfff3e2);
@@ -58,7 +57,6 @@ public class DriveSimFrame extends JFrame {
         setDesignOfMainWindow();
 		
         lastFrame = System.currentTimeMillis();
-        lastRefresh = System.currentTimeMillis();
         while (running)
             update();
         close();
@@ -320,17 +318,20 @@ public class DriveSimFrame extends JFrame {
     }
 
     private void update() {
+    	while(System.currentTimeMillis() - lastFrame < SimulatorConfig.getDefaultRefreshInterval()) {
+	    	try {
+				Thread.sleep(3);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+    	}
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
-
-        if (System.currentTimeMillis() - lastRefresh > sim.getWorld().getSensorRefreshInterval()) {
-            lastRefresh = System.currentTimeMillis();
-            sim.getWorld().refresh();
-            robotInfoPanel1.onHighlightedRobotChange();
-            robotInfoPanel2.onHighlightedRobotChange();
-            scenarioManager.refresh();
-        }
-
+        
+        sim.getWorld().refresh();
+        robotInfoPanel1.onHighlightedRobotChange();
+        robotInfoPanel2.onHighlightedRobotChange();
+        scenarioManager.refresh();
         deadlockDetector.update();
         collisionDetector.update();
         sim.getWorld().update(delta);
@@ -361,7 +362,8 @@ public class DriveSimFrame extends JFrame {
 		popupPanel.add(popupLabel);
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
-		Popup popup = pf.getPopup(this, popupPanel, 150, 300);
+		
+		Popup popup = pf.getPopup(this, popupPanel, (int)this.getLocation().getX() + 150, (int)this.getLocation().getY() + 300);
 		return popup;
 	}
 

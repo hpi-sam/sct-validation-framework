@@ -35,11 +35,6 @@ public class SimulationWorld {
     private float offsetX = SimulatorConfig.getDefaultOffsetX(), offsetY = SimulatorConfig.getDefaultOffsetY();
 
     /**
-     * Number of milliseconds between sensor refreshes
-     */
-    private float sensorRefreshInterval = SimulatorConfig.getDefaultSensorRefreshInterval();
-
-    /**
      * Whether the simulation is running or not
      */
     private boolean running = false;
@@ -191,14 +186,6 @@ public class SimulationWorld {
 
     public float getOffsetY() {
         return offsetY;
-    }
-
-    public float getSensorRefreshInterval() {
-        return sensorRefreshInterval;
-    }
-
-    public void setSensorRefreshInterval(float sensorRefreshInterval) {
-        this.sensorRefreshInterval = sensorRefreshInterval;
     }
 
     public synchronized Robot addRobot() {

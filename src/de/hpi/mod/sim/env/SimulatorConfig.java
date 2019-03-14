@@ -29,7 +29,7 @@ public class SimulatorConfig {
     public static final float DEFAULT_ROTATION_SPEED = .5f;
 	public static final long DEFAULT_UNLOADING_TIME = 1000;
 	public static final float BATTERY_FULL = 100;
-	public static final float BATTERY_LOW = 20;
+	public static final float BATTERY_LOW = 25;
 	public static final float BATTERY_LOSS = .1f;
 	public static final float BATTERY_LOADING_SPEED = .02f;
 	public static final int DEFAULT_UNLOADING_RANGE = 30;
@@ -37,7 +37,7 @@ public class SimulatorConfig {
 	public static final float DEFAULT_BLOCK_SIZE = 20;
 	public static final float DEFAULT_OFFSET_X = 0;
 	public static final float DEFAULT_OFFSET_Y = 0;
-	public static final float DEFAULT_SENSOR_REFRESH_INTERVAL = 10;
+	public static final float DEFAULT_REFRESH_INTERVAL = 25;
 	public static final float MIN_BLOCK_SIZE = 5;
 	public static final float MAX_BLOCK_SIZE = 30;
 	
@@ -68,7 +68,7 @@ public class SimulatorConfig {
 	/**
      * Number of vertical unloading positions.
      */
-	public static final int DEFAULT_MAP_HEIGHT = 4;
+	public static final int DEFAULT_MAP_HEIGHT = 7;
 
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
@@ -97,7 +97,7 @@ public class SimulatorConfig {
    	private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
    	private static float defaultOffsetX = DEFAULT_OFFSET_X;
    	private static float defaultOffsetY = DEFAULT_OFFSET_Y;
-   	private static float defaultSensorRefreshInterval = DEFAULT_SENSOR_REFRESH_INTERVAL;
+   	private static float defaultRefreshInterval = DEFAULT_REFRESH_INTERVAL;
    	private static float minBlockSize = MIN_BLOCK_SIZE;
    	private static float maxBlockSize = MAX_BLOCK_SIZE;
    	
@@ -253,8 +253,8 @@ public class SimulatorConfig {
    		return defaultOffsetY;
    	}
    	
-   	public static float getDefaultSensorRefreshInterval() {
-   		return defaultSensorRefreshInterval;
+   	public static float getDefaultRefreshInterval() {
+   		return defaultRefreshInterval;
    	}
    	
    	public static float getMinBlockSize() {
