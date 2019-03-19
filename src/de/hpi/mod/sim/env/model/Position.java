@@ -58,8 +58,8 @@ public class Position {
         }
     }
 
-	public boolean is(Position pos) {
-		if(pos.getX() == x && pos.getY() == y) {
+	public boolean is(Position position) {
+		if(position.getX() == x && position.getY() == y) {
 			return true;
 		} else {
 			return false;

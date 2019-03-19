@@ -54,11 +54,11 @@ public class DeadlockDetector {
 			return;
 		}
 		for(Robot robot : robotList) {
-			Position oldPos = robotPositions.get(robot.getID());
-			if (oldPos == null) {
+			Position oldPosition = robotPositions.get(robot.getID());
+			if (oldPosition == null) {
 				return;
 			}
-			if(!(oldPos.is(robot.pos()))) {
+			if(!(oldPosition.is(robot.pos()))) {
 				return;
 			}
 		}	

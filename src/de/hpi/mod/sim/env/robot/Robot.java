@@ -214,8 +214,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public void unloaded() {
         manager.startUnloading();
-        // TODO unloading Dispatcher
-        //dispatcher.reportUnloadingPackage(robotID, packageID);
         hasPackage = false;
     }
 

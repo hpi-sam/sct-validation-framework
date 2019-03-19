@@ -49,33 +49,33 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * This should only be used for Debug-Scenarios,
      * since the Robots may be in an invalid state after reaching their targets
      *
-     * @param pos The Waypoint where the Robot will be placed
+     * @param position The Waypoint where the Robot will be placed
      * @param state 
      * @param facing The Orientation of the Robot at its starting position
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtPosition(Position pos, RobotState state, Orientation facing, List<Position> targets) {
+    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets) {
     	
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
                 0,
                 grid, stations, this, this,
-                pos, state, facing, targets);
+                position, state, facing, targets);
         robots.add(robot);
         return robot;
     }
     
-    public Robot addRobotInScenarioHPI(Position pos, Orientation facing) {
+    public Robot addRobotInScenarioHPI(Position position, Orientation facing) {
 
-	if (grid.posType(pos) == PositionType.STATION) {
+	if (grid.posType(position) == PositionType.STATION) {
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
-                (int) pos.getX()/SimulatorConfig.getSpaceBetweenChargingStations(),
+                (int) position.getX()/SimulatorConfig.getSpaceBetweenChargingStations(),
                 grid, stations, this, this,
-                pos, facing);
+                position, facing);
         robots.add(robot);
         return robot;
     } else {
@@ -93,13 +93,13 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
     /**
      * Whether there is a Robot on the given Position
-     * @param pos The Position to check
+     * @param position The Position to check
      * @return true if there is a Robot on the Position
      */
     @Override
-    public boolean isBlockedByRobot(Position pos) {
-        for (Robot r : robots) {
-            if (r.pos().equals(pos) || r.oldPos().equals(pos))
+    public boolean isBlockedByRobot(Position position) {
+        for (Robot robot : robots) {
+            if (robot.pos().equals(position) || robot.oldPos().equals(position))
                 return true;
         }
         return false;

@@ -99,10 +99,10 @@ public class TestListPanel extends JPanel implements ITestListener {
 	 * Turns all scenario labels to plain text.
 	 */
     public void clearSelections() {
-		for(JLabel l: tests.values()) {
-			Font oldFont = l.getFont();
+		for(JLabel label: tests.values()) {
+			Font oldFont = label.getFont();
 			Font newFont = new Font(oldFont.getName(), Font.PLAIN, oldFont.getSize());
-			l.setFont(newFont);
+			label.setFont(newFont);
 		}
 	}
 }

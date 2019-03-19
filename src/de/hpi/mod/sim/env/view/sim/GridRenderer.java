@@ -90,7 +90,7 @@ public class GridRenderer {
      * Draws a Block
      * @param graphic Graphics to render to
      * @param cell The type of the cell determines how its rendered
-     * @param drawPos The draw-position
+     * @param drawPosition The draw-position
      * @param borderLeft should a border be drawn on the left of the block?
      * @param highlight Highlighted?
      * @param isZeroZero should the zero-zero highlight be drawn?
@@ -98,7 +98,7 @@ public class GridRenderer {
  	 * @param blockedBy1 is this block blocked by the first highlighted robot?
  	 * @param blockedBy2 is this block blocked by the second highlighted robot?
      */
-    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPos, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean isUnusedStationBlock, boolean blockedBy1, boolean blockedBy2) {
+    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPosition, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean isUnusedStationBlock, boolean blockedBy1, boolean blockedBy2) {
         float blockSize = world.getBlockSize();
 
         if (cell == CellType.BLOCK || isUnusedStationBlock)
@@ -115,23 +115,23 @@ public class GridRenderer {
             graphic.setColor(new Color(0xfff3e2));
 
         //draw the block
-        graphic.fillRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
+        graphic.fillRect((int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize);
         
         //draw the grid pattern around the block
         graphic.setColor(darken(graphic.getColor()));
-        graphic.drawRect((int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize);
+        graphic.drawRect((int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize);
         
         //draw the border to the left of the block
         if (borderLeft) {
         	graphic.setColor(Color.DARK_GRAY);
-        	graphic.drawRect((int) drawPos.getX(), (int) drawPos.getY(), 0, (int) blockSize);
+        	graphic.drawRect((int) drawPosition.getX(), (int) drawPosition.getY(), 0, (int) blockSize);
         }
         
         //draw the zero-zero highlight
         if (isZeroZero) {
         	graphic.setColor(Color.GREEN);
-            graphic.fillOval((int) (drawPos.getX() + blockSize / 4),
-            		(int) (drawPos.getY() + blockSize / 4),
+            graphic.fillOval((int) (drawPosition.getX() + blockSize / 4),
+            		(int) (drawPosition.getY() + blockSize / 4),
             		(int) blockSize / 2, 
             		(int) blockSize / 2);
         }
@@ -139,19 +139,19 @@ public class GridRenderer {
         //draw the mouse highlight
         if (highlight) {
             graphic.setColor(Color.RED);
-            graphic.fillRect((int) (drawPos.getX() + blockSize / 4),
-                    (int) (drawPos.getY() + blockSize / 4),
+            graphic.fillRect((int) (drawPosition.getX() + blockSize / 4),
+                    (int) (drawPosition.getY() + blockSize / 4),
                     (int) (blockSize / 2),
                     (int) (blockSize / 2));
         }
         
         //draw the robot blocking
         if (blockedBy1) {
-        	graphic.drawImage(leftClickedRobotBlocking, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
+        	graphic.drawImage(leftClickedRobotBlocking, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize, null);
         }
         
         if (blockedBy2) {
-        	graphic.drawImage(rightClickedRobotBlocking, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
+        	graphic.drawImage(rightClickedRobotBlocking, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize, null);
         }
     }
     

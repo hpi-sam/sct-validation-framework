@@ -29,13 +29,13 @@ public class Station {
 
     public Station(int stationID) {
         this.stationID = stationID;
-        initBatteries();
+        initializeBatteries();
     }
 
     /**
      * Adds the batteries with IDs 0, 1, 2 to the station
      */
-    private void initBatteries() {
+    private void initializeBatteries() {
         batteries = new Battery[SimulatorConfig.BATTERIES_PER_STATION];
         for (int i = 0; i < batteries.length; i++) {
             batteries[i] = new Battery(i);
@@ -118,11 +118,11 @@ public class Station {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
 
-        Station station = (Station) o;
+        Station station = (Station) object;
 
         return stationID == station.stationID;
     }

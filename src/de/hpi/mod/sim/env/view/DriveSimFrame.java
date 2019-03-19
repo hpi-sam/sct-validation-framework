@@ -67,6 +67,57 @@ public class DriveSimFrame extends JFrame {
         new DriveSimFrame();
     }
     
+    public void displayMessage(String message) {
+		Popup popup = createPopup(message);
+		popup.show();
+		
+		Thread popupHider = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				popup.hide();
+			}
+		};
+		popupHider.start();
+	}
+
+	public void reportCollision(Robot r1, Robot r2) {
+		displayMessage("Collision detected!");
+		sim.renderExplosion(r1);
+	}
+	
+	public void clearSelections() {
+    	testListPanel.clearSelections();
+    	scenarioPanel.clearSelections();
+    }
+	
+	public void resetSimulationView() {
+		sim.reset();
+	}
+    
+    public boolean isRunning() {
+    	return running;
+    }
+    
+    public ScenarioPanel getScenarioPanel() {
+    	return scenarioPanel;
+    }
+    
+    public ConfigPanel getConfigPanel() {
+    	return configPanel;
+    }
+    
+    public TestListPanel getTestListPanel() {
+    	return testListPanel;
+    }
+    
+    public TimerPanel getTimerPanel() {
+    	return timerPanel;
+    }
+    
     private static void setSystemLookAndFeel() {
     	try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -296,26 +347,6 @@ public class DriveSimFrame extends JFrame {
 			e.printStackTrace();
 		}
 	}
-    
-    public boolean isRunning() {
-    	return running;
-    }
-    
-    public ScenarioPanel getScenarioPanel() {
-    	return scenarioPanel;
-    }
-    
-    public ConfigPanel getConfigPanel() {
-    	return configPanel;
-    }
-    
-    public TestListPanel getTestListPanel() {
-    	return testListPanel;
-    }
-    
-    public TimerPanel getTimerPanel() {
-    	return timerPanel;
-    }
 
     private void update() {
     	while(System.currentTimeMillis() - lastFrame < SimulatorConfig.getDefaultRefreshInterval()) {
@@ -346,11 +377,6 @@ public class DriveSimFrame extends JFrame {
         System.exit(0);
     }
     
-    public void clearSelections() {
-    	testListPanel.clearSelections();
-    	scenarioPanel.clearSelections();
-    }
-    
     //create a new popup with the provided text 
     private Popup createPopup(String message) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
@@ -365,31 +391,5 @@ public class DriveSimFrame extends JFrame {
 		
 		Popup popup = pf.getPopup(this, popupPanel, (int)this.getLocation().getX() + 150, (int)this.getLocation().getY() + 300);
 		return popup;
-	}
-
-    public void displayMessage(String message) {
-		Popup popup = createPopup(message);
-		popup.show();
-		
-		Thread popupHider = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				popup.hide();
-			}
-		};
-		popupHider.start();
-	}
-
-	public void reportCollision(Robot r1, Robot r2) {
-		displayMessage("Collision detected!");
-		sim.renderExplosion(r1);
-	}
-	
-	public void resetSimulationView() {
-		sim.reset();
 	}
 }

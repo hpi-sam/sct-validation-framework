@@ -33,14 +33,14 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
         // Add information
-        addInfo("ID", r -> Integer.toString(r.getID()));
-        addInfo("Battery", r -> Integer.toString((int) r.getBattery()));
-        addInfo("Pos", r -> stringify(r.pos()));
-        addInfo("Target", r -> stringify(r.getTarget()));
-        addInfo("Facing", r -> r.posOrientation().toString());
-        addInfo("Target Direction", r ->
-                r.isTargetReached() ? "-" : r.targetDirection().toString());
-        addInfo("State", r -> trimStateName(r.getMachineState()));
+        addInfo("ID", robot -> Integer.toString(robot.getID()));
+        addInfo("Battery", robot -> Integer.toString((int) robot.getBattery()));
+        addInfo("Pos", robot -> stringify(robot.pos()));
+        addInfo("Target", robot -> stringify(robot.getTarget()));
+        addInfo("Facing", robot -> robot.posOrientation().toString());
+        addInfo("Target Direction", robot ->
+                robot.isTargetReached() ? "-" : robot.targetDirection().toString());
+        addInfo("State", robot -> trimStateName(robot.getMachineState()));
     }
 
     /*
@@ -81,9 +81,9 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         JLabel label = new JLabel();
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
 
-        var lref = new LabelRefresher(label, template, refresh);
-        refresher.add(lref);
-        lref.refresh();
+        var labelRefresher = new LabelRefresher(label, template, refresh);
+        refresher.add(labelRefresher);
+        labelRefresher.refresh();
 
         add(label);
     }
@@ -93,18 +93,18 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
      */
     @Override
     public void onHighlightedRobotChange() {
-        for (LabelRefresher ref : refresher)
-            ref.refresh();
+        for (LabelRefresher labelRefresher : refresher)
+            labelRefresher.refresh();
         repaint();
     }
 
     /**
      * converts a Position to a String
-     * @param pos the position
+     * @param position the position
      * @return a String representation
      */
-    private String stringify(Position pos) {
-        return String.format("(%s, %s)", pos.getX(), pos.getY());
+    private String stringify(Position position) {
+        return String.format("(%s, %s)", position.getX(), position.getY());
     }
 
     /**

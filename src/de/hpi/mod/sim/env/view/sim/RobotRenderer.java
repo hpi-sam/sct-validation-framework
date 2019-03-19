@@ -45,12 +45,12 @@ public class RobotRenderer {
         // Draw Robots
         for (Robot robot : world.getRobots()) {
             DriveManager drive = robot.getDriveManager();
-            Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
+            Point2D drawPosition = world.toDrawPosition(drive.getX(), drive.getY());
 
             boolean leftClicked = robot.equals(world.getHighlightedRobot1());
             boolean rightClicked = robot.equals(world.getHighlightedRobot2());
 
-            drawRobot(graphic, drawPos, drive.getAngle(), leftClicked, rightClicked, robot.isHasPackage(), robot.getBattery() < .1);
+            drawRobot(graphic, drawPosition, drive.getAngle(), leftClicked, rightClicked, robot.isHasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets
@@ -65,10 +65,10 @@ public class RobotRenderer {
         }
     }
 
-    private void drawRobot(Graphics graphic, Point2D drawPos, float angle, boolean leftClicked, boolean rightClicked, boolean hasPackage, boolean batteryEmpty) {
+    private void drawRobot(Graphics graphic, Point2D drawPosition, float angle, boolean leftClicked, boolean rightClicked, boolean hasPackage, boolean batteryEmpty) {
         float blockSize = world.getBlockSize();
-        int translateX = (int) drawPos.getX();
-        int translateY = (int) drawPos.getY();
+        int translateX = (int) drawPosition.getX();
+        int translateY = (int) drawPosition.getY();
 
         BufferedImage image = robotIcon;
         if(leftClicked)
@@ -87,18 +87,18 @@ public class RobotRenderer {
         	graphic.drawImage(op.filter(packageIcon, null), translateX, translateY, (int) blockSize, (int) blockSize, null);
         
         if (batteryEmpty)
-            graphic.drawImage(batteryIcon, (int) drawPos.getX(), (int) drawPos.getY(), (int) blockSize, (int) blockSize, null);
+            graphic.drawImage(batteryIcon, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize, null);
     }
 
-    private void drawTarget(Graphics graphic, Point2D drawPos, Point2D targetPos) {
+    private void drawTarget(Graphics graphic, Point2D drawPosition, Point2D targetPosition) {
         Graphics2D Graphic2D = (Graphics2D) graphic;
         graphic.setColor(Color.RED);
 
         int offset = (int) world.getBlockSize() / 2;
         Graphic2D.drawLine(
-                (int) drawPos.getX() + offset,
-                (int) drawPos.getY() + offset,
-                (int) targetPos.getX() + offset,
-                (int) targetPos.getY() + offset);
+                (int) drawPosition.getX() + offset,
+                (int) drawPosition.getY() + offset,
+                (int) targetPosition.getX() + offset,
+                (int) targetPosition.getY() + offset);
     }
 }

@@ -54,8 +54,8 @@ public enum Orientation {
     }
 
     public static Direction difference(Orientation o1, Orientation o2) {
-        int diff = Math.floorMod(Math.round(o1.getAngle() - o2.getAngle()), 360);
-        switch (diff) {
+        int difference = Math.floorMod(Math.round(o1.getAngle() - o2.getAngle()), 360);
+        switch (difference) {
             case 0: return Direction.AHEAD;
             case 90: return Direction.LEFT;
             case 270: return Direction.RIGHT;

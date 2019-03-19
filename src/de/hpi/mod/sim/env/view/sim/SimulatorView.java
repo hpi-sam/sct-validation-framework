@@ -62,7 +62,6 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     	int widthBlocks = (int) (currentWidth/blockSize);
     	
     	SimulatorConfig.setChargingStationsInUse(widthBlocks/SimulatorConfig.getSpaceBetweenChargingStations());
-    	//SimulatorConfig.setMapHeight(heightBlocks);
     	int unloadingRange = (widthBlocks/3)*((heightBlocks-SimulatorConfig.getQueueSize())/3);
     	SimulatorConfig.setUnloadingRange(unloadingRange);
     	
@@ -110,9 +109,9 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     }
 
     private void refreshSimulationSize() {
-    	Rectangle r = this.getBounds();
-    	currentHeight = r.height;
-    	currentWidth = r.width;
+    	Rectangle rectangle = this.getBounds();
+    	currentHeight = rectangle.height;
+    	currentWidth = rectangle.width;
     }
 
 	public void renderExplosion(Robot robot) {

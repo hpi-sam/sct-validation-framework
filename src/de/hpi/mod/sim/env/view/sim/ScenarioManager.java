@@ -200,7 +200,7 @@ public class ScenarioManager {
     			station_number = ThreadLocalRandom.current().nextInt(maxStations);
     		} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     		
-            newRobots.add(new NewScenarioRobotHPI(new Position(SimulatorConfig.getFirstStationTop().getX()
+            newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
             		+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
             		SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
             return newRobots;
@@ -224,7 +224,7 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobotHPI(new Position(SimulatorConfig.getFirstStationTop().getX()
+    			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
     			robotsAtStations[station_number] ++;
@@ -251,7 +251,7 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobotHPI(new Position(SimulatorConfig.getFirstStationTop().getX()
+    			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
     			robotsAtStations[station_number] ++;
@@ -277,7 +277,7 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobotHPI(new Position(SimulatorConfig.getFirstStationTop().getX()
+    			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
     			robotsAtStations[station_number] ++;
@@ -721,36 +721,36 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     
     private class NewTestRobot extends NewRobot {
 
-        private Position pos;
+        private Position position;
         private RobotState state;
         private List<Position> targets = new ArrayList<Position>();
         private Orientation facing;
 
-        public NewTestRobot(Position pos, RobotState startingState, Orientation facing, List<Position> targets) {
-            this.pos = pos;
+        public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
+            this.position = position;
             this.state = startingState;
             this.targets = targets;
             this.facing = facing;
         }
 
         @Override
-        public Robot register(SimulationWorld sim) {
-            return sim.addRobotAtPosition(pos, state, facing, targets);
+        public Robot register(SimulationWorld simulationWorld) {
+            return simulationWorld.addRobotAtPosition(position, state, facing, targets);
         }
     }
     
-    private class NewScenarioRobotHPI extends NewRobot{
-    	private Position pos;
+    private class NewScenarioRobot extends NewRobot{
+    	private Position position;
     	private Orientation facing;
     	
-    	public NewScenarioRobotHPI(Position pos, Orientation facing) {
-    		this.pos = pos;
+    	public NewScenarioRobot(Position position, Orientation facing) {
+    		this.position = position;
     		this.facing = facing;
     	}
     	
     	@Override
     	public Robot register(SimulationWorld sim) {
-    		return sim.addRobotInScenarioHPI2(pos, facing);
+    		return sim.addRobotInScenarioHPI2(position, facing);
     	}
     }
 

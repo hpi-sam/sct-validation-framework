@@ -56,7 +56,7 @@ public class SimulationWorld {
     private Robot highlightedRobot1 = null;
     private Robot highlightedRobot2 = null;
 
-    private Simulator sim;
+    private Simulator simulator;
 
     private SimulatorView view;
 
@@ -81,7 +81,7 @@ public class SimulationWorld {
 
     public SimulationWorld(SimulatorView view) {
         this.view = view;
-        sim = new Simulator();
+        simulator = new Simulator();
     }
 
     /**
@@ -91,7 +91,7 @@ public class SimulationWorld {
     public synchronized void refresh() {
         if (running) {
             isRefreshing = true;
-            sim.refresh();
+            simulator.refresh();
             isRefreshing = false;
             notifyAll();
         }
@@ -106,7 +106,7 @@ public class SimulationWorld {
         if (running) {
             try {
                 isUpdating = true;
-                for (Robot robot : sim.getRobots()) {
+                for (Robot robot : simulator.getRobots()) {
                     robot.getDriveManager().update(delta);
                 }
                 isUpdating = false;
@@ -130,7 +130,7 @@ public class SimulationWorld {
     }
 
     public Simulator getSimulator() {
-        return sim;
+        return simulator;
     }
 
     public SimulatorView getView() {
@@ -144,7 +144,7 @@ public class SimulationWorld {
      * @return List of Robots in Simulation
      */
     public List<Robot> getRobots() {
-        return sim.getRobots();
+        return simulator.getRobots();
     }
 
     public void zoomIn(float zoom) {
@@ -189,15 +189,15 @@ public class SimulationWorld {
     }
 
     public synchronized Robot addRobot() {
-        return addRobotRunner(() -> sim.addRobot());
+        return addRobotRunner(() -> simulator.addRobot());
     }
 
     public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets) {
-        return addRobotRunner(() -> sim.addRobotAtPosition(pos, initialState, facing, targets));
+        return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets));
     }
     
     public Robot addRobotInScenarioHPI2(Position pos, Orientation facing) {
-    	return addRobotRunner(() -> sim.addRobotInScenarioHPI(pos, facing));
+    	return addRobotRunner(() -> simulator.addRobotInScenarioHPI(pos, facing));
     }
 
     private Robot addRobotRunner(AddRobotRunner runner) {
@@ -223,7 +223,7 @@ public class SimulationWorld {
 		}
 
 		if (isRunning()) toggleRunning();
-		sim.getRobots().clear();
+		simulator.getRobots().clear();
 
 		scenario.loadScenario(this);
     }
@@ -313,7 +313,7 @@ public class SimulationWorld {
     }
 
     public void dispose() {
-        sim.close();
+        simulator.close();
     }
 
     private void refreshHighlightedRobotListeners() {

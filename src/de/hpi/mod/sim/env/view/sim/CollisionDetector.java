@@ -20,13 +20,13 @@ public class CollisionDetector {
 	public void update() {
 		if(!collisionReported) {
 			List<Robot> robots = world.getRobots();
-			for (Robot r1 : robots) {
-				for (Robot r2: robots) {
-					if (r1 != r2
-						&& (r1.pos().is(r2.pos()) || r1.oldPos().is(r2.pos()) || r1.oldPos().is(r2.oldPos()))
+			for (Robot robot1 : robots) {
+				for (Robot robot2: robots) {
+					if (robot1 != robot2
+						&& (robot1.pos().is(robot2.pos()) || robot1.oldPos().is(robot2.pos()) || robot1.oldPos().is(robot2.oldPos()))
 						&& !collisionReported) {
 						collisionReported = true;
-						reportCollision(r1, r2);
+						reportCollision(robot1, robot2);
 					}
 				}
 			}
@@ -37,10 +37,10 @@ public class CollisionDetector {
 		collisionReported = false;
 	}
 
-	private void reportCollision(Robot r1, Robot r2) {
-		frame.reportCollision(r1, r2);
-		world.setHighlightedRobot1(r1);
-		world.setHighlightedRobot2(r2);
+	private void reportCollision(Robot robot1, Robot robot2) {
+		frame.reportCollision(robot1, robot2);
+		world.setHighlightedRobot1(robot1);
+		world.setHighlightedRobot2(robot2);
 		if(world.isRunning())
 			world.toggleRunning();
 		if(scenarioManager.isRunningTest()) {

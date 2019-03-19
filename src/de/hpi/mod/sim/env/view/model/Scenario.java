@@ -35,7 +35,7 @@ public abstract class Scenario {
 
     public void loadScenario(SimulationWorld sim) {
         List<NewRobot> newRobots = initializeScenario();
-        newRobots.forEach(r -> r.register(sim));
+        newRobots.forEach(robot -> robot.register(sim));
     }
 
 	public boolean isResizable() {

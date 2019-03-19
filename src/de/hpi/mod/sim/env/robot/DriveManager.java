@@ -33,14 +33,14 @@ public class DriveManager implements IRobotActors {
     private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
 
 
-    public DriveManager(DriveListener listener, Position pos, Orientation facing) {
+    public DriveManager(DriveListener listener, Position position, Orientation facing) {
         this.listener = listener;
-        currentPosition = pos;
-        oldPosition = pos;
+        currentPosition = position;
+        oldPosition = position;
         targetFacing = facing;
         oldFacing = facing;
-        x = pos.getX();
-        y = pos.getY();
+        x = position.getX();
+        y = position.getY();
         angle = facing.getAngle();
     }
 

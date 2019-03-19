@@ -17,8 +17,8 @@ public abstract class TestScenario extends Scenario {
     public void loadScenario(SimulationWorld sim) {
         robots.clear();
         List<NewRobot> newRobots = initializeScenario();
-        for (NewRobot r : newRobots) {
-            robots.add(r.register(sim));
+        for (NewRobot robot : newRobots) {
+            robots.add(robot.register(sim));
         }
         hasRun = true;
     }
