@@ -51,7 +51,12 @@ public class ScenarioPanel extends JPanel {
     }
     
     private JButton newRunButton(Scenario scenario) {
-    	JButton run = new JButton("run");
+    	JButton run;
+    	if(scenario.getName().equals("Empty")) {
+    		run = new JButton ("clear");
+    	} else {
+    		run = new JButton("run");
+    	}
 
         run.addActionListener(e -> {
         	scenarioManager.runScenario(scenario);

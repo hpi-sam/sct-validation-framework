@@ -13,15 +13,17 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ScenarioManager {
 
     private List<Scenario> scenarios = new ArrayList<>();
-    private List<TestScenario> tests = new ArrayList<>();
+    private Map<String,ArrayList<TestScenario>> testGroups = new LinkedHashMap<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
     
@@ -35,18 +37,33 @@ public class ScenarioManager {
     CollisionDetector collisionDetector;
     DeadlockDetector deadlockDetector;
     DriveSimFrame frame;
+	private List<TestScenario> tests = new ArrayList<>();
 
 
     public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector, DriveSimFrame frame) {
         this.world = world;
         this.collisionDetector = collisionDetector;
         this.frame = frame;
-        scenarios.add(new EmptyScenario());
+        initializeScenarioList();
+        initializeTestGroupsMap();
+        initializeTestList();
+    }
+
+	private void initializeScenarioList() {
+		scenarios.add(new EmptyScenario());
         scenarios.add(new OneRobotScenario());
         scenarios.add(new EasyScenario());
         scenarios.add(new MediumScenario());
         scenarios.add(new HardScenario());
-        tests.add(new OppositeRobotsOnCrossroadScenario());
+	}
+
+	private void initializeTestList() {
+		for(String key : testGroups.keySet()) {
+			for(TestScenario test : testGroups.get(key)) {
+				tests.add(test);
+			}
+		}
+		/*tests .add(new OppositeRobotsOnCrossroadScenario());
         tests.add(new TwoRobotsOnCrossroadScenario());
         tests.add(new ThreeRobotsOnCrossroadScenario());
         tests.add(new FourRobotsOnCrossroadScenario());
@@ -59,11 +76,39 @@ public class ScenarioManager {
         tests.add(new LongRoute());
         tests.add(new MiddleRouteTwoRobots());
         tests.add(new MiddleRouteTwoRobots2());
-        tests.add(new OppositeRobotsScenario());
+        tests.add(new OppositeRobots());
         tests.add(new MiddleRouteThreeRobots());
         tests.add(new MiddleRouteTwoRobots3());
-        tests.add(new ExplosionTest());
-    }
+        tests.add(new ExplosionTest());*/
+	}
+
+	private void initializeTestGroupsMap() {
+		ArrayList<TestScenario> drivingToCrossroadTests = new ArrayList<>();
+        drivingToCrossroadTests.add(new OppositeRobotsOnCrossroadScenario());
+        drivingToCrossroadTests.add(new TwoRobotsOnCrossroadScenario());
+        drivingToCrossroadTests.add(new ThreeRobotsOnCrossroadScenario());
+        drivingToCrossroadTests.add(new FourRobotsOnCrossroadScenario());
+        testGroups.put("Driving at Crossroad", drivingToCrossroadTests);
+        ArrayList<TestScenario> drivingInStationTests = new ArrayList<>();
+        drivingInStationTests.add(new DriveToQueueEnd());
+        drivingInStationTests.add(new DriveToLoadingPosition());
+        testGroups.put("Driving in Station", drivingInStationTests);
+        ArrayList<TestScenario> simpleDrivingTests = new ArrayList<>();
+        simpleDrivingTests.add(new DriveToUnloadingPosition());
+        simpleDrivingTests.add(new HandleTwoRobotsInStation());
+        simpleDrivingTests.add(new HandleThreeRobotsInStation());
+        simpleDrivingTests.add(new MiddleRoute());
+        simpleDrivingTests.add(new LongRoute());
+        simpleDrivingTests.add(new OppositeRobots());
+        simpleDrivingTests.add(new ExplosionTest());
+        testGroups.put("Simple drive logic", simpleDrivingTests);
+        ArrayList<TestScenario> complexDrivingTests = new ArrayList<>();
+        complexDrivingTests.add(new MiddleRouteTwoRobots());
+        complexDrivingTests.add(new MiddleRouteTwoRobots2());
+        complexDrivingTests.add(new MiddleRouteThreeRobots());
+        complexDrivingTests.add(new MiddleRouteTwoRobots3());
+        testGroups.put("Complex drive logic", complexDrivingTests);
+	}
 
     private void runScenario(Scenario scenario, boolean isTest) {
     	frame.setResizable(scenario.isResizable());
@@ -681,8 +726,8 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
          }
     }
 
-    private class OppositeRobotsScenario extends TestScenario {
-        public OppositeRobotsScenario() { 
+    private class OppositeRobots extends TestScenario {
+        public OppositeRobots() { 
         	name = "Opposite Robots"; 
         	description = "Opposite Robots (typical Deadlock)";
         }
@@ -764,5 +809,9 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 
 	public void setCollisionDetector(CollisionDetector collisionDetector) {
 		this.collisionDetector = collisionDetector;
+	}
+
+	public Map<String,ArrayList<TestScenario>> getTestGroups() {
+		return testGroups;
 	}
 }

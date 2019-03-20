@@ -8,23 +8,41 @@ import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import javax.swing.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class TestListPanel extends JPanel implements ITestListener {
 
     private static Map<TestScenario, JLabel> tests = new HashMap<>();
     private ScenarioManager scenarioManager;
+    private int yCoordinate = 0;
 
     public TestListPanel(ScenarioManager scenarioManager) {
     	this.scenarioManager = scenarioManager;
         setLayout(new GridBagLayout());
 
-        for (TestScenario test : scenarioManager.getTests())
-            addTest(test);
+       //for (TestScenario test : scenarioManager.getTests())
+            //addTest(test);
+       Map<String, ArrayList<TestScenario>> testGroups = scenarioManager.getTestGroups();
+       Set<String> keys = testGroups.keySet();
+       for(String key : keys) {
+    	   addTestGroup(key, testGroups.get(key));
+       }   
     }
     
-    @Override
+    private void addTestGroup(String key, ArrayList<TestScenario> arrayList) {
+	    addGroupLabel(key);
+	    yCoordinate++;
+	    for (TestScenario test : arrayList) {
+	    	addTest(test);
+	    	yCoordinate++;
+	    }
+		
+	}
+
+	@Override
     public void onTestCompleted(TestScenario test) {
     	//set the background of the menu wrapper of the label to green
         tests.get(test).getParent().setBackground(DriveSimFrame.MENU_GREEN);
@@ -44,6 +62,19 @@ public class TestListPanel extends JPanel implements ITestListener {
 		repaint();
 	}
 
+	private void addGroupLabel(String key) {
+		Font text = new Font(Font.MONOSPACED, Font.BOLD, 14);
+		JLabel label = new JLabel(key);
+		label.setFont(text);
+		GridBagConstraints labelConstraints = new GridBagConstraints();
+		labelConstraints.gridx = 0;
+        labelConstraints.gridy = yCoordinate;
+        labelConstraints.fill = GridBagConstraints.HORIZONTAL;
+        labelConstraints.anchor = GridBagConstraints.LINE_START;
+        labelConstraints.weightx = 1.0;
+        add(new MenuWrapper(180, 30, DriveSimFrame.MAIN_MENU_COLOR, label), labelConstraints);
+	}
+	
     private void addTest(TestScenario test) {
     	
     	// --------------------------
@@ -55,7 +86,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         JLabel label = newTestLabel(test);
         GridBagConstraints labelConstraints = new GridBagConstraints();
         labelConstraints.gridx = 0;
-        labelConstraints.gridy = tests.size();
+        labelConstraints.gridy = yCoordinate;
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.weightx = 1.0;
@@ -64,7 +95,7 @@ public class TestListPanel extends JPanel implements ITestListener {
         JButton run = newRunButton(test);
         GridBagConstraints runConstraints = new GridBagConstraints();
         runConstraints.gridx = 1;
-        runConstraints.gridy = tests.size();
+        runConstraints.gridy = yCoordinate;
         runConstraints.fill = GridBagConstraints.HORIZONTAL;
         runConstraints.insets = new Insets(3, 3, 3, 3);
         add(new MenuWrapper(74, 24, DriveSimFrame.MAIN_MENU_COLOR, run), runConstraints);
