@@ -22,9 +22,7 @@ public class TestListPanel extends JPanel implements ITestListener {
     public TestListPanel(ScenarioManager scenarioManager) {
     	this.scenarioManager = scenarioManager;
         setLayout(new GridBagLayout());
-
-       //for (TestScenario test : scenarioManager.getTests())
-            //addTest(test);
+        
        Map<String, ArrayList<TestScenario>> testGroups = scenarioManager.getTestGroups();
        Set<String> keys = testGroups.keySet();
        for(String key : keys) {

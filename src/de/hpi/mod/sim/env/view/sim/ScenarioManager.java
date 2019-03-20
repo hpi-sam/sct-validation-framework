@@ -63,23 +63,6 @@ public class ScenarioManager {
 				tests.add(test);
 			}
 		}
-		/*tests .add(new OppositeRobotsOnCrossroadScenario());
-        tests.add(new TwoRobotsOnCrossroadScenario());
-        tests.add(new ThreeRobotsOnCrossroadScenario());
-        tests.add(new FourRobotsOnCrossroadScenario());
-        tests.add(new DriveToQueueEnd());
-        tests.add(new DriveToLoadingPosition());
-        tests.add(new DriveToUnloadingPosition());
-        tests.add(new HandleTwoRobotsInStation());
-        tests.add(new HandleThreeRobotsInStation());
-        tests.add(new MiddleRoute());
-        tests.add(new LongRoute());
-        tests.add(new MiddleRouteTwoRobots());
-        tests.add(new MiddleRouteTwoRobots2());
-        tests.add(new OppositeRobots());
-        tests.add(new MiddleRouteThreeRobots());
-        tests.add(new MiddleRouteTwoRobots3());
-        tests.add(new ExplosionTest());*/
 	}
 
 	private void initializeTestGroupsMap() {
