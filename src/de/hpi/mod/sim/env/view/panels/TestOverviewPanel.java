@@ -20,7 +20,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 
 	private ScenarioManager scenarioManager;
 	
-	private JTextField progressDisplay;
+	private JProgressBar progressDisplay;
 	private JButton showHideButton;
 	private JButton runAllButton;
 	private JButton resetButton;
@@ -95,16 +95,22 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		add(new MenuWrapper(194, 24, DriveSimFrame.MAIN_MENU_COLOR, resetButton), resetButtonConstraints);
 	}
 	
-	private JTextField newProgressDisplay() {
-		JTextField textField = new JTextField("0/0 green");
+	private JProgressBar newProgressDisplay() {
+	/*	JTextField textField = new JTextField("0/0 green");
 		textField.setEditable(false);
-		return textField;
+		return textField;*/
+		
+		JProgressBar progressBar = new JProgressBar(0, scenarioManager.getTests().size());
+		progressBar.setStringPainted(true);
+		progressBar.setString("0/0 green");
+		return progressBar;
 	}
 	
 	private void updateProgressDisplay() {
 		String complete = Integer.toString(getCompletedTestCount());
 		String amount = Integer.toString(scenarioManager.getTests().size());
-		progressDisplay.setText(complete + "/" + amount + " green");
+		progressDisplay.setValue(getCompletedTestCount());
+		progressDisplay.setString(complete + "/" + amount + " green");
 	}
 	
 	private JButton newShowHideButton() {
