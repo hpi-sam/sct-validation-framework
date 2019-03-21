@@ -86,9 +86,18 @@ public class DriveSimFrame extends JFrame {
 
 	public void reportCollision(Robot r1, Robot r2) {
 		displayMessage("Collision detected!");
+		forbidFurhterRunning();
 		sim.renderExplosion(r1);
 	}
 	
+	public void forbidFurhterRunning() {
+		world.setRunForbidden(true);
+	}
+	
+	public void allowRunning() {
+		world.setRunForbidden(false);
+	}
+
 	public void clearSelections() {
     	testListPanel.clearSelections();
     	scenarioPanel.clearSelections();

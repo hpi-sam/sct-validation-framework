@@ -38,6 +38,11 @@ public class SimulationWorld {
      * Whether the simulation is running or not
      */
     private boolean running = false;
+    
+    /**
+     * If set to true, the simulation will be considered as not running, even if it can Run
+     */
+    private boolean runForbidden = false;
 
     /**
      * The Position of the mouse in blocks
@@ -89,7 +94,7 @@ public class SimulationWorld {
      * Locks the List of robots
      */
     public synchronized void refresh() {
-        if (running) {
+        if (running && !runForbidden) {
             isRefreshing = true;
             simulator.refresh();
             isRefreshing = false;
@@ -103,7 +108,7 @@ public class SimulationWorld {
      * @param delta The time since last frame in milliseconds
      */
     public synchronized void update(float delta) {
-        if (running) {
+        if (running && !runForbidden) {
             try {
                 isUpdating = true;
                 for (Robot robot : simulator.getRobots()) {
@@ -269,6 +274,9 @@ public class SimulationWorld {
     }
     
     public boolean isRunning() {
+    	if(runForbidden) {
+    		return false;
+    	}
         return running;
     }
 
@@ -331,5 +339,9 @@ public class SimulationWorld {
 	public void resetHighlightedRobots() {
 		highlightedRobot1 = null;
 		highlightedRobot2 = null;
+	}
+
+	public void setRunForbidden(boolean isForbidden) {
+		runForbidden = isForbidden;
 	}
 }
