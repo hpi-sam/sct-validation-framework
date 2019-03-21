@@ -382,7 +382,7 @@ public class DriveSimFrame extends JFrame {
 		JPanel popupPanel = new JPanel(new BorderLayout());
 		popupPanel.setPreferredSize(new Dimension(600, 100));
 		popupPanel.setBackground(new Color(MAIN_MENU_COLOR.getRed(), MAIN_MENU_COLOR.getGreen(), MAIN_MENU_COLOR.getBlue(), 192));
-		JLabel popupLabel = new JLabel(message, JLabel.CENTER);
+		JLabel popupLabel = new JLabel(message, SwingConstants.CENTER);
 		Font original = (Font) UIManager.get("Label.font");
 		popupLabel.setFont(original.deriveFont(Font.BOLD, 16));
 		popupPanel.add(popupLabel);
