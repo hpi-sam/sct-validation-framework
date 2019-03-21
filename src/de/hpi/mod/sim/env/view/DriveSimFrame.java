@@ -398,7 +398,8 @@ public class DriveSimFrame extends JFrame {
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
 		
-		Popup popup = pf.getPopup(this, popupPanel, (int)this.getLocation().getX() + 150, (int)this.getLocation().getY() + 300);
+		Popup popup = pf.getPopup(this, popupPanel, (int)this.getLocation().getX()+this.getWidth()/2-300, 
+													(int)this.getLocation().getY()+this.getHeight()/2-50);
 		return popup;
 	}
 }
