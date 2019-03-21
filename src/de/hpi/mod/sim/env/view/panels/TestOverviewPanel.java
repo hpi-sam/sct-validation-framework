@@ -96,10 +96,6 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	}
 	
 	private JProgressBar newProgressDisplay() {
-	/*	JTextField textField = new JTextField("0/0 green");
-		textField.setEditable(false);
-		return textField;*/
-		
 		JProgressBar progressBar = new JProgressBar(0, scenarioManager.getTests().size());
 		progressBar.setStringPainted(true);
 		progressBar.setString("0/0 green");
