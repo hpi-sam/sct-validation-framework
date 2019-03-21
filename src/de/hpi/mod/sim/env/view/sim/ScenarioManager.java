@@ -94,6 +94,7 @@ public class ScenarioManager {
 	}
 
     private void runScenario(Scenario scenario, boolean isTest) {
+    	frame.allowRunning();
     	frame.setResizable(scenario.isResizable());
     	world.resetZoom();
 		world.resetOffset();
