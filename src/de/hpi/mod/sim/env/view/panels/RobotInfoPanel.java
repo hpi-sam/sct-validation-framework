@@ -2,10 +2,17 @@ package de.hpi.mod.sim.env.view.panels;
 
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +24,13 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
 
     private SimulationWorld world;
     private boolean isRightClickedRobot = false;
+    private JTree stateTree;
+    private DefaultTreeModel stateTreeModel;
 
     /**
      * List of refreshable information
      */
-    private List<LabelRefresher> refresher = new ArrayList<>();
+    private List<InfoRefresher> refresher = new ArrayList<>();
 
     /**
      * @param world We need to ask the world for the reference to the highlighted Robot constantly to be able to react on changes.
@@ -31,7 +40,8 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         this.world = world;
         this.isRightClickedRobot = isRightClickedRobot;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-
+        //setLayout(new GridLayout(0, 1));
+        	
         // Add information
         addInfo("ID", robot -> Integer.toString(robot.getID()));
         addInfo("Battery", robot -> Integer.toString((int) robot.getBattery()));
@@ -40,36 +50,35 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         addInfo("Facing", robot -> robot.posOrientation().toString());
         addInfo("Target Direction", robot ->
                 robot.isTargetReached() ? "-" : robot.targetDirection().toString());
-        addInfo("State", robot -> trimStateName(robot.getMachineState()));
+        addStateTree();
+        //addInfo("State", robot -> trimStateName(robot.getMachineState()));
     }
 
-    /*
-     * This trims the YAKINDU state name to the lowest hierarchy level.
-     * 
-     * This only works with the following naming conventions in the state chart:
-     * 1. The top state must be called "Drive System" (or any other String with exactly 13 characters).
-     * 2. When regions are used they have to either be unnamed or start with an underscore "_".
-     * 3. No other underscores "_" can be used in state names.
-     */
-    private String trimStateName(String machineState) {
-    	//remove the top state prefix
-    	String[] hierarchyLevels = machineState.substring(13).split("__");
+    private void addStateTree() {
+		
+    	DefaultMutableTreeNode topStateNode = new DefaultMutableTreeNode("State:");
+	    
+    	stateTreeModel = new DefaultTreeModel(topStateNode);
     	
-    	//get the lowest hierarchy level (they are separated by a double underscore)
-    	String stateWithPossibleRegion = hierarchyLevels[hierarchyLevels.length - 1];
-    	
-    	//if the state is not in the highest hierarchy it has a region prefix which we want to remove.
-    	String stateWithoutRegion;
-    	if(hierarchyLevels.length > 1) {
-    		//the region prefix is separated by a single underscore
-    		String region = stateWithPossibleRegion.split("_")[0];
-    		stateWithoutRegion = stateWithPossibleRegion.substring(region.length() + 1);
-    	} else {
-    		stateWithoutRegion = stateWithPossibleRegion;
-    	}
-    	//YAKINDU replaces spaces with underscores. We undo this.
-    	stateWithoutRegion = stateWithoutRegion.replace("_", " ");
-		return stateWithoutRegion;
+	    stateTree = new JTree(stateTreeModel);
+	    stateTree.setShowsRootHandles(false);
+	    stateTree.setToolTipText("<html>This feature is experimental. <br>Please see the project documentation for neccessary naming conventions.");
+	    
+	    refresher.add(new StateTreeRefresher(topStateNode));
+	    
+	    DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+        renderer.setLeafIcon(null);
+        renderer.setOpenIcon(null);
+        renderer.setClosedIcon(null);
+        stateTree.setCellRenderer(renderer);
+        
+        if(isRightClickedRobot)
+        	stateTree.setBackground(DriveSimFrame.MENU_RED);
+        else
+        	stateTree.setBackground(DriveSimFrame.MENU_GREEN);
+	    
+        stateTree.setAlignmentX(LEFT_ALIGNMENT);
+		add(stateTree);
 	}
 
 	/**
@@ -85,6 +94,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         refresher.add(labelRefresher);
         labelRefresher.refresh();
 
+        label.setAlignmentX(LEFT_ALIGNMENT);
         add(label);
     }
 
@@ -93,8 +103,8 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
      */
     @Override
     public void onHighlightedRobotChange() {
-        for (LabelRefresher labelRefresher : refresher)
-            labelRefresher.refresh();
+        for (InfoRefresher infoRefresher : refresher)
+            infoRefresher.refresh();
         repaint();
     }
 
@@ -110,7 +120,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
     /**
      * Stores the information needed to onHighlightedRobotChange a label
      */
-    private class LabelRefresher {
+    private class LabelRefresher implements InfoRefresher{
 
         /**
          * The Label that displays the information
@@ -137,6 +147,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         /**
          * Asks the getter for the value of the highlighted Robot and renders it to the label
          */
+        @Override
         public void refresh() {
         	Robot robot;
         	
@@ -150,6 +161,84 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
             else
                 label.setText(template + ": " + runnable.run(robot));
         }
+    }
+    
+    private class StateTreeRefresher implements InfoRefresher {
+    	
+    	private DefaultMutableTreeNode topNode;
+    	private String currentDisplay = "";
+
+		public StateTreeRefresher(DefaultMutableTreeNode topNode) {
+			this.topNode = topNode;
+		}
+
+		@Override
+		public void refresh() {
+			Robot robot;
+        	
+        	if(isRightClickedRobot) {
+        		robot = world.getHighlightedRobot2();
+        	} else {
+        		robot = world.getHighlightedRobot1();
+        	}
+        	
+        	if(robot != null) {
+        		String robotState = robot.getMachineState();
+        		if (!robotState.equals(currentDisplay)) {
+        			currentDisplay = robotState;
+        			topNode.removeAllChildren();
+                	stateTreeModel.reload();
+                	
+                	DefaultMutableTreeNode lastNode = topNode;
+        		
+	        		String[] states = splitStates(robotState);
+	        		for(String state : states) {
+	        			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(state);
+	        			
+	        			stateTreeModel.insertNodeInto(newNode, lastNode, 0);
+	        			
+	        			lastNode = newNode;
+	        		}
+	        		stateTree.scrollPathToVisible(new TreePath(lastNode.getPath()));
+        		}
+        		
+        	} else {
+        		topNode.removeAllChildren();
+            	stateTreeModel.reload();
+        	}
+        	
+		}
+		
+		/*
+	     * This splits the YAKINDU state name into the hierarchy levels.
+	     * 
+	     * This only works with the following naming conventions in the state chart:
+	     * 1. The top state must be called "Drive System" (or any other String with exactly 13 characters).
+	     * 2. When regions are used they have to either be unnamed or start with an underscore "_".
+	     * 3. No other underscores "_" can be used in state names.
+	     */
+	    private String[] splitStates(String machineState) {
+	    	//remove the top state prefix
+	    	String[] hierarchyLevels = machineState.substring(13).split("__");
+	    	
+	    	//if the state is not in the highest hierarchy it has a region prefix which we want to remove.
+	    	for(int i = 1; i < hierarchyLevels.length; i++) {
+	    		String region = hierarchyLevels[i].split("_")[0];
+	    		hierarchyLevels[i] = hierarchyLevels[i].substring(region.length() + 1);
+	    	}
+	    	
+	    	//YAKINDU replaces spaces with underscores. We undo this.
+	    	for(int i = 0; i < hierarchyLevels.length; i++) {
+	    		hierarchyLevels[i] = hierarchyLevels[i].replace("_", " ");
+	    	}
+	    	
+			return hierarchyLevels;
+		}
+    	
+    }
+    
+    private interface InfoRefresher {
+    	public void refresh();
     }
 
     private interface RobotInformation {
