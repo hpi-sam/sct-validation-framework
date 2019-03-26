@@ -91,7 +91,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	            }
         	}
         }
-        startDriving();
+        if(!isInTest || !testPositionTargets.isEmpty()) {
+        	startDriving();
+        }
         drive.dataRefresh();
     }
 
@@ -199,7 +201,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         }
         state = RobotState.TO_STATION;
         hasReservedBattery = needsLoading;
-        startDriving(); //TODO: here the infinite loop at the end of the scenario seems the occur 
+        startDriving();
     }
 
     private void startDriving() {
