@@ -123,6 +123,7 @@ public class ScenarioManager {
     	runningAllTests = false;
     	test.resetTest();
     	frame.getTestListPanel().select(test);
+    	frame.getTimerPanel().startNewClock();
     	frame.displayMessage("Starting test \"" + test.getName() + "\"");
     	runScenario(test, true);
     }
@@ -153,6 +154,7 @@ public class ScenarioManager {
     		nextTest.resetTest();
     		frame.getTestListPanel().select(nextTest);
     		currentScenario = nextTest;
+    		frame.getTimerPanel().startNewClock();
     		runScenario(nextTest, true);
     	}
 	}

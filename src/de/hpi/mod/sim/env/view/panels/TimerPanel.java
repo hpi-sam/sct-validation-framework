@@ -18,11 +18,9 @@ public class TimerPanel extends JPanel {
 	private SimulationWorld world;
 	private float time;
 	private JTextField valueField;
-	private DriveSimFrame frame;
 	
-	public TimerPanel(SimulationWorld world, DriveSimFrame frame){
+	public TimerPanel(SimulationWorld world){
 		this.world = world;
-		this.frame = frame;
 		
 		setLayout(new GridBagLayout());
 		
@@ -65,7 +63,7 @@ public class TimerPanel extends JPanel {
 		timer = new Timer(1000,new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				if(world.isRunning()) {
-			        time += (float)frame.getSimulationPanel().getCurrentLevel()/(float)SimulatorConfig.getDefaultRobotSpeedLevel();
+			        time += 1 * SimulatorConfig.getRobotSpeedFactor();
 			        displayNewTime();
 				}
 			}

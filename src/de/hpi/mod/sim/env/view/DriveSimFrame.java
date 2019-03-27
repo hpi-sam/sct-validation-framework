@@ -154,7 +154,7 @@ public class DriveSimFrame extends JFrame {
         simulationPanel = new SimulationPanel(world, scenarioManager);
         testListPanel = new TestListPanel(scenarioManager);
         testOverviewPanel = new TestOverviewPanel(scenarioManager, this);
-        timerPanel = new TimerPanel(world, this);
+        timerPanel = new TimerPanel(world);
         scenarioPanel = new ScenarioPanel(scenarioManager);
         setJMenuBar(new DriveSimMenu(world));
 	}
