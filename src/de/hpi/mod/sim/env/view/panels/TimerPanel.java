@@ -65,7 +65,7 @@ public class TimerPanel extends JPanel {
 		timer = new Timer(1000,new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				if(world.isRunning()) {
-			        time += (float)frame.getConfigPanel().getCurrentLevel()/(float)SimulatorConfig.getDefaultRobotSpeedLevel();
+			        time += (float)frame.getSimulationPanel().getCurrentLevel()/(float)SimulatorConfig.getDefaultRobotSpeedLevel();
 			        displayNewTime();
 				}
 			}
@@ -77,6 +77,12 @@ public class TimerPanel extends JPanel {
 		time = 0.0f;
 		displayNewTime();
 		startTimer();
+	}
+	
+	public void clearTimer() {
+		stopTimer();
+		time = 0.0f;
+		displayNewTime();
 	}
 
 	public void startTimer() {
