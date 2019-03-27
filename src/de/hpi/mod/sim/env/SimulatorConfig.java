@@ -41,6 +41,7 @@ public class SimulatorConfig {
 	public static final float MIN_BLOCK_SIZE = 5;
 	public static final float MAX_BLOCK_SIZE = 30;
 	
+	public static final float ROBOT_LEVEL_0_SPEED = 0.00025f;
 	public static final float ROBOT_LEVEL_1_SPEED = 0.0005f;
 	public static final float ROBOT_LEVEL_2_SPEED = 0.001f;
 	public static final float ROBOT_LEVEL_3_SPEED = 0.002f;
@@ -51,7 +52,7 @@ public class SimulatorConfig {
 	public static final float ROBOT_LEVEL_8_SPEED = 0.008f;
 	public static final float ROBOT_LEVEL_9_SPEED = 0.01f;
 	public static final float ROBOT_LEVEL_10_SPEED = 0.012f;
-	public static final int ROBOT_MIN_SPEED_LEVEL = 1;
+	public static final int ROBOT_MIN_SPEED_LEVEL = 0;
 	public static final int ROBOT_DEFAULT_SPEED_LEVEL = 5;
 	public static final int ROBOT_MAX_SPEED_LEVEL = 10;
 	
@@ -113,6 +114,7 @@ public class SimulatorConfig {
     private static Map<Integer,Float> robotSpeedsMap = null;
     static {
     	robotSpeedsMap = new HashMap<Integer,Float>();
+    	robotSpeedsMap.put(0, ROBOT_LEVEL_0_SPEED);
     	robotSpeedsMap.put(1, ROBOT_LEVEL_1_SPEED);
     	robotSpeedsMap.put(2, ROBOT_LEVEL_2_SPEED);
     	robotSpeedsMap.put(3, ROBOT_LEVEL_3_SPEED);

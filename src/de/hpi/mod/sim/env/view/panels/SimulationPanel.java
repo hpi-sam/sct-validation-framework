@@ -76,6 +76,8 @@ public class SimulationPanel extends JPanel implements ITimeListener{
         setter.setValue(SimulatorConfig.getDefaultRobotSpeedLevel());
         valueSlider.setToolTipText("Adjust Robot Speed");
         valueSlider.setEnabled(true); //in the begin the speed slider should be changeable, even if not afterwards while paused simulation
+        valueSlider.setMajorTickSpacing(5);
+        valueSlider.setPaintTicks(true);
         valueSlider.addChangeListener(e -> {
         	setter.setValue(valueSlider.getValue());
             valueField.setText(Integer.toString(valueSlider.getValue()));
