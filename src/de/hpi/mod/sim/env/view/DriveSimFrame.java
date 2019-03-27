@@ -32,7 +32,7 @@ public class DriveSimFrame extends JFrame {
     private ScenarioPanel scenarioPanel;
     private TestListPanel testListPanel;
     private TestOverviewPanel testOverviewPanel;
-    private ConfigPanel configPanel;
+    private SimulationPanel simulationPanel;
     private TimerPanel timerPanel;
 
     private ScenarioManager scenarioManager;
@@ -115,8 +115,8 @@ public class DriveSimFrame extends JFrame {
     	return scenarioPanel;
     }
     
-    public ConfigPanel getConfigPanel() {
-    	return configPanel;
+    public SimulationPanel getSimulationPanel() {
+    	return simulationPanel;
     }
     
     public TestListPanel getTestListPanel() {
@@ -151,7 +151,7 @@ public class DriveSimFrame extends JFrame {
     private void initializePanels() {
 		robotInfoPanel1 = new RobotInfoPanel(world, false);
         robotInfoPanel2 = new RobotInfoPanel(world, true);
-        configPanel = new ConfigPanel(world);
+        simulationPanel = new SimulationPanel(world, scenarioManager);
         testListPanel = new TestListPanel(scenarioManager);
         testOverviewPanel = new TestOverviewPanel(scenarioManager, this);
         timerPanel = new TimerPanel(world, this);
@@ -162,7 +162,7 @@ public class DriveSimFrame extends JFrame {
     private void addListeners() {
 		world.addHighlightedRobotListener(robotInfoPanel1);
         world.addHighlightedRobotListener2(robotInfoPanel2);
-        world.addTimeListener(configPanel);
+        world.addTimeListener(simulationPanel);
         scenarioManager.addTestListener(testListPanel);
         scenarioManager.addTestListener(testOverviewPanel);
 	}
@@ -174,8 +174,8 @@ public class DriveSimFrame extends JFrame {
         scenarioPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
         scenarioPanel.setBackground(MAIN_MENU_COLOR);
         
-        configPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Configuration"));
-        configPanel.setBackground(MAIN_MENU_COLOR);
+        simulationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Simulation"));
+        simulationPanel.setBackground(MAIN_MENU_COLOR);
         
         timerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
         timerPanel.setBackground(MAIN_MENU_COLOR);
@@ -246,12 +246,12 @@ public class DriveSimFrame extends JFrame {
 		scenarioConstraints.fill = GridBagConstraints.HORIZONTAL;
 		add(scenarioPanel, scenarioConstraints);
 		
-		GridBagConstraints configConstraints = new GridBagConstraints();
-		configConstraints.gridx = 2;
-		configConstraints.gridy = 2;
-		configConstraints.gridwidth = 2;
-		configConstraints.fill = GridBagConstraints.HORIZONTAL;
-		add(configPanel, configConstraints);
+		GridBagConstraints simulationConstraints = new GridBagConstraints();
+		simulationConstraints.gridx = 2;
+		simulationConstraints.gridy = 2;
+		simulationConstraints.gridwidth = 2;
+		simulationConstraints.fill = GridBagConstraints.HORIZONTAL;
+		add(simulationPanel, simulationConstraints);
 		
 		GridBagConstraints timerConstraints = new GridBagConstraints();
 		timerConstraints.gridx = 2;

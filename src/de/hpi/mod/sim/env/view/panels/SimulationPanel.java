@@ -3,55 +3,45 @@ package de.hpi.mod.sim.env.view.panels;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
+import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ConfigPanel extends JPanel implements ITimeListener{
+public class SimulationPanel extends JPanel implements ITimeListener{
 
 	private int currentLevel = SimulatorConfig.getDefaultRobotSpeedLevel();
 	private SimulationWorld world;
+	private ScenarioManager scenarioManager;
 	private JTextField valueField;
 	private JButton playButton;
+	private JButton stopButton;
+	private JButton restartButton;
 	private JSlider valueSlider;
 	private ValueSetter setter;
 	private ImageIcon playIcon;
 	private ImageIcon pauseIcon;
 	
-    public ConfigPanel(SimulationWorld world) {
+    public SimulationPanel(SimulationWorld world, ScenarioManager scenarioManager) {
     	this.world = world;
+    	this.scenarioManager = scenarioManager;
     	
-    	// --------------------------------------
-    	// | Move Speed							|
-    	// |  -------					 ------	|
-    	// |  |Value|   -------O-------- | |> |	|
-    	// |  -------					 ------	|
-    	// |  -------							|
-    	// |  |Reset|							|
-    	// |  -------							|
-    	// --------------------------------------
+    	// --------------------------------------------------------
+    	// |  -------					 ------	 ------ --------- |
+    	// |  |Value|   -------O-------- | |> |	 |Stop| |Restart| |
+    	// |  -------					 ------	 ------ --------- |
+    	// --------------------------------------------------------
     	
     	//We use a GridBagLayout for flexibility
         setLayout(new GridBagLayout());
         
-        addLabel();
         addValueField();
         addSlider();
-        addResetButton();
         addPlayButton();
+        addStopButton();
+        addRestartButton();
     }
-
-    private void addLabel() {
-    	JLabel label = new JLabel("Move Speed");
-        GridBagConstraints labelConstraints = new GridBagConstraints();
-        labelConstraints.gridx = 0;
-        labelConstraints.gridy = 0;
-        labelConstraints.gridwidth = 3;
-        labelConstraints.anchor = GridBagConstraints.LINE_START;
-        labelConstraints.fill = GridBagConstraints.HORIZONTAL;
-        add(new MenuWrapper(390, 30, DriveSimFrame.MAIN_MENU_COLOR, label), labelConstraints);
-	}
 
 	private void addValueField() {
 		valueField = newValueField();
@@ -94,26 +84,6 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         return valueSlider;
 	}
 
-	private void addResetButton() {
-		JButton resetButton = newResetButton();
-        GridBagConstraints resetButtonConstraints = new GridBagConstraints();
-        resetButtonConstraints.gridx = 0;
-        resetButtonConstraints.gridy = 2;
-        resetButtonConstraints.insets = new Insets(3, 3, 3, 3);        
-        add(new MenuWrapper(60, 24, DriveSimFrame.MAIN_MENU_COLOR, resetButton), resetButtonConstraints);
-	}
-	
-	private JButton newResetButton() {
-		JButton resetButton = new JButton("Reset");
-        resetButton.addActionListener(e -> {
-            valueSlider.setValue(SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
-            valueField.setText(Integer.toString(SimulatorConfig.getDefaultRobotSpeedLevel()));
-            setter.setValue(SimulatorConfig.getDefaultRobotSpeedLevel());
-            currentLevel = SimulatorConfig.getDefaultRobotSpeedLevel();
-        });
-        return resetButton;
-	}
-
 	private void addPlayButton() {
 		playButton = newPlayButton();
 		refresh();  // Refresh to set icon
@@ -132,6 +102,40 @@ public class ConfigPanel extends JPanel implements ITimeListener{
         	world.toggleRunning();
         });
         return playButton;
+	}
+	
+	private void addStopButton() {
+		stopButton = newStopButton();
+		GridBagConstraints stopButtonConstraints = new GridBagConstraints();
+		stopButtonConstraints.gridx = 3;
+		stopButtonConstraints.gridy = 1;
+		stopButtonConstraints.insets = new Insets(3, 3, 3, 3);
+        add(new MenuWrapper(60, 60, DriveSimFrame.MAIN_MENU_COLOR, stopButton), stopButtonConstraints);
+	}
+	
+	private JButton newStopButton() {
+		JButton stopButton = new JButton("Stop");
+		stopButton.addActionListener(e -> {
+        	scenarioManager.clearScenario();
+        });
+        return stopButton;
+	}
+	
+	private void addRestartButton() {
+		restartButton = newRestartButton();
+		GridBagConstraints restartButtonConstraints = new GridBagConstraints();
+		restartButtonConstraints.gridx = 4;
+		restartButtonConstraints.gridy = 1;
+		restartButtonConstraints.insets = new Insets(3, 3, 3, 3);
+        add(new MenuWrapper(80, 60, DriveSimFrame.MAIN_MENU_COLOR, restartButton), restartButtonConstraints);
+	}
+	
+	private JButton newRestartButton() {
+		JButton restartButton = new JButton("Restart");
+		restartButton.addActionListener(e -> {
+        	scenarioManager.restartScenario();
+        });
+        return restartButton;
 	}
 
 	private void loadIcons() {

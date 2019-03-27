@@ -23,6 +23,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ScenarioManager {
 
     private List<Scenario> scenarios = new ArrayList<>();
+    private Scenario clear = new EmptyScenario();
+    private Scenario currentScenario;
     private Map<String,ArrayList<TestScenario>> testGroups = new LinkedHashMap<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
@@ -50,7 +52,6 @@ public class ScenarioManager {
     }
 
 	private void initializeScenarioList() {
-		scenarios.add(new EmptyScenario());
         scenarios.add(new OneRobotScenario());
         scenarios.add(new EasyScenario());
         scenarios.add(new MediumScenario());
@@ -117,6 +118,7 @@ public class ScenarioManager {
     }
     
     public void runTest(TestScenario test) {
+    	currentScenario = test;
     	testsToRun.clear();
     	runningAllTests = false;
     	test.resetTest();
@@ -126,6 +128,7 @@ public class ScenarioManager {
     }
     
     public void runScenario(Scenario scenario) {
+    	currentScenario = scenario;
     	testsToRun.clear();
     	runningAllTests = false;
     	frame.getScenarioPanel().select(scenario);
@@ -149,6 +152,7 @@ public class ScenarioManager {
     		TestScenario nextTest = testsToRun.poll();
     		nextTest.resetTest();
     		frame.getTestListPanel().select(nextTest);
+    		currentScenario = nextTest;
     		runScenario(nextTest, true);
     	}
 	}
@@ -156,6 +160,24 @@ public class ScenarioManager {
 	public void addTestListener(ITestListener listener) {
         listeners.add(listener);
     }
+	
+	public void clearScenario() {
+		currentScenario = null;
+		testsToRun.clear();
+    	runningAllTests = false;
+    	frame.clearSelections();
+    	frame.getTimerPanel().clearTimer();
+    	runScenario(clear, false);
+	}
+	
+	public void restartScenario() {
+		if(currentScenario != null) {
+			frame.getTimerPanel().startNewClock();
+	    	frame.displayMessage("Restarting scenario: \"" + currentScenario.getName() + "\"");
+			runScenario(currentScenario, isRunningTest);
+			
+		}
+	}
 
     public void refresh() {
     	if (isRunningTest) {
