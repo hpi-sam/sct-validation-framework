@@ -216,18 +216,23 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     
     @Override
     public String getMachineState() {
-    	List<String> activeStates = new ArrayList<>();
-    	for(DrivesystemStatemachine.State state : DrivesystemStatemachine.State.values()) {
-    		/*
-    		* This is not intended by the YAKINDU implementation and source generation. 
-    		* Thus the interface does not support this. 
-    		* This is why we have to cast to the actual DrivesystemStatemachine object.
-    		*/
-    		if(((DrivesystemStatemachine) machine).isStateActive(state)) {
-    			activeStates.add(state.toString());
-    		}
+    	try {
+	    	List<String> activeStates = new ArrayList<>();
+	    	for(DrivesystemStatemachine.State state : DrivesystemStatemachine.State.values()) {
+	    		/*
+	    		* This is not intended by the YAKINDU implementation and source generation. 
+	    		* Thus the interface does not support this. 
+	    		* This is why we have to cast to the actual DrivesystemStatemachine object.
+	    		*/
+	    		if(((DrivesystemStatemachine) machine).isStateActive(state)) {
+	    			activeStates.add(state.toString());
+	    		}
+	    		
+	    		
+	    	}
+    		return activeStates.get(activeStates.size() - 1);
+    	} catch (Exception e) { //avoid problems with version changes
+    		return "";
     	}
-
-    	return activeStates.get(activeStates.size() - 1);
     }
 }
