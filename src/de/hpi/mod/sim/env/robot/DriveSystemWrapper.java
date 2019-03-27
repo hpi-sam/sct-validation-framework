@@ -12,7 +12,7 @@ import de.hpi.mod.sim.env.model.*;
  * Handles calls to the statechard.
  * This should be the only file with logic depending on the statechard implementation.
  */
-public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOperationCallback, IDriveSystem {
+public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOperationCallback, IDrivesystemStatemachine.SCIRawDataOperationCallback, IDriveSystem {
 
     /**
      * The generated Statemachine
@@ -35,6 +35,7 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         this.processor = processor;
         this.machine = machine;
         this.machine.getSCIData().setSCIDataOperationCallback(this);
+        this.machine.getSCIRawData().setSCIRawDataOperationCallback(this);
         this.machine.init();
         this.machine.enter();
     }
@@ -48,6 +49,7 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         this.processor = processor;
         this.machine = machine;
         this.machine.getSCIData().setSCIDataOperationCallback(this);
+        this.machine.getSCIRawData().setSCIRawDataOperationCallback(this);
         this.machine.init();
         this.machine.enter();
     }
@@ -121,6 +123,30 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         return toSCIDirection(data.targetDirection());
     }
 
+    @Override
+    public long posX() {
+    	//TODO 
+        return 0;
+    }
+
+    @Override
+    public long posY() {
+    	//TODO 
+        return 0;
+    }
+
+    @Override
+    public long targetX() {
+    	//TODO 
+        return 0;
+    }
+
+    @Override
+    public long targetY() {
+    	//TODO 
+        return 0;
+    }
+    
     private long toSCIPositionType(PositionType type) {
         switch (type) {
             case WAYPOINT:
