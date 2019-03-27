@@ -1,5 +1,5 @@
-#Installation von YAKINDU
-##Windows 7/10
+# Installation von YAKINDU
+## Windows 7/10
 
 1. Java 11 herunterladen (https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
 2. Die Exe ausfuehren und den Installationsanweisungen folgen.
@@ -12,7 +12,7 @@
 9. "Projects from Folder or Archive" auswaehlen. Dann oben rechts aus Directory klicken und geklonten Ordner auswaehlen. Dabei bis in den Ordner simulator navigieren. Dann Finish klicken.
 10. Yakindu sollte nun mit der Probelizenz schon voll funktionsfaehig sein. Wir wollen aber noch eine Lizenz hinzufuegen, damit es nach 30 Tagen weiter verwendet werden kann. Dazu unter "Window" "Preferences" auswaehlen. Dann auf "YAKINDU Licenses" und dort auf "Import License File" klicken. Jetzt die Lizenzdatei auswählen und auf OK und dann Apply klicken.
 
-##MacOS X
+## MacOS X
 
 1. Java 11 herunterladen (https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
 2. Die heruntergeladene .dmg oeffnen und den Installationsanweisungen folgen.
@@ -22,9 +22,9 @@
 6. "Projects from Folder or Archive" auswaehlen. Dann oben rechts aus Directory klicken und geklonten Ordner auswaehlen. Dabei bis in den Ordner simulator navigieren. Dann Finish klicken.
 7. Yakindu sollte nun mit der Probelizenz schon voll funktionsfaehig sein. Wir wollen aber noch eine Lizenz hinzufuegen, damit es nach 30 Tagen weiter verwendet werden kann. Dazu unter "YAKINDU SCT Professional Edition" "Einstellungen" auswaehlen. Dann auf "YAKINDU Licenses" und dort auf "Import License File" klicken. Jetzt die Lizenzdatei auswaehlen und auf OK und dann Apply klicken.
 
-##Ubuntu
+## Ubuntu
 
-###1. Weg PPA benutzen
+### 1. Weg PPA benutzen
 Hinweis: Sich vorher sudo Rechte zu geben, laesst die Notwendigkeit fuer sudo vor jedem Befehl natuerlich entfallen.
 
 Hinweis 2: Wer eine neuere Ubuntu-Version als Ubuntu 18.04 benutzt, kann Schritt 2 ueberspringen, aber schaden tut es nicht
@@ -41,13 +41,13 @@ Hinweis 3: Die Darstellung bis hierhin folgt: http://ubuntuhandbook.org/index.ph
 9. "Projects from Folder or Archive" auswaehlen. Dann oben rechts aus Directory klicken und geklonten Ordner auswaehlen. Dabei bis in den Ordner simulator navigieren. Dann Finish klicken.
 10. Yakindu sollte nun mit der Probelizenz schon voll funktionsfaehig sein. Da Yakindu kein Hinzufuegen von Lizenzen in einer VM akzeptiert, muss selbststaendig getestet werden, ob das Hinzufuegen der richtigen Lizenz analog zu dem Schritt 10 von Windows bzw. Schritt 7 von MacOS funktioniert.
 
-###2. Weg Direktdownload
+### 2. Weg Direktdownload
 
 1. Java 11 herunterladen (https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html) . Bevorzugt die .tar.gz
 2. Entpacken und einrichten von Java unter Beachtung der README manuell einrichten.
 3. Ab hier ist die Prozedur analog zum 1. Weg ab Schritt 5.
 
-##Allgemeine Anmerkungen
+## Allgemeine Anmerkungen
 
 Eclipse hat manchmal kleine Bugs mit Java 11. Falls der Error 'Polling news feed' immer mal wieder ein kleines Fenster oeffnet empfehlen wir den folgenden Artikel als work around:
 https://stackoverflow.com/questions/52528693/eclipse-internal-error-polling-news-feeds
