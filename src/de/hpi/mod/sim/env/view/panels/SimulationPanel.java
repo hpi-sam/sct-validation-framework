@@ -22,6 +22,8 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	private ValueSetter setter;
 	private ImageIcon playIcon;
 	private ImageIcon pauseIcon;
+	private ImageIcon stopIcon;
+	private ImageIcon resetIcon;
 	
     public SimulationPanel(SimulationWorld world, ScenarioManager scenarioManager) {
     	this.world = world;
@@ -116,7 +118,9 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	}
 	
 	private JButton newStopButton() {
-		JButton stopButton = new JButton("Stop");
+		// JButton stopButton = new JButton("Stop");
+		JButton stopButton = new JButton();
+		stopButton.setIcon(stopIcon);
 		stopButton.addActionListener(e -> {
         	scenarioManager.clearScenario();
         });
@@ -129,11 +133,13 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 		restartButtonConstraints.gridx = 4;
 		restartButtonConstraints.gridy = 1;
 		restartButtonConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(80, 60, DriveSimFrame.MAIN_MENU_COLOR, restartButton), restartButtonConstraints);
+        add(new MenuWrapper(60, 60, DriveSimFrame.MAIN_MENU_COLOR, restartButton), restartButtonConstraints);
 	}
 	
 	private JButton newRestartButton() {
-		JButton restartButton = new JButton("Restart");
+		// JButton restartButton = new JButton("Restart");
+		JButton restartButton = new JButton();
+		restartButton.setIcon(resetIcon);
 		restartButton.addActionListener(e -> {
         	scenarioManager.restartScenario();
         });
@@ -143,6 +149,8 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	private void loadIcons() {
     	playIcon = new ImageIcon(SimulatorConfig.getStringPathToPlayIcon());
         pauseIcon = new ImageIcon(SimulatorConfig.getStringPathToPauseIcon());
+    	stopIcon = new ImageIcon(SimulatorConfig.getStringPathToStopIcon());
+    	resetIcon = new ImageIcon(SimulatorConfig.getStringPathToResetIcon());
 	}
 
 	public int getCurrentLevel() {

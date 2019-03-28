@@ -25,6 +25,8 @@ public class SimulatorConfig {
     public static final String STRING_PATH_TO_PACKAGE = "res/package.png";
     public static final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
     public static final String STRING_PATH_TO_PAUSE_ICON = "res/pause.png";
+    public static final String STRING_PATH_TO_STOP_ICON = "res/stop.png";
+    public static final String STRING_PATH_TO_RESET_ICON = "res/reset.png";
     public static final String URL_TO_EXPLOSION = "/explosion.gif"; //the gif needs to be loaded using getResource. For this reason the path looks different to the other paths
     public static final float DEFAULT_ROTATION_SPEED = .5f;
 	public static final long DEFAULT_UNLOADING_TIME = 1000;
@@ -86,6 +88,8 @@ public class SimulatorConfig {
     private static String stringPathToPackage = STRING_PATH_TO_PACKAGE;
     private static String stringPathToPlayIcon = STRING_PATH_TO_PLAY_ICON;
     private static String stringPathToPauseIcon = STRING_PATH_TO_PAUSE_ICON;
+    private static String stringPathToStopIcon = STRING_PATH_TO_STOP_ICON;
+    private static String stringPathToResetIcon = STRING_PATH_TO_RESET_ICON;
     private static String urlToExplosion = URL_TO_EXPLOSION;
     private static float defaultRotationSpeed = DEFAULT_ROTATION_SPEED;
    	private static long defaultUnloadingTime = DEFAULT_UNLOADING_TIME;
@@ -211,6 +215,14 @@ public class SimulatorConfig {
 		return stringPathToPauseIcon;
 	}
 	
+	public static String getStringPathToStopIcon() {
+		return stringPathToStopIcon;
+	}
+
+	
+	public static String getStringPathToResetIcon() {
+		return stringPathToResetIcon;
+	}
 	public static String getURLToExplosion() {
 		return urlToExplosion;
 	}
