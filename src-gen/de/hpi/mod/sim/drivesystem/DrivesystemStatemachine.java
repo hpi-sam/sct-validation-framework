@@ -342,7 +342,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2,
 		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2,
 		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2,
-		drive_System_driving__driving_trapped_,
 		$NullState$
 	};
 	
@@ -354,13 +353,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	private ITimer timer;
 	
 	private final boolean[] timeEvents = new boolean[1];
-	private boolean waitedForDeadlock;
+	private long waitedForDeadlock;
 	
-	protected void setWaitedForDeadlock(boolean value) {
+	protected void setWaitedForDeadlock(long value) {
 		waitedForDeadlock = value;
 	}
 	
-	protected boolean getWaitedForDeadlock() {
+	protected long getWaitedForDeadlock() {
 		return waitedForDeadlock;
 	}
 	
@@ -393,7 +392,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		}
 		clearEvents();
 		clearOutEvents();
-		setWaitedForDeadlock(false);
+		setWaitedForDeadlock(0);
 		
 		sCIPositionType.setWAYPOINT(0);
 		
@@ -530,9 +529,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
 				drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2_react(true);
 				break;
-			case drive_System_driving__driving_trapped_:
-				drive_System_driving__driving_trapped__react(true);
-				break;
 			default:
 				// $NullState$
 			}
@@ -597,7 +593,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			return stateVector[0] == State.drive_System_unloading__unloading_turning_left;
 		case drive_System_driving:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_trapped_.ordinal();
+					drive_System_driving.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2.ordinal();
 		case drive_System_driving__driving_on_waypoint_or_station:
 			return stateVector[0] == State.drive_System_driving__driving_on_waypoint_or_station;
 		case drive_System_driving__driving_waiting_in_station:
@@ -667,8 +663,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2;
 		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
 			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2;
-		case drive_System_driving__driving_trapped_:
-			return stateVector[0] == State.drive_System_driving__driving_trapped_;
 		default:
 			return false;
 		}
@@ -776,7 +770,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr0_tr0() {
-		return sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND();
+		return (sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND() && !sCIData.operationCallback.blockedCrossroadAhead());
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr1_tr1() {
@@ -791,16 +785,12 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return ((sCIData.operationCallback.targetDirection()==sCIDirection.getLEFT() && !sCIData.operationCallback.blockedWaypointLeft()) && !sCIData.operationCallback.blockedCrossroadAhead());
 	}
 	
-	private boolean check_Drive_System_driving__driving__choice_1_tr4_tr4() {
-		return sCIData.operationCallback.blockedCrossroadAhead();
-	}
-	
 	private boolean check_Drive_System_driving__driving__choice_2_tr1_tr1() {
-		return getWaitedForDeadlock();
+		return getWaitedForDeadlock()>5;
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_3_tr1_tr1() {
-		return ((((!sCIData.operationCallback.blockedCrossroadAhead() && sCIData.operationCallback.blockedWaypointAhead()) && sCIData.operationCallback.blockedWaypointLeft()) && sCIData.operationCallback.blockedWaypointRight()) && sCIData.operationCallback.posOrientation()==sCIOrientation.getSOUTH());
+		return ((((((!sCIData.operationCallback.blockedCrossroadAhead() && sCIData.operationCallback.blockedWaypointAhead()) && sCIData.operationCallback.blockedWaypointLeft()) && sCIData.operationCallback.blockedWaypointRight()) && sCIData.operationCallback.posOrientation()==sCIOrientation.getSOUTH())) || ((((sCIData.operationCallback.blockedCrossroadAhead() && sCIData.operationCallback.blockedRight()) && !sCIData.operationCallback.blockedFront()) && sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT())));
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_3_tr2_tr2() {
@@ -917,16 +907,10 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private void effect_Drive_System_driving__driving__choice_1_tr4() {
-		enterSequence_Drive_System_driving__driving_trapped__default();
-	}
-	
-	private void effect_Drive_System_driving__driving__choice_1_tr5() {
 		enterSequence_Drive_System_driving__driving_on_crossroad_default();
 	}
 	
 	private void effect_Drive_System_driving__driving__choice_2_tr1() {
-		setWaitedForDeadlock(false);
-		
 		enterSequence_Drive_System_driving__driving_entering_crossroad_default();
 	}
 	
@@ -1006,7 +990,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* Entry action for state 'waiting to ensure real deadlock'. */
 	private void entryAction_Drive_System_driving__driving_waiting_to_ensure_real_deadlock() {
-		timer.setTimer(this, 0, (5 * 1000), false);
+		timer.setTimer(this, 0, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'driving forward in station'. */
@@ -1047,6 +1031,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	/* Entry action for state 'entering crossroad'. */
 	private void entryAction_Drive_System_driving__driving_entering_crossroad() {
 		sCIActors.raiseDriveForward();
+		
+		setWaitedForDeadlock(0);
 	}
 	
 	/* Entry action for state 'forward1'. */
@@ -1358,12 +1344,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		stateVector[0] = State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2;
 	}
 	
-	/* 'default' enter sequence for state trapped! */
-	private void enterSequence_Drive_System_driving__driving_trapped__default() {
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__driving_trapped_;
-	}
-	
 	/* 'default' enter sequence for region Drive System */
 	private void enterSequence_Drive_System_default() {
 		react_Drive_System__entry_Default();
@@ -1627,12 +1607,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		stateVector[0] = State.$NullState$;
 	}
 	
-	/* Default exit sequence for state trapped! */
-	private void exitSequence_Drive_System_driving__driving_trapped_() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
 	/* Default exit sequence for region Drive System */
 	private void exitSequence_Drive_System() {
 		switch (stateVector[0]) {
@@ -1728,9 +1702,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			break;
 		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
 			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
-			break;
-		case drive_System_driving__driving_trapped_:
-			exitSequence_Drive_System_driving__driving_trapped_();
 			break;
 		default:
 			break;
@@ -1837,9 +1808,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			break;
 		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
 			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
-			break;
-		case drive_System_driving__driving_trapped_:
-			exitSequence_Drive_System_driving__driving_trapped_();
 			break;
 		default:
 			break;
@@ -1984,11 +1952,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 					if (check_Drive_System_driving__driving__choice_1_tr3_tr3()) {
 						effect_Drive_System_driving__driving__choice_1_tr3();
 					} else {
-						if (check_Drive_System_driving__driving__choice_1_tr4_tr4()) {
-							effect_Drive_System_driving__driving__choice_1_tr4();
-						} else {
-							effect_Drive_System_driving__driving__choice_1_tr5();
-						}
+						effect_Drive_System_driving__driving__choice_1_tr4();
 					}
 				}
 			}
@@ -2320,7 +2284,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		if (try_transition) {
 			if (timeEvents[0]) {
 				exitSequence_Drive_System_driving__driving_waiting_to_ensure_real_deadlock();
-				setWaitedForDeadlock(true);
+				setWaitedForDeadlock(getWaitedForDeadlock() + 1);
 				
 				enterSequence_Drive_System_driving__driving_waiting_on_waypoint_default();
 				drive_System_driving_react(false);
@@ -2793,18 +2757,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		}
 		if (did_transition==false) {
 			did_transition = drive_System_driving__driving_turning_around_on_crossroad_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving__driving_trapped__react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			did_transition = false;
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_react(try_transition);
 		}
 		return did_transition;
 	}
