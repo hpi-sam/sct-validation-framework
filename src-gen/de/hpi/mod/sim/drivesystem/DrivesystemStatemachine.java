@@ -306,40 +306,43 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	public enum State {
 		drive_System_idle,
 		drive_System_unloading,
-		drive_System_unloading__region0_waiting_for_orientation_check,
-		drive_System_unloading__region0_unloading,
-		drive_System_unloading__region0_turning_left,
+		drive_System_unloading__unloading_waiting_for_orientation_check,
+		drive_System_unloading__unloading_unloading,
+		drive_System_unloading__unloading_turning_left,
 		drive_System_driving,
-		drive_System_driving__region0_on_waypoint_or_station,
-		drive_System_driving__region0_waiting_in_station,
-		drive_System_driving__region0_waiting_on_waypoint,
-		drive_System_driving__region0_waiting_to_ensure_real_deadlock,
-		drive_System_driving__region0_on_crossroad,
-		drive_System_driving__region0_driving_forward_in_station,
-		drive_System_driving__region0_turning_right_in_station,
-		drive_System_driving__region0_turning_left_in_station,
-		drive_System_driving__region0_exiting_charging_position,
-		drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1,
-		drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2,
-		drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward,
-		drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3,
-		drive_System_driving__region0_turning_around_on_waypoint,
-		drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane,
-		drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad,
-		drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane,
-		drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane,
-		drive_System_driving__region0_entering_crossroad,
-		drive_System_driving__region0_leaving_crossroad_ahead,
-		drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1,
-		drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2,
-		drive_System_driving__region0_leaving_crossroad_to_right_side,
-		drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right,
-		drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward,
-		drive_System_driving__region0_leaving_crossroad_to_left_side,
-		drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1,
-		drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left,
-		drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2,
-		drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3,
+		drive_System_driving__driving_on_waypoint_or_station,
+		drive_System_driving__driving_waiting_in_station,
+		drive_System_driving__driving_waiting_on_waypoint,
+		drive_System_driving__driving_waiting_to_ensure_real_deadlock,
+		drive_System_driving__driving_on_crossroad,
+		drive_System_driving__driving_driving_forward_in_station,
+		drive_System_driving__driving_turning_right_in_station,
+		drive_System_driving__driving_turning_left_in_station,
+		drive_System_driving__driving_exiting_charging_position,
+		drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1,
+		drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2,
+		drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward,
+		drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3,
+		drive_System_driving__driving_entering_crossroad,
+		drive_System_driving__driving_leaving_crossroad_ahead,
+		drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1,
+		drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2,
+		drive_System_driving__driving_leaving_crossroad_to_right_side,
+		drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right,
+		drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward,
+		drive_System_driving__driving_leaving_crossroad_to_left_side,
+		drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1,
+		drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left,
+		drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2,
+		drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3,
+		drive_System_driving__driving_turning_around_on_crossroad,
+		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1,
+		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1,
+		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1,
+		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2,
+		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2,
+		drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2,
+		drive_System_driving__driving_trapped_,
 		$NullState$
 	};
 	
@@ -437,89 +440,98 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			case drive_System_idle:
 				drive_System_idle_react(true);
 				break;
-			case drive_System_unloading__region0_waiting_for_orientation_check:
-				drive_System_unloading__region0_waiting_for_orientation_check_react(true);
+			case drive_System_unloading__unloading_waiting_for_orientation_check:
+				drive_System_unloading__unloading_waiting_for_orientation_check_react(true);
 				break;
-			case drive_System_unloading__region0_unloading:
-				drive_System_unloading__region0_unloading_react(true);
+			case drive_System_unloading__unloading_unloading:
+				drive_System_unloading__unloading_unloading_react(true);
 				break;
-			case drive_System_unloading__region0_turning_left:
-				drive_System_unloading__region0_turning_left_react(true);
+			case drive_System_unloading__unloading_turning_left:
+				drive_System_unloading__unloading_turning_left_react(true);
 				break;
-			case drive_System_driving__region0_on_waypoint_or_station:
-				drive_System_driving__region0_on_waypoint_or_station_react(true);
+			case drive_System_driving__driving_on_waypoint_or_station:
+				drive_System_driving__driving_on_waypoint_or_station_react(true);
 				break;
-			case drive_System_driving__region0_waiting_in_station:
-				drive_System_driving__region0_waiting_in_station_react(true);
+			case drive_System_driving__driving_waiting_in_station:
+				drive_System_driving__driving_waiting_in_station_react(true);
 				break;
-			case drive_System_driving__region0_waiting_on_waypoint:
-				drive_System_driving__region0_waiting_on_waypoint_react(true);
+			case drive_System_driving__driving_waiting_on_waypoint:
+				drive_System_driving__driving_waiting_on_waypoint_react(true);
 				break;
-			case drive_System_driving__region0_waiting_to_ensure_real_deadlock:
-				drive_System_driving__region0_waiting_to_ensure_real_deadlock_react(true);
+			case drive_System_driving__driving_waiting_to_ensure_real_deadlock:
+				drive_System_driving__driving_waiting_to_ensure_real_deadlock_react(true);
 				break;
-			case drive_System_driving__region0_on_crossroad:
-				drive_System_driving__region0_on_crossroad_react(true);
+			case drive_System_driving__driving_on_crossroad:
+				drive_System_driving__driving_on_crossroad_react(true);
 				break;
-			case drive_System_driving__region0_driving_forward_in_station:
-				drive_System_driving__region0_driving_forward_in_station_react(true);
+			case drive_System_driving__driving_driving_forward_in_station:
+				drive_System_driving__driving_driving_forward_in_station_react(true);
 				break;
-			case drive_System_driving__region0_turning_right_in_station:
-				drive_System_driving__region0_turning_right_in_station_react(true);
+			case drive_System_driving__driving_turning_right_in_station:
+				drive_System_driving__driving_turning_right_in_station_react(true);
 				break;
-			case drive_System_driving__region0_turning_left_in_station:
-				drive_System_driving__region0_turning_left_in_station_react(true);
+			case drive_System_driving__driving_turning_left_in_station:
+				drive_System_driving__driving_turning_left_in_station_react(true);
 				break;
-			case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1:
-				drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1_react(true);
+			case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1:
+				drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1_react(true);
 				break;
-			case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2:
-				drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2_react(true);
+			case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2:
+				drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2_react(true);
 				break;
-			case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward:
-				drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward_react(true);
+			case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward:
+				drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward_react(true);
 				break;
-			case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3:
-				drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3_react(true);
+			case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3:
+				drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3_react(true);
 				break;
-			case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane:
-				drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane_react(true);
+			case drive_System_driving__driving_entering_crossroad:
+				drive_System_driving__driving_entering_crossroad_react(true);
 				break;
-			case drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad:
-				drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad_react(true);
+			case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
+				drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_react(true);
 				break;
-			case drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane:
-				drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane_react(true);
+			case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
+				drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_react(true);
 				break;
-			case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane:
-				drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane_react(true);
+			case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
+				drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_react(true);
 				break;
-			case drive_System_driving__region0_entering_crossroad:
-				drive_System_driving__region0_entering_crossroad_react(true);
+			case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
+				drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
-				drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_react(true);
+			case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
+				drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
-				drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_react(true);
+			case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
+				drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
-				drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_react(true);
+			case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
+				drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
-				drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_react(true);
+			case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
+				drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
-				drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_react(true);
+			case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1:
+				drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
-				drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_react(true);
+			case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1:
+				drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
-				drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_react(true);
+			case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1:
+				drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1_react(true);
 				break;
-			case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
-				drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_react(true);
+			case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2:
+				drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2_react(true);
+				break;
+			case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2:
+				drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2_react(true);
+				break;
+			case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
+				drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2_react(true);
+				break;
+			case drive_System_driving__driving_trapped_:
+				drive_System_driving__driving_trapped__react(true);
 				break;
 			default:
 				// $NullState$
@@ -576,81 +588,87 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			return stateVector[0] == State.drive_System_idle;
 		case drive_System_unloading:
 			return stateVector[0].ordinal() >= State.
-					drive_System_unloading.ordinal()&& stateVector[0].ordinal() <= State.drive_System_unloading__region0_turning_left.ordinal();
-		case drive_System_unloading__region0_waiting_for_orientation_check:
-			return stateVector[0] == State.drive_System_unloading__region0_waiting_for_orientation_check;
-		case drive_System_unloading__region0_unloading:
-			return stateVector[0] == State.drive_System_unloading__region0_unloading;
-		case drive_System_unloading__region0_turning_left:
-			return stateVector[0] == State.drive_System_unloading__region0_turning_left;
+					drive_System_unloading.ordinal()&& stateVector[0].ordinal() <= State.drive_System_unloading__unloading_turning_left.ordinal();
+		case drive_System_unloading__unloading_waiting_for_orientation_check:
+			return stateVector[0] == State.drive_System_unloading__unloading_waiting_for_orientation_check;
+		case drive_System_unloading__unloading_unloading:
+			return stateVector[0] == State.drive_System_unloading__unloading_unloading;
+		case drive_System_unloading__unloading_turning_left:
+			return stateVector[0] == State.drive_System_unloading__unloading_turning_left;
 		case drive_System_driving:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3.ordinal();
-		case drive_System_driving__region0_on_waypoint_or_station:
-			return stateVector[0] == State.drive_System_driving__region0_on_waypoint_or_station;
-		case drive_System_driving__region0_waiting_in_station:
-			return stateVector[0] == State.drive_System_driving__region0_waiting_in_station;
-		case drive_System_driving__region0_waiting_on_waypoint:
-			return stateVector[0] == State.drive_System_driving__region0_waiting_on_waypoint;
-		case drive_System_driving__region0_waiting_to_ensure_real_deadlock:
-			return stateVector[0] == State.drive_System_driving__region0_waiting_to_ensure_real_deadlock;
-		case drive_System_driving__region0_on_crossroad:
-			return stateVector[0] == State.drive_System_driving__region0_on_crossroad;
-		case drive_System_driving__region0_driving_forward_in_station:
-			return stateVector[0] == State.drive_System_driving__region0_driving_forward_in_station;
-		case drive_System_driving__region0_turning_right_in_station:
-			return stateVector[0] == State.drive_System_driving__region0_turning_right_in_station;
-		case drive_System_driving__region0_turning_left_in_station:
-			return stateVector[0] == State.drive_System_driving__region0_turning_left_in_station;
-		case drive_System_driving__region0_exiting_charging_position:
+					drive_System_driving.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_trapped_.ordinal();
+		case drive_System_driving__driving_on_waypoint_or_station:
+			return stateVector[0] == State.drive_System_driving__driving_on_waypoint_or_station;
+		case drive_System_driving__driving_waiting_in_station:
+			return stateVector[0] == State.drive_System_driving__driving_waiting_in_station;
+		case drive_System_driving__driving_waiting_on_waypoint:
+			return stateVector[0] == State.drive_System_driving__driving_waiting_on_waypoint;
+		case drive_System_driving__driving_waiting_to_ensure_real_deadlock:
+			return stateVector[0] == State.drive_System_driving__driving_waiting_to_ensure_real_deadlock;
+		case drive_System_driving__driving_on_crossroad:
+			return stateVector[0] == State.drive_System_driving__driving_on_crossroad;
+		case drive_System_driving__driving_driving_forward_in_station:
+			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station;
+		case drive_System_driving__driving_turning_right_in_station:
+			return stateVector[0] == State.drive_System_driving__driving_turning_right_in_station;
+		case drive_System_driving__driving_turning_left_in_station:
+			return stateVector[0] == State.drive_System_driving__driving_turning_left_in_station;
+		case drive_System_driving__driving_exiting_charging_position:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving__region0_exiting_charging_position.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3.ordinal();
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1:
-			return stateVector[0] == State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2:
-			return stateVector[0] == State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward:
-			return stateVector[0] == State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3:
-			return stateVector[0] == State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3;
-		case drive_System_driving__region0_turning_around_on_waypoint:
+					drive_System_driving__driving_exiting_charging_position.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3.ordinal();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1:
+			return stateVector[0] == State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1;
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2:
+			return stateVector[0] == State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2;
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward:
+			return stateVector[0] == State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward;
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3:
+			return stateVector[0] == State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3;
+		case drive_System_driving__driving_entering_crossroad:
+			return stateVector[0] == State.drive_System_driving__driving_entering_crossroad;
+		case drive_System_driving__driving_leaving_crossroad_ahead:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving__region0_turning_around_on_waypoint.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane.ordinal();
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane:
-			return stateVector[0] == State.drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad:
-			return stateVector[0] == State.drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane:
-			return stateVector[0] == State.drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane:
-			return stateVector[0] == State.drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane;
-		case drive_System_driving__region0_entering_crossroad:
-			return stateVector[0] == State.drive_System_driving__region0_entering_crossroad;
-		case drive_System_driving__region0_leaving_crossroad_ahead:
+					drive_System_driving__driving_leaving_crossroad_ahead.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2.ordinal();
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1;
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2;
+		case drive_System_driving__driving_leaving_crossroad_to_right_side:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving__region0_leaving_crossroad_ahead.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2.ordinal();
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1;
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2;
-		case drive_System_driving__region0_leaving_crossroad_to_right_side:
+					drive_System_driving__driving_leaving_crossroad_to_right_side.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward.ordinal();
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right;
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward;
+		case drive_System_driving__driving_leaving_crossroad_to_left_side:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving__region0_leaving_crossroad_to_right_side.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward.ordinal();
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right;
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side:
+					drive_System_driving__driving_leaving_crossroad_to_left_side.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3.ordinal();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1;
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left;
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2;
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
+			return stateVector[0] == State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3;
+		case drive_System_driving__driving_turning_around_on_crossroad:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving__region0_leaving_crossroad_to_left_side.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3.ordinal();
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
-			return stateVector[0] == State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3;
+					drive_System_driving__driving_turning_around_on_crossroad.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2.ordinal();
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1:
+			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1:
+			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1:
+			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2:
+			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2:
+			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
+			return stateVector[0] == State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2;
+		case drive_System_driving__driving_trapped_:
+			return stateVector[0] == State.drive_System_driving__driving_trapped_;
 		default:
 			return false;
 		}
@@ -737,60 +755,76 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCInterface.raiseActionCompleted();
 	}
 	
-	private boolean check_Drive_System_unloading__region0__choice_0_tr0_tr0() {
+	private boolean check_Drive_System_unloading__unloading__choice_0_tr0_tr0() {
 		return sCIData.operationCallback.posOrientation()==sCIOrientation.getEAST();
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_0_tr1_tr1() {
-		return (sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD() && !sCIData.operationCallback.blockedFront());
+	private boolean check_Drive_System_driving__driving__choice_0_tr0_tr0() {
+		return sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD();
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_0_tr2_tr2() {
+	private boolean check_Drive_System_driving__driving__choice_0_tr1_tr1() {
 		return sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT();
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_0_tr3_tr3() {
+	private boolean check_Drive_System_driving__driving__choice_0_tr2_tr2() {
 		return sCIData.operationCallback.targetDirection()==sCIDirection.getLEFT();
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_0_tr4_tr4() {
+	private boolean check_Drive_System_driving__driving__choice_0_tr3_tr3() {
 		return sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND();
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_1_tr1_tr1() {
+	private boolean check_Drive_System_driving__driving__choice_1_tr0_tr0() {
+		return sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND();
+	}
+	
+	private boolean check_Drive_System_driving__driving__choice_1_tr1_tr1() {
 		return (sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD() && !sCIData.operationCallback.blockedWaypointAhead());
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_1_tr2_tr2() {
+	private boolean check_Drive_System_driving__driving__choice_1_tr2_tr2() {
 		return (sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT() && !sCIData.operationCallback.blockedWaypointRight());
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_1_tr3_tr3() {
-		return ((sCIData.operationCallback.targetDirection()==sCIDirection.getLEFT() && !sCIData.operationCallback.blockedWaypointLeft()) && !sCIData.operationCallback.blockedWaypointAhead());
+	private boolean check_Drive_System_driving__driving__choice_1_tr3_tr3() {
+		return ((sCIData.operationCallback.targetDirection()==sCIDirection.getLEFT() && !sCIData.operationCallback.blockedWaypointLeft()) && !sCIData.operationCallback.blockedCrossroadAhead());
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_2_tr1_tr1() {
+	private boolean check_Drive_System_driving__driving__choice_1_tr4_tr4() {
+		return sCIData.operationCallback.blockedCrossroadAhead();
+	}
+	
+	private boolean check_Drive_System_driving__driving__choice_2_tr1_tr1() {
 		return getWaitedForDeadlock();
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_3_tr1_tr1() {
+	private boolean check_Drive_System_driving__driving__choice_3_tr1_tr1() {
 		return ((((!sCIData.operationCallback.blockedCrossroadAhead() && sCIData.operationCallback.blockedWaypointAhead()) && sCIData.operationCallback.blockedWaypointLeft()) && sCIData.operationCallback.blockedWaypointRight()) && sCIData.operationCallback.posOrientation()==sCIOrientation.getSOUTH());
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_3_tr2_tr2() {
+	private boolean check_Drive_System_driving__driving__choice_3_tr2_tr2() {
 		return (!sCIData.operationCallback.blockedCrossroadAhead() && !sCIData.operationCallback.blockedWaypointRight());
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_5_tr1_tr1() {
-		return sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND();
-	}
-	
-	private boolean check_Drive_System_driving__region0__choice_7_tr1_tr1() {
+	private boolean check_Drive_System_driving__driving__choice_5_tr0_tr0() {
 		return sCIData.operationCallback.isTargetReached();
 	}
 	
-	private boolean check_Drive_System_driving__region0__choice_8_tr1_tr1() {
+	private boolean check_Drive_System_driving__driving__choice_6_tr0_tr0() {
 		return sCIData.operationCallback.posType()==sCIPositionType.getWAYPOINT();
+	}
+	
+	private boolean check_Drive_System_driving__driving__choice_8_tr0_tr0() {
+		return !sCIData.operationCallback.blockedFront();
+	}
+	
+	private boolean check_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0_tr0_tr0() {
+		return !sCIData.operationCallback.blockedFront();
+	}
+	
+	private boolean check_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1_tr0_tr0() {
+		return !sCIData.operationCallback.blockedFront();
 	}
 	
 	private void effect_Drive_System_unloading_tr0() {
@@ -801,7 +835,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		react();
 	}
 	
-	private void effect_Drive_System_driving_tr0() {
+	private void effect_Drive_System_driving_tr1() {
 		exitSequence_Drive_System_driving();
 		sCIProcessor.raiseArrived();
 		
@@ -809,248 +843,274 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		react();
 	}
 	
-	private void effect_Drive_System_driving__region0_exiting_charging_position_tr0() {
-		exitSequence_Drive_System_driving__region0_exiting_charging_position();
-		react_Drive_System_driving__region0__choice_9();
+	private void effect_Drive_System_driving__driving_exiting_charging_position_tr0() {
+		exitSequence_Drive_System_driving__driving_exiting_charging_position();
+		react_Drive_System_driving__driving__choice_7();
 	}
 	
-	private void effect_Drive_System_driving__region0_turning_around_on_waypoint_tr0() {
-		exitSequence_Drive_System_driving__region0_turning_around_on_waypoint();
-		react_Drive_System_driving__region0__choice_9();
-	}
-	
-	private void effect_Drive_System_driving__region0_leaving_crossroad_ahead_tr0() {
-		exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead();
-		enterSequence_Drive_System_driving__region0_on_waypoint_or_station_default();
+	private void effect_Drive_System_driving__driving_leaving_crossroad_ahead_tr0() {
+		exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead();
+		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
 		drive_System_driving_react(false);
 	}
 	
-	private void effect_Drive_System_driving__region0_leaving_crossroad_to_right_side_tr0() {
-		exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side();
-		enterSequence_Drive_System_driving__region0_on_waypoint_or_station_default();
+	private void effect_Drive_System_driving__driving_leaving_crossroad_to_right_side_tr0() {
+		exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side();
+		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
 		drive_System_driving_react(false);
 	}
 	
-	private void effect_Drive_System_driving__region0_leaving_crossroad_to_left_side_tr0() {
-		exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side();
-		enterSequence_Drive_System_driving__region0_on_waypoint_or_station_default();
+	private void effect_Drive_System_driving__driving_leaving_crossroad_to_left_side_tr0() {
+		exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side();
+		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
 		drive_System_driving_react(false);
 	}
 	
-	private void effect_Drive_System_unloading__region0__choice_0_tr0() {
-		enterSequence_Drive_System_unloading__region0_unloading_default();
+	private void effect_Drive_System_driving__driving_turning_around_on_crossroad_tr0() {
+		exitSequence_Drive_System_driving__driving_turning_around_on_crossroad();
+		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
+		drive_System_driving_react(false);
 	}
 	
-	private void effect_Drive_System_unloading__region0__choice_0_tr1() {
-		enterSequence_Drive_System_unloading__region0_turning_left_default();
+	private void effect_Drive_System_unloading__unloading__choice_0_tr0() {
+		enterSequence_Drive_System_unloading__unloading_unloading_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_0_tr1() {
-		enterSequence_Drive_System_driving__region0_driving_forward_in_station_default();
+	private void effect_Drive_System_unloading__unloading__choice_0_tr1() {
+		enterSequence_Drive_System_unloading__unloading_turning_left_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_0_tr2() {
-		enterSequence_Drive_System_driving__region0_turning_right_in_station_default();
+	private void effect_Drive_System_driving__driving__choice_0_tr0() {
+		react_Drive_System_driving__driving__choice_8();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_0_tr3() {
-		enterSequence_Drive_System_driving__region0_turning_left_in_station_default();
+	private void effect_Drive_System_driving__driving__choice_0_tr1() {
+		enterSequence_Drive_System_driving__driving_turning_right_in_station_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_0_tr4() {
-		enterSequence_Drive_System_driving__region0_exiting_charging_position_default();
+	private void effect_Drive_System_driving__driving__choice_0_tr2() {
+		enterSequence_Drive_System_driving__driving_turning_left_in_station_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_0_tr0() {
-		enterSequence_Drive_System_driving__region0_waiting_in_station_default();
+	private void effect_Drive_System_driving__driving__choice_0_tr3() {
+		enterSequence_Drive_System_driving__driving_exiting_charging_position_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_1_tr1() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead_default();
+	private void effect_Drive_System_driving__driving__choice_0_tr4() {
+		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_1_tr2() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side_default();
+	private void effect_Drive_System_driving__driving__choice_1_tr0() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_1_tr3() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side_default();
+	private void effect_Drive_System_driving__driving__choice_1_tr1() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_1_tr0() {
-		enterSequence_Drive_System_driving__region0_on_crossroad_default();
+	private void effect_Drive_System_driving__driving__choice_1_tr2() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_2_tr1() {
+	private void effect_Drive_System_driving__driving__choice_1_tr3() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side_default();
+	}
+	
+	private void effect_Drive_System_driving__driving__choice_1_tr4() {
+		enterSequence_Drive_System_driving__driving_trapped__default();
+	}
+	
+	private void effect_Drive_System_driving__driving__choice_1_tr5() {
+		enterSequence_Drive_System_driving__driving_on_crossroad_default();
+	}
+	
+	private void effect_Drive_System_driving__driving__choice_2_tr1() {
 		setWaitedForDeadlock(false);
 		
-		enterSequence_Drive_System_driving__region0_entering_crossroad_default();
+		enterSequence_Drive_System_driving__driving_entering_crossroad_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_2_tr0() {
-		enterSequence_Drive_System_driving__region0_waiting_to_ensure_real_deadlock_default();
+	private void effect_Drive_System_driving__driving__choice_2_tr0() {
+		enterSequence_Drive_System_driving__driving_waiting_to_ensure_real_deadlock_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_3_tr1() {
-		react_Drive_System_driving__region0__choice_2();
+	private void effect_Drive_System_driving__driving__choice_3_tr1() {
+		react_Drive_System_driving__driving__choice_2();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_3_tr2() {
-		enterSequence_Drive_System_driving__region0_entering_crossroad_default();
+	private void effect_Drive_System_driving__driving__choice_3_tr2() {
+		enterSequence_Drive_System_driving__driving_entering_crossroad_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_3_tr0() {
-		enterSequence_Drive_System_driving__region0_waiting_on_waypoint_default();
+	private void effect_Drive_System_driving__driving__choice_3_tr0() {
+		enterSequence_Drive_System_driving__driving_waiting_on_waypoint_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_4_tr0() {
-		react_Drive_System_driving__region0__choice_3();
+	private void effect_Drive_System_driving__driving__choice_4_tr0() {
+		react_Drive_System_driving__driving__choice_3();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_5_tr1() {
-		enterSequence_Drive_System_driving__region0_turning_around_on_waypoint_default();
+	private void effect_Drive_System_driving__driving__choice_5_tr0() {
+		react_Drive_System_driving__driving__exit_Default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_5_tr0() {
-		react_Drive_System_driving__region0__choice_4();
+	private void effect_Drive_System_driving__driving__choice_5_tr1() {
+		react_Drive_System_driving__driving__choice_6();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_6_tr0() {
-		react_Drive_System_driving__region0__choice_0();
+	private void effect_Drive_System_driving__driving__choice_6_tr0() {
+		react_Drive_System_driving__driving__choice_4();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_7_tr1() {
-		react_Drive_System_driving__region0__exit_Default();
+	private void effect_Drive_System_driving__driving__choice_6_tr1() {
+		react_Drive_System_driving__driving__choice_0();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_7_tr0() {
-		react_Drive_System_driving__region0__choice_8();
+	private void effect_Drive_System_driving__driving__choice_7_tr0() {
+		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_8_tr1() {
-		react_Drive_System_driving__region0__choice_5();
+	private void effect_Drive_System_driving__driving__choice_8_tr0() {
+		enterSequence_Drive_System_driving__driving_driving_forward_in_station_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_8_tr0() {
-		react_Drive_System_driving__region0__choice_6();
+	private void effect_Drive_System_driving__driving__choice_8_tr1() {
+		enterSequence_Drive_System_driving__driving_waiting_in_station_default();
 	}
 	
-	private void effect_Drive_System_driving__region0__choice_9_tr0() {
-		enterSequence_Drive_System_driving__region0_on_waypoint_or_station_default();
+	private void effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0_tr0() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1_default();
+	}
+	
+	private void effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0_tr1() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1_default();
+	}
+	
+	private void effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1_tr0() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2_default();
+	}
+	
+	private void effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1_tr1() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2_default();
 	}
 	
 	/* Entry action for state 'unloading'. */
-	private void entryAction_Drive_System_unloading__region0_unloading() {
+	private void entryAction_Drive_System_unloading__unloading_unloading() {
 		sCIActors.raiseStartUnload();
 	}
 	
 	/* Entry action for state 'turning left'. */
-	private void entryAction_Drive_System_unloading__region0_turning_left() {
+	private void entryAction_Drive_System_unloading__unloading_turning_left() {
 		sCIActors.raiseTurnLeft();
 	}
 	
 	/* Entry action for state 'waiting to ensure real deadlock'. */
-	private void entryAction_Drive_System_driving__region0_waiting_to_ensure_real_deadlock() {
+	private void entryAction_Drive_System_driving__driving_waiting_to_ensure_real_deadlock() {
 		timer.setTimer(this, 0, (5 * 1000), false);
 	}
 	
 	/* Entry action for state 'driving forward in station'. */
-	private void entryAction_Drive_System_driving__region0_driving_forward_in_station() {
+	private void entryAction_Drive_System_driving__driving_driving_forward_in_station() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'turning right in station'. */
-	private void entryAction_Drive_System_driving__region0_turning_right_in_station() {
+	private void entryAction_Drive_System_driving__driving_turning_right_in_station() {
 		sCIActors.raiseTurnRight();
 	}
 	
 	/* Entry action for state 'turning left in station'. */
-	private void entryAction_Drive_System_driving__region0_turning_left_in_station() {
+	private void entryAction_Drive_System_driving__driving_turning_left_in_station() {
 		sCIActors.raiseTurnLeft();
 	}
 	
 	/* Entry action for state 'right1'. */
-	private void entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1() {
+	private void entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1() {
 		sCIActors.raiseTurnRight();
 	}
 	
 	/* Entry action for state 'right2'. */
-	private void entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2() {
+	private void entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2() {
 		sCIActors.raiseTurnRight();
 	}
 	
 	/* Entry action for state 'forward'. */
-	private void entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward() {
+	private void entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'right3'. */
-	private void entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3() {
+	private void entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3() {
 		sCIActors.raiseTurnRight();
 	}
 	
-	/* Entry action for state 'turning left to change lane'. */
-	private void entryAction_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane() {
-		sCIActors.raiseTurnLeft();
-	}
-	
-	/* Entry action for state 'switching lane'. */
-	private void entryAction_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane() {
-		sCIActors.raiseDriveForward();
-	}
-	
-	/* Entry action for state 'turning left on new lane'. */
-	private void entryAction_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane() {
-		sCIActors.raiseTurnLeft();
-	}
-	
 	/* Entry action for state 'entering crossroad'. */
-	private void entryAction_Drive_System_driving__region0_entering_crossroad() {
+	private void entryAction_Drive_System_driving__driving_entering_crossroad() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'forward1'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'forward2'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'right'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right() {
 		sCIActors.raiseTurnRight();
 	}
 	
 	/* Entry action for state 'forward'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'forward1'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'left'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left() {
 		sCIActors.raiseTurnLeft();
 	}
 	
 	/* Entry action for state 'forward2'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Entry action for state 'forward3'. */
-	private void entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3() {
+	private void entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3() {
+		sCIActors.raiseDriveForward();
+	}
+	
+	/* Entry action for state 'turining left 1'. */
+	private void entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1() {
+		sCIActors.raiseTurnLeft();
+	}
+	
+	/* Entry action for state 'driving forward 1'. */
+	private void entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1() {
+		sCIActors.raiseDriveForward();
+	}
+	
+	/* Entry action for state 'turining left 2'. */
+	private void entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2() {
+		sCIActors.raiseTurnLeft();
+	}
+	
+	/* Entry action for state 'driving forward 2'. */
+	private void entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2() {
 		sCIActors.raiseDriveForward();
 	}
 	
 	/* Exit action for state 'waiting to ensure real deadlock'. */
-	private void exitAction_Drive_System_driving__region0_waiting_to_ensure_real_deadlock() {
+	private void exitAction_Drive_System_driving__driving_waiting_to_ensure_real_deadlock() {
 		timer.unsetTimer(this, 0);
 	}
 	
@@ -1062,227 +1122,246 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* 'default' enter sequence for state unloading */
 	private void enterSequence_Drive_System_unloading_default() {
-		enterSequence_Drive_System_unloading__region0_default();
+		enterSequence_Drive_System_unloading__unloading_default();
 	}
 	
 	/* 'default' enter sequence for state waiting for orientation check */
-	private void enterSequence_Drive_System_unloading__region0_waiting_for_orientation_check_default() {
+	private void enterSequence_Drive_System_unloading__unloading_waiting_for_orientation_check_default() {
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_unloading__region0_waiting_for_orientation_check;
+		stateVector[0] = State.drive_System_unloading__unloading_waiting_for_orientation_check;
 	}
 	
 	/* 'default' enter sequence for state unloading */
-	private void enterSequence_Drive_System_unloading__region0_unloading_default() {
-		entryAction_Drive_System_unloading__region0_unloading();
+	private void enterSequence_Drive_System_unloading__unloading_unloading_default() {
+		entryAction_Drive_System_unloading__unloading_unloading();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_unloading__region0_unloading;
+		stateVector[0] = State.drive_System_unloading__unloading_unloading;
 	}
 	
 	/* 'default' enter sequence for state turning left */
-	private void enterSequence_Drive_System_unloading__region0_turning_left_default() {
-		entryAction_Drive_System_unloading__region0_turning_left();
+	private void enterSequence_Drive_System_unloading__unloading_turning_left_default() {
+		entryAction_Drive_System_unloading__unloading_turning_left();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_unloading__region0_turning_left;
+		stateVector[0] = State.drive_System_unloading__unloading_turning_left;
 	}
 	
 	/* 'default' enter sequence for state driving */
 	private void enterSequence_Drive_System_driving_default() {
-		enterSequence_Drive_System_driving__region0_default();
+		enterSequence_Drive_System_driving__driving_default();
 	}
 	
 	/* 'default' enter sequence for state on waypoint or station */
-	private void enterSequence_Drive_System_driving__region0_on_waypoint_or_station_default() {
+	private void enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default() {
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_on_waypoint_or_station;
+		stateVector[0] = State.drive_System_driving__driving_on_waypoint_or_station;
 	}
 	
 	/* 'default' enter sequence for state waiting in station */
-	private void enterSequence_Drive_System_driving__region0_waiting_in_station_default() {
+	private void enterSequence_Drive_System_driving__driving_waiting_in_station_default() {
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_waiting_in_station;
+		stateVector[0] = State.drive_System_driving__driving_waiting_in_station;
 	}
 	
 	/* 'default' enter sequence for state waiting on waypoint */
-	private void enterSequence_Drive_System_driving__region0_waiting_on_waypoint_default() {
+	private void enterSequence_Drive_System_driving__driving_waiting_on_waypoint_default() {
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_waiting_on_waypoint;
+		stateVector[0] = State.drive_System_driving__driving_waiting_on_waypoint;
 	}
 	
 	/* 'default' enter sequence for state waiting to ensure real deadlock */
-	private void enterSequence_Drive_System_driving__region0_waiting_to_ensure_real_deadlock_default() {
-		entryAction_Drive_System_driving__region0_waiting_to_ensure_real_deadlock();
+	private void enterSequence_Drive_System_driving__driving_waiting_to_ensure_real_deadlock_default() {
+		entryAction_Drive_System_driving__driving_waiting_to_ensure_real_deadlock();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_waiting_to_ensure_real_deadlock;
+		stateVector[0] = State.drive_System_driving__driving_waiting_to_ensure_real_deadlock;
 	}
 	
 	/* 'default' enter sequence for state on crossroad */
-	private void enterSequence_Drive_System_driving__region0_on_crossroad_default() {
+	private void enterSequence_Drive_System_driving__driving_on_crossroad_default() {
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_on_crossroad;
+		stateVector[0] = State.drive_System_driving__driving_on_crossroad;
 	}
 	
 	/* 'default' enter sequence for state driving forward in station */
-	private void enterSequence_Drive_System_driving__region0_driving_forward_in_station_default() {
-		entryAction_Drive_System_driving__region0_driving_forward_in_station();
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station_default() {
+		entryAction_Drive_System_driving__driving_driving_forward_in_station();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_driving_forward_in_station;
+		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station;
 	}
 	
 	/* 'default' enter sequence for state turning right in station */
-	private void enterSequence_Drive_System_driving__region0_turning_right_in_station_default() {
-		entryAction_Drive_System_driving__region0_turning_right_in_station();
+	private void enterSequence_Drive_System_driving__driving_turning_right_in_station_default() {
+		entryAction_Drive_System_driving__driving_turning_right_in_station();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_turning_right_in_station;
+		stateVector[0] = State.drive_System_driving__driving_turning_right_in_station;
 	}
 	
 	/* 'default' enter sequence for state turning left in station */
-	private void enterSequence_Drive_System_driving__region0_turning_left_in_station_default() {
-		entryAction_Drive_System_driving__region0_turning_left_in_station();
+	private void enterSequence_Drive_System_driving__driving_turning_left_in_station_default() {
+		entryAction_Drive_System_driving__driving_turning_left_in_station();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_turning_left_in_station;
+		stateVector[0] = State.drive_System_driving__driving_turning_left_in_station;
 	}
 	
 	/* 'default' enter sequence for state exiting charging position */
-	private void enterSequence_Drive_System_driving__region0_exiting_charging_position_default() {
-		enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_default();
+	private void enterSequence_Drive_System_driving__driving_exiting_charging_position_default() {
+		enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_default();
 	}
 	
 	/* 'default' enter sequence for state right1 */
-	private void enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1_default() {
-		entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1();
+	private void enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1_default() {
+		entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1;
+		stateVector[0] = State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1;
 	}
 	
 	/* 'default' enter sequence for state right2 */
-	private void enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2_default() {
-		entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2();
+	private void enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2_default() {
+		entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2;
+		stateVector[0] = State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2;
 	}
 	
 	/* 'default' enter sequence for state forward */
-	private void enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward_default() {
-		entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward();
+	private void enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward_default() {
+		entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward;
+		stateVector[0] = State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward;
 	}
 	
 	/* 'default' enter sequence for state right3 */
-	private void enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3_default() {
-		entryAction_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3();
+	private void enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3_default() {
+		entryAction_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3;
-	}
-	
-	/* 'default' enter sequence for state turning around on waypoint */
-	private void enterSequence_Drive_System_driving__region0_turning_around_on_waypoint_default() {
-		enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_default();
-	}
-	
-	/* 'default' enter sequence for state turning left to change lane */
-	private void enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane_default() {
-		entryAction_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane;
-	}
-	
-	/* 'default' enter sequence for state waiting for free crossroad */
-	private void enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad_default() {
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad;
-	}
-	
-	/* 'default' enter sequence for state switching lane */
-	private void enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane_default() {
-		entryAction_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane;
-	}
-	
-	/* 'default' enter sequence for state turning left on new lane */
-	private void enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane_default() {
-		entryAction_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane;
+		stateVector[0] = State.drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3;
 	}
 	
 	/* 'default' enter sequence for state entering crossroad */
-	private void enterSequence_Drive_System_driving__region0_entering_crossroad_default() {
-		entryAction_Drive_System_driving__region0_entering_crossroad();
+	private void enterSequence_Drive_System_driving__driving_entering_crossroad_default() {
+		entryAction_Drive_System_driving__driving_entering_crossroad();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_entering_crossroad;
+		stateVector[0] = State.drive_System_driving__driving_entering_crossroad;
 	}
 	
 	/* 'default' enter sequence for state leaving crossroad ahead */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead_default() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_default();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead_default() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_default();
 	}
 	
 	/* 'default' enter sequence for state forward1 */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1;
 	}
 	
 	/* 'default' enter sequence for state forward2 */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2;
 	}
 	
 	/* 'default' enter sequence for state leaving crossroad to right side */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side_default() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_default();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side_default() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_default();
 	}
 	
 	/* 'default' enter sequence for state right */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right;
 	}
 	
 	/* 'default' enter sequence for state forward */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward;
 	}
 	
 	/* 'default' enter sequence for state leaving crossroad to left side */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side_default() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side_default() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default();
 	}
 	
 	/* 'default' enter sequence for state forward1 */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1;
 	}
 	
 	/* 'default' enter sequence for state left */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left;
 	}
 	
 	/* 'default' enter sequence for state forward2 */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2;
 	}
 	
 	/* 'default' enter sequence for state forward3 */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_default() {
-		entryAction_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_default() {
+		entryAction_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3;
+		stateVector[0] = State.drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3;
+	}
+	
+	/* 'default' enter sequence for state turning around on crossroad */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad_default() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_default();
+	}
+	
+	/* 'default' enter sequence for state turining left 1 */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1_default() {
+		entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1;
+	}
+	
+	/* 'default' enter sequence for state waiting to drive forward 1 */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1_default() {
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1;
+	}
+	
+	/* 'default' enter sequence for state driving forward 1 */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1_default() {
+		entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1;
+	}
+	
+	/* 'default' enter sequence for state turining left 2 */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2_default() {
+		entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2;
+	}
+	
+	/* 'default' enter sequence for state waiting to drive forward 2 */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2_default() {
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2;
+	}
+	
+	/* 'default' enter sequence for state driving forward 2 */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2_default() {
+		entryAction_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2;
+	}
+	
+	/* 'default' enter sequence for state trapped! */
+	private void enterSequence_Drive_System_driving__driving_trapped__default() {
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_trapped_;
 	}
 	
 	/* 'default' enter sequence for region Drive System */
@@ -1290,39 +1369,39 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		react_Drive_System__entry_Default();
 	}
 	
-	/* 'default' enter sequence for region  */
-	private void enterSequence_Drive_System_unloading__region0_default() {
-		react_Drive_System_unloading__region0__entry_Default();
+	/* 'default' enter sequence for region _unloading */
+	private void enterSequence_Drive_System_unloading__unloading_default() {
+		react_Drive_System_unloading__unloading__entry_Default();
 	}
 	
-	/* 'default' enter sequence for region null */
-	private void enterSequence_Drive_System_driving__region0_default() {
-		react_Drive_System_driving__region0__entry_Default();
+	/* 'default' enter sequence for region _driving */
+	private void enterSequence_Drive_System_driving__driving_default() {
+		react_Drive_System_driving__driving__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _inStationExitCharger */
-	private void enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_default() {
-		react_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger__entry_Default();
-	}
-	
-	/* 'default' enter sequence for region null */
-	private void enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_default() {
-		react_Drive_System_driving__region0_turning_around_on_waypoint__region0__entry_Default();
+	private void enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_default() {
+		react_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _onCrossroadDriveForward */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_default() {
-		react_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward__entry_Default();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_default() {
+		react_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _onCrossroadDriveRight */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_default() {
-		react_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_default() {
+		react_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _onCrossroadDriveLeft */
-	private void enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default() {
-		react_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default();
+	private void enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default() {
+		react_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region _turningAroundOnCrossroad */
+	private void enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_default() {
+		react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__entry_Default();
 	}
 	
 	/* Default exit sequence for state idle */
@@ -1333,205 +1412,223 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* Default exit sequence for state unloading */
 	private void exitSequence_Drive_System_unloading() {
-		exitSequence_Drive_System_unloading__region0();
+		exitSequence_Drive_System_unloading__unloading();
 	}
 	
 	/* Default exit sequence for state waiting for orientation check */
-	private void exitSequence_Drive_System_unloading__region0_waiting_for_orientation_check() {
+	private void exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state unloading */
-	private void exitSequence_Drive_System_unloading__region0_unloading() {
+	private void exitSequence_Drive_System_unloading__unloading_unloading() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state turning left */
-	private void exitSequence_Drive_System_unloading__region0_turning_left() {
+	private void exitSequence_Drive_System_unloading__unloading_turning_left() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state driving */
 	private void exitSequence_Drive_System_driving() {
-		exitSequence_Drive_System_driving__region0();
+		exitSequence_Drive_System_driving__driving();
 	}
 	
 	/* Default exit sequence for state on waypoint or station */
-	private void exitSequence_Drive_System_driving__region0_on_waypoint_or_station() {
+	private void exitSequence_Drive_System_driving__driving_on_waypoint_or_station() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state waiting in station */
-	private void exitSequence_Drive_System_driving__region0_waiting_in_station() {
+	private void exitSequence_Drive_System_driving__driving_waiting_in_station() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state waiting on waypoint */
-	private void exitSequence_Drive_System_driving__region0_waiting_on_waypoint() {
+	private void exitSequence_Drive_System_driving__driving_waiting_on_waypoint() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state waiting to ensure real deadlock */
-	private void exitSequence_Drive_System_driving__region0_waiting_to_ensure_real_deadlock() {
+	private void exitSequence_Drive_System_driving__driving_waiting_to_ensure_real_deadlock() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 		
-		exitAction_Drive_System_driving__region0_waiting_to_ensure_real_deadlock();
+		exitAction_Drive_System_driving__driving_waiting_to_ensure_real_deadlock();
 	}
 	
 	/* Default exit sequence for state on crossroad */
-	private void exitSequence_Drive_System_driving__region0_on_crossroad() {
+	private void exitSequence_Drive_System_driving__driving_on_crossroad() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state driving forward in station */
-	private void exitSequence_Drive_System_driving__region0_driving_forward_in_station() {
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state turning right in station */
-	private void exitSequence_Drive_System_driving__region0_turning_right_in_station() {
+	private void exitSequence_Drive_System_driving__driving_turning_right_in_station() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state turning left in station */
-	private void exitSequence_Drive_System_driving__region0_turning_left_in_station() {
+	private void exitSequence_Drive_System_driving__driving_turning_left_in_station() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state exiting charging position */
-	private void exitSequence_Drive_System_driving__region0_exiting_charging_position() {
-		exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger();
+	private void exitSequence_Drive_System_driving__driving_exiting_charging_position() {
+		exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger();
 	}
 	
 	/* Default exit sequence for state right1 */
-	private void exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1() {
+	private void exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state right2 */
-	private void exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2() {
+	private void exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state forward */
-	private void exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward() {
+	private void exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state right3 */
-	private void exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state turning around on waypoint */
-	private void exitSequence_Drive_System_driving__region0_turning_around_on_waypoint() {
-		exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0();
-	}
-	
-	/* Default exit sequence for state turning left to change lane */
-	private void exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state waiting for free crossroad */
-	private void exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state switching lane */
-	private void exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state turning left on new lane */
-	private void exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane() {
+	private void exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state entering crossroad */
-	private void exitSequence_Drive_System_driving__region0_entering_crossroad() {
+	private void exitSequence_Drive_System_driving__driving_entering_crossroad() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state leaving crossroad ahead */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead() {
-		exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward();
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead() {
+		exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward();
 	}
 	
 	/* Default exit sequence for state forward1 */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state forward2 */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state leaving crossroad to right side */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side() {
-		exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight();
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side() {
+		exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight();
 	}
 	
 	/* Default exit sequence for state right */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state forward */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state leaving crossroad to left side */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side() {
-		exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft();
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side() {
+		exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft();
 	}
 	
 	/* Default exit sequence for state forward1 */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state left */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state forward2 */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state forward3 */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state turning around on crossroad */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad() {
+		exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad();
+	}
+	
+	/* Default exit sequence for state turining left 1 */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state waiting to drive forward 1 */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state driving forward 1 */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state turining left 2 */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state waiting to drive forward 2 */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state driving forward 2 */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state trapped! */
+	private void exitSequence_Drive_System_driving__driving_trapped_() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
@@ -1542,189 +1639,207 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_idle:
 			exitSequence_Drive_System_idle();
 			break;
-		case drive_System_unloading__region0_waiting_for_orientation_check:
-			exitSequence_Drive_System_unloading__region0_waiting_for_orientation_check();
+		case drive_System_unloading__unloading_waiting_for_orientation_check:
+			exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check();
 			break;
-		case drive_System_unloading__region0_unloading:
-			exitSequence_Drive_System_unloading__region0_unloading();
+		case drive_System_unloading__unloading_unloading:
+			exitSequence_Drive_System_unloading__unloading_unloading();
 			break;
-		case drive_System_unloading__region0_turning_left:
-			exitSequence_Drive_System_unloading__region0_turning_left();
+		case drive_System_unloading__unloading_turning_left:
+			exitSequence_Drive_System_unloading__unloading_turning_left();
 			break;
-		case drive_System_driving__region0_on_waypoint_or_station:
-			exitSequence_Drive_System_driving__region0_on_waypoint_or_station();
+		case drive_System_driving__driving_on_waypoint_or_station:
+			exitSequence_Drive_System_driving__driving_on_waypoint_or_station();
 			break;
-		case drive_System_driving__region0_waiting_in_station:
-			exitSequence_Drive_System_driving__region0_waiting_in_station();
+		case drive_System_driving__driving_waiting_in_station:
+			exitSequence_Drive_System_driving__driving_waiting_in_station();
 			break;
-		case drive_System_driving__region0_waiting_on_waypoint:
-			exitSequence_Drive_System_driving__region0_waiting_on_waypoint();
+		case drive_System_driving__driving_waiting_on_waypoint:
+			exitSequence_Drive_System_driving__driving_waiting_on_waypoint();
 			break;
-		case drive_System_driving__region0_waiting_to_ensure_real_deadlock:
-			exitSequence_Drive_System_driving__region0_waiting_to_ensure_real_deadlock();
+		case drive_System_driving__driving_waiting_to_ensure_real_deadlock:
+			exitSequence_Drive_System_driving__driving_waiting_to_ensure_real_deadlock();
 			break;
-		case drive_System_driving__region0_on_crossroad:
-			exitSequence_Drive_System_driving__region0_on_crossroad();
+		case drive_System_driving__driving_on_crossroad:
+			exitSequence_Drive_System_driving__driving_on_crossroad();
 			break;
-		case drive_System_driving__region0_driving_forward_in_station:
-			exitSequence_Drive_System_driving__region0_driving_forward_in_station();
+		case drive_System_driving__driving_driving_forward_in_station:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station();
 			break;
-		case drive_System_driving__region0_turning_right_in_station:
-			exitSequence_Drive_System_driving__region0_turning_right_in_station();
+		case drive_System_driving__driving_turning_right_in_station:
+			exitSequence_Drive_System_driving__driving_turning_right_in_station();
 			break;
-		case drive_System_driving__region0_turning_left_in_station:
-			exitSequence_Drive_System_driving__region0_turning_left_in_station();
+		case drive_System_driving__driving_turning_left_in_station:
+			exitSequence_Drive_System_driving__driving_turning_left_in_station();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane();
+		case drive_System_driving__driving_entering_crossroad:
+			exitSequence_Drive_System_driving__driving_entering_crossroad();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad();
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane();
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane();
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
 			break;
-		case drive_System_driving__region0_entering_crossroad:
-			exitSequence_Drive_System_driving__region0_entering_crossroad();
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2();
 			break;
-		default:
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2();
 			break;
-		}
-	}
-	
-	/* Default exit sequence for region  */
-	private void exitSequence_Drive_System_unloading__region0() {
-		switch (stateVector[0]) {
-		case drive_System_unloading__region0_waiting_for_orientation_check:
-			exitSequence_Drive_System_unloading__region0_waiting_for_orientation_check();
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
 			break;
-		case drive_System_unloading__region0_unloading:
-			exitSequence_Drive_System_unloading__region0_unloading();
-			break;
-		case drive_System_unloading__region0_turning_left:
-			exitSequence_Drive_System_unloading__region0_turning_left();
+		case drive_System_driving__driving_trapped_:
+			exitSequence_Drive_System_driving__driving_trapped_();
 			break;
 		default:
 			break;
 		}
 	}
 	
-	/* Default exit sequence for region null */
-	private void exitSequence_Drive_System_driving__region0() {
+	/* Default exit sequence for region _unloading */
+	private void exitSequence_Drive_System_unloading__unloading() {
 		switch (stateVector[0]) {
-		case drive_System_driving__region0_on_waypoint_or_station:
-			exitSequence_Drive_System_driving__region0_on_waypoint_or_station();
+		case drive_System_unloading__unloading_waiting_for_orientation_check:
+			exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check();
 			break;
-		case drive_System_driving__region0_waiting_in_station:
-			exitSequence_Drive_System_driving__region0_waiting_in_station();
+		case drive_System_unloading__unloading_unloading:
+			exitSequence_Drive_System_unloading__unloading_unloading();
 			break;
-		case drive_System_driving__region0_waiting_on_waypoint:
-			exitSequence_Drive_System_driving__region0_waiting_on_waypoint();
+		case drive_System_unloading__unloading_turning_left:
+			exitSequence_Drive_System_unloading__unloading_turning_left();
 			break;
-		case drive_System_driving__region0_waiting_to_ensure_real_deadlock:
-			exitSequence_Drive_System_driving__region0_waiting_to_ensure_real_deadlock();
+		default:
 			break;
-		case drive_System_driving__region0_on_crossroad:
-			exitSequence_Drive_System_driving__region0_on_crossroad();
+		}
+	}
+	
+	/* Default exit sequence for region _driving */
+	private void exitSequence_Drive_System_driving__driving() {
+		switch (stateVector[0]) {
+		case drive_System_driving__driving_on_waypoint_or_station:
+			exitSequence_Drive_System_driving__driving_on_waypoint_or_station();
 			break;
-		case drive_System_driving__region0_driving_forward_in_station:
-			exitSequence_Drive_System_driving__region0_driving_forward_in_station();
+		case drive_System_driving__driving_waiting_in_station:
+			exitSequence_Drive_System_driving__driving_waiting_in_station();
 			break;
-		case drive_System_driving__region0_turning_right_in_station:
-			exitSequence_Drive_System_driving__region0_turning_right_in_station();
+		case drive_System_driving__driving_waiting_on_waypoint:
+			exitSequence_Drive_System_driving__driving_waiting_on_waypoint();
 			break;
-		case drive_System_driving__region0_turning_left_in_station:
-			exitSequence_Drive_System_driving__region0_turning_left_in_station();
+		case drive_System_driving__driving_waiting_to_ensure_real_deadlock:
+			exitSequence_Drive_System_driving__driving_waiting_to_ensure_real_deadlock();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1();
+		case drive_System_driving__driving_on_crossroad:
+			exitSequence_Drive_System_driving__driving_on_crossroad();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2();
+		case drive_System_driving__driving_driving_forward_in_station:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward();
+		case drive_System_driving__driving_turning_right_in_station:
+			exitSequence_Drive_System_driving__driving_turning_right_in_station();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3();
+		case drive_System_driving__driving_turning_left_in_station:
+			exitSequence_Drive_System_driving__driving_turning_left_in_station();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward();
 			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3();
 			break;
-		case drive_System_driving__region0_entering_crossroad:
-			exitSequence_Drive_System_driving__region0_entering_crossroad();
+		case drive_System_driving__driving_entering_crossroad:
+			exitSequence_Drive_System_driving__driving_entering_crossroad();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
+			break;
+		case drive_System_driving__driving_trapped_:
+			exitSequence_Drive_System_driving__driving_trapped_();
 			break;
 		default:
 			break;
@@ -1732,39 +1847,19 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* Default exit sequence for region _inStationExitCharger */
-	private void exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger() {
+	private void exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger() {
 		switch (stateVector[0]) {
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward();
 			break;
-		case drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3:
-			exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3();
-			break;
-		default:
-			break;
-		}
-	}
-	
-	/* Default exit sequence for region null */
-	private void exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0() {
-		switch (stateVector[0]) {
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane();
-			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad();
-			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane();
-			break;
-		case drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane:
-			exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane();
+		case drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3:
+			exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3();
 			break;
 		default:
 			break;
@@ -1772,13 +1867,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* Default exit sequence for region _onCrossroadDriveForward */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward() {
 		switch (stateVector[0]) {
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
+		case drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
 			break;
 		default:
 			break;
@@ -1786,13 +1881,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* Default exit sequence for region _onCrossroadDriveRight */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight() {
 		switch (stateVector[0]) {
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+		case drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
 			break;
 		default:
 			break;
@@ -1800,19 +1895,45 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* Default exit sequence for region _onCrossroadDriveLeft */
-	private void exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft() {
+	private void exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft() {
 		switch (stateVector[0]) {
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
 			break;
-		case drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
-			exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+		case drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3:
+			exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region _turningAroundOnCrossroad */
+	private void exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad() {
+		switch (stateVector[0]) {
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2();
+			break;
+		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
+			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
 			break;
 		default:
 			break;
@@ -1820,29 +1941,29 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_unloading__region0__choice_0() {
-		if (check_Drive_System_unloading__region0__choice_0_tr0_tr0()) {
-			effect_Drive_System_unloading__region0__choice_0_tr0();
+	private void react_Drive_System_unloading__unloading__choice_0() {
+		if (check_Drive_System_unloading__unloading__choice_0_tr0_tr0()) {
+			effect_Drive_System_unloading__unloading__choice_0_tr0();
 		} else {
-			effect_Drive_System_unloading__region0__choice_0_tr1();
+			effect_Drive_System_unloading__unloading__choice_0_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_0() {
-		if (check_Drive_System_driving__region0__choice_0_tr1_tr1()) {
-			effect_Drive_System_driving__region0__choice_0_tr1();
+	private void react_Drive_System_driving__driving__choice_0() {
+		if (check_Drive_System_driving__driving__choice_0_tr0_tr0()) {
+			effect_Drive_System_driving__driving__choice_0_tr0();
 		} else {
-			if (check_Drive_System_driving__region0__choice_0_tr2_tr2()) {
-				effect_Drive_System_driving__region0__choice_0_tr2();
+			if (check_Drive_System_driving__driving__choice_0_tr1_tr1()) {
+				effect_Drive_System_driving__driving__choice_0_tr1();
 			} else {
-				if (check_Drive_System_driving__region0__choice_0_tr3_tr3()) {
-					effect_Drive_System_driving__region0__choice_0_tr3();
+				if (check_Drive_System_driving__driving__choice_0_tr2_tr2()) {
+					effect_Drive_System_driving__driving__choice_0_tr2();
 				} else {
-					if (check_Drive_System_driving__region0__choice_0_tr4_tr4()) {
-						effect_Drive_System_driving__region0__choice_0_tr4();
+					if (check_Drive_System_driving__driving__choice_0_tr3_tr3()) {
+						effect_Drive_System_driving__driving__choice_0_tr3();
 					} else {
-						effect_Drive_System_driving__region0__choice_0_tr0();
+						effect_Drive_System_driving__driving__choice_0_tr4();
 					}
 				}
 			}
@@ -1850,84 +1971,105 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_1() {
-		if (check_Drive_System_driving__region0__choice_1_tr1_tr1()) {
-			effect_Drive_System_driving__region0__choice_1_tr1();
+	private void react_Drive_System_driving__driving__choice_1() {
+		if (check_Drive_System_driving__driving__choice_1_tr0_tr0()) {
+			effect_Drive_System_driving__driving__choice_1_tr0();
 		} else {
-			if (check_Drive_System_driving__region0__choice_1_tr2_tr2()) {
-				effect_Drive_System_driving__region0__choice_1_tr2();
+			if (check_Drive_System_driving__driving__choice_1_tr1_tr1()) {
+				effect_Drive_System_driving__driving__choice_1_tr1();
 			} else {
-				if (check_Drive_System_driving__region0__choice_1_tr3_tr3()) {
-					effect_Drive_System_driving__region0__choice_1_tr3();
+				if (check_Drive_System_driving__driving__choice_1_tr2_tr2()) {
+					effect_Drive_System_driving__driving__choice_1_tr2();
 				} else {
-					effect_Drive_System_driving__region0__choice_1_tr0();
+					if (check_Drive_System_driving__driving__choice_1_tr3_tr3()) {
+						effect_Drive_System_driving__driving__choice_1_tr3();
+					} else {
+						if (check_Drive_System_driving__driving__choice_1_tr4_tr4()) {
+							effect_Drive_System_driving__driving__choice_1_tr4();
+						} else {
+							effect_Drive_System_driving__driving__choice_1_tr5();
+						}
+					}
 				}
 			}
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_2() {
-		if (check_Drive_System_driving__region0__choice_2_tr1_tr1()) {
-			effect_Drive_System_driving__region0__choice_2_tr1();
+	private void react_Drive_System_driving__driving__choice_2() {
+		if (check_Drive_System_driving__driving__choice_2_tr1_tr1()) {
+			effect_Drive_System_driving__driving__choice_2_tr1();
 		} else {
-			effect_Drive_System_driving__region0__choice_2_tr0();
+			effect_Drive_System_driving__driving__choice_2_tr0();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_3() {
-		if (check_Drive_System_driving__region0__choice_3_tr1_tr1()) {
-			effect_Drive_System_driving__region0__choice_3_tr1();
+	private void react_Drive_System_driving__driving__choice_3() {
+		if (check_Drive_System_driving__driving__choice_3_tr1_tr1()) {
+			effect_Drive_System_driving__driving__choice_3_tr1();
 		} else {
-			if (check_Drive_System_driving__region0__choice_3_tr2_tr2()) {
-				effect_Drive_System_driving__region0__choice_3_tr2();
+			if (check_Drive_System_driving__driving__choice_3_tr2_tr2()) {
+				effect_Drive_System_driving__driving__choice_3_tr2();
 			} else {
-				effect_Drive_System_driving__region0__choice_3_tr0();
+				effect_Drive_System_driving__driving__choice_3_tr0();
 			}
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_4() {
-		effect_Drive_System_driving__region0__choice_4_tr0();
+	private void react_Drive_System_driving__driving__choice_4() {
+		effect_Drive_System_driving__driving__choice_4_tr0();
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_5() {
-		if (check_Drive_System_driving__region0__choice_5_tr1_tr1()) {
-			effect_Drive_System_driving__region0__choice_5_tr1();
+	private void react_Drive_System_driving__driving__choice_5() {
+		if (check_Drive_System_driving__driving__choice_5_tr0_tr0()) {
+			effect_Drive_System_driving__driving__choice_5_tr0();
 		} else {
-			effect_Drive_System_driving__region0__choice_5_tr0();
+			effect_Drive_System_driving__driving__choice_5_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_6() {
-		effect_Drive_System_driving__region0__choice_6_tr0();
-	}
-	
-	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_7() {
-		if (check_Drive_System_driving__region0__choice_7_tr1_tr1()) {
-			effect_Drive_System_driving__region0__choice_7_tr1();
+	private void react_Drive_System_driving__driving__choice_6() {
+		if (check_Drive_System_driving__driving__choice_6_tr0_tr0()) {
+			effect_Drive_System_driving__driving__choice_6_tr0();
 		} else {
-			effect_Drive_System_driving__region0__choice_7_tr0();
+			effect_Drive_System_driving__driving__choice_6_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_8() {
-		if (check_Drive_System_driving__region0__choice_8_tr1_tr1()) {
-			effect_Drive_System_driving__region0__choice_8_tr1();
+	private void react_Drive_System_driving__driving__choice_7() {
+		effect_Drive_System_driving__driving__choice_7_tr0();
+	}
+	
+	/* The reactions of state null. */
+	private void react_Drive_System_driving__driving__choice_8() {
+		if (check_Drive_System_driving__driving__choice_8_tr0_tr0()) {
+			effect_Drive_System_driving__driving__choice_8_tr0();
 		} else {
-			effect_Drive_System_driving__region0__choice_8_tr0();
+			effect_Drive_System_driving__driving__choice_8_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_driving__region0__choice_9() {
-		effect_Drive_System_driving__region0__choice_9_tr0();
+	private void react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0() {
+		if (check_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0_tr0_tr0()) {
+			effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0_tr0();
+		} else {
+			effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0_tr1();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1() {
+		if (check_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1_tr0_tr0()) {
+			effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1_tr0();
+		} else {
+			effect_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1_tr1();
+		}
 	}
 	
 	/* Default react sequence for initial entry  */
@@ -1936,73 +2078,73 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_unloading__region0__entry_Default() {
-		enterSequence_Drive_System_unloading__region0_waiting_for_orientation_check_default();
+	private void react_Drive_System_unloading__unloading__entry_Default() {
+		enterSequence_Drive_System_unloading__unloading_waiting_for_orientation_check_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_driving__region0__entry_Default() {
-		enterSequence_Drive_System_driving__region0_on_waypoint_or_station_default();
+	private void react_Drive_System_driving__driving__entry_Default() {
+		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger__entry_Default() {
-		enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1_default();
+	private void react_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger__entry_Default() {
+		enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_driving__region0_turning_around_on_waypoint__region0__entry_Default() {
-		enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane_default();
+	private void react_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward__entry_Default() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward__entry_Default() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_default();
+	private void react_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_default();
+	private void react_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default() {
-		enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_default();
+	private void react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__entry_Default() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1_default();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_Drive_System_unloading__region0__exit_Default() {
+	private void react_Drive_System_unloading__unloading__exit_Default() {
 		effect_Drive_System_unloading_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger__exit_Default() {
-		effect_Drive_System_driving__region0_exiting_charging_position_tr0();
+	private void react_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger__exit_Default() {
+		effect_Drive_System_driving__driving_exiting_charging_position_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_Drive_System_driving__region0_turning_around_on_waypoint__region0__exit_Default() {
-		effect_Drive_System_driving__region0_turning_around_on_waypoint_tr0();
+	private void react_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward__exit_Default() {
+		effect_Drive_System_driving__driving_leaving_crossroad_ahead_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward__exit_Default() {
-		effect_Drive_System_driving__region0_leaving_crossroad_ahead_tr0();
+	private void react_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default() {
+		effect_Drive_System_driving__driving_leaving_crossroad_to_right_side_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default() {
-		effect_Drive_System_driving__region0_leaving_crossroad_to_right_side_tr0();
+	private void react_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default() {
+		effect_Drive_System_driving__driving_leaving_crossroad_to_left_side_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default() {
-		effect_Drive_System_driving__region0_leaving_crossroad_to_left_side_tr0();
+	private void react_Drive_System_driving__driving__exit_Default() {
+		effect_Drive_System_driving_tr1();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_Drive_System_driving__region0__exit_Default() {
-		effect_Drive_System_driving_tr0();
+	private void react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__exit_Default() {
+		effect_Drive_System_driving__driving_turning_around_on_crossroad_tr0();
 	}
 	
 	private boolean react() {
@@ -2051,13 +2193,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_unloading__region0_waiting_for_orientation_check_react(boolean try_transition) {
+	private boolean drive_System_unloading__unloading_waiting_for_orientation_check_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.dataRefresh) {
-				exitSequence_Drive_System_unloading__region0_waiting_for_orientation_check();
-				react_Drive_System_unloading__region0__choice_0();
+				exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check();
+				react_Drive_System_unloading__unloading__choice_0();
 			} else {
 				did_transition = false;
 			}
@@ -2068,13 +2210,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_unloading__region0_unloading_react(boolean try_transition) {
+	private boolean drive_System_unloading__unloading_unloading_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.unloaded) {
-				exitSequence_Drive_System_unloading__region0_unloading();
-				react_Drive_System_unloading__region0__exit_Default();
+				exitSequence_Drive_System_unloading__unloading_unloading();
+				react_Drive_System_unloading__unloading__exit_Default();
 			} else {
 				did_transition = false;
 			}
@@ -2085,13 +2227,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_unloading__region0_turning_left_react(boolean try_transition) {
+	private boolean drive_System_unloading__unloading_turning_left_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_unloading__region0_turning_left();
-				enterSequence_Drive_System_unloading__region0_waiting_for_orientation_check_default();
+				exitSequence_Drive_System_unloading__unloading_turning_left();
+				enterSequence_Drive_System_unloading__unloading_waiting_for_orientation_check_default();
 				drive_System_unloading_react(false);
 			} else {
 				did_transition = false;
@@ -2121,13 +2263,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_on_waypoint_or_station_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_on_waypoint_or_station_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.dataRefresh) {
-				exitSequence_Drive_System_driving__region0_on_waypoint_or_station();
-				react_Drive_System_driving__region0__choice_7();
+				exitSequence_Drive_System_driving__driving_on_waypoint_or_station();
+				react_Drive_System_driving__driving__choice_5();
 			} else {
 				did_transition = false;
 			}
@@ -2138,13 +2280,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_waiting_in_station_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_waiting_in_station_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.dataRefresh) {
-				exitSequence_Drive_System_driving__region0_waiting_in_station();
-				react_Drive_System_driving__region0__choice_6();
+				exitSequence_Drive_System_driving__driving_waiting_in_station();
+				react_Drive_System_driving__driving__choice_8();
 			} else {
 				did_transition = false;
 			}
@@ -2155,13 +2297,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_waiting_on_waypoint_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_waiting_on_waypoint_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.dataRefresh) {
-				exitSequence_Drive_System_driving__region0_waiting_on_waypoint();
-				react_Drive_System_driving__region0__choice_4();
+				exitSequence_Drive_System_driving__driving_waiting_on_waypoint();
+				react_Drive_System_driving__driving__choice_4();
 			} else {
 				did_transition = false;
 			}
@@ -2172,15 +2314,15 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_waiting_to_ensure_real_deadlock_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_waiting_to_ensure_real_deadlock_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[0]) {
-				exitSequence_Drive_System_driving__region0_waiting_to_ensure_real_deadlock();
+				exitSequence_Drive_System_driving__driving_waiting_to_ensure_real_deadlock();
 				setWaitedForDeadlock(true);
 				
-				enterSequence_Drive_System_driving__region0_waiting_on_waypoint_default();
+				enterSequence_Drive_System_driving__driving_waiting_on_waypoint_default();
 				drive_System_driving_react(false);
 			} else {
 				did_transition = false;
@@ -2192,13 +2334,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_on_crossroad_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_on_crossroad_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.dataRefresh) {
-				exitSequence_Drive_System_driving__region0_on_crossroad();
-				react_Drive_System_driving__region0__choice_1();
+				exitSequence_Drive_System_driving__driving_on_crossroad();
+				react_Drive_System_driving__driving__choice_1();
 			} else {
 				did_transition = false;
 			}
@@ -2209,13 +2351,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_driving_forward_in_station_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_driving_forward_in_station_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_driving_forward_in_station();
-				react_Drive_System_driving__region0__choice_9();
+				exitSequence_Drive_System_driving__driving_driving_forward_in_station();
+				react_Drive_System_driving__driving__choice_7();
 			} else {
 				did_transition = false;
 			}
@@ -2226,13 +2368,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_turning_right_in_station_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_turning_right_in_station_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_turning_right_in_station();
-				react_Drive_System_driving__region0__choice_9();
+				exitSequence_Drive_System_driving__driving_turning_right_in_station();
+				react_Drive_System_driving__driving__choice_7();
 			} else {
 				did_transition = false;
 			}
@@ -2243,13 +2385,13 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_turning_left_in_station_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_turning_left_in_station_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_turning_left_in_station();
-				react_Drive_System_driving__region0__choice_9();
+				exitSequence_Drive_System_driving__driving_turning_left_in_station();
+				react_Drive_System_driving__driving__choice_7();
 			} else {
 				did_transition = false;
 			}
@@ -2260,7 +2402,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_exiting_charging_position_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_exiting_charging_position_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
@@ -2272,167 +2414,84 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right1();
-				enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2_default();
-				drive_System_driving__region0_exiting_charging_position_react(false);
+				exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right1();
+				enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2_default();
+				drive_System_driving__driving_exiting_charging_position_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_exiting_charging_position_react(try_transition);
+			did_transition = drive_System_driving__driving_exiting_charging_position_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right2();
-				enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward_default();
-				drive_System_driving__region0_exiting_charging_position_react(false);
+				exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right2();
+				enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward_default();
+				drive_System_driving__driving_exiting_charging_position_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_exiting_charging_position_react(try_transition);
+			did_transition = drive_System_driving__driving_exiting_charging_position_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_forward();
-				enterSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3_default();
-				drive_System_driving__region0_exiting_charging_position_react(false);
+				exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_forward();
+				enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3_default();
+				drive_System_driving__driving_exiting_charging_position_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_exiting_charging_position_react(try_transition);
+			did_transition = drive_System_driving__driving_exiting_charging_position_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger_right3();
-				react_Drive_System_driving__region0_exiting_charging_position__inStationExitCharger__exit_Default();
+				exitSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_right3();
+				react_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger__exit_Default();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_exiting_charging_position_react(try_transition);
+			did_transition = drive_System_driving__driving_exiting_charging_position_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_turning_around_on_waypoint_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			did_transition = false;
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_entering_crossroad_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_to_change_lane();
-				enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad_default();
-				drive_System_driving__region0_turning_around_on_waypoint_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_turning_around_on_waypoint_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (((sCInterface.dataRefresh) && ((!sCIData.operationCallback.blockedCrossroadRight() && !sCIData.operationCallback.blockedFront())))) {
-				exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_waiting_for_free_crossroad();
-				enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane_default();
-				drive_System_driving__region0_turning_around_on_waypoint_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_turning_around_on_waypoint_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_switching_lane();
-				enterSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane_default();
-				drive_System_driving__region0_turning_around_on_waypoint_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_turning_around_on_waypoint_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_turning_around_on_waypoint__region0_turning_left_on_new_lane();
-				react_Drive_System_driving__region0_turning_around_on_waypoint__region0__exit_Default();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_turning_around_on_waypoint_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving__region0_entering_crossroad_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_entering_crossroad();
-				enterSequence_Drive_System_driving__region0_on_crossroad_default();
+				exitSequence_Drive_System_driving__driving_entering_crossroad();
+				enterSequence_Drive_System_driving__driving_on_crossroad_default();
 				drive_System_driving_react(false);
 			} else {
 				did_transition = false;
@@ -2444,7 +2503,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_ahead_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_ahead_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
@@ -2456,42 +2515,42 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
-				enterSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_default();
-				drive_System_driving__region0_leaving_crossroad_ahead_react(false);
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward1();
+				enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_default();
+				drive_System_driving__driving_leaving_crossroad_ahead_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_ahead_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_ahead_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
-				react_Drive_System_driving__region0_leaving_crossroad_ahead__onCrossroadDriveForward__exit_Default();
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward_forward2();
+				react_Drive_System_driving__driving_leaving_crossroad_ahead__onCrossroadDriveForward__exit_Default();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_ahead_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_ahead_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_right_side_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_right_side_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
@@ -2503,42 +2562,42 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
-				enterSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_default();
-				drive_System_driving__region0_leaving_crossroad_to_right_side_react(false);
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+				enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_default();
+				drive_System_driving__driving_leaving_crossroad_to_right_side_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_to_right_side_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_to_right_side_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
-				react_Drive_System_driving__region0_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default();
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+				react_Drive_System_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_to_right_side_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_to_right_side_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_left_side_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_left_side_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
@@ -2550,73 +2609,202 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
-				enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_default();
-				drive_System_driving__region0_leaving_crossroad_to_left_side_react(false);
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+				enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_default();
+				drive_System_driving__driving_leaving_crossroad_to_left_side_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_to_left_side_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
-				enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_default();
-				drive_System_driving__region0_leaving_crossroad_to_left_side_react(false);
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+				enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_default();
+				drive_System_driving__driving_leaving_crossroad_to_left_side_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_to_left_side_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
-				enterSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_default();
-				drive_System_driving__region0_leaving_crossroad_to_left_side_react(false);
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+				enterSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_default();
+				drive_System_driving__driving_leaving_crossroad_to_left_side_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_to_left_side_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_react(boolean try_transition) {
+	private boolean drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
-				react_Drive_System_driving__region0_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default();
+				exitSequence_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+				react_Drive_System_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving__region0_leaving_crossroad_to_left_side_react(try_transition);
+			did_transition = drive_System_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_turning_around_on_crossroad_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			did_transition = false;
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1();
+				enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1_default();
+				drive_System_driving__driving_turning_around_on_crossroad_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_turning_around_on_crossroad_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.dataRefresh) {
+				exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_1();
+				react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_0();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_turning_around_on_crossroad_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_1();
+				enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2_default();
+				drive_System_driving__driving_turning_around_on_crossroad_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_turning_around_on_crossroad_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_2();
+				enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2_default();
+				drive_System_driving__driving_turning_around_on_crossroad_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_turning_around_on_crossroad_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.dataRefresh) {
+				exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2();
+				react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__choice_1();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_turning_around_on_crossroad_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
+				react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__exit_Default();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_turning_around_on_crossroad_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_trapped__react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			did_transition = false;
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving_react(try_transition);
 		}
 		return did_transition;
 	}
