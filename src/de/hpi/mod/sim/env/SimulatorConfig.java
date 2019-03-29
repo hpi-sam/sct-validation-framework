@@ -31,7 +31,7 @@ public class SimulatorConfig {
     public static final float DEFAULT_ROTATION_SPEED = .5f;
 	public static final long DEFAULT_UNLOADING_TIME = 1000;
 	public static final float BATTERY_FULL = 100;
-	public static final float BATTERY_LOW = 25;
+	public static final float BATTERY_LOW = 35;
 	public static final float BATTERY_LOSS = .1f;
 	public static final float BATTERY_LOADING_SPEED = .02f;
 	public static final int DEFAULT_UNLOADING_RANGE = 30;
