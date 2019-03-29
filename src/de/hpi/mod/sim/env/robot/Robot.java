@@ -234,6 +234,26 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         return Orientation.difference(
                 manager.currentFacing(), grid.targetOrientation(manager.currentPosition(), target));
     }
+    
+    @Override
+    public int posX() {
+    	return this.pos().getX();
+    }
+    
+    @Override
+    public int posY() {
+    	return this.pos().getY();
+    }
+    
+    @Override
+    public int targetX() {
+    	return this.target.getX();
+    }
+    
+    @Override
+    public int targetY() {
+    	return this.target.getY();
+    }
 
     @Override
     public boolean isTargetReached() {

@@ -127,25 +127,25 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     @Override
     public long posX() {
     	//TODO 
-        return 0;
+        return data.posX();
     }
 
     @Override
     public long posY() {
     	//TODO 
-        return 0;
+        return data.posY();
     }
 
     @Override
     public long targetX() {
     	//TODO 
-        return 0;
+        return data.targetX();
     }
 
     @Override
     public long targetY() {
     	//TODO 
-        return 0;
+        return data.targetY();
     }
     
     private long toSCIPositionType(PositionType type) {
