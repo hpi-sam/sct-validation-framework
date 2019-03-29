@@ -23,6 +23,7 @@ import java.io.IOException;
 
 public class DriveSimFrame extends JFrame {
 
+	private static final long serialVersionUID = 4683030810403226266L;
 	private SimulationWorld world;
     private SimulatorView sim;
     private DeadlockDetector deadlockDetector;

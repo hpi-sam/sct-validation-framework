@@ -21,7 +21,8 @@ import java.util.List;
  */
 public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener {
 
-    private SimulationWorld world;
+	private static final long serialVersionUID = -42067353669036945L;
+	private SimulationWorld world;
     private boolean isRightClickedRobot = false;
     private JTree stateTree;
     private DefaultTreeModel stateTreeModel;

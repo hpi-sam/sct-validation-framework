@@ -19,7 +19,6 @@ public class KeyManager {
         keys.clear();
 
         keys.put("Pause/Play", KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0));
-        keys.put("Add Robot", KeyStroke.getKeyStroke(KeyEvent.VK_A, 0));
         keys.put("Zoom In", KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_DOWN_MASK));
         keys.put("Zoom Out", KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK));
         keys.put("Reset Zoom", KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));

@@ -11,7 +11,8 @@ import java.util.Map;
 
 public class ScenarioPanel extends JPanel {
 
-    private static Map<Scenario, JLabel> scenarios = new HashMap<>();
+	private static final long serialVersionUID = -5510158727041489627L;
+	private static Map<Scenario, JLabel> scenarios = new HashMap<>();
     private ScenarioManager scenarioManager;
 
     public ScenarioPanel(ScenarioManager scenarioManager) {

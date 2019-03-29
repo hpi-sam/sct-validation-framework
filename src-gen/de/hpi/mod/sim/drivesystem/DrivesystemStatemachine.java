@@ -1,6 +1,6 @@
 package de.hpi.mod.sim.drivesystem;
 
-import de.hpi.mod.sim.ITimer;
+import de.hpi.mod.sim.machine.ITimer;
 
 public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	protected class SCInterfaceImpl implements SCInterface {

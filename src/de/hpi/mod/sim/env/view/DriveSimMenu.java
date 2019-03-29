@@ -12,11 +12,12 @@ import java.util.List;
 
 public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
-    private Icon playIcon, pauseIcon;
+	private static final long serialVersionUID = -1260633775659938837L;
+	private Icon playIcon, pauseIcon;
     private SimulationWorld world;
 
     private JMenuItem playItem, zoomInItem, zoomOutItem, zoomResetItem, moveLeftItem,
-            moveRightItem, moveUpItem, moveDownItem, moveResetItem, addRobotItem, resetSimItem, keyItem;
+            moveRightItem, moveUpItem, moveDownItem, moveResetItem, resetSimItem, keyItem;
 
     private KeyManager keyManager;
 
@@ -41,7 +42,6 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         moveUpItem = new JMenuItem("Up");
         moveDownItem = new JMenuItem("Down");
         moveResetItem = new JMenuItem("Reset");
-        addRobotItem = new JMenuItem("Add Robot");
         playItem = new JMenuItem("Play/Pause", playIcon);
         resetSimItem = new JMenuItem("Reset Simulation");
         keyItem = new JMenuItem("Keystrokes");
@@ -55,7 +55,6 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
             }
         };
 
-        addRobotItem.addActionListener(e -> world.addRobot());
         zoomInItem.addActionListener(e -> world.zoomIn(1));
         zoomOutItem.addActionListener(e -> world.zoomOut(1));
         zoomResetItem.addActionListener(e -> world.resetZoom());
@@ -81,7 +80,6 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         worldMenu.add(moveMenu);
         worldMenu.add(zoomMenu);
         worldMenu.addSeparator();
-        worldMenu.add(addRobotItem);
         worldMenu.add(resetSimItem);
 
         playMenu.add(playItem);
@@ -107,7 +105,6 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
     private void updateKeystrokes() {
         playItem.setAccelerator(keyManager.getKey("Pause/Play"));
-        addRobotItem.setAccelerator(keyManager.getKey("Add Robot"));
         zoomInItem.setAccelerator(keyManager.getKey("Zoom In"));
         zoomOutItem.setAccelerator(keyManager.getKey("Zoom Out"));
         zoomResetItem.setAccelerator(keyManager.getKey("Reset Zoom"));

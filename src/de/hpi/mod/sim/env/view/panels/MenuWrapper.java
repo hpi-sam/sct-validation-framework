@@ -14,6 +14,9 @@ import javax.swing.JPanel;
  *
  */
 public class MenuWrapper extends JPanel {
+	
+	private static final long serialVersionUID = 5623569438638761729L;
+
 	public MenuWrapper(int width, int height, Color color, JComponent component) {
 		super(new BorderLayout()); //use a BordeLayout to force the component to have the size of the wrapper
 		

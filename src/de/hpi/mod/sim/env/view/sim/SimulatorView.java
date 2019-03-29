@@ -16,7 +16,8 @@ import java.awt.event.MouseMotionListener;
  */
 public class SimulatorView extends JPanel implements MouseListener, MouseMotionListener {
 
-    private GridRenderer gridRenderer;
+	private static final long serialVersionUID = -361892313938561668L;
+	private GridRenderer gridRenderer;
     private RobotRenderer robotRenderer;
     private ExplosionRenderer explosionRenderer;
 

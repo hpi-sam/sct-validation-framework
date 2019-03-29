@@ -14,6 +14,14 @@ public interface ISensor {
     PositionType posType();
 
     Direction targetDirection();
+    
+    int posX();
+    
+    int posY();
+    
+    int targetX();
+    
+    int targetY();
 
     boolean isTargetReached();
 

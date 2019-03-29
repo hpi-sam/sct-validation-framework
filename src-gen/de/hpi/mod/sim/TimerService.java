@@ -7,6 +7,9 @@ import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import de.hpi.mod.sim.machine.ITimer;
+import de.hpi.mod.sim.machine.ITimerCallback;
+
 /**
  * Default timer service implementation.
  *

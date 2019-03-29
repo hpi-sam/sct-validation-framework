@@ -93,4 +93,24 @@ public class DummyRobot implements ISensor, IRobotActors, IProcessor {
     public boolean blockedCrossroadRight() {
         return false;
     }
+
+	@Override
+	public int posX() {
+		return 0;
+	}
+
+	@Override
+	public int posY() {
+		return 0;
+	}
+
+	@Override
+	public int targetX() {
+		return 0;
+	}
+
+	@Override
+	public int targetY() {
+		return 0;
+	}
 }
