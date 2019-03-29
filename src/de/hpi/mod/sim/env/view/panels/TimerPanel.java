@@ -14,6 +14,8 @@ import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld; 
 
 public class TimerPanel extends JPanel {
+	
+	private static final long serialVersionUID = 8453578481264370011L;
 	private Timer timer;
 	private SimulationWorld world;
 	private float time;

@@ -9,7 +9,8 @@ import java.util.List;
 
 public class KeyDialog extends JDialog {
 
-    private List<KeyPanel> keys = new ArrayList<>();
+	private static final long serialVersionUID = 3508290970431685348L;
+	private List<KeyPanel> keys = new ArrayList<>();
 
     public KeyDialog(KeyManager manager) {
         setLayout(new GridLayout(0, 1));
@@ -68,7 +69,8 @@ public class KeyDialog extends JDialog {
 
     private class KeyPanel extends JPanel {
 
-        private KeyStroke original;
+		private static final long serialVersionUID = 7932161312631978911L;
+		private KeyStroke original;
         private Color originalColor;
         private KeyStroke key;
         private String name;

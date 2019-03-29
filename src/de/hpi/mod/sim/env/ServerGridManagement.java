@@ -4,7 +4,6 @@ import de.hpi.mod.sim.env.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * Represents the Map and contains all logic which is dependant of the

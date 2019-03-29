@@ -11,6 +11,7 @@ import java.awt.*;
 
 public class SimulationPanel extends JPanel implements ITimeListener{
 
+	private static final long serialVersionUID = 4048135614810423369L;
 	private int currentLevel = SimulatorConfig.getDefaultRobotSpeedLevel();
 	private SimulationWorld world;
 	private ScenarioManager scenarioManager;

@@ -15,7 +15,8 @@ import java.util.Set;
 
 public class TestListPanel extends JPanel implements ITestListener {
 
-    private static Map<TestScenario, JLabel> tests = new HashMap<>();
+	private static final long serialVersionUID = 7429792932382048548L;
+	private static Map<TestScenario, JLabel> tests = new HashMap<>();
     private ScenarioManager scenarioManager;
     private int yCoordinate = 0;
 

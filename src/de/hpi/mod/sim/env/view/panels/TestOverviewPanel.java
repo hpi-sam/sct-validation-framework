@@ -18,6 +18,7 @@ import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 public class TestOverviewPanel extends JPanel implements ITestListener {
 
+	private static final long serialVersionUID = -3210286617906504416L;
 	private ScenarioManager scenarioManager;
 	
 	private JProgressBar progressDisplay;

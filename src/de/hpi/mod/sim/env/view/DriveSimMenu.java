@@ -12,7 +12,8 @@ import java.util.List;
 
 public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
-    private Icon playIcon, pauseIcon;
+	private static final long serialVersionUID = -1260633775659938837L;
+	private Icon playIcon, pauseIcon;
     private SimulationWorld world;
 
     private JMenuItem playItem, zoomInItem, zoomOutItem, zoomResetItem, moveLeftItem,
