@@ -1,4 +1,4 @@
-package de.hpi.mod.sim;
+package de.hpi.mod.sim.machine;
 
 /**
 * Interface for state machines which use timed event triggers.

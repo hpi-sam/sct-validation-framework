@@ -10,11 +10,9 @@ import java.util.List;
 public class KeyDialog extends JDialog {
 
     private List<KeyPanel> keys = new ArrayList<>();
-    private KeyManager manager;
 
     public KeyDialog(KeyManager manager) {
         setLayout(new GridLayout(0, 1));
-        this.manager = manager;
 
         manager.getKeys().forEach((name, key) -> {
             keys.add(new KeyPanel(name, key));
