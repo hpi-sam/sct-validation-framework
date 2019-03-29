@@ -71,7 +71,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     public void mouseClicked(MouseEvent e) {
         Position pos = world.toGridPosition(e.getX(), e.getY());
         for (Robot r : world.getRobots()) {
-            if (r.getDriveManager().currentPosition().equals(pos)) {
+            if (r.getDriveManager().currentPosition().equals(pos) || r.getDriveManager().getOldPosition().equals(pos)) {
             	if(e.getButton() == MouseEvent.BUTTON1) {
             		world.setHighlightedRobot1(r);
             	} else if (e.getButton() == MouseEvent.BUTTON3) {
