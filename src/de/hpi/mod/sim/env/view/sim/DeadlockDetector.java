@@ -28,6 +28,10 @@ public class DeadlockDetector {
 	}
 	
 	public void update(){
+		if(!simulationWorld.isRunning() || deactivated) {
+			return;
+		}
+		
 		offset = (long) Math.max(defaultOffset, defaultOffset / SimulatorConfig.getRobotSpeedFactor());
 		if(currentTime + offset <= System.currentTimeMillis()) {
 			checkForDeadlock();
@@ -47,12 +51,10 @@ public class DeadlockDetector {
 	private void checkForDeadlock() {
 		List<Robot> robotList = simulationWorld.getRobots();
 		
-		if(!simulationWorld.isRunning() || deactivated) {
-			return;
-		}
 		if(robotList.isEmpty()) {
 			return;
 		}
+		
 		for(Robot robot : robotList) {
 			Position oldPosition = robotPositions.get(robot.getID());
 			if (oldPosition == null) {
