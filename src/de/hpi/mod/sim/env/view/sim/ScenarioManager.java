@@ -56,6 +56,7 @@ public class ScenarioManager {
         scenarios.add(new EasyScenario());
         scenarios.add(new MediumScenario());
         scenarios.add(new HardScenario());
+        scenarios.add(new HardcoreScenario());
 	}
 
 	private void initializeTestList() {
@@ -333,6 +334,33 @@ public class ScenarioManager {
     			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
+    			robotsAtStations[station_number] ++;
+    		}
+            return newRobots;
+    	}
+    }
+    
+    private class HardcoreScenario extends Scenario{
+    	public HardcoreScenario() {
+    		name = "Hardcore mode";
+    	}
+    	
+    	@Override
+    	public List<NewRobot> initializeScenario(){
+    		int maxStations = SimulatorConfig.getChargingStationsInUse();
+    		int station_number;
+    		int[] robotsAtStations = new int[maxStations];
+    		List<NewRobot> newRobots = new ArrayList<>();
+    		
+    		//for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*SimulatorConfig.getBatteriesPerStation(); i++) {
+    		for(int i=0; i<3; i++) {
+    			do {
+    				station_number = ThreadLocalRandom.current().nextInt(maxStations);
+    			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
+    	
+    			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
+    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
+    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST, true));
     			robotsAtStations[station_number] ++;
     		}
             return newRobots;
@@ -795,15 +823,22 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     private class NewScenarioRobot extends NewRobot{
     	private Position position;
     	private Orientation facing;
+    	private boolean inHardcoreMode = false;
     	
     	public NewScenarioRobot(Position position, Orientation facing) {
     		this.position = position;
     		this.facing = facing;
     	}
     	
-    	@Override
+    	public NewScenarioRobot(Position position, Orientation facing, boolean inHardcoreMode) {
+			this.position = position;
+			this.facing = facing;
+			this.inHardcoreMode = inHardcoreMode;
+		}
+
+		@Override
     	public Robot register(SimulationWorld sim) {
-    		return sim.addRobotInScenarioHPI2(position, facing);
+    		return sim.addRobotInScenarioHPI2(position, facing, inHardcoreMode);
     	}
     }
 

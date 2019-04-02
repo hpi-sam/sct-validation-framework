@@ -67,7 +67,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         return robot;
     }
     
-    public Robot addRobotInScenarioHPI(Position position, Orientation facing) {
+    public Robot addRobotInScenarioHPI(Position position, Orientation facing, boolean inHardcoreMode) {
 
 	if (grid.posType(position) == PositionType.STATION) {
         int robotID = Robot.incrementID();
@@ -75,7 +75,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
                 robotID,
                 (int) position.getX()/SimulatorConfig.getSpaceBetweenChargingStations(),
                 grid, stations, this, this,
-                position, facing);
+                position, facing, inHardcoreMode);
         robots.add(robot);
         return robot;
     } else {

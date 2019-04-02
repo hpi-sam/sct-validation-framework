@@ -14,6 +14,8 @@ public class DriveManager implements IRobotActors {
 	private DriveListener listener;
 
     private float x, y, angle;
+    private long delay = Integer.MAX_VALUE;
+    private long now = System.currentTimeMillis();
 
     private Position currentPosition;
     private Orientation targetFacing;
@@ -31,6 +33,12 @@ public class DriveManager implements IRobotActors {
     private long unloadingTime = SimulatorConfig.getDefaultUnloadingTime();
     
     private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
+    
+    private boolean inHardcoreMode = false;
+	private boolean isWaitingToMove = false;
+	private boolean isWaitingToTurningLeft = false;
+	private boolean isWaitingToTurningRight = false;
+	private boolean isWaitingToUnloading = false;
 
 
     public DriveManager(DriveListener listener, Position position, Orientation facing) {
@@ -45,7 +53,29 @@ public class DriveManager implements IRobotActors {
     }
 
     public void update(float delta) {
-        if (isMoving) {
+    	if(inHardcoreMode) {
+    		if(delay + now <= System.currentTimeMillis()) {
+    			if (isWaitingToMove) {
+    				performDriveForward();
+    	            isMoving = true;
+    	            isWaitingToMove = false;
+    	        } else if (isWaitingToTurningLeft ) { 
+    	            performTurnLeft();
+    	            isTurningLeft = true;
+    	            isWaitingToTurningLeft = false;
+    	        } else if (isWaitingToTurningRight) {
+    	            performTurnRight();
+    	            isTurningRight = true;
+    	            isWaitingToTurningRight = false;
+    	        } else if (isWaitingToUnloading ) {
+    	            performUnload();
+    	            isUnloading = true;
+    	            isWaitingToUnloading = false;
+    	        }
+    		}
+    	} 
+    	
+    	if (isMoving) {
             move(delta);
         } else if (isTurningLeft) { 
             turnLeft(delta);
@@ -135,38 +165,78 @@ public class DriveManager implements IRobotActors {
     public void driveForward() {
         decreaseBattery();
         if (hasPower()) {
-            oldPosition = currentPosition;
-            currentPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
-            battery -= SimulatorConfig.getBatteryLoss();
-            isMoving = true;
+        	if(inHardcoreMode) {
+        		delay = ThreadLocalRandom.current().nextLong(300);
+        		now = System.currentTimeMillis();
+        		isWaitingToMove = true;
+        	} else {
+        		performDriveForward();
+        	}
         }
     }
+
+	private void performDriveForward() {
+		oldPosition = currentPosition;
+		currentPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
+		battery -= SimulatorConfig.getBatteryLoss();
+		isMoving = true;
+	}
 
     @Override
     public void turnLeft() {
         decreaseBattery();
         if (hasPower()) {
-            oldFacing = targetFacing;
-            targetFacing = targetFacing.getTurnedLeft();
-            isTurningLeft = true;
+        	if(inHardcoreMode) {
+        		delay = ThreadLocalRandom.current().nextLong(300);
+        		now = System.currentTimeMillis();
+        		isWaitingToTurningLeft = true;
+        	} else {
+	            performTurnLeft();
+        	}
         }
     }
+
+	private void performTurnLeft() {
+		oldFacing = targetFacing;
+		targetFacing = targetFacing.getTurnedLeft();
+		isTurningLeft = true;
+	}
 
     @Override
     public void turnRight() {
         decreaseBattery();
         if (hasPower()) {
-            oldFacing = targetFacing;
-            targetFacing = targetFacing.getTurnedRight();
-            isTurningRight = true;
+        	if(inHardcoreMode) {
+        		delay = ThreadLocalRandom.current().nextLong(300);
+        		now = System.currentTimeMillis();
+        		isWaitingToTurningRight = true;
+        	} else {
+	            performTurnRight();
+        	}
         }
     }
 
+	private void performTurnRight() {
+		oldFacing = targetFacing;
+		targetFacing = targetFacing.getTurnedRight();
+		isTurningRight = true;
+	}
+
     @Override
     public void startUnloading() {
-        unloadingStartTime = System.currentTimeMillis();
-        isUnloading = true;
+    	if(inHardcoreMode) {
+    		delay = ThreadLocalRandom.current().nextLong(300);
+    		now = System.currentTimeMillis();
+    		isWaitingToUnloading = true;
+    	} else {
+    		performUnload();
+    	}
     }
+
+	private void performUnload() {
+		unloadingStartTime = System.currentTimeMillis();
+		isUnloading = true;
+	}
 
     private void decreaseBattery() {
         battery -= SimulatorConfig.getBatteryLoss();
@@ -248,4 +318,8 @@ public class DriveManager implements IRobotActors {
     public void setUnloadingTime(long unloadingTime) {
         this.unloadingTime = unloadingTime;
     }
+
+	public void activateHardcoreMode() {
+		inHardcoreMode = true;
+	}
 }
