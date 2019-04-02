@@ -2,15 +2,10 @@ package de.hpi.mod.sim.env.view.panels;
 
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
-import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 
 import java.awt.*;
 import java.util.ArrayList;
