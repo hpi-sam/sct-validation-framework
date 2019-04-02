@@ -33,7 +33,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private int stationID;
     private int packageID;
 
-    private RobotState state = RobotState.TO_BATTERY;
+    private RobotState state = RobotState.TO_QUEUE;
     private boolean driving = false;
     private boolean hasPackage = false;
 
