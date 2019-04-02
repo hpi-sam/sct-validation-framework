@@ -70,7 +70,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
         sliderConstraints.fill = GridBagConstraints.HORIZONTAL;
         sliderConstraints.weightx = 1.0; //the slider gets all the additional space
         sliderConstraints.insets = new Insets(0, 3, 0, 3);
-        add(new MenuWrapper(200, 60, DriveSimFrame.MAIN_MENU_COLOR, valueSlider), sliderConstraints);
+        add(new MenuWrapper(100, 60, DriveSimFrame.MAIN_MENU_COLOR, valueSlider), sliderConstraints);
 	}
 	
 	private JSlider newSpeedSlider() {

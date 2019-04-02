@@ -24,8 +24,6 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
 	private static final long serialVersionUID = -42067353669036945L;
 	private SimulationWorld world;
     private boolean isRightClickedRobot = false;
-    private JTree stateTree;
-    private DefaultTreeModel stateTreeModel;
 
     /**
      * List of refreshable information
@@ -55,32 +53,15 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
     }
 
     private void addStateTree() {
-		
-    	DefaultMutableTreeNode topStateNode = new DefaultMutableTreeNode("State:");
-	    
-    	stateTreeModel = new DefaultTreeModel(topStateNode);
+    	JLabel stateTree = new JLabel();
     	
-	    stateTree = new JTree(stateTreeModel);
-	    stateTree.setShowsRootHandles(false);
-	    stateTree.setToolTipText("<html>This feature is experimental. <br>Please see the project documentation for neccessary naming conventions.");
-	    
-	    refresher.add(new StateTreeRefresher(topStateNode));
-	    
-	    DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-        renderer.setLeafIcon(null);
-        renderer.setOpenIcon(null);
-        renderer.setClosedIcon(null);
-        stateTree.setCellRenderer(renderer);
-        
-        if(isRightClickedRobot)
-        	stateTree.setBackground(DriveSimFrame.MENU_RED);
-        else
-        	stateTree.setBackground(DriveSimFrame.MENU_GREEN);
-	    
-        stateTree.setAlignmentX(LEFT_ALIGNMENT);
-		add(stateTree);
-	}
-
+    	StateTreeRefresher stateTreeRefresher = new StateTreeRefresher(stateTree);
+    	refresher.add(stateTreeRefresher);
+    	stateTreeRefresher.refresh();
+    	
+    	add(stateTree);
+    }
+    
 	/**
      * Adds the information to the panel
      * @param template The name of the value
@@ -165,11 +146,11 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
     
     private class StateTreeRefresher implements InfoRefresher {
     	
-    	private DefaultMutableTreeNode topNode;
+    	private JLabel label;
     	private String currentDisplay = "";
 
-		public StateTreeRefresher(DefaultMutableTreeNode topNode) {
-			this.topNode = topNode;
+		public StateTreeRefresher(JLabel label) {
+			this.label = label;
 		}
 
 		@Override
@@ -186,25 +167,21 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         		String robotState = robot.getMachineState();
         		if (!robotState.equals(currentDisplay)) {
         			currentDisplay = robotState;
-        			topNode.removeAllChildren();
-                	stateTreeModel.reload();
-                	
-                	DefaultMutableTreeNode lastNode = topNode;
-        		
-	        		String[] states = splitStates(robotState);
-	        		for(String state : states) {
-	        			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(state);
-	        			
-	        			stateTreeModel.insertNodeInto(newNode, lastNode, 0);
-	        			
-	        			lastNode = newNode;
-	        		}
-	        		stateTree.scrollPathToVisible(new TreePath(lastNode.getPath()));
+        			
+        			String[] states = splitStates(robotState);
+        			StringBuilder stringBuilder = new StringBuilder("<html>State:<br/>");
+        			for(int i = 0; i < states.length; i++) {
+        				for(int j = 0; j < i + 1; j++)
+        					stringBuilder.append("_");
+        				stringBuilder.append(states[i]);
+        				stringBuilder.append("<br/>");
+        			}
+        			
+        			label.setText(stringBuilder.toString());
         		}
         		
         	} else {
-        		topNode.removeAllChildren();
-            	stateTreeModel.reload();
+        		label.setText("<html>State: -");
         	}
         	
 		}
