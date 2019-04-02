@@ -167,7 +167,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         			StringBuilder stringBuilder = new StringBuilder("<html>State:<br/>");
         			for(int i = 0; i < states.length; i++) {
         				for(int j = 0; j < 2*i + 1; j++)
-        					stringBuilder.append("&nbsp;");
+        					stringBuilder.append("&nbsp;"); //adds a secure space since the JLabel won't render normal spaces liek we want it to
         				stringBuilder.append(states[i]);
         				stringBuilder.append("<br/>");
         			}
