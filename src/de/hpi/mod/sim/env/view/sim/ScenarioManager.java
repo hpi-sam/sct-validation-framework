@@ -353,6 +353,7 @@ public class ScenarioManager {
     		List<NewRobot> newRobots = new ArrayList<>();
     		
     		//for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*SimulatorConfig.getBatteriesPerStation(); i++) {
+    		//TODO: Use many robots after drive logic update in the queue, otherwise the robots will almost immediately crash in the queue
     		for(int i=0; i<3; i++) {
     			do {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);

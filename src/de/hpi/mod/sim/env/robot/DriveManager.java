@@ -166,7 +166,7 @@ public class DriveManager implements IRobotActors {
         decreaseBattery();
         if (hasPower()) {
         	if(inHardcoreMode) {
-        		delay = ThreadLocalRandom.current().nextLong(300);
+        		delay = getCustomRandomisedDelay(2000);
         		now = System.currentTimeMillis();
         		isWaitingToMove = true;
         	} else {
@@ -174,6 +174,21 @@ public class DriveManager implements IRobotActors {
         	}
         }
     }
+
+	private long getCustomRandomisedDelay(int upperBound) {
+		int percentage = ThreadLocalRandom.current().nextInt(100);
+		if(percentage < 50) {
+			return ThreadLocalRandom.current().nextLong(upperBound/10);
+		} else if (percentage < 70) {
+			return ThreadLocalRandom.current().nextLong(upperBound/10, upperBound/8);
+		} else if (percentage < 85) {
+			return ThreadLocalRandom.current().nextLong(upperBound/8, upperBound/5);
+		} else if (percentage < 95) {
+			return ThreadLocalRandom.current().nextLong(upperBound/5, upperBound/2);
+		} else {
+			return ThreadLocalRandom.current().nextLong(upperBound/2, upperBound);
+		}
+	}
 
 	private void performDriveForward() {
 		oldPosition = currentPosition;
@@ -187,7 +202,7 @@ public class DriveManager implements IRobotActors {
         decreaseBattery();
         if (hasPower()) {
         	if(inHardcoreMode) {
-        		delay = ThreadLocalRandom.current().nextLong(300);
+        		delay = getCustomRandomisedDelay(300);
         		now = System.currentTimeMillis();
         		isWaitingToTurningLeft = true;
         	} else {
@@ -207,7 +222,7 @@ public class DriveManager implements IRobotActors {
         decreaseBattery();
         if (hasPower()) {
         	if(inHardcoreMode) {
-        		delay = ThreadLocalRandom.current().nextLong(300);
+        		delay = getCustomRandomisedDelay(300);
         		now = System.currentTimeMillis();
         		isWaitingToTurningRight = true;
         	} else {
@@ -225,7 +240,7 @@ public class DriveManager implements IRobotActors {
     @Override
     public void startUnloading() {
     	if(inHardcoreMode) {
-    		delay = ThreadLocalRandom.current().nextLong(300);
+    		delay = getCustomRandomisedDelay(300);
     		now = System.currentTimeMillis();
     		isWaitingToUnloading = true;
     	} else {
