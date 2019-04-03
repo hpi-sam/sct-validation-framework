@@ -166,7 +166,7 @@ public class DriveManager implements IRobotActors {
         decreaseBattery();
         if (hasPower()) {
         	if(inHardcoreMode) {
-        		delay = getCustomRandomisedDelay(2000);
+        		delay = getCustomRandomisedDelay(1000);
         		now = System.currentTimeMillis();
         		isWaitingToMove = true;
         	} else {

@@ -68,9 +68,9 @@ public class Station {
 
     boolean isDriveLock() { return driveLock; }
 
-    void toggleDriveLock() { 
+    boolean toggleDriveLock() { 
     	driveLock = !driveLock; 
-    	// return driveLock;
+    	return driveLock;
 	}
 
     void resetDriveLock() { driveLock = false; }
