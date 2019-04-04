@@ -34,7 +34,7 @@ public class DriveManager implements IRobotActors {
     
     private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
     
-    private boolean inHardcoreMode = false;
+    private int maxDelay = 0;
 	private boolean isWaitingToMove = false;
 	private boolean isWaitingToTurningLeft = false;
 	private boolean isWaitingToTurningRight = false;
@@ -53,7 +53,7 @@ public class DriveManager implements IRobotActors {
     }
 
     public void update(float delta) {
-    	if(inHardcoreMode) {
+    	if(maxDelay > 0) {
     		if(delay + now <= System.currentTimeMillis()) {
     			if (isWaitingToMove) {
     				performDriveForward();
@@ -95,7 +95,7 @@ public class DriveManager implements IRobotActors {
 	}
 
 	private void unload() {
-		if (System.currentTimeMillis() - unloadingStartTime > unloadingTime) {
+		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(SimulatorConfig.getRobotSpeedLevel()+1))) {
 		    isUnloading = false;
 		    listener.unloadingCompleted();
 		}
@@ -165,8 +165,8 @@ public class DriveManager implements IRobotActors {
     public void driveForward() {
         decreaseBattery();
         if (hasPower()) {
-        	if(inHardcoreMode) {
-        		delay = getCustomRandomisedDelay(1000);
+        	if(maxDelay > 0) {
+        		delay = getCustomRandomisedDelay(maxDelay);
         		now = System.currentTimeMillis();
         		isWaitingToMove = true;
         	} else {
@@ -203,8 +203,8 @@ public class DriveManager implements IRobotActors {
     public void turnLeft() {
         decreaseBattery();
         if (hasPower()) {
-        	if(inHardcoreMode) {
-        		delay = getCustomRandomisedDelay(300);
+        	if(maxDelay > 0) {
+        		delay = getCustomRandomisedDelay(maxDelay/3);
         		now = System.currentTimeMillis();
         		isWaitingToTurningLeft = true;
         	} else {
@@ -223,8 +223,8 @@ public class DriveManager implements IRobotActors {
     public void turnRight() {
         decreaseBattery();
         if (hasPower()) {
-        	if(inHardcoreMode) {
-        		delay = getCustomRandomisedDelay(300);
+        	if(maxDelay > 0) {
+        		delay = getCustomRandomisedDelay(maxDelay/3);
         		now = System.currentTimeMillis();
         		isWaitingToTurningRight = true;
         	} else {
@@ -241,8 +241,8 @@ public class DriveManager implements IRobotActors {
 
     @Override
     public void startUnloading() {
-    	if(inHardcoreMode) {
-    		delay = getCustomRandomisedDelay(300);
+    	if(maxDelay > 0) {
+    		delay = getCustomRandomisedDelay(maxDelay/3);
     		now = System.currentTimeMillis();
     		isWaitingToUnloading = true;
     	} else {
@@ -336,7 +336,7 @@ public class DriveManager implements IRobotActors {
         this.unloadingTime = unloadingTime;
     }
 
-	public void activateHardcoreMode() {
-		inHardcoreMode = true;
+	public void setMaxDelay(int maxDelay) {
+		this.maxDelay = maxDelay;
 	}
 }

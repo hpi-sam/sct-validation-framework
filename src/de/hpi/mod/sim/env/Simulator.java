@@ -67,7 +67,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         return robot;
     }
     
-    public Robot addRobotInScenarioHPI(Position position, Orientation facing, boolean inHardcoreMode) {
+    public Robot addRobotInScenarioHPI(Position position, Orientation facing, int delay) {
 
 		if (grid.posType(position) == PositionType.STATION || grid.posType(position) == PositionType.WAYPOINT) {
 	        int robotID = Robot.incrementID();
@@ -88,8 +88,9 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * Refreshes the Robots.
      */
     public void refresh() {
-        for (Robot robot : robots)
-            robot.refresh();
+        for (Robot robot : robots) {
+        	robot.refresh();
+        }
     }
 
     /**

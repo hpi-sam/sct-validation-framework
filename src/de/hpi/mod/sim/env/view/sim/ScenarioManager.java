@@ -360,7 +360,7 @@ public class ScenarioManager {
     	
     			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
-    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH, true));
+    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH, 1000));
     			robotsAtStations[station_number] ++;
     		}
             return newRobots;
@@ -771,7 +771,11 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
         }
     }
     
-    private class ExplosionTest extends TestScenario {
+    /**
+     * The following test only illustrates what happens, if two robots are crashing, so it fails naturally,
+     * therefore you will not use this normally
+     * 
+     * private class ExplosionTest extends TestScenario {
         public ExplosionTest() { 
         	name = "Explosion Test"; 
         	description = "Test scenario to test the explosion animation";
@@ -788,7 +792,7 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
             newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotTwo));
             return newRobots;
         }
-    }
+    }**/
     
     private class NewTestRobot extends NewRobot {
 
@@ -813,22 +817,22 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     private class NewScenarioRobot extends NewRobot{
     	private Position position;
     	private Orientation facing;
-    	private boolean inHardcoreMode = false;
+    	private int delay = 0;
     	
     	public NewScenarioRobot(Position position, Orientation facing) {
     		this.position = position;
     		this.facing = facing;
     	}
     	
-    	public NewScenarioRobot(Position position, Orientation facing, boolean inHardcoreMode) {
+    	public NewScenarioRobot(Position position, Orientation facing, int delay) {
 			this.position = position;
 			this.facing = facing;
-			this.inHardcoreMode = inHardcoreMode;
+			this.delay = delay;
 		}
 
 		@Override
     	public Robot register(SimulationWorld sim) {
-    		return sim.addRobotInScenarioHPI2(position, facing, inHardcoreMode);
+    		return sim.addRobotInScenarioHPI2(position, facing, delay);
     	}
     }
 

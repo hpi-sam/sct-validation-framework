@@ -78,34 +78,33 @@ public class StationManager implements IRobotStationDispatcher {
      */
     @Override
     public boolean requestEnteringStation(int robotID, int stationID) {
-        return requestDriveLock(stationID);
+    	 if(!getStationByID(stationID).blocked()) {
+    		 getStationByID(stationID).blockQueue();
+    		 return true;
+         } else {
+         	 return false;
+         }
     }
 
-    /**
+	/**
      * Checks whether the robot is currently allowed to drive to the queue
      */
     @Override
     public boolean requestLeavingBattery(int robotID, int stationID) {
-    	requestDriveLock(stationID);
+    	getStationByID(stationID).freeBattery();
     	return true;
-    }
-
-    private boolean requestDriveLock(int stationID) {
-        Station station = getStationByID(stationID);
-        // If Robot can enter it activates the lock
-        station.toggleDriveLock();
-        return !station.isDriveLock();
     }
 
     @Override
     public void reportChargingAtStation(int robotID, int stationID) {
-        getStationByID(stationID).resetDriveLock();
+        getStationByID(stationID).blockBattery();
     }
 
     @Override
     public void reportEnteringQueueAtStation(int robotID, int stationID) {
-        getStationByID(stationID).unregisterBatteryWithRobotIfPresent(robotID);
-        getStationByID(stationID).resetDriveLock();
+    	Station station = getStationByID(stationID);
+        station.unregisterBatteryWithRobotIfPresent(robotID);
+        station.unblockQueue();
     }
 
     @Override
