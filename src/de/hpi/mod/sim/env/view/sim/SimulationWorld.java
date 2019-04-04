@@ -202,8 +202,8 @@ public class SimulationWorld {
 		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets));
 	}
 
-	public Robot addRobotInScenarioHPI2(Position pos, Orientation facing, boolean inHardcoreMode) {
-		return addRobotRunner(() -> simulator.addRobotInScenarioHPI(pos, facing, inHardcoreMode));
+	public Robot addRobotInScenarioHPI2(Position pos, Orientation facing, int delay) {
+		return addRobotRunner(() -> simulator.addRobotInScenarioHPI(pos, facing, delay));
 	}
 
 	private Robot addRobotRunner(AddRobotRunner runner) {

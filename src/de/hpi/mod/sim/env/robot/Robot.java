@@ -45,7 +45,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private long delay = 0;
 
 	private boolean isInTest = false;
-	private boolean inHardcoreMode = false;
+
+	private boolean refreshing = false;
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
@@ -76,17 +77,15 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, ILocation simulator,
-			IScanner simulator2, Position position, Orientation facing, boolean inHardcoreMode) {
+			IScanner simulator2, Position position, Orientation facing, int delay) {
 		this(robotID2, i, grid2, stations, simulator, simulator2, position, facing);
-		if(inHardcoreMode) {
-			manager.activateHardcoreMode();
-		}
+		manager.setMaxDelay(delay);
 	}
 
 	/**
      * Handles state changes and refreshes the State-Machine
      */
-    public void refresh() {
+    public void refresh(String memo) {
         if (!driving) {
         	if(!isInTest || !testPositionTargets.isEmpty()) {
 	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
@@ -161,7 +160,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private void handleArriveAtQueue() {
         dispatcher.reportEnteringQueueAtStation(robotID, stationID);
-        if(!isInTest) {
+    	if(!isInTest) {
         	target = location.getLoadingPositionAtStation(stationID);
         } else {
         	target = testPositionTargets.get(0);
@@ -173,7 +172,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private void handleFinishedLoading() {
     	if(now == 0) {
-    		long minWaitTime = (long) (500 / SimulatorConfig.getRobotSpeedFactor());
+    		long minWaitTime = (long) (500 / (SimulatorConfig.getRobotSpeedFactor()+1));
     		long maxWaitTime = 10 * minWaitTime;
     		delay = ThreadLocalRandom.current().nextLong(minWaitTime, maxWaitTime);
     		now = System.currentTimeMillis();
@@ -392,4 +391,16 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     public enum RobotState {
         TO_BATTERY, TO_QUEUE, TO_LOADING, TO_UNLOADING, TO_STATION, SCENARIO
     }
+
+	public void startingRefreshing() {
+		refreshing  = true;
+	}
+
+	public boolean isRefreshing() {
+		return refreshing;
+	}
+
+	public void finishRefreshing() {
+		refreshing = false;
+	}
 }

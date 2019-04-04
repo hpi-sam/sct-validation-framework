@@ -31,6 +31,10 @@ class Battery {
     boolean isFree() {
         return !blocked;
     }
+    
+    boolean isBlocked() {
+        return blocked;
+    }
 
     void setBlocked(boolean blocked) {
         this.blocked = blocked;

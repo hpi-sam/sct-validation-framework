@@ -26,6 +26,10 @@ public class Station {
      */
     private boolean driveLock = false;
 
+	private boolean blockedBattery = false;
+
+	private boolean blockedQueue = false;
+
 
     public Station(int stationID) {
         this.stationID = stationID;
@@ -68,9 +72,8 @@ public class Station {
 
     boolean isDriveLock() { return driveLock; }
 
-    boolean toggleDriveLock() { 
-    	driveLock = !driveLock; 
-    	return driveLock;
+    void acquireDriveLock() { 
+    	driveLock = true; 
 	}
 
     void resetDriveLock() { driveLock = false; }
@@ -129,4 +132,34 @@ public class Station {
 
         return stationID == station.stationID;
     }
+
+	public boolean batteriesAreEmpty() {
+		System.out.print("Are the batteries blocked: ");
+		System.out.println(blockedBattery);
+		if(blockedBattery) {
+			System.out.println("Allow drive in stations");
+			return false;
+		}
+		return true;
+	}
+
+	public void freeBattery() {
+		blockedBattery = false;
+	}
+
+	public void blockBattery() {
+		blockedBattery = true;
+	}
+
+	public boolean blocked() {
+		return blockedBattery || blockedQueue;
+	}
+
+	public void blockQueue() {
+		blockedQueue  = true;
+	}
+
+	public void unblockQueue() {
+		blockedQueue = false;
+	}
 }
