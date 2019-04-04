@@ -69,7 +69,7 @@ public class StationManager implements IRobotStationDispatcher {
     	if(target.getX() >= 0) {
     		return target.getX() / 3 * 2;
     	} else {
-    		return (-target.getX() - 2) / 3 * 2 + 1; 
+    		return (-target.getX() - 1) / 3 * 2 + 1; 
     	}
     }
 

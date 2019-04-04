@@ -287,8 +287,8 @@ public class DriveSimFrame extends JFrame {
 		//Set up the color and size of the whole window
 		getContentPane().setBackground(MAIN_MENU_COLOR);
 		setBackground(MAIN_MENU_COLOR);
-		setMinimumSize(new Dimension(1000, 800));
-		setPreferredSize(new Dimension(1000, 800));
+		setMinimumSize(new Dimension(1022, 800));
+		setPreferredSize(new Dimension(1022, 800));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);
