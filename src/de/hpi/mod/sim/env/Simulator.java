@@ -76,7 +76,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 	                robotID,
 	                stationID,
 	                grid, stations, this, this,
-	                position, facing, inHardcoreMode);
+	                position, facing, delay);
 	        robots.add(robot);
 	        return robot;
 		} else {
