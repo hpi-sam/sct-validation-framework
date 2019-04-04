@@ -2,6 +2,8 @@ package de.hpi.mod.sim.env.view.sim;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.net.URL;
 
@@ -16,6 +18,7 @@ public class ExplosionRenderer {
 	private Image explosion;
 	private Robot robot;
 	private boolean shouldRender = false;
+	private Rectangle explosionRectangle;
 
 	public ExplosionRenderer(SimulationWorld world) {
 		this.world = world;
@@ -36,6 +39,7 @@ public class ExplosionRenderer {
 	public void reset() {
 		shouldRender = false;
 		robot = null;
+		explosionRectangle = null;
 	}
 	
 	public void render(Graphics graphic) {
@@ -45,7 +49,15 @@ public class ExplosionRenderer {
 	        int x = (int) drawPos.getX() - explosion.getWidth(null) / 2 + 15; //the explosion gif we use doesn't start its explosion in the exact center. Thus we add 15 to center it
 	        int y = (int) drawPos.getY() - explosion.getHeight(null) / 2;
 	        
+	        if(explosionRectangle == null)
+	        	explosionRectangle = new Rectangle(x, y, explosion.getWidth(null), explosion.getHeight(null));
+	        
 	        graphic.drawImage(explosion, x, y, null);
 		}
+	}
+
+	public void mousePressed(MouseEvent e) {
+		if (shouldRender && explosionRectangle.contains(e.getX(), e.getY()))
+			reset();
 	}
 }
