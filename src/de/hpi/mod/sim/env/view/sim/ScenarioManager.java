@@ -56,6 +56,7 @@ public class ScenarioManager {
         scenarios.add(new EasyScenario());
         scenarios.add(new MediumScenario());
         scenarios.add(new HardScenario());
+        scenarios.add(new HardcoreScenario());
 	}
 
 	private void initializeTestList() {
@@ -84,7 +85,7 @@ public class ScenarioManager {
         simpleDrivingTests.add(new MiddleRoute());
         simpleDrivingTests.add(new LongRoute());
         simpleDrivingTests.add(new OppositeRobots());
-        simpleDrivingTests.add(new ExplosionTest());
+        // simpleDrivingTests.add(new ExplosionTest()); Test to test explosion functionality
         testGroups.put("Simple drive logic", simpleDrivingTests);
         ArrayList<TestScenario> complexDrivingTests = new ArrayList<>();
         complexDrivingTests.add(new MiddleRouteTwoRobots());
@@ -253,9 +254,9 @@ public class ScenarioManager {
     			station_number = ThreadLocalRandom.current().nextInt(maxStations);
     		} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     		
-            newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
-            		+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
-            		SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
+            newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+            		+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
+            		SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH));
             return newRobots;
     	}
     }
@@ -277,9 +278,9 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
-    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
-    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
+    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
+    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2), Orientation.NORTH));
     			robotsAtStations[station_number] ++;
     		}
             return newRobots;
@@ -304,9 +305,9 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
-    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
-    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
+    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
+    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2), Orientation.NORTH));
     			robotsAtStations[station_number] ++;
     		}
             return newRobots;
@@ -330,9 +331,36 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobot(new Position(SimulatorConfig.getFirstStationTop().getX()
-    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations(), 
-    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]), Orientation.EAST));
+    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
+    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH));
+    			robotsAtStations[station_number] ++;
+    		}
+            return newRobots;
+    	}
+    }
+    
+    private class HardcoreScenario extends Scenario{
+    	public HardcoreScenario() {
+    		name = "Hardcore mode";
+    	}
+    	
+    	@Override
+    	public List<NewRobot> initializeScenario(){
+    		int maxStations = SimulatorConfig.getChargingStationsInUse();
+    		int station_number;
+    		int[] robotsAtStations = new int[maxStations];
+    		List<NewRobot> newRobots = new ArrayList<>();
+    		
+    		for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*SimulatorConfig.getBatteriesPerStation(); i++) {
+    		//for(int i=0; i<3; i++) {
+    			do {
+    				station_number = ThreadLocalRandom.current().nextInt(maxStations);
+    			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
+    	
+    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
+    					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH, true));
     			robotsAtStations[station_number] ++;
     		}
             return newRobots;
@@ -474,9 +502,8 @@ public class ScenarioManager {
          public List<NewRobot> initializeScenario() {
              List<NewRobot> newRobots = new ArrayList<>();
              List<Position> targets = new ArrayList<>();
-             targets.add(new Position(2,0));
              targets.add(new Position(3,10));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
              return newRobots;
          }
     }
@@ -492,12 +519,12 @@ public class ScenarioManager {
          public List<NewRobot> initializeScenario() {
              List<NewRobot> newRobots = new ArrayList<>();
              List<Position> targets = new ArrayList<>();
-             targets.add(new Position(2,0));
+             //targets.add(new Position(2,0));
              targets.add(new Position(3,10));
              targets.add(new Position(1,0));
              targets.add(new Position(2,0));
              targets.add(new Position(6,10));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
              return newRobots;
          }
     }
@@ -514,7 +541,6 @@ public class ScenarioManager {
 	             List<NewRobot> newRobots = new ArrayList<>();
 	             List<Position> targets = new ArrayList<>();
 	             List<Position> targets2 = new ArrayList<>();
-	             targets.add(new Position(2,0));
 	             targets.add(new Position(3,10));
 	             targets.add(new Position(1,0));
 	             targets.add(new Position(2,0));
@@ -529,8 +555,8 @@ public class ScenarioManager {
 	             targets2.add(new Position(6,10));
 	             targets2.add(new Position(7,0));
 	             targets2.add(new Position(8,0));
-	             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
-	             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targets2));
+	             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+	             newRobots.add(new NewTestRobot(new Position(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets2));
 	             return newRobots;
 	         }
 	    }
@@ -547,7 +573,6 @@ public class ScenarioManager {
 	         List<NewRobot> newRobots = new ArrayList<>();
 	         List<Position> targets = new ArrayList<>();
 	         List<Position> targets2 = new ArrayList<>();
-	         targets.add(new Position(2,0));
 	         targets.add(new Position(3,10));
 	         targets.add(new Position(1,0));
 	         targets.add(new Position(2,0));
@@ -555,15 +580,14 @@ public class ScenarioManager {
 	         targets.add(new Position(4,0));
 	         targets.add(new Position(5,0));
 	
-	         targets2.add(new Position(5,0));
 	         targets2.add(new Position(3,10));
 	         targets2.add(new Position(4,0));
 	         targets2.add(new Position(5,0));
 	         targets2.add(new Position(6,10));
 	         targets2.add(new Position(7,0));
 	         targets2.add(new Position(8,0));
-	         newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
-	         newRobots.add(new NewTestRobot(new Position(3, -2), RobotState.TO_BATTERY, Orientation.EAST, targets2));
+	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets2));
 	         return newRobots;
 	     }
 	}
@@ -581,7 +605,6 @@ private class MiddleRouteThreeRobots extends TestScenario {
 	         List<Position> targets = new ArrayList<>();
 	         List<Position> targets2 = new ArrayList<>();
 	         List<Position> targets3 = new ArrayList<>();
-	         targets.add(new Position(2,0));
 	         targets.add(new Position(3,10));
 	         targets.add(new Position(1,0));
 	         targets.add(new Position(2,0));
@@ -589,7 +612,6 @@ private class MiddleRouteThreeRobots extends TestScenario {
 	         targets.add(new Position(4,0));
 	         targets.add(new Position(5,0));
 	
-	         targets2.add(new Position(5,0));
 	         targets2.add(new Position(3,10));
 	         targets2.add(new Position(4,0));
 	         targets2.add(new Position(5,0));
@@ -597,16 +619,15 @@ private class MiddleRouteThreeRobots extends TestScenario {
 	         targets2.add(new Position(7,0));
 	         targets2.add(new Position(8,0));
 	         
-	         targets3.add(new Position(8,0));
 	         targets3.add(new Position(3,10));
 	         targets3.add(new Position(7,0));
 	         targets3.add(new Position(8,0));
 	         targets3.add(new Position(6,10));
 	         targets3.add(new Position(10,0));
 	         targets3.add(new Position(11,0));
-	         newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
-	         newRobots.add(new NewTestRobot(new Position(3, -2), RobotState.TO_BATTERY, Orientation.EAST, targets2));
-	         newRobots.add(new NewTestRobot(new Position(6, -2), RobotState.TO_BATTERY, Orientation.EAST, targets3));
+	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets2));
+	         newRobots.add(new NewTestRobot(new Position(8, 0), RobotState.TO_LOADING, Orientation.NORTH, targets3));
 	         return newRobots;
 	     }
 	}
@@ -625,7 +646,6 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 	         List<Position> targets2 = new ArrayList<>();
 	         List<Position> targets3 = new ArrayList<>();
 	         List<Position> targets4 = new ArrayList<>();
-	         targets.add(new Position(2,0));
 	         targets.add(new Position(3,10));
 	         targets.add(new Position(1,0));
 	         targets.add(new Position(2,0));
@@ -640,7 +660,6 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 	         targets2.add(new Position(7,0));
 	         targets2.add(new Position(8,0));
 	
-	         targets3.add(new Position(5,0));
 	         targets3.add(new Position(3,10));
 	         targets3.add(new Position(4,0));
 	         targets3.add(new Position(5,0));
@@ -654,10 +673,10 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 	         targets4.add(new Position(6,10));
 	         targets4.add(new Position(13,0));
 	         targets4.add(new Position(14,0));
-	         newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
-	         newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targets2));
-	         newRobots.add(new NewTestRobot(new Position(3, -2), RobotState.TO_BATTERY, Orientation.EAST, targets3));
-	         newRobots.add(new NewTestRobot(new Position(3, -3), RobotState.TO_BATTERY, Orientation.EAST, targets4));
+	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+	         newRobots.add(new NewTestRobot(new Position(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets2));
+	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets3));
+	         newRobots.add(new NewTestRobot(new Position(5, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets4));
 	         return newRobots;
 	     }
 	}
@@ -673,7 +692,6 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
          public List<NewRobot> initializeScenario() {
              List<NewRobot> newRobots = new ArrayList<>();
              List<Position> targets = new ArrayList<>();
-             targets.add(new Position(2,0));
              targets.add(new Position(3,10));
              targets.add(new Position(1,0));
              targets.add(new Position(2,0));
@@ -681,7 +699,7 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
              targets.add(new Position(7,0));
              targets.add(new Position(8,0));
              targets.add(new Position(12,10));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
              return newRobots;
          }
     }
@@ -795,15 +813,22 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
     private class NewScenarioRobot extends NewRobot{
     	private Position position;
     	private Orientation facing;
+    	private boolean inHardcoreMode = false;
     	
     	public NewScenarioRobot(Position position, Orientation facing) {
     		this.position = position;
     		this.facing = facing;
     	}
     	
-    	@Override
+    	public NewScenarioRobot(Position position, Orientation facing, boolean inHardcoreMode) {
+			this.position = position;
+			this.facing = facing;
+			this.inHardcoreMode = inHardcoreMode;
+		}
+
+		@Override
     	public Robot register(SimulationWorld sim) {
-    		return sim.addRobotInScenarioHPI2(position, facing);
+    		return sim.addRobotInScenarioHPI2(position, facing, inHardcoreMode);
     	}
     }
 
