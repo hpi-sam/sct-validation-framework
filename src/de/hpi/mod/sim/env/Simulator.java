@@ -88,7 +88,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      */
     public void refresh() {
         for (Robot robot : robots) {
-        	robot.refresh("I called it");
+        	robot.refresh();
         }
     }
 

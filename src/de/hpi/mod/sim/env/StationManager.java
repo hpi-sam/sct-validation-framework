@@ -89,17 +89,6 @@ public class StationManager implements IRobotStationDispatcher {
     public boolean requestLeavingBattery(int robotID, int stationID) {
     	getStationByID(stationID).freeBattery();
     	return true;
-    	//return requestDriveLock(stationID);
-    }
-
-    private boolean requestDriveLock(int stationID) {
-    	Station station = getStationByID(stationID);
-    	boolean hasDriveLock = station.isDriveLock();
-    	if(!hasDriveLock) {
-    		station.acquireDriveLock();
-    	}
-    	System.out.println(hasDriveLock);
-    	return !hasDriveLock;
     }
 
     @Override
@@ -111,14 +100,12 @@ public class StationManager implements IRobotStationDispatcher {
     public void reportEnteringQueueAtStation(int robotID, int stationID) {
     	Station station = getStationByID(stationID);
         station.unregisterBatteryWithRobotIfPresent(robotID);
-        station.resetDriveLock();
         station.unblockQueue();
     }
 
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
         getStationByID(stationID).decreaseQueue();
-        //getStationByID(stationID).resetDriveLock();
     }
 
     public List<Station> getStations() {

@@ -1,7 +1,5 @@
 package de.hpi.mod.sim.env.robot;
 
-import de.hpi.mod.sim.env.ServerGridManagement;
-import de.hpi.mod.sim.env.Simulator;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.*;
 import java.util.List;
@@ -85,7 +83,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	/**
      * Handles state changes and refreshes the State-Machine
      */
-    public void refresh(String memo) {
+    public void refresh() {
         if (!driving) {
         	if(!isInTest || !testPositionTargets.isEmpty()) {
 	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {

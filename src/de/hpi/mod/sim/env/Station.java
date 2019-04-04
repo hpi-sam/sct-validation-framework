@@ -20,12 +20,6 @@ public class Station {
      */
     private Battery[] batteries;
 
-    /**
-     * Whether a robot is driving from arrival or battery to queue-start.
-     * Is set so no two robots are driving simultaneously
-     */
-    private boolean driveLock = false;
-
 	private boolean blockedBattery = false;
 
 	private boolean blockedQueue = false;
@@ -69,14 +63,6 @@ public class Station {
     boolean hasFreeBattery() {
         return Arrays.stream(batteries).anyMatch(Battery::isFree);
     }
-
-    boolean isDriveLock() { return driveLock; }
-
-    void acquireDriveLock() { 
-    	driveLock = true; 
-	}
-
-    void resetDriveLock() { driveLock = false; }
 
     /**
      * Reserves a free battery for the robot.
@@ -132,16 +118,6 @@ public class Station {
 
         return stationID == station.stationID;
     }
-
-	public boolean batteriesAreEmpty() {
-		System.out.print("Are the batteries blocked: ");
-		System.out.println(blockedBattery);
-		if(blockedBattery) {
-			System.out.println("Allow drive in stations");
-			return false;
-		}
-		return true;
-	}
 
 	public void freeBattery() {
 		blockedBattery = false;
