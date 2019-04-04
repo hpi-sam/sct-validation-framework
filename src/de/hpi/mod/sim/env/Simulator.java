@@ -71,9 +71,15 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
 	if (grid.posType(position) == PositionType.STATION || grid.posType(position) == PositionType.WAYPOINT) {
         int robotID = Robot.incrementID();
+         int stationID;
+	        if (position.getX() < 0) {
+	        	stationID = (int) -position.getX()/SimulatorConfig.getSpaceBetweenChargingStations() * 2 - 1;
+	       } else {
+	            stationID = (int) position.getX()/SimulatorConfig.getSpaceBetweenChargingStations() * 2;
+	       }
         Robot robot = new Robot(
                 robotID,
-                (int) position.getX()/SimulatorConfig.getSpaceBetweenChargingStations(),
+                stationID,
                 grid, stations, this, this,
                 position, facing, inHardcoreMode);
         robots.add(robot);
