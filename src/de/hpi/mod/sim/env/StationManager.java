@@ -66,7 +66,11 @@ public class StationManager implements IRobotStationDispatcher {
     
     @Override
     public int getStationIDFromPosition(Position target) {
-    	return target.getX()/3;
+    	if(target.getX() >= 0) {
+    		return target.getX() / 3 * 2;
+    	} else {
+    		return (-target.getX() - 2) / 3 * 2 + 1; 
+    	}
     }
 
     /**
