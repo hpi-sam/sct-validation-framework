@@ -260,23 +260,51 @@ public class ServerGridManagement implements ISensorDataProvider {
 	}
 
 	public Position getArrivalPositionAtStation(int stationID) {
-		int x = stationID * 3 + 1;
+		int x;
+		if((stationID & 1) == 0) {
+			//even station ID means the station is on the right
+			x = stationID/2 * 3 + 1;
+		} else {
+			//odd station ID means the station is on the left
+			x = -(stationID + 1)/2 * 3 + 1;
+		}
 		return new Position(x, 0);
 	}
 
 	public Position getQueuePositionAtStation(int stationID) {
-		int x = stationID * 3 + 2;
+		int x;
+		if((stationID & 1) == 0) {
+			//even station ID means the station is on the right
+			x = stationID/2 * 3 + 2;
+		} else {
+			//odd station ID means the station is on the left
+			x = -(stationID + 1)/2 * 3 + 2;
+		}
 		return new Position(x, -SimulatorConfig.QUEUE_SIZE);
 	}
 
 	public Position getChargerPositionAtStation(int stationID, int chargerID) {
-		int x = stationID * 3;
+		int x;
+		if((stationID & 1) == 0) {
+			//even station ID means the station is on the right
+			x = stationID/2 * 3;
+		} else {
+			//odd station ID means the station is on the left
+			x = -(stationID + 1)/2 * 3;
+		}
 		int y = -2 - chargerID;
 		return new Position(x, y);
 	}
 
 	public Position getLoadingPositionAtStation(int stationID) {
-		int x = stationID * 3 + 2;
+		int x;
+		if((stationID & 1) == 0) {
+			//even station ID means the station is on the right
+			x = stationID/2 * 3 + 2;
+		} else {
+			//odd station ID means the station is on the left
+			x = -(stationID + 1)/2 * 3 + 2;
+		}
 		return new Position(x, 0);
 	}
 

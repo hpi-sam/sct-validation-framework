@@ -60,7 +60,7 @@ public class GridRenderer {
         int stationDepth = SimulatorConfig.QUEUE_SIZE + 1;
 
         for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
-            for (int x = (int) blocksOffsetX; x < widthInBlocks + blocksOffsetX; x++) {
+            for (int x = (int) blocksOffsetX - widthInBlocks/2; x < widthInBlocks/2 + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
                 CellType cellType = grid.cellType(current);
                 
@@ -74,8 +74,9 @@ public class GridRenderer {
                 boolean isZeroZero = current.is(new Position(0, 0));
                 
                 // Unused stations should be drawn differently
+                int stationCount = SimulatorConfig.getChargingStationsInUse();
                 boolean isUnusedStationBlock = (cellType == CellType.BATTERY || cellType == CellType.STATION || cellType == CellType.LOADING || cellType == CellType.QUEUE) 
-                		&& (current.getX() >= SimulatorConfig.getChargingStationsInUse() * 3 || current.getX() < 0);
+                		&& (current.getX() >= stationCount * 3 / 2 - stationCount % 2 || current.getX() < -stationCount * 3 / 2 + stationCount % 2);
                 
                 boolean blockedBy1 = world.isBlockedByHighlightedRobot1(current);
                 boolean blockedBy2 = world.isBlockedByHighlightedRobot2(current);

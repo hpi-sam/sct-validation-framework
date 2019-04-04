@@ -69,18 +69,19 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     
     public Robot addRobotInScenarioHPI(Position position, Orientation facing, int delay) {
 
-	if (grid.posType(position) == PositionType.STATION || grid.posType(position) == PositionType.WAYPOINT) {
-        int robotID = Robot.incrementID();
-        Robot robot = new Robot(
-                robotID,
-                (int) position.getX()/SimulatorConfig.getSpaceBetweenChargingStations(),
-                grid, stations, this, this,
-                position, facing, delay);
-        robots.add(robot);
-        return robot;
-    } else {
-    	throw new IllegalStateException("Illegal initial position for scenario robot. Please contact the mod chair");
-    }
+		if (grid.posType(position) == PositionType.STATION || grid.posType(position) == PositionType.WAYPOINT) {
+	        int robotID = Robot.incrementID();
+	        int stationID = stations.getStationIDFromPosition(position);
+	        Robot robot = new Robot(
+	                robotID,
+	                stationID,
+	                grid, stations, this, this,
+	                position, facing, inHardcoreMode);
+	        robots.add(robot);
+	        return robot;
+		} else {
+	    	throw new IllegalStateException("Illegal initial position for scenario robot. Please contact the mod chair");
+		}
     }
 
     /**
