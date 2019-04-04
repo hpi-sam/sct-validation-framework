@@ -83,7 +83,7 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public boolean requestLeavingBattery(int robotID, int stationID) {
     	requestDriveLock(stationID);
-    	return true;
+    	return getStationByID(stationID).isDriveLock();
     }
 
     private boolean requestDriveLock(int stationID) {
