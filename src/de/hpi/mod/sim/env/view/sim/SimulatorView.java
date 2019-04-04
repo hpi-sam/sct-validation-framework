@@ -90,7 +90,9 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     }
 
     @Override
-    public void mousePressed(MouseEvent e) { }
+    public void mousePressed(MouseEvent e) {
+    	explosionRenderer.mousePressed(e);
+    }
 
     @Override
     public void mouseReleased(MouseEvent e) { }
