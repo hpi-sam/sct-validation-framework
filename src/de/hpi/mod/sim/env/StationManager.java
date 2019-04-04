@@ -82,13 +82,15 @@ public class StationManager implements IRobotStationDispatcher {
      */
     @Override
     public boolean requestLeavingBattery(int robotID, int stationID) {
-        return requestDriveLock(stationID);
+    	requestDriveLock(stationID);
+    	return true;
     }
 
     private boolean requestDriveLock(int stationID) {
         Station station = getStationByID(stationID);
         // If Robot can enter it activates the lock
-        return !station.isDriveLock() && station.toggleDriveLock();
+        station.toggleDriveLock();
+        return !station.isDriveLock();
     }
 
     @Override

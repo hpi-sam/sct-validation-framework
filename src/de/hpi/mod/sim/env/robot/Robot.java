@@ -1,5 +1,7 @@
 package de.hpi.mod.sim.env.robot;
 
+import de.hpi.mod.sim.env.ServerGridManagement;
+import de.hpi.mod.sim.env.Simulator;
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.*;
 import java.util.List;
@@ -33,7 +35,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private int stationID;
     private int packageID;
 
-    private RobotState state = RobotState.TO_BATTERY;
+    private RobotState state = RobotState.TO_QUEUE;
     private boolean driving = false;
     private boolean hasPackage = false;
 
@@ -43,6 +45,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private long delay = 0;
 
 	private boolean isInTest = false;
+	private boolean inHardcoreMode = false;
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
@@ -72,7 +75,15 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         this.state = initialState;
     }
 
-    /**
+    public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, ILocation simulator,
+			IScanner simulator2, Position position, Orientation facing, boolean inHardcoreMode) {
+		this(robotID2, i, grid2, stations, simulator, simulator2, position, facing);
+		if(inHardcoreMode) {
+			manager.activateHardcoreMode();
+		}
+	}
+
+	/**
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
