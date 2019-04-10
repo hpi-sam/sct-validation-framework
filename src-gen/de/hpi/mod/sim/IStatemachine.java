@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.machine;
+package de.hpi.mod.sim;
 
 /**
  * Basic interface for state machines.

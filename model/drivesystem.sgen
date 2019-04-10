@@ -5,7 +5,6 @@ GeneratorModel for yakindu::java {
 		feature Outlet {
 			targetProject = "drivesystem"
 			targetFolder = "src-gen"
-			libraryTargetFolder = "src"
 		}
 		
 		feature Naming {

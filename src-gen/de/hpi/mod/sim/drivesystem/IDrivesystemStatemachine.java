@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.drivesystem;
 
-import de.hpi.mod.sim.machine.IStatemachine;
-import de.hpi.mod.sim.machine.ITimerCallback;
+import de.hpi.mod.sim.IStatemachine;
+import de.hpi.mod.sim.ITimerCallback;
 
 public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
 	public interface SCInterface {

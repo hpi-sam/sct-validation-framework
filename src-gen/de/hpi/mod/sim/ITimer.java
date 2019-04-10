@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.machine;
+package de.hpi.mod.sim;
 
 /**
  * Interface a timer has to implement. Use to implement your own timer
