@@ -33,7 +33,7 @@ public class SimulatorConfig {
 	public static final float BATTERY_LOW = 35;
 	public static final float BATTERY_LOSS = .1f;
 	public static final float BATTERY_LOADING_SPEED = .02f;
-	public static final int DEFAULT_UNLOADING_RANGE = 30;
+	public static final int DEFAULT_UNLOADING_RANGE = 50;
 	
 	public static final float DEFAULT_BLOCK_SIZE = 20;
 	public static final float DEFAULT_OFFSET_X = 0;
@@ -70,7 +70,7 @@ public class SimulatorConfig {
 	/**
      * Number of vertical unloading positions.
      */
-	public static final int DEFAULT_MAP_HEIGHT = 7;
+	public static final int DEFAULT_MAP_HEIGHT = 10;
 
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
