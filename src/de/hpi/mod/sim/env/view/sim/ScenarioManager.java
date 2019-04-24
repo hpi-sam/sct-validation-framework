@@ -69,6 +69,7 @@ public class ScenarioManager {
 
 	private void initializeTestGroupsMap() {
 		ArrayList<TestScenario> drivingToCrossroadTests = new ArrayList<>();
+		drivingToCrossroadTests.add(new DriveToDropPosition());
         drivingToCrossroadTests.add(new OppositeRobotsOnCrossroadScenario());
         drivingToCrossroadTests.add(new TwoRobotsOnCrossroadScenario());
         drivingToCrossroadTests.add(new ThreeRobotsOnCrossroadScenario());
@@ -486,6 +487,23 @@ public class ScenarioManager {
              List<Position> targets = new ArrayList<>();
              targets.add(new Position(2,0));
              newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             return newRobots;
+         }
+    }
+    
+    private class DriveToDropPosition extends TestScenario {
+    	
+    	public DriveToDropPosition() {
+    		name = "Drive to unloading shaft";
+    		description = "Drive to unloading shaft";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targets = new ArrayList<>();
+             targets.add(new Position(-6,9));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
              return newRobots;
          }
     }
