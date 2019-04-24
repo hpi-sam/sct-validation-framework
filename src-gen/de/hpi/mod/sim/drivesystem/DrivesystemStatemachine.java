@@ -205,6 +205,16 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			this.cROSSROAD = value;
 		}
 		
+		private long bLOCKED;
+		
+		public long getBLOCKED() {
+			return bLOCKED;
+		}
+		
+		public void setBLOCKED(long value) {
+			this.bLOCKED = value;
+		}
+		
 	}
 	
 	protected SCIPositionTypeImpl sCIPositionType;
@@ -399,6 +409,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCIPositionType.setSTATION(1);
 		
 		sCIPositionType.setCROSSROAD(2);
+		
+		sCIPositionType.setBLOCKED(3);
 		
 		sCIOrientation.setNORTH(0);
 		
@@ -798,7 +810,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_5_tr0_tr0() {
-		return sCIData.operationCallback.isOnTarget();
+		return (sCIData.operationCallback.isOnTarget() || sCIData.operationCallback.canUnloadToTarget());
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_6_tr0_tr0() {

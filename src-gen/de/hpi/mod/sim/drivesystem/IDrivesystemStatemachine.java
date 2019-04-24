@@ -118,6 +118,10 @@ public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
 		
 		public void setCROSSROAD(long value);
 		
+		public long getBLOCKED();
+		
+		public void setBLOCKED(long value);
+		
 	}
 	
 	public SCIPositionType getSCIPositionType();
