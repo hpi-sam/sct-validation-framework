@@ -41,6 +41,10 @@ public class Position {
                 ", y=" + y +
                 '}';
     }
+    
+    public Position getModified(int dx, int dy) {
+        return new Position(x + dx, y + dy);
+    }
 
     public static Position nextPositionInOrientation(Orientation facing, Position current) {
         switch (facing) {

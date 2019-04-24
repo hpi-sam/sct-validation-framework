@@ -60,7 +60,9 @@ public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
 		
 		public long targetDirection();
 		
-		public boolean isTargetReached();
+		public boolean isOnTarget();
+		
+		public boolean canUnloadToTarget();
 		
 		public boolean blockedLeft();
 		

@@ -23,7 +23,7 @@ public interface ISensor {
     
     int targetY();
 
-    boolean isTargetReached();
+    boolean isOnTarget();
 
     boolean blockedLeft();
 
@@ -40,4 +40,6 @@ public interface ISensor {
     boolean blockedCrossroadAhead();
 
     boolean blockedCrossroadRight();
+
+	boolean canUnloadToTarget();
 }

@@ -188,9 +188,15 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     }
 
     @Override
-    public boolean isTargetReached() {
-        return data.isTargetReached();
+    public boolean isOnTarget() {
+        return data.isOnTarget();
     }
+
+    @Override
+    public boolean canUnloadToTarget() {
+        return data.canUnloadToTarget();
+    }
+
 
     @Override
     public boolean blockedLeft() {

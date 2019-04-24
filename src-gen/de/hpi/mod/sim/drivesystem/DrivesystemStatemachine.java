@@ -798,7 +798,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_5_tr0_tr0() {
-		return sCIData.operationCallback.isTargetReached();
+		return sCIData.operationCallback.isOnTarget();
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_6_tr0_tr0() {

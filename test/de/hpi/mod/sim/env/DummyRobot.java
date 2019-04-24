@@ -50,9 +50,14 @@ public class DummyRobot implements ISensor, IRobotActors, IProcessor {
     }
 
     @Override
-    public boolean isTargetReached() {
+    public boolean isOnTarget() {
         return false;
     }
+
+	@Override
+	public boolean canUnloadToTarget() {
+		return false;
+	}
 
     @Override
     public boolean blockedLeft() {

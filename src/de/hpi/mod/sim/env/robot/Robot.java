@@ -264,12 +264,21 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     @Override
-    public boolean isTargetReached() {
+    public boolean isOnTarget() {
         return manager.currentPosition().equals(target) && this.pos().equals(this.oldPos());
+    }
+
+    @Override
+    public boolean canUnloadToTarget() {
+        return this.pos().equals(this.oldPos()) &&
+        		((manager.currentPosition().getModified(-1,0).equals(target) && manager.currentFacing() == Orientation.NORTH) ||
+        		 (manager.currentPosition().getModified(1,0).equals(target) && manager.currentFacing() == Orientation.SOUTH) ||
+        		 (manager.currentPosition().getModified(0,-1).equals(target) && manager.currentFacing() == Orientation.WEST) ||
+        		 (manager.currentPosition().getModified(0,1).equals(target) && manager.currentFacing() == Orientation.EAST) );
     }
     
     public boolean hasReachedAllTargets() {
-    	return testPositionTargets.isEmpty() && this.isTargetReached();
+    	return testPositionTargets.isEmpty() && this.isOnTarget();
     }
 
     @Override
