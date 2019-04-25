@@ -217,7 +217,32 @@ public class ServerGridManagement implements ISensorDataProvider {
 			return Direction.random();
 		}
 		
+		// calculate steps to target (relative to orientation)
+		int steps_ahead = 0, steps_right = 0;
+		int delta_x = target.getX() - current.getX(); 
+		int delta_y = target.getY() - current.getY(); 
+		if(facing==Orientation.NORTH) {
+			steps_ahead = delta_y; steps_right = delta_x;
+		}else if(facing==Orientation.WEST) {
+			steps_ahead = -delta_x; steps_right = delta_y;
+		}else if(facing==Orientation.SOUTH) {
+			steps_ahead = -delta_y; steps_right = -delta_x;
+		}else if(facing==Orientation.EAST) {
+			steps_ahead = delta_x; steps_right = -delta_y;
+		}
+		
 		// If in Station...
+		if(posType(current) == PositionType.STATION) {
+			if(steps_ahead > 0) {
+				return Direction.AHEAD;
+			}else if(steps_ahead < 0) {
+				return Direction.BEHIND;
+			}else if(steps_ahead == 0 && steps_right < 0) {
+				return Direction.LEFT;
+			}else if(steps_ahead == 0 && steps_right > 0) {
+				return Direction.RIGHT;
+			}
+		}
 		
 		
 		
