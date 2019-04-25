@@ -245,9 +245,10 @@ public class ServerGridManagement implements ISensorDataProvider {
 		}
 		
 		
+		return Orientation.difference(facing, targetOrientation(current, target));
 		
 		// If nothing applies: return random direction
-		return Direction.random();	
+		// return Direction.random();	
 		
 	}
 
