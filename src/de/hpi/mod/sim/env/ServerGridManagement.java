@@ -212,6 +212,12 @@ public class ServerGridManagement implements ISensorDataProvider {
 	@Override
 	public Orientation targetOrientation(Position current, Position target) {
 
+		// If already ON target: return random orientation
+		if(current.equals( target)) {
+			return Orientation.random();
+		}
+		
+		
 		// If Position is in Station
 		if (posType(current) == PositionType.STATION) {
 			if (cellType(current) == CellType.BATTERY)
@@ -227,7 +233,8 @@ public class ServerGridManagement implements ISensorDataProvider {
 			}
 			return Orientation.NORTH;
 		}
-
+		
+		
 		// Special Case
 		// If target exactly below return EAST
 		if (Position.nextPositionInOrientation(Orientation.SOUTH, current).equals(target))
@@ -256,6 +263,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 			return Orientation.SOUTH;
 		}
 
+		// If nothing applies :
 		return Orientation.SOUTH;
 	}
 
