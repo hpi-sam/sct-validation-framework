@@ -210,6 +210,26 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * Returns the orientation the target is pointing to
 	 */
 	@Override
+	public Direction targetDirection(Orientation facing, Position current, Position target) {
+		
+		// If already ON target position: return random direction
+		if(current.equals( target)) {
+			return Direction.random();
+		}
+		
+		// If in Station...
+		
+		
+		
+		// If nothing applies: return random direction
+		return Direction.random();	
+		
+	}
+
+	/**
+	 * Returns the orientation the target is pointing to
+	 */
+	@Override
 	public Orientation targetOrientation(Position current, Position target) {
 
 		// If already ON target: return random orientation
