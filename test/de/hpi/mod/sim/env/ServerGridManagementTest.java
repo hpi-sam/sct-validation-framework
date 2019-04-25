@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env;
 
 import de.hpi.mod.sim.env.model.CellType;
+import de.hpi.mod.sim.env.model.Direction;
 import de.hpi.mod.sim.env.model.IRobotController;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
@@ -251,6 +252,45 @@ public class ServerGridManagementTest {
     @Test
     public void getUnloadingPositionFromID() {
 
+    }
+
+    @Test
+    public void targetDirectionInStation() {
+        // In Station (=> -5 < y < 0)
+    	// Direction is independant of target position type 
+        var grid = getGrid();
+        
+        // Situation 1:
+        // A A R B B
+        // A A R B B
+        // A A < B B
+        // A A L B B
+        // A A L B B
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(-1,-1)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(-1,-2)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(-1,-3)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(-1,-4)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(-1,-5)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(0,-1)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(0,-2)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(0,-3)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(0,-4)));
+        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3),p(0,-5)));
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3),p(1,-1)));
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3),p(1,-2)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3),p(1,-4)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3),p(1,-5)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(2,-1)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(2,-2)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(2,-3)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(2,-4)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(2,-5)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(3,-1)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(3,-2)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(3,-3)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(3,-4)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3),p(3,-5)));
+    	
     }
 
     @Test
