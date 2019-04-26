@@ -187,24 +187,24 @@ public class ServerGridManagementTest {
     }
 
     @Test
-    public void getFacingCrossroad() {
+    public void getSouthwestCornerOfUpcomingCrossroad() {
         var grid = getGrid();
         // #     #     # 4   #
         //
         // 3 c           d
         // #     #     #     #
         //       2
-        //   b     a
+        //   b     a 
         // #     #   1 #     #
         //       ^(0, 0)
-        assertEquals(new Position(1, 1), grid.getFacingCrossroad(Orientation.NORTH, new Position(2, 0)));
-        assertEquals(new Position(-2, 1), grid.getFacingCrossroad(Orientation.WEST, new Position(0, 2)));
-        assertEquals(new Position(-2, 4), grid.getFacingCrossroad(Orientation.EAST, new Position(-3, 4)));
-        assertEquals(new Position(4, 4), grid.getFacingCrossroad(Orientation.SOUTH, new Position(4, 6)));
+        assertEquals(new Position(1, 1), grid.getSouthwestCornerOfUpcomingCrossroad(Orientation.NORTH, new Position(2, 0)));
+        assertEquals(new Position(-2, 1), grid.getSouthwestCornerOfUpcomingCrossroad(Orientation.WEST, new Position(0, 2)));
+        assertEquals(new Position(-2, 4), grid.getSouthwestCornerOfUpcomingCrossroad(Orientation.EAST, new Position(-3, 4)));
+        assertEquals(new Position(4, 4), grid.getSouthwestCornerOfUpcomingCrossroad(Orientation.SOUTH, new Position(4, 6)));
     }
 
     @Test
-    public void getCrossroad() {
+    public void getSouthwestCornerOfCrossroad() {
         var grid = getGrid();
         // #     #     #     #
         //               4
@@ -214,14 +214,33 @@ public class ServerGridManagementTest {
         //   b     a 1
         // #     #     #     #
         //       ^(0, 0)
-        assertEquals(new Position(1, 1), grid.getCrossroad(new Position(2, 1)));
-        assertEquals(new Position(-2, 1), grid.getCrossroad(new Position(-1, 2)));
-        assertEquals(new Position(-2, 4), grid.getCrossroad(new Position(-2, 4)));
-        assertEquals(new Position(4, 4), grid.getCrossroad(new Position(4, 5)));
-        assertEquals(new Position(-5, 1), grid.getCrossroad(new Position(-4, 2)));
-
+        assertEquals(new Position(1, 1), grid.getSouthwestCornerOfCrossroad(new Position(2, 1)));
+        assertEquals(new Position(-2, 1), grid.getSouthwestCornerOfCrossroad(new Position(-1, 2)));
+        assertEquals(new Position(-2, 4), grid.getSouthwestCornerOfCrossroad(new Position(-2, 4)));
+        assertEquals(new Position(4, 4), grid.getSouthwestCornerOfCrossroad(new Position(4, 5)));
+        assertEquals(new Position(-5, 1), grid.getSouthwestCornerOfCrossroad(new Position(-4, 2)));
     }
 
+    
+    @Test
+    public void getSouthwestCornerOfWaypoint() {
+        var grid = getGrid();
+        // ##     ##     ##     ##
+        //               e
+        // 3c            5
+        // ##     ## 4 d ##     ##
+        // b   
+        // 2      
+        // ##     ## 1a  ##     ##
+        //         ^(0, 0)
+        assertEquals(new Position(1, 0), grid.getSouthwestCornerOfWaypoint(new Position(1, 0)));
+        assertEquals(new Position(-3, 1), grid.getSouthwestCornerOfWaypoint(new Position(-3, 2)));
+        assertEquals(new Position(-3, 4), grid.getSouthwestCornerOfWaypoint(new Position(-3, 4)));
+        assertEquals(new Position(1, 3), grid.getSouthwestCornerOfWaypoint(new Position(2, 3)));
+        assertEquals(new Position(3, 4), grid.getSouthwestCornerOfWaypoint(new Position(3, 5)));
+    }
+
+    
     @Test
     public void getCellsOfCrossroad() {
     }
