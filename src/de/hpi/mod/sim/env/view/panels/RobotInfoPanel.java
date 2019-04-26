@@ -39,13 +39,13 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         addInfo("ID", robot -> Integer.toString(robot.getID()));
         addInfo("Battery", robot -> Integer.toString((int) robot.getBattery()));
         addInfo("Pos", robot -> stringify(robot.pos()) + " (" + robot.posType().toString() +")");
-        addInfo("Blocked sides", robot -> (robot.blockedFront() ? "front " : "") +
-        								  (robot.blockedLeft() ? "left " : "") +
-        								  (robot.blockedRight() ? "right " : ""));
+        //addInfo("Blocked sides", robot -> (robot.blockedFront() ? "front " : "") +
+        //								  (robot.blockedLeft() ? "left " : "") +
+        //								  (robot.blockedRight() ? "right " : ""));
         addInfo("Target", robot -> stringify(robot.getTarget()));
         addInfo("Facing", robot -> robot.posOrientation().toString());
         addInfo("Target Direction", robot ->
-                robot.isTargetReached() ? "-" : robot.targetDirection().toString());
+                robot.isOnTarget() ? "-" : robot.targetDirection().toString());
         addStateTree();
         //addInfo("State", robot -> trimStateName(robot.getMachineState()));
     }
