@@ -507,6 +507,219 @@ public class ServerGridManagementTest {
     }
 
     @Test
+    public void targetDirectionOnWaypointFacingNorth() {
+    	// Robot at (-4,3), facing north:
+
+        // Expected results:    
+    	//         | -9  -8  -7  -6  -5  -4  -3  -2  -1   0
+    	// --------|-----------------------------------------
+        //      10 |  A   A   A   A   A   A   A   A   A   A
+        //       9 | [A]  A   A  [A]  A   A  [A]  A   A  [A]
+        //       8 |  A   A   A   A   A   A   A   A   A   A
+        //       7 |  A   A   A   A   A   A   A   A   A   A
+        //       6 | [L]  L   L  [L]  A   A  [A]  A   A  [A]
+        //       5 |  L   L   L   L   A   A   R   R   R   R
+        //       4 |  L   L   L   L   A   A   R   R   R   R
+        //       3 | [B]  B   B  [B]  L   ^  [R]  R   R  [R]
+        //       2 |  B   B   B   B   B   B   B   B   B   B  
+        //       1 |  B   B   B   B   B   B   B   B   B   B  
+        //       0 | [B]  B   B  [B]  B   B  [B]  B   B  [B]  <- (0,0)
+    	
+        var grid = getGrid();
+        
+        int max_y = 10, min_x = -9;
+        Position robot_position = p(-4,3);
+        Orientation robot_facing = Orientation.NORTH;
+        
+        // Define test grid
+        Direction[][] expectedTestResults = new Direction[][] {
+        			/*         -9               -8               -7               -6               -5               -4               -3               -2               -1               0     */
+        	/*10 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 9 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 8 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 7 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 6 */ {Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 5 */ {Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT},
+        	/* 4 */ {Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT},
+        	/* 3 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.LEFT,         null,     Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT},
+        	/* 2 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 1 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 0 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND}
+        };
+        
+        // Test complete defined grid
+        for(int i = 0 ; i < expectedTestResults.length ; i ++) {
+        	for(int j = 0 ; j < expectedTestResults[0].length ; j ++) {
+        		Position test_target = p(min_x+j, max_y-i);
+        		if(!test_target.equals(robot_position)) {
+        			assertEquals("Testing at "+test_target.toString()+grid.cellType(test_target).toString(), 
+        					expectedTestResults[i][j], 
+        					grid.targetDirection(robot_facing, robot_position, test_target));
+        		}
+        	}
+        }
+    }
+
+    @Test
+    public void targetDirectionOWaypointFacingEast() {
+    	// Robot at (-6,5), facing east:
+
+        // Expected results:    
+    	//         | -9  -8  -7  -6  -5  -4  -3  -2  -1   0
+    	// --------|-----------------------------------------
+        //      10 |  B   B   B   B   L   L   L   A   A   A
+        //       9 | [B]  B   B  [B]  L   L  [L]  A   A  [A]
+        //       8 |  B   B   B   B   L   L   L   A   A   A
+        //       7 |  B   B   B   B   L   L   L   A   A   A
+        //       6 | [B]  B   B  [B]  L   L  [L]  A   A  [A]
+        //       5 |  B   B   B   >   A   A   A   A   A   A
+        //       4 |  B   B   B   R   A   A   A   A   A   A
+        //       3 | [B]  B   B  [R]  R   R  [A]  A   A  [A]
+        //       2 |  B   B   B   R   R   R   A   A   A   A
+        //       1 |  B   B   B   R   R   R   A   A   A   A  
+        //       0 | [B]  B   B  [R]  R   R  [A]  A   A  [A]  <- (0,0)
+    	
+        var grid = getGrid();
+        
+        int max_y = 10, min_x = -9;
+        Position robot_position = p(-6,5);
+        Orientation robot_facing = Orientation.EAST;
+        
+        // Define test grid
+        Direction[][] expectedTestResults = new Direction[][] {
+        			/*         -9               -8               -7               -6               -5               -4               -3               -2               -1               0     */
+        	/*10 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 9 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 8 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 7 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 6 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 5 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,       null,     Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 4 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.RIGHT, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 3 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 2 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 1 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 0 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD}
+        };
+        
+        // Test complete defined grid
+        for(int i = 0 ; i < expectedTestResults.length ; i ++) {
+        	for(int j = 0 ; j < expectedTestResults[0].length ; j ++) {
+        		Position test_target = p(min_x+j, max_y-i);
+        		if(!test_target.equals(robot_position)) {
+        			assertEquals("Testing at "+test_target.toString()+grid.cellType(test_target).toString(), 
+        					expectedTestResults[i][j], 
+        					grid.targetDirection(robot_facing, robot_position, test_target));
+        		}
+        	}
+        }
+    }
+
+    @Test
+    public void targetDirectionOnWayointFacingSouth() {
+    	// Robot at (-4,5), facing east:
+
+        // Expected results:    
+    	//         | -6  -5  -4  -3  -2  -1   0
+    	// --------|-----------------------------------------
+        //       9 | [B]  B   B  [B]  B   B  [B]
+        //       8 |  B   B   B   B   B   B   B
+        //       7 |  B   B   B   B   B   B   B
+        //       6 | [R]  R   R  [B]  B   B  [B]
+        //       5 |  R   R   R   B   L   L   L
+        //       4 |  R   R   R   v   L   L   L
+        //       3 | [A]  A   A  [A]  L   L  [L]
+        //       1 |  A   A   A   A   A   A   A   
+        //       1 |  A   A   A   A   A   A   A  
+        //       0 | [A]  A   A  [A]  A   A  [A]  <- (0,0)
+    	
+        var grid = getGrid();
+        
+        int max_y = 9, min_x = -6;
+        Position robot_position = p(-4,5);
+        Orientation robot_facing = Orientation.SOUTH;
+        
+        // Define test grid
+        Direction[][] expectedTestResults = new Direction[][] {
+        			/*         -6               -5               -4               -3               -2               -1               0     */
+        	/* 9 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 8 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 7 */ {Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 6 */ {Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 5 */ {Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.LEFT,  Direction.LEFT,  Direction.LEFT},
+        	/* 4 */ {Direction.RIGHT, Direction.RIGHT, Direction.RIGHT,        null,     Direction.LEFT,  Direction.LEFT,  Direction.LEFT},
+        	/* 3 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.LEFT},
+        	/* 2 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 1 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
+        	/* 0 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD}
+        };
+        
+        // Test complete defined grid
+        for(int i = 0 ; i < expectedTestResults.length ; i ++) {
+        	for(int j = 0 ; j < expectedTestResults[0].length ; j ++) {
+        		Position test_target = p(min_x+j, max_y-i);
+        		if(!test_target.equals(robot_position)) {
+        			assertEquals("Testing at "+test_target.toString()+grid.cellType(test_target).toString(), 
+        					expectedTestResults[i][j], 
+        					grid.targetDirection(robot_facing, robot_position, test_target));
+        		}
+        	}
+        }
+    }
+
+    @Test
+    public void targetDirectionOnWayointFacingWest() {
+    	// Robot at (-5,4), facing west:
+
+        // Expected results:    
+    	//         | -9  -8  -7  -6  -5  -4  -3  -2  -1   0
+    	// --------|-----------------------------------------
+        //       9 | [A]  A   A  [A]  R   R  [R]  B   B  [B]
+        //       8 |  A   A   A   A   R   R   R   B   B   B
+        //       7 |  A   A   A   A   R   R   R   B   B   B
+        //       6 | [A]  A   A  [A]  R   R  [R]  B   B  [B]
+        //       5 |  A   A   A   A   R   R   R   B   B   B
+        //       4 |  A   A   A   A   R   R   R   B   B   B
+        //       3 | [A]  A   A  [A]  A   <  [B]  B   B  [B]
+        //       2 |  A   A   A   L   L   L   B   B   B   B
+        //       1 |  A   A   A   L   L   L   B   B   B   B
+        //       0 | [A]  A   A  [L]  L   L  [B]  B   B  [B]  <- (0,0)
+    	
+        var grid = getGrid();
+        
+        int max_y = 10, min_x = -9;
+        Position robot_position = p(-5,4);
+        Orientation robot_facing = Orientation.WEST;
+        
+        // Define test grid
+        Direction[][] expectedTestResults = new Direction[][] {
+        			/*         -9               -8               -7               -6               -5               -4               -3               -2               -1               0     */
+        	/* 9 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 8 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 7 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 6 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 5 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 4 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 3 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD,         null,    Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 2 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 1 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        	/* 0 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
+        };
+        
+        // Test complete defined grid
+        for(int i = 0 ; i < expectedTestResults.length ; i ++) {
+        	for(int j = 0 ; j < expectedTestResults[0].length ; j ++) {
+        		Position test_target = p(min_x+j, max_y-i);
+        		if(!test_target.equals(robot_position)) {
+        			assertEquals("Testing at "+test_target.toString()+grid.cellType(test_target).toString(), 
+        					expectedTestResults[i][j], 
+        					grid.targetDirection(robot_facing, robot_position, test_target));
+        		}
+        	}
+        }
+    }
+
+
+    @Test
     public void targetDirectionInStationFacingNorth() {
     	// Robot at (-8,0), facing north:
 
