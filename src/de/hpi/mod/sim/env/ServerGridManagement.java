@@ -207,13 +207,13 @@ public class ServerGridManagement implements ISensorDataProvider {
 	}
 
 	/**
-	 * Returns the orientation the target is pointing to
+	 * Returns the direction the target is pointing to
 	 * 
 	 * @param facing   The orientation the robot is looking at
 	 * @param position The position of the robot
 	 * @param target   The position of the target
 	 * 
-	 * @return the orientation
+	 * @return the direction
 	 */
 	@Override
 	public Direction targetDirection(Orientation facing, Position current, Position target) {
@@ -236,7 +236,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 			
 			// B1: If target is also on the same crossroad...
 			if(posType(target) == PositionType.CROSSROAD && target_crossroad.equals(current_crossroad)) {
-				// ...then handle it as it it were a station (i.e. forward/backward with priority)
+				// ...then handle it as if it were a station (i.e. forward/backward with priority over left/right)
 				return targetDirectionInStation(facing, current, target);
 				
 			// B2: Otherwise...
@@ -247,12 +247,14 @@ public class ServerGridManagement implements ISensorDataProvider {
 			
 		// CASE C: Robot on waypoint...
 		} else if(posType(current) == PositionType.WAYPOINT) {
-			Position target_waypoint = getSouthwestCornerOfCrossroad(target);
-			Position current_waypoint = getSouthwestCornerOfCrossroad(current);
+			System.out.println(current.toString()+" is a WAYPOINT");
+			Position target_waypoint = getSouthwestCornerOfWaypoint(target);
+			Position current_waypoint = getSouthwestCornerOfWaypoint(current);
 			
 			// C1: If target is also on the same waypoint...
-			if(target_waypoint.equals(current_waypoint)) {
-				// ...then handle it as it it were a station (i.e. forward/backward with priority)
+			if(posType(target) == PositionType.WAYPOINT && target_waypoint.equals(current_waypoint)) {
+				System.out.println("      "+target.toString()+" is a also WAYPOINT");
+				// ...then handle it as if it were a station
 				return targetDirectionInStation(facing, current, target);
 				
 			// C2: If robot is facing a croassroad...
@@ -261,18 +263,23 @@ public class ServerGridManagement implements ISensorDataProvider {
 				Position upcoming_crossroad = getSouthwestCornerOfCrossroad(Position.nextPositionInOrientation(facing, current));
 				
 				// C2.1: If target is on the faced crossroad ...
-				if(target_crossroad.equals(upcoming_crossroad)) {
-					return targetDirectionInStation(facing, current, target);
-
+				if(posType(target) == PositionType.CROSSROAD && target_crossroad.equals(upcoming_crossroad)) {
+					return Direction.AHEAD;
+					
 				// C2.2: Target is elsewehere
 				} else {
 					return targetDirectionOnCrossroad(facing, upcoming_crossroad, target);
 				}
 				
-			// C3: Otherwise...
+			// C3: If robot is sideways on the waypoint...
 			}else{
-				int steps_ahead = forwardStepsToTarget(facing, current_waypoint, target);
-				int steps_right = rightStepsToTarget(facing, current_waypoint, target);
+				int steps_ahead = forwardStepsToTarget(facing, current, target);
+				int steps_right = rightStepsToTarget(facing, current, target);
+				
+				// If on front pieve of waypoint, increase  
+				if(posType(Position.nextPositionInOrientation(facing, current)) != PositionType.WAYPOINT) {
+					steps_ahead += 1;
+				}
 				
 				// Return correct direction (relative to 
 				if(steps_right < 0) {
@@ -643,9 +650,11 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 */
 	Position getSouthwestCornerOfWaypoint(Position position) {
 		int x = position.getX(), y= position.getY();
-		if(x % 3 == 2 && y % 3 == 0) {
+		if(Math.floorMod(x, 3) == 2 && y % 3 == 0) {
+			System.out.println("adjust x "+position.toString());
 			x = x - 1;
-		}else if(x % 3 == 0 && y % 3 == 2) {
+		}else if(x % 3 == 0 && Math.floorMod(y, 3) == 2) {
+			System.out.println("adjust y "+position.toString());
 			y = y - 1;
 		}
 		return new Position(x, y);
