@@ -235,7 +235,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 			Position current_crossroad = getSouthwestCornerOfCrossroad(current);
 			
 			// B1: If target is also on the same crossroad...
-			if(target_crossroad.equals(current_crossroad)) {
+			if(posType(target) == PositionType.CROSSROAD && target_crossroad.equals(current_crossroad)) {
 				// ...then handle it as it it were a station (i.e. forward/backward with priority)
 				return targetDirectionInStation(facing, current, target);
 				
