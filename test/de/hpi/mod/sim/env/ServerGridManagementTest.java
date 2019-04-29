@@ -242,19 +242,32 @@ public class ServerGridManagementTest {
     @Test
     public void getSouthwestCornerOfWaypoint() {
         var grid = getGrid();
-        // ##     ##     ##     ##
-        //               e
-        // 3c            5
-        // ##     ## 4 d ##     ##
-        // b   
-        // 2      
-        // ##     ## 1a  ##     ##
-        //         ^(0, 0)
+        // ##     ##     ##     ##     ##
+        //                       
+        //        3             5
+        // ## 6   ##     ## 4   ##     ##
+        //            
+        //        2                    7
+        // ##     ##     ## 1   ##     ##
+        //                ^(0, 0)
+        
         assertEquals(new Position(1, 0), grid.getSouthwestCornerOfWaypoint(new Position(1, 0)));
+        assertEquals(new Position(1, 0), grid.getSouthwestCornerOfWaypoint(new Position(2, 0)));
+        
+        assertEquals(new Position(-3, 1), grid.getSouthwestCornerOfWaypoint(new Position(-3, 1)));
         assertEquals(new Position(-3, 1), grid.getSouthwestCornerOfWaypoint(new Position(-3, 2)));
+        
         assertEquals(new Position(-3, 4), grid.getSouthwestCornerOfWaypoint(new Position(-3, 4)));
+        assertEquals(new Position(-3, 4), grid.getSouthwestCornerOfWaypoint(new Position(-3, 5)));
+        
+        assertEquals(new Position(1, 3), grid.getSouthwestCornerOfWaypoint(new Position(1, 3)));
         assertEquals(new Position(1, 3), grid.getSouthwestCornerOfWaypoint(new Position(2, 3)));
+        
+        assertEquals(new Position(3, 4), grid.getSouthwestCornerOfWaypoint(new Position(3, 4)));
         assertEquals(new Position(3, 4), grid.getSouthwestCornerOfWaypoint(new Position(3, 5)));
+        
+        assertEquals(new Position(-5, 3), grid.getSouthwestCornerOfWaypoint(new Position(-5, 3)));
+        assertEquals(new Position(-5, 3), grid.getSouthwestCornerOfWaypoint(new Position(-4, 3)));
     }
 
     
@@ -616,7 +629,7 @@ public class ServerGridManagementTest {
 
     @Test
     public void targetDirectionOnWayointFacingSouth() {
-    	// Robot at (-4,5), facing east:
+    	// Robot at (-3,4), facing east:
 
         // Expected results:    
     	//         | -6  -5  -4  -3  -2  -1   0
@@ -635,7 +648,7 @@ public class ServerGridManagementTest {
         var grid = getGrid();
         
         int max_y = 9, min_x = -6;
-        Position robot_position = p(-4,5);
+        Position robot_position = p(-3,4);
         Orientation robot_facing = Orientation.SOUTH;
         
         // Define test grid
@@ -647,7 +660,7 @@ public class ServerGridManagementTest {
         	/* 6 */ {Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.BEHIND,Direction.BEHIND,Direction.BEHIND},
         	/* 5 */ {Direction.RIGHT, Direction.RIGHT, Direction.RIGHT, Direction.BEHIND,Direction.LEFT,  Direction.LEFT,  Direction.LEFT},
         	/* 4 */ {Direction.RIGHT, Direction.RIGHT, Direction.RIGHT,        null,     Direction.LEFT,  Direction.LEFT,  Direction.LEFT},
-        	/* 3 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.LEFT,  Direction.LEFT,  Direction.LEFT,  Direction.LEFT},
+        	/* 3 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.LEFT,  Direction.LEFT,  Direction.LEFT},
         	/* 2 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
         	/* 1 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD},
         	/* 0 */ {Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD, Direction.AHEAD}
@@ -668,7 +681,7 @@ public class ServerGridManagementTest {
 
     @Test
     public void targetDirectionOnWayointFacingWest() {
-    	// Robot at (-5,4), facing west:
+    	// Robot at (-4,3), facing west:
 
         // Expected results:    
     	//         | -9  -8  -7  -6  -5  -4  -3  -2  -1   0
@@ -686,8 +699,8 @@ public class ServerGridManagementTest {
     	
         var grid = getGrid();
         
-        int max_y = 10, min_x = -9;
-        Position robot_position = p(-5,4);
+        int max_y = 9, min_x = -9;
+        Position robot_position = p(-4,3);
         Orientation robot_facing = Orientation.WEST;
         
         // Define test grid
@@ -937,148 +950,148 @@ public class ServerGridManagementTest {
     }
     
 
-    @Test
-    public void targetOrientation() {
-        var grid = getGrid();
-
-        // m >= 0
-        // Loading = (3n+2, 0)
-        // Unloading = (3n, 3m+1)
-        // Station Entry = (3n+1, 0)
-        // Battery = (3n, -2), (3n, -3), (3n, -4)
-        // Station Depth = -5
-
-        // Drive out of Station from Loading to Unloading
-        // Always North because Robot has to exit Station before driving to WP
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(3, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(0, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(-3, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(3, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(0, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(-3, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(3, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(0, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(-3, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(3, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(0, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(-3, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(3, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(0, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(-3, 1)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(3, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(0, 4)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(-3, 4)));
-
-        // Drive in Station to Loading
-        // While driving down should be South because Robot has to drive to end of station first
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -0), p(2, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -1), p(2, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -2), p(2, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -3), p(2, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -4), p(2, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -0), p(5, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -1), p(5, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -2), p(5, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -3), p(5, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -4), p(5, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -0), p(-1, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -1), p(-1, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -2), p(-1, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -3), p(-1, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -4), p(-1, 0)));
-        // At Bottom should be East
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(1, -5), p(2, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(4, -5), p(5, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(-2, -5), p(-1, 0)));
-        // Driving up -> North
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -1), p(2, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -2), p(2, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -3), p(2, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -4), p(2, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -5), p(2, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -1), p(5, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -2), p(5, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -3), p(5, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -4), p(5, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -5), p(5, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -1), p(-1, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -2), p(-1, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -3), p(-1, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -4), p(-1, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -5), p(-1, 0)));
-
-        // Drive out of Battery to Loading -> East
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(0, -2), p(2, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(0, -3), p(2, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(0, -4), p(2, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(3, -2), p(5, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(3, -3), p(5, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(3, -4), p(5, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(-3, -2), p(-1, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(-3, -3), p(-1, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(-3, -4), p(-1, 0)));
-
-        // Drive from Loading to Unloading
-        // From West
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 1), p(9, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 2), p(9, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 3), p(9, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 4), p(9, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 5), p(9, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 6), p(9, 7)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(5, 7), p(9, 7)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(6, 7), p(9, 7)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(7, 7), p(9, 7)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(8, 7), p(9, 7)));
-        // From East
-        // Drive North to targetY+1, so Robot is still on right side of street
-        // Drive West, do U-Turn on Crossroad after target
-        // TODO: No U-Turn
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 1), p(3, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 2), p(3, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 3), p(3, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 4), p(3, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 5), p(3, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 6), p(3, 7)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 7), p(3, 7)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(8, 8), p(3, 7)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(7, 8), p(3, 7)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(6, 8), p(3, 7)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(5, 8), p(3, 7)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(4, 8), p(3, 7)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 8), p(3, 7)));
-
-        // Drive from Unloading to Loading
-        // From East
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(3, 7), p(7, 0)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(4, 7), p(7, 0)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(5, 7), p(7, 0)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(6, 7), p(7, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 7), p(7, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 6), p(7, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 5), p(7, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 4), p(7, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 3), p(7, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 2), p(7, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 1), p(7, 0)));
-        // From West
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(6, 7), p(3, 0)));
-        assertEquals(Orientation.WEST, grid.targetOrientation(p(7, 7), p(3, 0)));
-        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 7), p(3, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(8, 8), p(3, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(7, 8), p(3, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(6, 8), p(3, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(5, 8), p(3, 0)));
-        assertEquals(Orientation.EAST, grid.targetOrientation(p(4, 8), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 8), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 7), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 6), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 5), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 4), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 3), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 2), p(3, 0)));
-        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 1), p(3, 0)));
-    }
+//    @Test
+//    public void targetOrientation() {
+//        var grid = getGrid();
+//
+//        // m >= 0
+//        // Loading = (3n+2, 0)
+//        // Unloading = (3n, 3m+1)
+//        // Station Entry = (3n+1, 0)
+//        // Battery = (3n, -2), (3n, -3), (3n, -4)
+//        // Station Depth = -5
+//
+//        // Drive out of Station from Loading to Unloading
+//        // Always North because Robot has to exit Station before driving to WP
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(3, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(0, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(-3, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(3, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(0, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, 0), p(-3, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(3, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(0, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(-3, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(3, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(0, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 0), p(-3, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(3, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(0, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(-3, 1)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(3, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(0, 4)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, 0), p(-3, 4)));
+//
+//        // Drive in Station to Loading
+//        // While driving down should be South because Robot has to drive to end of station first
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -0), p(2, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -1), p(2, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -2), p(2, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -3), p(2, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(1, -4), p(2, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -0), p(5, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -1), p(5, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -2), p(5, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -3), p(5, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(4, -4), p(5, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -0), p(-1, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -1), p(-1, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -2), p(-1, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -3), p(-1, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(-2, -4), p(-1, 0)));
+//        // At Bottom should be East
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(1, -5), p(2, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(4, -5), p(5, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(-2, -5), p(-1, 0)));
+//        // Driving up -> North
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -1), p(2, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -2), p(2, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -3), p(2, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -4), p(2, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(2, -5), p(2, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -1), p(5, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -2), p(5, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -3), p(5, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -4), p(5, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, -5), p(5, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -1), p(-1, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -2), p(-1, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -3), p(-1, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -4), p(-1, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(-1, -5), p(-1, 0)));
+//
+//        // Drive out of Battery to Loading -> East
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(0, -2), p(2, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(0, -3), p(2, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(0, -4), p(2, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(3, -2), p(5, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(3, -3), p(5, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(3, -4), p(5, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(-3, -2), p(-1, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(-3, -3), p(-1, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(-3, -4), p(-1, 0)));
+//
+//        // Drive from Loading to Unloading
+//        // From West
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 1), p(9, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 2), p(9, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 3), p(9, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 4), p(9, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 5), p(9, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(5, 6), p(9, 7)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(5, 7), p(9, 7)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(6, 7), p(9, 7)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(7, 7), p(9, 7)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(8, 7), p(9, 7)));
+//        // From East
+//        // Drive North to targetY+1, so Robot is still on right side of street
+//        // Drive West, do U-Turn on Crossroad after target
+//        // TODO: No U-Turn
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 1), p(3, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 2), p(3, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 3), p(3, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 4), p(3, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 5), p(3, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 6), p(3, 7)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 7), p(3, 7)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(8, 8), p(3, 7)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(7, 8), p(3, 7)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(6, 8), p(3, 7)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(5, 8), p(3, 7)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(4, 8), p(3, 7)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 8), p(3, 7)));
+//
+//        // Drive from Unloading to Loading
+//        // From East
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(3, 7), p(7, 0)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(4, 7), p(7, 0)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(5, 7), p(7, 0)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(6, 7), p(7, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 7), p(7, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 6), p(7, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 5), p(7, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 4), p(7, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 3), p(7, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 2), p(7, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(7, 1), p(7, 0)));
+//        // From West
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(6, 7), p(3, 0)));
+//        assertEquals(Orientation.WEST, grid.targetOrientation(p(7, 7), p(3, 0)));
+//        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 7), p(3, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(8, 8), p(3, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(7, 8), p(3, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(6, 8), p(3, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(5, 8), p(3, 0)));
+//        assertEquals(Orientation.EAST, grid.targetOrientation(p(4, 8), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 8), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 7), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 6), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 5), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 4), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 3), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 2), p(3, 0)));
+//        assertEquals(Orientation.SOUTH, grid.targetOrientation(p(3, 1), p(3, 0)));
+//    }
 
     private Position p(int x, int y) {
         return new Position(x, y);
