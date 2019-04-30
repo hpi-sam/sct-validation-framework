@@ -266,12 +266,16 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean isOnTarget() {
-        return manager.currentPosition().equals(target) && this.pos().equals(this.oldPos());
+        return isOnTargetOrNearby() && this.pos().equals(this.oldPos());
+    }
+
+    public boolean isOnTargetOrNearby() {
+        return manager.currentPosition().equals(target);
     }
 
     @Override
     public boolean canUnloadToTarget() {
-        return this.pos().equals(this.oldPos()) &&
+        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&
         		((manager.currentPosition().equals(target.getModified(-1,0)) && manager.currentFacing() == Orientation.NORTH) ||
         		 (manager.currentPosition().equals(target.getModified(1,0)) && manager.currentFacing() == Orientation.SOUTH) ||
         		 (manager.currentPosition().equals(target.getModified(0,-1)) && manager.currentFacing() == Orientation.WEST) ||
