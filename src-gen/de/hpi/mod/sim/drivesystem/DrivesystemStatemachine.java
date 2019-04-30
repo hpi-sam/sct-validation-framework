@@ -316,9 +316,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	public enum State {
 		drive_System_idle,
 		drive_System_unloading,
-		drive_System_unloading__unloading_waiting_for_orientation_check,
-		drive_System_unloading__unloading_unloading,
-		drive_System_unloading__unloading_turning_left,
 		drive_System_driving,
 		drive_System_driving__driving_on_waypoint_or_station,
 		drive_System_driving__driving_waiting_in_station,
@@ -451,14 +448,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			case drive_System_idle:
 				drive_System_idle_react(true);
 				break;
-			case drive_System_unloading__unloading_waiting_for_orientation_check:
-				drive_System_unloading__unloading_waiting_for_orientation_check_react(true);
-				break;
-			case drive_System_unloading__unloading_unloading:
-				drive_System_unloading__unloading_unloading_react(true);
-				break;
-			case drive_System_unloading__unloading_turning_left:
-				drive_System_unloading__unloading_turning_left_react(true);
+			case drive_System_unloading:
+				drive_System_unloading_react(true);
 				break;
 			case drive_System_driving__driving_on_waypoint_or_station:
 				drive_System_driving__driving_on_waypoint_or_station_react(true);
@@ -595,14 +586,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_idle:
 			return stateVector[0] == State.drive_System_idle;
 		case drive_System_unloading:
-			return stateVector[0].ordinal() >= State.
-					drive_System_unloading.ordinal()&& stateVector[0].ordinal() <= State.drive_System_unloading__unloading_turning_left.ordinal();
-		case drive_System_unloading__unloading_waiting_for_orientation_check:
-			return stateVector[0] == State.drive_System_unloading__unloading_waiting_for_orientation_check;
-		case drive_System_unloading__unloading_unloading:
-			return stateVector[0] == State.drive_System_unloading__unloading_unloading;
-		case drive_System_unloading__unloading_turning_left:
-			return stateVector[0] == State.drive_System_unloading__unloading_turning_left;
+			return stateVector[0] == State.drive_System_unloading;
 		case drive_System_driving:
 			return stateVector[0].ordinal() >= State.
 					drive_System_driving.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2.ordinal();
@@ -761,10 +745,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCInterface.raiseActionCompleted();
 	}
 	
-	private boolean check_Drive_System_unloading__unloading__choice_0_tr0_tr0() {
-		return sCIData.operationCallback.posOrientation()==sCIOrientation.getEAST();
-	}
-	
 	private boolean check_Drive_System_driving__driving__choice_0_tr0_tr0() {
 		return sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD();
 	}
@@ -782,15 +762,15 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr0_tr0() {
-		return (sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND() && !sCIData.operationCallback.blockedCrossroadAhead());
+		return sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND();
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr1_tr1() {
-		return (sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD() && !sCIData.operationCallback.blockedWaypointAhead());
+		return (sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT() && !sCIData.operationCallback.blockedWaypointRight());
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr2_tr2() {
-		return (sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT() && !sCIData.operationCallback.blockedWaypointRight());
+		return (sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD() && !sCIData.operationCallback.blockedWaypointAhead());
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr3_tr3() {
@@ -829,12 +809,12 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return !sCIData.operationCallback.blockedFront();
 	}
 	
-	private void effect_Drive_System_unloading_tr0() {
-		exitSequence_Drive_System_unloading();
-		sCIProcessor.raiseUnloaded();
-		
-		enterSequence_Drive_System_idle_default();
-		react();
+	private boolean check_Drive_System_driving__driving__choice_9_tr0_tr0() {
+		return (((sCIData.operationCallback.posOrientation()==sCIOrientation.getEAST() || sCIData.operationCallback.posOrientation()==sCIOrientation.getWEST())) && !sCIData.operationCallback.blockedCrossroadAhead());
+	}
+	
+	private boolean check_Drive_System_driving__driving__choice_9_tr1_tr1() {
+		return (((sCIData.operationCallback.posOrientation()==sCIOrientation.getSOUTH() || sCIData.operationCallback.posOrientation()==sCIOrientation.getNORTH())) && !sCIData.operationCallback.blockedWaypointRight());
 	}
 	
 	private void effect_Drive_System_driving_tr1() {
@@ -874,14 +854,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		drive_System_driving_react(false);
 	}
 	
-	private void effect_Drive_System_unloading__unloading__choice_0_tr0() {
-		enterSequence_Drive_System_unloading__unloading_unloading_default();
-	}
-	
-	private void effect_Drive_System_unloading__unloading__choice_0_tr1() {
-		enterSequence_Drive_System_unloading__unloading_turning_left_default();
-	}
-	
 	private void effect_Drive_System_driving__driving__choice_0_tr0() {
 		react_Drive_System_driving__driving__choice_8();
 	}
@@ -903,15 +875,15 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private void effect_Drive_System_driving__driving__choice_1_tr0() {
-		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad_default();
+		react_Drive_System_driving__driving__choice_9();
 	}
 	
 	private void effect_Drive_System_driving__driving__choice_1_tr1() {
-		enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead_default();
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side_default();
 	}
 	
 	private void effect_Drive_System_driving__driving__choice_1_tr2() {
-		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side_default();
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_ahead_default();
 	}
 	
 	private void effect_Drive_System_driving__driving__choice_1_tr3() {
@@ -990,14 +962,16 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_waiting_to_drive_forward_2_default();
 	}
 	
-	/* Entry action for state 'unloading'. */
-	private void entryAction_Drive_System_unloading__unloading_unloading() {
-		sCIActors.raiseStartUnload();
+	private void effect_Drive_System_driving__driving__choice_9_tr0() {
+		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad_default();
 	}
 	
-	/* Entry action for state 'turning left'. */
-	private void entryAction_Drive_System_unloading__unloading_turning_left() {
-		sCIActors.raiseTurnLeft();
+	private void effect_Drive_System_driving__driving__choice_9_tr1() {
+		enterSequence_Drive_System_driving__driving_leaving_crossroad_to_right_side_default();
+	}
+	
+	private void effect_Drive_System_driving__driving__choice_9_tr2() {
+		enterSequence_Drive_System_driving__driving_on_crossroad_default();
 	}
 	
 	/* Entry action for state 'waiting to ensure real deadlock'. */
@@ -1120,27 +1094,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* 'default' enter sequence for state unloading */
 	private void enterSequence_Drive_System_unloading_default() {
-		enterSequence_Drive_System_unloading__unloading_default();
-	}
-	
-	/* 'default' enter sequence for state waiting for orientation check */
-	private void enterSequence_Drive_System_unloading__unloading_waiting_for_orientation_check_default() {
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_unloading__unloading_waiting_for_orientation_check;
-	}
-	
-	/* 'default' enter sequence for state unloading */
-	private void enterSequence_Drive_System_unloading__unloading_unloading_default() {
-		entryAction_Drive_System_unloading__unloading_unloading();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_unloading__unloading_unloading;
-	}
-	
-	/* 'default' enter sequence for state turning left */
-	private void enterSequence_Drive_System_unloading__unloading_turning_left_default() {
-		entryAction_Drive_System_unloading__unloading_turning_left();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_unloading__unloading_turning_left;
+		stateVector[0] = State.drive_System_unloading;
 	}
 	
 	/* 'default' enter sequence for state driving */
@@ -1361,11 +1316,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		react_Drive_System__entry_Default();
 	}
 	
-	/* 'default' enter sequence for region _unloading */
-	private void enterSequence_Drive_System_unloading__unloading_default() {
-		react_Drive_System_unloading__unloading__entry_Default();
-	}
-	
 	/* 'default' enter sequence for region _driving */
 	private void enterSequence_Drive_System_driving__driving_default() {
 		react_Drive_System_driving__driving__entry_Default();
@@ -1404,23 +1354,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* Default exit sequence for state unloading */
 	private void exitSequence_Drive_System_unloading() {
-		exitSequence_Drive_System_unloading__unloading();
-	}
-	
-	/* Default exit sequence for state waiting for orientation check */
-	private void exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state unloading */
-	private void exitSequence_Drive_System_unloading__unloading_unloading() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state turning left */
-	private void exitSequence_Drive_System_unloading__unloading_turning_left() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
@@ -1625,14 +1558,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_idle:
 			exitSequence_Drive_System_idle();
 			break;
-		case drive_System_unloading__unloading_waiting_for_orientation_check:
-			exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check();
-			break;
-		case drive_System_unloading__unloading_unloading:
-			exitSequence_Drive_System_unloading__unloading_unloading();
-			break;
-		case drive_System_unloading__unloading_turning_left:
-			exitSequence_Drive_System_unloading__unloading_turning_left();
+		case drive_System_unloading:
+			exitSequence_Drive_System_unloading();
 			break;
 		case drive_System_driving__driving_on_waypoint_or_station:
 			exitSequence_Drive_System_driving__driving_on_waypoint_or_station();
@@ -1714,23 +1641,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			break;
 		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
 			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
-			break;
-		default:
-			break;
-		}
-	}
-	
-	/* Default exit sequence for region _unloading */
-	private void exitSequence_Drive_System_unloading__unloading() {
-		switch (stateVector[0]) {
-		case drive_System_unloading__unloading_waiting_for_orientation_check:
-			exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check();
-			break;
-		case drive_System_unloading__unloading_unloading:
-			exitSequence_Drive_System_unloading__unloading_unloading();
-			break;
-		case drive_System_unloading__unloading_turning_left:
-			exitSequence_Drive_System_unloading__unloading_turning_left();
 			break;
 		default:
 			break;
@@ -1921,15 +1831,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/* The reactions of state null. */
-	private void react_Drive_System_unloading__unloading__choice_0() {
-		if (check_Drive_System_unloading__unloading__choice_0_tr0_tr0()) {
-			effect_Drive_System_unloading__unloading__choice_0_tr0();
-		} else {
-			effect_Drive_System_unloading__unloading__choice_0_tr1();
-		}
-	}
-	
-	/* The reactions of state null. */
 	private void react_Drive_System_driving__driving__choice_0() {
 		if (check_Drive_System_driving__driving__choice_0_tr0_tr0()) {
 			effect_Drive_System_driving__driving__choice_0_tr0();
@@ -2048,14 +1949,22 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		}
 	}
 	
-	/* Default react sequence for initial entry  */
-	private void react_Drive_System__entry_Default() {
-		enterSequence_Drive_System_idle_default();
+	/* The reactions of state null. */
+	private void react_Drive_System_driving__driving__choice_9() {
+		if (check_Drive_System_driving__driving__choice_9_tr0_tr0()) {
+			effect_Drive_System_driving__driving__choice_9_tr0();
+		} else {
+			if (check_Drive_System_driving__driving__choice_9_tr1_tr1()) {
+				effect_Drive_System_driving__driving__choice_9_tr1();
+			} else {
+				effect_Drive_System_driving__driving__choice_9_tr2();
+			}
+		}
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_Drive_System_unloading__unloading__entry_Default() {
-		enterSequence_Drive_System_unloading__unloading_waiting_for_orientation_check_default();
+	private void react_Drive_System__entry_Default() {
+		enterSequence_Drive_System_idle_default();
 	}
 	
 	/* Default react sequence for initial entry  */
@@ -2086,11 +1995,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	/* Default react sequence for initial entry  */
 	private void react_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad__entry_Default() {
 		enterSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_turining_left_1_default();
-	}
-	
-	/* The reactions of exit default. */
-	private void react_Drive_System_unloading__unloading__exit_Default() {
-		effect_Drive_System_unloading_tr0();
 	}
 	
 	/* The reactions of exit default. */
@@ -2133,6 +2037,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		if (try_transition) {
 			if (sCInterface.unload) {
 				exitSequence_Drive_System_idle();
+				sCIActors.raiseStartUnload();
+				
 				enterSequence_Drive_System_unloading_default();
 				react();
 			} else {
@@ -2155,68 +2061,24 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (sCInterface.stop) {
+			if (sCInterface.unloaded) {
 				exitSequence_Drive_System_unloading();
+				sCIProcessor.raiseUnloaded();
+				
 				enterSequence_Drive_System_idle_default();
 				react();
 			} else {
-				did_transition = false;
+				if (sCInterface.stop) {
+					exitSequence_Drive_System_unloading();
+					enterSequence_Drive_System_idle_default();
+					react();
+				} else {
+					did_transition = false;
+				}
 			}
 		}
 		if (did_transition==false) {
 			did_transition = react();
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_unloading__unloading_waiting_for_orientation_check_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.dataRefresh) {
-				exitSequence_Drive_System_unloading__unloading_waiting_for_orientation_check();
-				react_Drive_System_unloading__unloading__choice_0();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_unloading_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_unloading__unloading_unloading_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.unloaded) {
-				exitSequence_Drive_System_unloading__unloading_unloading();
-				react_Drive_System_unloading__unloading__exit_Default();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_unloading_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_unloading__unloading_turning_left_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_unloading__unloading_turning_left();
-				enterSequence_Drive_System_unloading__unloading_waiting_for_orientation_check_default();
-				drive_System_unloading_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_unloading_react(try_transition);
 		}
 		return did_transition;
 	}
