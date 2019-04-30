@@ -9,4 +9,5 @@ public interface ISensorDataProvider {
     boolean blockedCrossroadAhead(Orientation facing, Position pos);
     boolean blockedCrossroadRight(Orientation facing, Position pos);
     Orientation targetOrientation(Position current, Position target);
+    Direction targetDirection(Orientation facing, Position current, Position target);
 }

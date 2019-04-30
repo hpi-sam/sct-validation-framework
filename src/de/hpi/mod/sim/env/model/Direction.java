@@ -1,5 +1,7 @@
 package de.hpi.mod.sim.env.model;
 
+import java.util.Random;
+
 /**
  * The directions relative to a robot
  */
@@ -20,5 +22,11 @@ public enum Direction {
         if (rotated > 180)
             rotated -= 180;
         return rotated;
+    }
+
+    
+    public static Direction random() {
+    	Random random = new Random();
+    	return values()[random.nextInt(values().length)];
     }
 }

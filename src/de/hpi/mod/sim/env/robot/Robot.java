@@ -239,8 +239,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public Direction targetDirection() {
-        return Orientation.difference(
-                manager.currentFacing(), grid.targetOrientation(manager.currentPosition(), target));
+    	return grid.targetDirection(manager.currentFacing(), manager.currentPosition(), target);
+    	// return Orientation.difference(
+    	//          manager.currentFacing(), grid.targetOrientation(manager.currentPosition(), target));
     }
     
     @Override

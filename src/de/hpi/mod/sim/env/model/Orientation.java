@@ -1,5 +1,7 @@
 package de.hpi.mod.sim.env.model;
 
+import java.util.Random;
+
 /**
  * The orientation a robot can face
  */
@@ -62,4 +64,10 @@ public enum Orientation {
             default: return Direction.BEHIND;
         }
     }
+    
+    public static Orientation random() {
+    	Random random = new Random();
+    	return values()[random.nextInt(values().length)];
+    }
+    
 }
