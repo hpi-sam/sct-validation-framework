@@ -69,7 +69,8 @@ public class ScenarioManager {
 
 	private void initializeTestGroupsMap() {
 		ArrayList<TestScenario> drivingToCrossroadTests = new ArrayList<>();
-		drivingToCrossroadTests.add(new DriveToDropPosition());
+		drivingToCrossroadTests.add(new DriveToUnloadingShaft());
+		drivingToCrossroadTests.add(new DriveToUnloadingShaftAndTurnAround());
         drivingToCrossroadTests.add(new OppositeRobotsOnCrossroadScenario());
         drivingToCrossroadTests.add(new TwoRobotsOnCrossroadScenario());
         drivingToCrossroadTests.add(new ThreeRobotsOnCrossroadScenario());
@@ -491,9 +492,9 @@ public class ScenarioManager {
          }
     }
     
-    private class DriveToDropPosition extends TestScenario {
+    private class DriveToUnloadingShaft extends TestScenario {
     	
-    	public DriveToDropPosition() {
+    	public DriveToUnloadingShaft() {
     		name = "Drive to unloading shaft";
     		description = "Drive to unloading shaft";
     	}
@@ -503,6 +504,24 @@ public class ScenarioManager {
              List<NewRobot> newRobots = new ArrayList<>();
              List<Position> targets = new ArrayList<>();
              targets.add(new Position(-6,9));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+             return newRobots;
+         }
+    }
+    
+    private class DriveToUnloadingShaftAndTurnAround extends TestScenario {
+    	
+    	public DriveToUnloadingShaftAndTurnAround() {
+    		name = "Turn around after unloading";
+    		description = "Turn around after unloading";
+    	}
+    	
+    	 @Override
+         public List<NewRobot> initializeScenario() {
+             List<NewRobot> newRobots = new ArrayList<>();
+             List<Position> targets = new ArrayList<>();
+             targets.add(new Position(3,9));
+             targets.add(new Position(4,0));
              newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
              return newRobots;
          }
