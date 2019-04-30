@@ -247,13 +247,11 @@ public class ServerGridManagement implements ISensorDataProvider {
 			
 		// CASE C: Robot on waypoint...
 		} else if(posType(current) == PositionType.WAYPOINT) {
-			System.out.println(current.toString()+" is a WAYPOINT");
 			Position target_waypoint = getSouthwestCornerOfWaypoint(target);
 			Position current_waypoint = getSouthwestCornerOfWaypoint(current);
 			
 			// C1: If target is also on the same waypoint...
 			if(posType(target) == PositionType.WAYPOINT && target_waypoint.equals(current_waypoint)) {
-				System.out.println("      "+target.toString()+" is a also WAYPOINT");
 				// ...then handle it as if it were a station
 				return targetDirectionInStation(facing, current, target);
 				
@@ -651,10 +649,8 @@ public class ServerGridManagement implements ISensorDataProvider {
 	Position getSouthwestCornerOfWaypoint(Position position) {
 		int x = position.getX(), y= position.getY();
 		if(Math.floorMod(x, 3) == 2 && y % 3 == 0) {
-			System.out.println("adjust x "+position.toString());
 			x = x - 1;
 		}else if(x % 3 == 0 && Math.floorMod(y, 3) == 2) {
-			System.out.println("adjust y "+position.toString());
 			y = y - 1;
 		}
 		return new Position(x, y);
