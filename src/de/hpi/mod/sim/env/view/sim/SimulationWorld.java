@@ -203,6 +203,7 @@ public class SimulationWorld {
 	}
 
 	public Robot addRobotInScenarioHPI2(Position pos, Orientation facing, int delay) {
+		// TODO: Wtf is this method? 
 		return addRobotRunner(() -> simulator.addRobotInScenarioHPI(pos, facing, delay));
 	}
 
