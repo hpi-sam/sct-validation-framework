@@ -8,6 +8,7 @@ import java.util.*;
 public class Station {
 
     private int stationID;
+    private long now;
 
     /**
      * How many robots want to drive or are in the queue.
@@ -125,14 +126,21 @@ public class Station {
 
 	public void blockBattery() {
 		blockedBattery = true;
+		now = System.currentTimeMillis();
 	}
 
 	public boolean blocked() {
+		if(now+SimulatorConfig.getDefaultStationUnblockingTime()<=System.currentTimeMillis()) {
+			blockedBattery = false;
+			blockedQueue = false;
+			return false;
+		}
 		return blockedBattery || blockedQueue;
 	}
 
 	public void blockQueue() {
 		blockedQueue  = true;
+		now = System.currentTimeMillis();
 	}
 
 	public void unblockQueue() {
