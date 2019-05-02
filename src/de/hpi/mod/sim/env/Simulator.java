@@ -203,4 +203,8 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         for (Robot robot : robots)
             robot.close();
     }
+
+	public ServerGridManagement getServerGridManagement() {
+		return grid;
+	}
 }

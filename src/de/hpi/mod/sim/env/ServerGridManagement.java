@@ -55,6 +55,14 @@ public class ServerGridManagement implements ISensorDataProvider {
 			return CellType.STATION;
 		}
 	}
+	
+	public boolean isInvalid(Position position) {
+		CellType cellType = cellType(position);
+		if(cellType == CellType.BLOCK) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Is another Robot on this position?

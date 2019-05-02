@@ -37,6 +37,7 @@ public class ScenarioManager {
 	
 	private TestScenario activeTest = null;
     CollisionDetector collisionDetector;
+    InvalidPositionDetector invalidPositionDetector;
     DeadlockDetector deadlockDetector;
     DriveSimFrame frame;
 	private List<TestScenario> tests = new ArrayList<>();
@@ -104,6 +105,7 @@ public class ScenarioManager {
         world.playScenario(scenario);
         deadlockDetector.reactivate();
         collisionDetector.reset();
+        invalidPositionDetector.reset();
         if(!world.isRunning()) 
         	world.toggleRunning();
         
@@ -850,5 +852,9 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 
 	public Map<String,ArrayList<TestScenario>> getTestGroups() {
 		return testGroups;
+	}
+
+	public void setInvalidPositionDetector(InvalidPositionDetector invalidPositionDetector) {
+		this.invalidPositionDetector = invalidPositionDetector;
 	}
 }
