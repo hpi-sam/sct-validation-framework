@@ -279,23 +279,23 @@ public class ServerGridManagementTest {
     public void getArrivalPositionAtStation() {
         var grid = getGrid();
         assertEquals(new Position(1, 0), grid.getArrivalPositionAtStation(0));
-        assertEquals(new Position(4, 0), grid.getArrivalPositionAtStation(1));
-        assertEquals(new Position(7, 0), grid.getArrivalPositionAtStation(2));
+        assertEquals(new Position(-2, 0), grid.getArrivalPositionAtStation(1));
+        assertEquals(new Position(4, 0), grid.getArrivalPositionAtStation(2));
     }
 
     @Test
     public void getChargerPositionAtStation() {
         var grid = getGrid();
         assertEquals(new Position(0, -2), grid.getChargerPositionAtStation(0, 0));
-        assertEquals(new Position(3, -3), grid.getChargerPositionAtStation(1, 1));
-        assertEquals(new Position(6, -4), grid.getChargerPositionAtStation(2, 2));
+        assertEquals(new Position(-3, -3), grid.getChargerPositionAtStation(1, 1));
+        assertEquals(new Position(3, -4), grid.getChargerPositionAtStation(2, 2));
     }
 
     @Test
     public void getLoadingPositionAtStation() {
         var grid = getGrid();
         assertEquals(new Position(2, 0), grid.getLoadingPositionAtStation(0));
-        assertEquals(new Position(5, 0), grid.getLoadingPositionAtStation(1));
+        assertEquals(new Position(-1, 0), grid.getLoadingPositionAtStation(1));
     }
 
     @Test

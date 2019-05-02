@@ -509,7 +509,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 
 	public Position getArrivalPositionAtStation(int stationID) {
 		int x;
-		if((stationID & 1) == 0) {
+		if((stationID % 2) == 0) {
 			//even station ID means the station is on the right
 			x = stationID/2 * 3 + 1;
 		} else {
@@ -533,7 +533,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 
 	public Position getChargerPositionAtStation(int stationID, int chargerID) {
 		int x;
-		if((stationID & 1) == 0) {
+		if((stationID % 2) == 0) {
 			//even station ID means the station is on the right
 			x = stationID/2 * 3;
 		} else {
@@ -546,7 +546,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 
 	public Position getLoadingPositionAtStation(int stationID) {
 		int x;
-		if((stationID & 1) == 0) {
+		if((stationID % 2) == 0) {
 			//even station ID means the station is on the right
 			x = stationID/2 * 3 + 2;
 		} else {

@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.env.robot;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import org.junit.Test;
@@ -26,12 +27,12 @@ public class DriveManagerTest {
     @Test
     public void testDriveForward() {
         Position initPosition = new Position(0, 0);
-        Orientation initFacing = Orientation.SOUTH;
+        Orientation initFacing = Orientation.NORTH;
 
         DummyDriveHandler handler = new DummyDriveHandler();
         DriveManager drive = new DriveManager(
                 handler, initPosition, initFacing);
-        //SimulatorConfig.setRobotSpeedLevel(.001f);  // Move 1 cell per second
+        SimulatorConfig.setRobotSpeedLevel(2);  // Move 1 cell per second
 
         for (int i = 0; i < 10; i++) {
             drive.driveForward();
@@ -92,11 +93,11 @@ public class DriveManagerTest {
         }
     }
 
-    @Test
+    /* @Test
     public void testStartUnloading() {
         // TODO change DriveManager so a Timer can be injected
         fail("Not yet implemented");
-    }
+    } */
 
     private class DummyDriveHandler implements DriveListener {
 
