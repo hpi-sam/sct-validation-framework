@@ -239,8 +239,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public Direction targetDirection() {
-        return Orientation.difference(
-                manager.currentFacing(), grid.targetOrientation(manager.currentPosition(), target));
+    	return grid.targetDirection(manager.currentFacing(), manager.currentPosition(), target);
+    	// return Orientation.difference(
+    	//          manager.currentFacing(), grid.targetOrientation(manager.currentPosition(), target));
     }
     
     @Override
@@ -265,7 +266,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean isTargetReached() {
-        return manager.currentPosition().equals(target) && this.pos().equals(this.oldPos());
+        return isOnTarget() && this.pos().equals(this.oldPos());
+    }
+
+    public boolean isOnTarget() {
+        return manager.currentPosition().equals(target);
     }
     
     public boolean hasReachedAllTargets() {
