@@ -770,7 +770,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr2_tr2() {
-		return (sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD() && !sCIData.operationCallback.blockedWaypointAhead());
+		return ((sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD() && !sCIData.operationCallback.blockedWaypointAhead()) && !sCIData.operationCallback.blockedCrossroadAhead());
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_1_tr3_tr3() {
@@ -778,11 +778,15 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_2_tr1_tr1() {
-		return getWaitedForDeadlock()>5;
+		return (getWaitedForDeadlock()>5 && ((sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT() || sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND())));
+	}
+	
+	private boolean check_Drive_System_driving__driving__choice_2_tr2_tr2() {
+		return (getWaitedForDeadlock()>10 && sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD());
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_3_tr1_tr1() {
-		return ((((((!sCIData.operationCallback.blockedCrossroadAhead() && sCIData.operationCallback.blockedWaypointAhead()) && sCIData.operationCallback.blockedWaypointLeft()) && sCIData.operationCallback.blockedWaypointRight()) && sCIData.operationCallback.posOrientation()==sCIOrientation.getSOUTH())) || ((((sCIData.operationCallback.blockedCrossroadAhead() && sCIData.operationCallback.blockedRight()) && !sCIData.operationCallback.blockedFront()) && sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT())));
+		return ((((((!sCIData.operationCallback.blockedCrossroadAhead() && sCIData.operationCallback.blockedWaypointAhead()) && sCIData.operationCallback.blockedWaypointLeft()) && sCIData.operationCallback.blockedWaypointRight()) && sCIData.operationCallback.posOrientation()==sCIOrientation.getSOUTH())) || ((sCIData.operationCallback.blockedCrossroadAhead() && !sCIData.operationCallback.blockedFront())));
 	}
 	
 	private boolean check_Drive_System_driving__driving__choice_3_tr2_tr2() {
@@ -895,6 +899,10 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private void effect_Drive_System_driving__driving__choice_2_tr1() {
+		enterSequence_Drive_System_driving__driving_entering_crossroad_default();
+	}
+	
+	private void effect_Drive_System_driving__driving__choice_2_tr2() {
 		enterSequence_Drive_System_driving__driving_entering_crossroad_default();
 	}
 	
@@ -1877,7 +1885,11 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		if (check_Drive_System_driving__driving__choice_2_tr1_tr1()) {
 			effect_Drive_System_driving__driving__choice_2_tr1();
 		} else {
-			effect_Drive_System_driving__driving__choice_2_tr0();
+			if (check_Drive_System_driving__driving__choice_2_tr2_tr2()) {
+				effect_Drive_System_driving__driving__choice_2_tr2();
+			} else {
+				effect_Drive_System_driving__driving__choice_2_tr0();
+			}
 		}
 	}
 	
