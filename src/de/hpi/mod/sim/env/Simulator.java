@@ -15,7 +15,9 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     private List<Robot> robots = new CopyOnWriteArrayList<>();
     private ServerGridManagement grid;
     private IRobotStationDispatcher stations;
+    private int mapHeight = SimulatorConfig.getMapHeight();
     private int unloadingRange = SimulatorConfig.getUnloadingRange();
+    private int[] heights = new int[mapHeight];
 
 
     public Simulator() {
@@ -150,6 +152,10 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
     private int getRandomUnloadingID(Position robotPosition) {
         int id = ThreadLocalRandom.current().nextInt(100) + 1;
+        int min_pos = 0;
+        int minimum = Integer.MAX_VALUE;
+        boolean negative = false;
+        
         if(id > 70) {
         	id = ThreadLocalRandom.current().nextInt(3*unloadingRange/4, unloadingRange);
         } else if (id > 55) {
@@ -161,11 +167,26 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         } else {
         	id = ThreadLocalRandom.current().nextInt(-unloadingRange, 0);
         }
-        if(id!= 0) {
-        	return id;
-        } else {
-        	return id + 1;
+        for(int i=0; i<heights.length;i++) {
+        	if(heights[i] < minimum) {
+        		minimum = heights[i];
+        		min_pos = i;
+        	}
+        	if(heights[i] >= 100) {
+        		heights[i]=0;
+        	}
         }
+        if(heights[Math.abs(id)/mapHeight] > minimum) {
+        	heights[min_pos]++;
+        	if(id < 0) {
+        		id = (min_pos*mapHeight + id%mapHeight)*-1;
+        	} else {
+        		id = min_pos*mapHeight + id%mapHeight;
+        	}
+        } else {
+        	heights[Math.abs(id)/mapHeight]++;
+        }
+        return id;
     }
 
     @Override

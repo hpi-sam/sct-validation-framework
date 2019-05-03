@@ -79,7 +79,6 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public boolean requestEnteringStation(int robotID, int stationID) {
     	 if(!getStationByID(stationID).blocked()) {
-    		 getStationByID(stationID).blockQueue();
     		 return true;
          } else {
          	 return false;
@@ -104,12 +103,13 @@ public class StationManager implements IRobotStationDispatcher {
     public void reportEnteringQueueAtStation(int robotID, int stationID) {
     	Station station = getStationByID(stationID);
         station.unregisterBatteryWithRobotIfPresent(robotID);
-        station.unblockQueue();
+        station.blockQueue();
     }
 
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
         getStationByID(stationID).decreaseQueue();
+        getStationByID(stationID).unblockQueue();
     }
 
     public List<Station> getStations() {

@@ -33,7 +33,8 @@ public class SimulatorConfig {
 	public static final float BATTERY_LOW = 35;
 	public static final float BATTERY_LOSS = .1f;
 	public static final float BATTERY_LOADING_SPEED = .02f;
-	public static final int DEFAULT_UNLOADING_RANGE = 30;
+	public static final int DEFAULT_UNLOADING_RANGE = 50;
+	public static final int DEFAULT_STATION_UNBLOCKING_TIME = 5000; //in ms
 	
 	public static final float DEFAULT_BLOCK_SIZE = 20;
 	public static final float DEFAULT_OFFSET_X = 0;
@@ -70,7 +71,7 @@ public class SimulatorConfig {
 	/**
      * Number of vertical unloading positions.
      */
-	public static final int DEFAULT_MAP_HEIGHT = 7;
+	public static final int DEFAULT_MAP_HEIGHT = 10;
 
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
@@ -95,6 +96,7 @@ public class SimulatorConfig {
    	private static float batteryLow = BATTERY_LOW;
    	private static float batteryLoss = BATTERY_LOSS;
    	private static float batteryChargingSpeed = BATTERY_LOADING_SPEED;
+   	private static int defaultStationUnblockingTime = DEFAULT_STATION_UNBLOCKING_TIME;
    	
    	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
    	private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
@@ -291,6 +293,10 @@ public class SimulatorConfig {
 
 	public static int getMapHeight() {
 		return mapHeight;
+	}
+	
+	public static int getDefaultStationUnblockingTime() {
+		return defaultStationUnblockingTime;
 	}
 
 	public static void setMapHeight(int mapHeight) {
