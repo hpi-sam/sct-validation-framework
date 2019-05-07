@@ -63,6 +63,21 @@ public class ServerGridManagement implements ISensorDataProvider {
 		}
 		return false;
 	}
+	
+	public boolean invalidManoeuvre(Position oldPos, Position pos) {
+		if(pos.getY() >= 1) {
+			return false;
+		}
+		if(pos.getX() % 3 == 2 && oldPos.getX() % 3 == 0) {
+			return true;
+		}
+		if(oldPos.getX() % 3 == 1 && oldPos.getY() > -5) {
+			if(pos.getX() % 3 == 2) {
+				return true;
+			}
+		}
+		return false;
+	};
 
 	/**
 	 * Is another Robot on this position?
@@ -697,5 +712,5 @@ public class ServerGridManagement implements ISensorDataProvider {
 		
 		// Return filtered results
 		return cells;
-	};
+	}
 }
