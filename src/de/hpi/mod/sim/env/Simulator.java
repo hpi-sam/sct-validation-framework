@@ -57,14 +57,14 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets) {
+    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets, int delay) {
     	
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
                 0,
                 grid, stations, this, this,
-                position, state, facing, targets);
+                position, state, facing, targets, delay);
         robots.add(robot);
         return robot;
     }

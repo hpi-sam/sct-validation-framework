@@ -112,7 +112,12 @@ public class SimulationWorld {
 			try {
 				isUpdating = true;
 				for (Robot robot : simulator.getRobots()) {
-					robot.getDriveManager().update(delta);
+					if(robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
+						robot.getDriveManager().update(delta);
+					} else {
+						robot.getDriveManager().update(delta, robot.getRobotSpecificDelay());
+					}
+					
 				}
 				isUpdating = false;
 				notifyAll();
@@ -198,8 +203,8 @@ public class SimulationWorld {
 		return addRobotRunner(() -> simulator.addRobot());
 	}
 
-	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets) {
-		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets));
+	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets, int delay) {
+		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets, delay));
 	}
 
 	public Robot addRobotInScenarioHPI2(Position pos, Orientation facing, int delay) {

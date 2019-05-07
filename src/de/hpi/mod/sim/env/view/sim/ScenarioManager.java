@@ -383,8 +383,8 @@ public class ScenarioManager {
             targetsRobotOne.add(new Position(0,5));
             List<Position> targetsRobotThree = new ArrayList<>();
             targetsRobotThree.add(new Position(9,4));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
+            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0));
+            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0));
             return newRobots;
         }
     }
@@ -403,8 +403,8 @@ public class ScenarioManager {
             targetsRobotOne.add(new Position(0,5));
             List<Position> targetsRobotTwo = new ArrayList<>();
             targetsRobotTwo.add(new Position(5,9));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
+            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0));
+            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0));
             return newRobots;
         }
     }
@@ -425,9 +425,9 @@ public class ScenarioManager {
             targetsRobotTwo.add(new Position(5,9));
             List<Position> targetsRobotThree = new ArrayList<>();
             targetsRobotThree.add(new Position(9,4));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
+            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0));
+            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0));
+            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0));
             return newRobots;
         }
     }
@@ -450,10 +450,10 @@ public class ScenarioManager {
             targetsRobotThree.add(new Position(9,4));
             List<Position> targetsRobotFour = new ArrayList<>();
             targetsRobotFour.add(new Position(4,0));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
-            newRobots.add(new NewTestRobot(new Position(4, 6), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotFour));
+            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0));
+            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0));
+            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0));
+            newRobots.add(new NewTestRobot(new Position(4, 6), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotFour,0));
             return newRobots;
         }
     }
@@ -470,7 +470,7 @@ public class ScenarioManager {
              List<NewRobot> newRobots = new ArrayList<>();
              List<Position> targets = new ArrayList<>();
              targets.add(new Position(2,-5));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets,0));
              return newRobots;
          }
     }
@@ -487,7 +487,7 @@ public class ScenarioManager {
              List<NewRobot> newRobots = new ArrayList<>();
              List<Position> targets = new ArrayList<>();
              targets.add(new Position(2,0));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets,0));
              return newRobots;
          }
     }
@@ -505,7 +505,7 @@ public class ScenarioManager {
              List<NewRobot> newRobots = new ArrayList<>();
              List<Position> targets = new ArrayList<>();
              targets.add(new Position(3,10));
-             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
              return newRobots;
          }
     }
@@ -526,7 +526,7 @@ public class ScenarioManager {
              targets.add(new Position(1,0));
              targets.add(new Position(2,0));
              targets.add(new Position(6,10));
-             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
              return newRobots;
          }
     }
@@ -557,8 +557,8 @@ public class ScenarioManager {
 	             targets2.add(new Position(6,10));
 	             targets2.add(new Position(7,0));
 	             targets2.add(new Position(8,0));
-	             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
-	             newRobots.add(new NewTestRobot(new Position(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets2));
+	             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
+	             newRobots.add(new NewTestRobot(new Position(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets2,0));
 	             return newRobots;
 	         }
 	    }
@@ -588,8 +588,8 @@ public class ScenarioManager {
 	         targets2.add(new Position(6,10));
 	         targets2.add(new Position(7,0));
 	         targets2.add(new Position(8,0));
-	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
-	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets2));
+	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
+	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets2,0));
 	         return newRobots;
 	     }
 	}
@@ -627,9 +627,9 @@ private class MiddleRouteThreeRobots extends TestScenario {
 	         targets3.add(new Position(6,10));
 	         targets3.add(new Position(10,0));
 	         targets3.add(new Position(11,0));
-	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
-	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets2));
-	         newRobots.add(new NewTestRobot(new Position(8, 0), RobotState.TO_LOADING, Orientation.NORTH, targets3));
+	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
+	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets2,0));
+	         newRobots.add(new NewTestRobot(new Position(8, 0), RobotState.TO_LOADING, Orientation.NORTH, targets3,0));
 	         return newRobots;
 	     }
 	}
@@ -675,10 +675,10 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 	         targets4.add(new Position(6,10));
 	         targets4.add(new Position(13,0));
 	         targets4.add(new Position(14,0));
-	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
-	         newRobots.add(new NewTestRobot(new Position(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets2));
-	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets3));
-	         newRobots.add(new NewTestRobot(new Position(5, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets4));
+	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
+	         newRobots.add(new NewTestRobot(new Position(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets2,0));
+	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets3,0));
+	         newRobots.add(new NewTestRobot(new Position(5, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets4,0));
 	         return newRobots;
 	     }
 	}
@@ -701,7 +701,7 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
              targets.add(new Position(7,0));
              targets.add(new Position(8,0));
              targets.add(new Position(12,10));
-             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets));
+             newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
              return newRobots;
          }
     }
@@ -722,8 +722,8 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
              targetsRobotOne.add(new Position(3,10));
              targetsRobotTwo.add(new Position(2,0));
              targetsRobotTwo.add(new Position(3,13));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne));
-             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne,0));
+             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo,0));
              return newRobots;
          }
     }
@@ -747,9 +747,9 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
              targetsRobotTwo.add(new Position(3,13));
              targetsRobotThree.add(new Position(2,0));
              targetsRobotThree.add(new Position(3,16));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne));
-             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo));
-             newRobots.add(new NewTestRobot(new Position(0, -4), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotThree));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne,0));
+             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo,0));
+             newRobots.add(new NewTestRobot(new Position(0, -4), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotThree,0));
              return newRobots;
          }
     }
@@ -767,8 +767,8 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
             List<Position> targetsRobotTwo = new ArrayList<>();
             targetsRobotOne.add(new Position(1,0));
             targetsRobotTwo.add(new Position(3,4));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotTwo));
+            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotOne,0));
+            newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotTwo,0));
             return newRobots;
         }
     }
@@ -802,17 +802,19 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
         private RobotState state;
         private List<Position> targets = new ArrayList<Position>();
         private Orientation facing;
+        private int robotSpecificDelay = 0;
 
-        public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
+        public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay) {
             this.position = position;
             this.state = startingState;
             this.targets = targets;
             this.facing = facing;
+            this.robotSpecificDelay = delay;
         }
 
         @Override
         public Robot register(SimulationWorld simulationWorld) {
-            return simulationWorld.addRobotAtPosition(position, state, facing, targets);
+            return simulationWorld.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay);
         }
     }
     

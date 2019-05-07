@@ -89,6 +89,11 @@ public class DriveManager implements IRobotActors {
             loadBattery(delta);
         }
     }
+    
+    public void update(float delta, int robotSpecificDelay) {
+    	this.maxDelay = robotSpecificDelay;
+		update(delta);
+	}
 
 	private void loadBattery(float delta) {
 		battery = Math.min(battery + delta * SimulatorConfig.getBatteryChargingSpeed(), 100);

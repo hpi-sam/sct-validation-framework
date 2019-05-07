@@ -32,6 +32,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private int robotID;
     private int stationID;
     private int packageID;
+    private int robotSpecificDelay = 0;
 
     private RobotState state = RobotState.TO_QUEUE;
     private boolean driving = false;
@@ -67,10 +68,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
-                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets) {
+                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay) {
         this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
+        this.robotSpecificDelay = robotSpecificDelay;
         this.state = initialState;
     }
 
@@ -405,5 +407,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	public void finishRefreshing() {
 		refreshing = false;
+	}
+	
+	public int getRobotSpecificDelay() {
+		return robotSpecificDelay;
+	}
+	
+	public boolean isInTest() {
+		return isInTest;
 	}
 }
