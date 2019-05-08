@@ -47,6 +47,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private boolean refreshing = false;
 
+	private Position invalidUnloadingPosition = null;
+
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -196,10 +198,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtUnloading() {
+    	if(manager.checkUnloadingPosition()) {
+    		invalidUnloadingPosition  = manager.currentPosition();
+    	}
         drive.unload();
     }
 
-    private void handleFinishedUnloading() {
+	private void handleFinishedUnloading() {
         boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
         if(!isInTest) {
@@ -415,5 +420,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	
 	public boolean isInTest() {
 		return isInTest;
+	}
+	
+	public Position getInvalidUnloadingPosition() {
+		return invalidUnloadingPosition;
+	}
+
+	public void resetInvalidUnloadingPosition() {
+		invalidUnloadingPosition = null;
 	}
 }

@@ -31,7 +31,10 @@ public class InvalidPositionDetector {
 						invalidPositionReported = true;
 						reportInvalidPosition(robot, robot.oldPos());
 					}
-					if(world.getSimulator().getServerGridManagement().invalidManoeuvre(robot.oldPos(), robot.pos()));
+					if(world.getSimulator().getServerGridManagement().invalidManoeuvre(robot.oldPos(), robot.pos())) {
+						invalidPositionReported = true;
+						reportInvalidPosition(robot, robot.pos());
+					}
 			}
 		}
 	}

@@ -344,4 +344,11 @@ public class DriveManager implements IRobotActors {
 	public void setMaxDelay(int maxDelay) {
 		this.maxDelay = maxDelay;
 	}
+
+	public boolean checkUnloadingPosition() {
+		if(currentPosition.getY() <= 1 || (currentPosition.getY()%3 != 0 && currentPosition.getX()%3 != 0)) {
+			return true;
+		}
+		return false;
+	}
 }

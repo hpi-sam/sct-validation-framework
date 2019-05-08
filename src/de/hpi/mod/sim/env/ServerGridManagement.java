@@ -4,6 +4,7 @@ import de.hpi.mod.sim.env.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -19,6 +20,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * controller to find out if a cells is blocked by a robot.
 	 */
 	private IRobotController control;
+	private ArrayList<Position> invalidPositions = new ArrayList<Position>();
 
 	public ServerGridManagement(IRobotController control) {
 		this.control = control;
@@ -94,7 +96,20 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * @param pos The position of the Robot
 	 */
 	public boolean isBlockedByMap(Position pos) {
-		return cellType(pos) == CellType.BLOCK;
+		boolean isBlock = cellType(pos) == CellType.BLOCK;
+		boolean isInvalid = false;
+		for(int i=0; i<invalidPositions.size(); i++) {
+			if(invalidPositions.get(i).is(pos)) {
+				isInvalid = true;
+				break;
+			}
+		}
+		
+		return isBlock || isInvalid;
+	}
+	
+	public void makePositionInvalid(Position pos) {
+		invalidPositions.add(pos);	
 	}
 
 	/**
@@ -712,5 +727,9 @@ public class ServerGridManagement implements ISensorDataProvider {
 		
 		// Return filtered results
 		return cells;
+	}
+
+	public void clearInvalidPositions() {
+		invalidPositions.clear();
 	}
 }
