@@ -13,4 +13,6 @@ public interface IRobotStationDispatcher {
     void reportChargingAtStation(int robotID, int stationID);
     void reportEnteringQueueAtStation(int robotID, int stationID);
     void reportLeaveStation(int robotID, int stationID);
+	boolean requestEnteringBattery(int robotID, int stationID);
+	void releaseAllLocks();
 }

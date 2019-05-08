@@ -79,6 +79,7 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public boolean requestEnteringStation(int robotID, int stationID) {
     	 if(!getStationByID(stationID).blocked()) {
+    		 getStationByID(stationID).blockQueue();
     		 return true;
          } else {
          	 return false;
@@ -89,27 +90,43 @@ public class StationManager implements IRobotStationDispatcher {
      * Checks whether the robot is currently allowed to drive to the queue
      */
     @Override
+    public boolean requestEnteringBattery(int robotID, int stationID) {
+    	getStationByID(stationID).blockQueue();
+    	getStationByID(stationID).increaseRobotsAtChargingCount();
+    	return true;
+    }
+    
+    @Override
     public boolean requestLeavingBattery(int robotID, int stationID) {
-    	getStationByID(stationID).freeBattery();
+    	getStationByID(stationID).decreaseRobotsAtChargingCount();
+    	getStationByID(stationID).blockQueue();
     	return true;
     }
 
     @Override
     public void reportChargingAtStation(int robotID, int stationID) {
-        getStationByID(stationID).blockBattery();
+        getStationByID(stationID).unblockQueue();
     }
 
     @Override
     public void reportEnteringQueueAtStation(int robotID, int stationID) {
     	Station station = getStationByID(stationID);
         station.unregisterBatteryWithRobotIfPresent(robotID);
-        station.blockQueue();
+        station.unblockQueue();
     }
 
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
         getStationByID(stationID).decreaseQueue();
         getStationByID(stationID).unblockQueue();
+    }
+    
+    @Override
+    public void releaseAllLocks() {
+    	for(int i=0; i<stations.size(); i++) {
+    		stations.get(i).unblockQueue();
+    		stations.get(i).resetRobotChargingCount();
+    	}
     }
 
     public List<Station> getStations() {

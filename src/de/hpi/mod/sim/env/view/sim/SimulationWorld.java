@@ -351,4 +351,8 @@ public class SimulationWorld {
 	public void setRunForbidden(boolean isForbidden) {
 		runForbidden = isForbidden;
 	}
+
+	public void releaseAllLocks() {
+		simulator.releaseAllLocks();
+	}
 }

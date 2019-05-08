@@ -207,4 +207,8 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 	public ServerGridManagement getServerGridManagement() {
 		return grid;
 	}
+
+	public void releaseAllLocks() {
+		stations.releaseAllLocks();
+	}
 }

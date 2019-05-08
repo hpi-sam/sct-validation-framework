@@ -45,7 +45,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 				return CellType.WAYPOINT;
 			return CellType.CROSSROAD;
 		} else {
-			if (position.getX() % 3 == 0 && position.getY() < -1 && position.getY() > -5)
+			if (position.getX() % 3 == 0 && position.getY() < 0 && position.getY() > -4)
 				return CellType.BATTERY;
 			if (position.getX() % 3 == 0 || position.getY() < -SimulatorConfig.QUEUE_SIZE)
 				return CellType.BLOCK;
@@ -578,7 +578,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 			//odd station ID means the station is on the left
 			x = -(stationID + 1)/2 * 3;
 		}
-		int y = -2 - chargerID;
+		int y = -1 - chargerID;
 		return new Position(x, y);
 	}
 

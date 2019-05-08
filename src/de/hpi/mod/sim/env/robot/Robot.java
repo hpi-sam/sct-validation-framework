@@ -123,22 +123,22 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtStation() {
-        if (dispatcher.requestEnteringStation(robotID, stationID)) {
-
-            if (hasReservedBattery) {
+        if (hasReservedBattery) {
+        	if(dispatcher.requestEnteringBattery(robotID, stationID)) {
         		target = location.getBatteryPositionAtStation(stationID,
                         dispatcher.getReservedChargerAtStation(robotID, stationID));
                 state = RobotState.TO_BATTERY;
                 hasReservedBattery = false;
                 startDriving();
-
-            } else {
-                target = location.getQueuePositionAtStation(stationID);
+        	}
+        } else {
+        	if (dispatcher.requestEnteringStation(robotID, stationID)) {
+        		target = location.getQueuePositionAtStation(stationID);
                 state = RobotState.TO_QUEUE;
-            }
-
-            startDriving();
+        	}
         }
+
+        startDriving();
     }
 
     private void handleArriveAtBattery() {

@@ -21,9 +21,8 @@ public class Station {
      */
     private Battery[] batteries;
 
-	private boolean blockedBattery = false;
-
 	private boolean blockedQueue = false;
+	private int chargingRobots = 0;
 
 
     public Station(int stationID) {
@@ -120,22 +119,15 @@ public class Station {
         return stationID == station.stationID;
     }
 
-	public void freeBattery() {
-		blockedBattery = false;
-	}
-
-	public void blockBattery() {
-		blockedBattery = true;
-		now = System.currentTimeMillis();
-	}
-
 	public boolean blocked() {
 		if(now+SimulatorConfig.getDefaultStationUnblockingTime()<=System.currentTimeMillis()) {
-			blockedBattery = false;
 			blockedQueue = false;
 			return false;
 		}
-		return blockedBattery || blockedQueue;
+		if(chargingRobots > 0) {
+			return true;
+		}
+		return blockedQueue;
 	}
 
 	public void blockQueue() {
@@ -145,5 +137,17 @@ public class Station {
 
 	public void unblockQueue() {
 		blockedQueue = false;
+	}
+
+	public void increaseRobotsAtChargingCount() {
+		chargingRobots++;
+	}
+
+	public void decreaseRobotsAtChargingCount() {
+		chargingRobots--;	
+	}
+
+	public void resetRobotChargingCount() {
+		chargingRobots = 0;
 	}
 }

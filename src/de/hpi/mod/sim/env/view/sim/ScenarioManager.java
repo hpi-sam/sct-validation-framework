@@ -104,6 +104,7 @@ public class ScenarioManager {
 		world.resetOffset();
 		world.resetHighlightedRobots();
         world.playScenario(scenario);
+        world.releaseAllLocks();
         deadlockDetector.reactivate();
         collisionDetector.reset();
         invalidPositionDetector.reset();
@@ -675,8 +676,8 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
 	         targets4.add(new Position(4,0));
 	         targets4.add(new Position(5,0));
 	         targets4.add(new Position(6,10));
-	         targets4.add(new Position(13,0));
-	         targets4.add(new Position(14,0));
+	         targets4.add(new Position(1,0));
+	         targets4.add(new Position(2,0));
 	         newRobots.add(new NewTestRobot(new Position(2, 0), RobotState.TO_LOADING, Orientation.NORTH, targets,0));
 	         newRobots.add(new NewTestRobot(new Position(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, targets2,0));
 	         newRobots.add(new NewTestRobot(new Position(5, 0), RobotState.TO_LOADING, Orientation.NORTH, targets3,0));
@@ -749,9 +750,9 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
              targetsRobotTwo.add(new Position(3,13));
              targetsRobotThree.add(new Position(2,0));
              targetsRobotThree.add(new Position(3,16));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne,0));
-             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo,0));
-             newRobots.add(new NewTestRobot(new Position(0, -4), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotThree,0));
+             newRobots.add(new NewTestRobot(new Position(0, -1), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne,0));
+             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo,0));
+             newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotThree,0));
              return newRobots;
          }
     }
