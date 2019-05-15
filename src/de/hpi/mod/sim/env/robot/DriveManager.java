@@ -32,7 +32,7 @@ public class DriveManager implements IRobotActors {
 
     private long unloadingTime = SimulatorConfig.getDefaultUnloadingTime();
     
-    private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
+    private float battery = ThreadLocalRandom.current().nextInt((int) (SimulatorConfig.getMinBatteryRatio()*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
     
     private int maxDelay = 0;
 	private boolean isWaitingToMove = false;

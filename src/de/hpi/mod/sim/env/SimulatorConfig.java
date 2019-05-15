@@ -32,7 +32,8 @@ public class SimulatorConfig {
 	public static final float BATTERY_FULL = 100;
 	public static final float BATTERY_LOW = 35;
 	public static final float BATTERY_LOSS = .1f;
-	public static final float BATTERY_LOADING_SPEED = .02f;
+	public static final float BATTERY_LOADING_SPEED = .015f;
+	public static final float MIN_BATTERY_RATIO = .5f;
 	public static final int DEFAULT_UNLOADING_RANGE = 50;
 	public static final int DEFAULT_STATION_UNBLOCKING_TIME = 10000; //in ms
 	
@@ -96,6 +97,7 @@ public class SimulatorConfig {
    	private static float batteryLow = BATTERY_LOW;
    	private static float batteryLoss = BATTERY_LOSS;
    	private static float batteryChargingSpeed = BATTERY_LOADING_SPEED;
+   	private static float minBatteryRatio = MIN_BATTERY_RATIO;
    	private static int defaultStationUnblockingTime = DEFAULT_STATION_UNBLOCKING_TIME;
    	
    	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
@@ -245,6 +247,10 @@ public class SimulatorConfig {
 	
 	public static float getBatteryLoss() {
 		return batteryLoss;
+	}
+	
+	public static float getMinBatteryRatio (){
+		return minBatteryRatio;
 	}
 	
 	public static float getBatteryChargingSpeed() {

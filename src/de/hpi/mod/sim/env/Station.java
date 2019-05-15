@@ -8,7 +8,6 @@ import java.util.*;
 public class Station {
 
     private int stationID;
-    private long now;
 
     /**
      * How many robots want to drive or are in the queue.
@@ -22,7 +21,7 @@ public class Station {
     private Battery[] batteries;
 
 	private boolean blockedQueue = false;
-	private int chargingRobots = 0;
+	private boolean blockedLevel2 = false;
 
 
     public Station(int stationID) {
@@ -120,34 +119,65 @@ public class Station {
     }
 
 	public boolean blocked() {
-		if(now+SimulatorConfig.getDefaultStationUnblockingTime()<=System.currentTimeMillis()) {
+		/*if(now+SimulatorConfig.getDefaultStationUnblockingTime()<=System.currentTimeMillis()) {
 			blockedQueue = false;
 			return false;
 		}
 		if(chargingRobots > 0) {
 			return true;
-		}
-		return blockedQueue;
+		}*/
+		return blockedQueue || blockedLevel2;
 	}
 
 	public void blockQueue() {
 		blockedQueue  = true;
-		now = System.currentTimeMillis();
 	}
 
 	public void unblockQueue() {
-		blockedQueue = false;
+		if(noRobotsOnBatteries()) {
+			blockedQueue = false;
+			blockedLevel2 = false;
+		} else {
+			blockedLevel2 = false;
+		}
 	}
 
-	public void increaseRobotsAtChargingCount() {
-		chargingRobots++;
+	private boolean noRobotsOnBatteries() {
+		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+			if(batteries[i].robotPresent()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
-	public void decreaseRobotsAtChargingCount() {
-		chargingRobots--;	
+	public boolean blockedLevel2() {
+		return blockedLevel2;
 	}
 
-	public void resetRobotChargingCount() {
-		chargingRobots = 0;
+	public void blockQueueLevel2() {
+		blockedLevel2 = true;
+	}
+
+	public void unblockQueueLevel2() {
+		blockedLevel2 = false;
+		
+	}
+
+	public boolean hasRobotsBelow(int batteryID) {
+		for(int i = batteryID + 1; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+			if(batteries[i].robotPresent()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void robotPresentOnCharger(int chargerID) {
+		batteries[chargerID].setRobotPresent();
+	}
+
+	void robotNotPresent(int batteryID) {
+		batteries[batteryID].setRobotNotPresent();
 	}
 }

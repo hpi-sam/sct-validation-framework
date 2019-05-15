@@ -22,7 +22,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
     public Simulator() {
         grid = new ServerGridManagement(this);
-        stations = new StationManager(10);
+        stations = new StationManager(SimulatorConfig.getChargingStationsInUse());
     }
 
     /**
@@ -34,7 +34,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         int robotID = Robot.incrementID();
         int stationID = stations.getReservationNextForStation(robotID, true);
         int batteryID = stations.getReservedChargerAtStation(robotID, stationID);
-        stations.reportChargingAtStation(robotID, stationID);
+        stations.reportChargingAtStation(robotID, stationID, batteryID);
 
         Robot robot = new Robot(
                 robotID,
@@ -154,7 +154,6 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         int id = ThreadLocalRandom.current().nextInt(100) + 1;
         int min_pos = 0;
         int minimum = Integer.MAX_VALUE;
-        boolean negative = false;
         
         if(id > 70) {
         	id = ThreadLocalRandom.current().nextInt(3*unloadingRange/4, unloadingRange);
@@ -210,5 +209,11 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
 	public void releaseAllLocks() {
 		stations.releaseAllLocks();
+	}
+
+	public void createNewStationManager(int chargingStationsInUse) {
+		if(chargingStationsInUse != stations.getUsedStations()) {
+			stations = new StationManager(chargingStationsInUse);
+		}
 	}
 }

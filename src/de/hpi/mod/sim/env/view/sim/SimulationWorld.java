@@ -355,4 +355,8 @@ public class SimulationWorld {
 	public void releaseAllLocks() {
 		simulator.releaseAllLocks();
 	}
+
+	public void updateSimulator(int chargingStationsInUse) {
+		simulator.createNewStationManager(chargingStationsInUse);
+	}
 }

@@ -49,6 +49,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private Position invalidUnloadingPosition = null;
 
+	private int batteryID;
+
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -125,8 +127,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private void handleArriveAtStation() {
         if (hasReservedBattery) {
         	if(dispatcher.requestEnteringBattery(robotID, stationID)) {
+        		batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
         		target = location.getBatteryPositionAtStation(stationID,
-                        dispatcher.getReservedChargerAtStation(robotID, stationID));
+                       batteryID);
                 state = RobotState.TO_BATTERY;
                 hasReservedBattery = false;
                 startDriving();
@@ -142,7 +145,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtBattery() {
-        dispatcher.reportChargingAtStation(robotID, stationID);
+        dispatcher.reportChargingAtStation(robotID, stationID, batteryID);
         manager.setLoading(true);
     }
 
@@ -153,7 +156,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private void handleFinishedCharging() {
         manager.setLoading(false);
 
-        if (dispatcher.requestLeavingBattery(robotID, stationID)) {
+        if (dispatcher.requestLeavingBattery(robotID, stationID, batteryID)) {
         	target = location.getQueuePositionAtStation(stationID);
             state = RobotState.TO_QUEUE;
             startDriving();
