@@ -185,6 +185,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         } else {
         	heights[Math.abs(id)/mapHeight]++;
         }
+        id += SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
         return id;
     }
 

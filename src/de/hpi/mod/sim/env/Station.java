@@ -180,4 +180,12 @@ public class Station {
 	void robotNotPresent(int batteryID) {
 		batteries[batteryID].setRobotNotPresent();
 	}
+
+	public void releaseLocks() {
+		blockedQueue = false;
+		blockedLevel2 = false;
+		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+			batteries[i].setRobotNotPresent();
+		}
+	}
 }

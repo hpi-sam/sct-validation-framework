@@ -131,7 +131,7 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public void releaseAllLocks() {
     	for(int i=0; i<stations.size(); i++) {
-    		stations.get(i).unblockQueue();
+    		stations.get(i).releaseLocks();
     	}
     }
     

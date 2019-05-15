@@ -73,6 +73,7 @@ public class SimulatorConfig {
      * Number of vertical unloading positions.
      */
 	public static final int DEFAULT_MAP_HEIGHT = 10;
+	public static final int NOT_USED_ROWS = 3;
 
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
@@ -118,6 +119,8 @@ public class SimulatorConfig {
     private static int mapHeight = DEFAULT_MAP_HEIGHT;
     private static int unloadingRange = DEFAULT_UNLOADING_RANGE;
     private static Map<Integer,Float> robotSpeedsMap = null;
+	private static int notUsedRows = NOT_USED_ROWS;
+	
     static {
     	robotSpeedsMap = new HashMap<Integer,Float>();
     	robotSpeedsMap.put(0, ROBOT_LEVEL_0_SPEED);
@@ -323,5 +326,9 @@ public class SimulatorConfig {
 
 	public static void setChargingStationsInUse(int chargingStationsInUse) {
 		SimulatorConfig.chargingStationsInUse = chargingStationsInUse;
+	}
+
+	public static int getNotUsedRows() {
+		return notUsedRows;
 	}
 }
