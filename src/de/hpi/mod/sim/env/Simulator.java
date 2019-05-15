@@ -57,14 +57,14 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets, int delay) {
+    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets, int delay, int initialDelay) {
     	
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
                 0,
                 grid, stations, this, this,
-                position, state, facing, targets, delay);
+                position, state, facing, targets, delay, initialDelay);
         robots.add(robot);
         return robot;
     }
@@ -185,7 +185,11 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         } else {
         	heights[Math.abs(id)/mapHeight]++;
         }
-        id += SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
+        if(id > 0) {
+        	id += SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
+        } else {
+        	id -= SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
+        }
         return id;
     }
 

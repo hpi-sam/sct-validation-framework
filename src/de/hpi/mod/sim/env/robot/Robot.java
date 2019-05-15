@@ -51,6 +51,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private int batteryID;
 
+	private int initialDelay = 0;
+
+	private long initialNow;
+
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -72,11 +76,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
-                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay) {
+                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay) {
         this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
         this.robotSpecificDelay = robotSpecificDelay;
+        this.initialDelay  = initialDelay;
+        this.initialNow = System.currentTimeMillis();
         this.state = initialState;
     }
 
@@ -90,25 +96,27 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
-        if (!driving) {
-        	if(!isInTest || !testPositionTargets.isEmpty()) {
-	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
-	                handleFinishedCharging();
-	            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
-	            	handleFinishedLoading();
-	            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
-	                handleFinishedUnloading();
-	            } else if (state == RobotState.TO_STATION) {
-	                handleArriveAtStation();
-	            } else if (state == RobotState.TO_QUEUE) {
-	                handleArriveAtQueue();
-	            }
-        	}
-        }
-        if(!isInTest || !testPositionTargets.isEmpty()) {
-        	startDriving();
-        }
-        drive.dataRefresh();
+    	if(System.currentTimeMillis() >= initialNow + initialDelay) {
+    		if (!driving) {
+            	if(!isInTest || !testPositionTargets.isEmpty()) {
+    	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
+    	                handleFinishedCharging();
+    	            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
+    	            	handleFinishedLoading();
+    	            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
+    	                handleFinishedUnloading();
+    	            } else if (state == RobotState.TO_STATION) {
+    	                handleArriveAtStation();
+    	            } else if (state == RobotState.TO_QUEUE) {
+    	                handleArriveAtQueue();
+    	            }
+            	}
+            }
+            if(!isInTest || !testPositionTargets.isEmpty()) {
+            	startDriving();
+            }
+            drive.dataRefresh();
+    	}
     }
 
     /**

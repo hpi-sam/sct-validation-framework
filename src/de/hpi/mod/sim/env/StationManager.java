@@ -103,7 +103,7 @@ public class StationManager implements IRobotStationDispatcher {
 		if(!getStationByID(stationID).blockedLevel2() && !getStationByID(stationID).hasRobotsBelow(batteryID)) {
 			getStationByID(stationID).blockQueueLevel2();
 			getStationByID(stationID).robotNotPresent(batteryID);
-			return true; //through concurrency issues, two robots can ask at the same time, if they are allowed to leave.
+			return true;
     	} else {
     		return false;
     	}
@@ -172,7 +172,7 @@ public class StationManager implements IRobotStationDispatcher {
         if(!filteredStations.isEmpty()) {
         	return filteredStations.get(r.nextInt(filteredStations.size()));
         } else {
-        	return getRandomStationWithPredicate(stationFilter);
+        	return stations.get(0); //Fallback strategy
         }
         
         /*if (filteredStations.size() > SimulatorConfig.getChargingStationsInUse()) {

@@ -203,8 +203,8 @@ public class SimulationWorld {
 		return addRobotRunner(() -> simulator.addRobot());
 	}
 
-	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets, int delay) {
-		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets, delay));
+	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets, int delay, int initialDelay) {
+		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets, delay, initialDelay));
 	}
 
 	public Robot addRobotInScenarioHPI2(Position pos, Orientation facing, int delay) {

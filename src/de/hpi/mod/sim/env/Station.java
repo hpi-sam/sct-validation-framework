@@ -101,11 +101,14 @@ public class Station {
      * @return A free battery
      */
     private Battery getFreeBattery() {
-        Optional<Battery> battery = Arrays.stream(batteries)
-                .filter(Battery::isFree).findFirst();
-        if (battery.isPresent())
-            return battery.get();
-        throw new IllegalStateException("There is no free battery");
+    	int freeID = 0;
+        for(int i=0; i<SimulatorConfig.getBatteriesPerStation(); i++) {
+        	if(batteries[i].isFree()) {
+        		freeID = i;
+        	}
+        }
+        return batteries[freeID];
+        // throw new IllegalStateException("There is no free battery");
     }
 
     @Override
