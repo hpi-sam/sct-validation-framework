@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -24,11 +23,50 @@ public class TestCaseGenerator {
 	}
 	
 	public Map<String, ArrayList<TestScenario>> getAllTestCases(){
+		testGroups.put("I.Driving in station", generateStationTests());
 		testGroups.put("II. Simple crossroad", generateSimpleCrossroadTests());
 		testGroups.put("III. Crossroad conflicts", generateCrossroadConflicTests());
 		return testGroups;
 	}
 	
+	private ArrayList<TestScenario> generateStationTests() {
+		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+		List<NewRobot> newRobots = new ArrayList<>();
+        List<Position> targets = new ArrayList<>();
+        targets.add(new Position(1,-2));
+        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive one step", "Drive one step", newRobots));
+        
+		newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(1,-5));
+        targets.add(new Position(2,-5));
+        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_UNLOADING, Orientation.EAST, targets, 0, 1000)); //RobotState is arbitrary here
+        testScenarios.add(new ConcreteTestScenario("Drive to end of queue", "Drive to end of queue", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(0,-2));
+        newRobots.add(new NewTestRobot(new Position(1, 0), RobotState.TO_UNLOADING, Orientation.SOUTH, targets, 0, 1000)); //RobotState is arbitrary here
+        testScenarios.add(new ConcreteTestScenario("Drive to battery", "Drive to battery", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(1,-5));
+        targets.add(new Position(2,0));
+        newRobots.add(new NewTestRobot(new Position(1, 0), RobotState.TO_UNLOADING, Orientation.SOUTH, targets, 0, 1000)); //RobotState is arbitrary here
+        testScenarios.add(new ConcreteTestScenario("Drive to loading 1", "Drive to loading position from station entry", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(1,-5));
+        targets.add(new Position(2,0));
+        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_UNLOADING, Orientation.EAST, targets, 0, 1000)); //RobotState is arbitrary here
+        testScenarios.add(new ConcreteTestScenario("Drive to loading 2", "Drive to loading position from battery", newRobots)); 
+        
+        return testScenarios;
+	}
+
 	private ArrayList<TestScenario> generateCrossroadConflicTests() {
 		ArrayList<TestScenario> testScenarios = new ArrayList<>();
 		testScenarios.addAll(generateTwoRobotsOppositOnCrossroadTests());

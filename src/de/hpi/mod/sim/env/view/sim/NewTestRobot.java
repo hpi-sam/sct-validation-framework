@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.hpi.mod.sim.env.model.Orientation;

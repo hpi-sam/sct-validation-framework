@@ -73,10 +73,6 @@ public class ScenarioManager {
 
 	private void initializeTestGroupsMap() {
 		testGroups = testCaseGenerator.getAllTestCases();
-        ArrayList<TestScenario> drivingInStationTests = new ArrayList<>();
-        drivingInStationTests.add(new DriveToQueueEnd());
-        drivingInStationTests.add(new DriveToLoadingPosition());
-        testGroups.put("Driving in Station", drivingInStationTests);
         ArrayList<TestScenario> simpleDrivingTests = new ArrayList<>();
         simpleDrivingTests.add(new DriveToUnloadingPosition());
         simpleDrivingTests.add(new HandleTwoRobotsInStation());
@@ -368,41 +364,6 @@ public class ScenarioManager {
             return newRobots;
     	}
     }
-    
-    private class DriveToQueueEnd extends TestScenario {
-    	
-    	public DriveToQueueEnd() {
-    		name = "Drive to end of the queue";
-    		description = "Drive to end of the queue";
-    	}
-    	
-    	 @Override
-         public List<NewRobot> initializeScenario() {
-             List<NewRobot> newRobots = new ArrayList<>();
-             List<Position> targets = new ArrayList<>();
-             targets.add(new Position(2,-5));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
-             return newRobots;
-         }
-    }
-    
-    private class DriveToLoadingPosition extends TestScenario {
-    	
-    	public DriveToLoadingPosition() {
-    		name = "Drive to loading position";
-    		description = "Drive to loading position";
-    	}
-    	
-    	 @Override
-         public List<NewRobot> initializeScenario() {
-             List<NewRobot> newRobots = new ArrayList<>();
-             List<Position> targets = new ArrayList<>();
-             targets.add(new Position(2,0));
-             newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targets));
-             return newRobots;
-         }
-    }
-    
     
     private class DriveToUnloadingPosition extends TestScenario {
     	
