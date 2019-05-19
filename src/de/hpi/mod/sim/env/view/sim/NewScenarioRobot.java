@@ -25,4 +25,8 @@ public class NewScenarioRobot extends NewRobot{
 	public Robot register(SimulationWorld sim) {
 		return sim.addRobotInScenarioHPI2(position, facing, delay);
 	}
+
+	@Override
+	public void refreshRobot() {
+	}	
 }

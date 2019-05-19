@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.hpi.mod.sim.env.model.Orientation;
@@ -16,11 +17,13 @@ public class NewTestRobot extends NewRobot{
     private Orientation facing;
     private int robotSpecificDelay = 0;
     private int initialDelay = 0;
+	private List<Position> targetsCopy = new ArrayList<Position>();
 
     public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
         this.position = position;
         this.state = startingState;
         this.targets = targets;
+        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
         this.initialDelay = 0;
@@ -30,6 +33,7 @@ public class NewTestRobot extends NewRobot{
         this.position = position;
         this.state = startingState;
         this.targets = targets;
+        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = delay;
         this.initialDelay = 0;
@@ -39,6 +43,7 @@ public class NewTestRobot extends NewRobot{
         this.position = position;
         this.state = startingState;
         this.targets = targets;
+        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = delay;
         this.initialDelay = initialDelay;
@@ -49,4 +54,10 @@ public class NewTestRobot extends NewRobot{
         return simulationWorld.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay);
     }
 
+    @Override
+    public void refreshRobot() {
+    	if(targets.isEmpty()) {
+    		targets.addAll(targetsCopy);
+    	}
+    }
 }

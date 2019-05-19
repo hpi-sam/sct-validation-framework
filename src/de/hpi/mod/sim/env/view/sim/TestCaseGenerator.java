@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -23,10 +24,181 @@ public class TestCaseGenerator {
 	}
 	
 	public Map<String, ArrayList<TestScenario>> getAllTestCases(){
-		testGroups.put("Simple crossroad", generateSimpleCrossroadTests());
+		testGroups.put("II. Simple crossroad", generateSimpleCrossroadTests());
+		testGroups.put("III. Crossroad conflicts", generateCrossroadConflicTests());
 		return testGroups;
 	}
 	
+	private ArrayList<TestScenario> generateCrossroadConflicTests() {
+		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+		testScenarios.addAll(generateTwoRobotsOppositOnCrossroadTests());
+		testScenarios.addAll(generateTwoRobotsCornerOnCrossroadTests());
+		testScenarios.addAll(generateThreeRobotsOnCrossroadTests());
+		testScenarios.addAll(generateFourRobotsOnCrossroadTest());
+		return testScenarios;
+	}
+
+
+	private ArrayList<TestScenario> generateTwoRobotsOppositOnCrossroadTests() {
+		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+		int biasX = rand.nextInt(5);
+		int biasY = rand.nextInt(5);
+		List<NewRobot> newRobots = new ArrayList<>();
+        List<Position> targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-6+biasX*3,8+biasY*3));
+        List<Position> targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-3+biasX*3,7+biasY*3));
+        newRobots.add(new NewTestRobot(new Position(-3+biasX*3, 8+biasY*3), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-6+biasX*3, 7+biasY*3), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Two Robots vertical", "Driving crossroad with two Robots vertical opposite", newRobots));
+        
+        biasX = rand.nextInt(5);
+		biasY = rand.nextInt(5);
+		newRobots = new ArrayList<>();
+        targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-5+biasX*3,6+biasY*3));
+        targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-4+biasX*3,9+biasY*3));
+        newRobots.add(new NewTestRobot(new Position(-5+biasX*3, 9+biasY*3), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-4+biasX*3, 6+biasY*3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Two Robots horizontal", "Driving crossroad with two Robots horizontal opposite", newRobots));
+		return testScenarios;
+	}
+
+	private ArrayList<TestScenario> generateTwoRobotsCornerOnCrossroadTests() {
+		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+		int biasX = rand.nextInt(5);
+		int biasY = rand.nextInt(5);
+		List<NewRobot> newRobots = new ArrayList<>();
+        List<Position> targetsRobotOne = new ArrayList<>();
+        
+        List<Position> targetsRobotTwo = new ArrayList<>();
+        targetsRobotTwo.add(new Position(-4+3*biasX,9+3*biasY));
+        List<Position> targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-3+3*biasX,7+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-4+3*biasX, 6+3*biasY), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-6+3*biasX, 7+3*biasY), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -NW", "Two Robots on crossroad with no Robot in the north and in the west", newRobots));
+        
+        biasX = rand.nextInt(5);
+		biasY = rand.nextInt(5);
+		newRobots = new ArrayList<>();
+        targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-5+3*biasX,6+3*biasY));
+        targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-3+3*biasX,7+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-5+3*biasX, 9+3*biasY), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-6+3*biasX, 7+3*biasY), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -ES", "Two Robots on crossroad with no Robot in the east and in the south", newRobots));
+        
+        biasX = rand.nextInt(5);
+        biasY = rand.nextInt(5);
+		newRobots = new ArrayList<>();
+        targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-6+3*biasX,8+3*biasY));
+        targetsRobotTwo = new ArrayList<>();
+        targetsRobotTwo.add(new Position(-5+3*biasX,6+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-3+3*biasX, 8+3*biasY), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-5+3*biasX, 9+3*biasY), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotTwo,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -SE", "Two Robots on crossroad with no Robot in the south and the east", newRobots));
+        
+        biasX = rand.nextInt(5);
+		biasY = rand.nextInt(5);
+		newRobots = new ArrayList<>();
+        targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-6+3*biasX,8+3*biasY));
+        targetsRobotTwo = new ArrayList<>();
+        targetsRobotTwo.add(new Position(-4+3*biasX,9+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-3+3*biasX, 8+3*biasY), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-4+3*biasX, 6+3*biasY), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -WN", "Two Robots on crossroad with no Robot in the west and the north", newRobots));
+        
+        return testScenarios;
+	}
+
+	private ArrayList<TestScenario> generateThreeRobotsOnCrossroadTests() {
+		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+		int biasX = rand.nextInt(5);
+		int biasY = rand.nextInt(5);
+		List<NewRobot> newRobots = new ArrayList<>();
+        List<Position> targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-6+3*biasX,8+3*biasY));
+        List<Position> targetsRobotTwo = new ArrayList<>();
+        targetsRobotTwo.add(new Position(-4+3*biasX,9+3*biasY));
+        List<Position> targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-3+3*biasX,7+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-3+3*biasX, 8+3*biasY), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-4+3*biasX, 6+3*biasY), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-6+3*biasX, 7+3*biasY), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -N", "Three Robots on crossroad with no Robot in the north", newRobots));
+        
+        biasX = rand.nextInt(5);
+		biasY = rand.nextInt(5);
+		newRobots = new ArrayList<>();
+        targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-5+3*biasX,6+3*biasY));
+        targetsRobotTwo = new ArrayList<>();
+        targetsRobotTwo.add(new Position(-4+3*biasX,9+3*biasY));
+        targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-3+3*biasX,7+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-5+3*biasX, 9+3*biasY), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-4+3*biasX, 6+3*biasY), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-6+3*biasX, 7+3*biasY), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -E", "Three Robots on crossroad with no Robot in the east", newRobots));
+        
+        biasX = rand.nextInt(5);
+        biasY = rand.nextInt(5);
+		newRobots = new ArrayList<>();
+        targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-6+3*biasX,8+3*biasY));
+        targetsRobotTwo = new ArrayList<>();
+        targetsRobotTwo.add(new Position(-5+3*biasX,6+3*biasY));
+        targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-3+3*biasX,7+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-3+3*biasX, 8+3*biasY), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-5+3*biasX, 9+3*biasY), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotTwo,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-6+3*biasX, 7+3*biasY), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -S", "Three Robots on crossroad with no Robot in the south", newRobots));
+        
+        biasX = rand.nextInt(5);
+		biasY = rand.nextInt(5);
+		newRobots = new ArrayList<>();
+        targetsRobotOne = new ArrayList<>();
+        targetsRobotOne.add(new Position(-6+3*biasX,8+3*biasY));
+        targetsRobotTwo = new ArrayList<>();
+        targetsRobotTwo.add(new Position(-4+3*biasX,9+3*biasY));
+        targetsRobotThree = new ArrayList<>();
+        targetsRobotThree.add(new Position(-5+3*biasX,6+3*biasY));
+        newRobots.add(new NewTestRobot(new Position(-3+3*biasX, 8+3*biasY), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-4+3*biasX, 6+3*biasY), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0,1000));
+        newRobots.add(new NewTestRobot(new Position(-5+3*biasX, 9+3*biasY), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotThree,0,1000));
+        testScenarios.add(new ConcreteTestScenario("Three Robots -W", "Three Robots on crossroad with no Robot in the west", newRobots));
+		
+		return testScenarios;
+	}
+
+	private ArrayList<TestScenario> generateFourRobotsOnCrossroadTest() {
+		 ArrayList<TestScenario> testScenarios = new ArrayList<>();
+		
+		 List<NewRobot> newRobots = new ArrayList<>();
+         List<Position> targetsRobotOne = new ArrayList<>();
+         targetsRobotOne.add(new Position(0,5));
+         List<Position> targetsRobotTwo = new ArrayList<>();
+         targetsRobotTwo.add(new Position(5,9));
+         List<Position> targetsRobotThree = new ArrayList<>();
+         targetsRobotThree.add(new Position(9,4));
+         List<Position> targetsRobotFour = new ArrayList<>();
+         targetsRobotFour.add(new Position(4,0));
+         newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
+         newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
+         newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
+         newRobots.add(new NewTestRobot(new Position(4, 6), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotFour));
+         testScenarios.add(new ConcreteTestScenario("Four Robots", "Four Robots on crossroad", newRobots));
+         
+         return testScenarios;
+         
+	}
+
 	private ArrayList<TestScenario>  generateSimpleCrossroadTests() {
 		ArrayList<TestScenario> testScenarios = new ArrayList<>();
 		testScenarios.addAll(generateEnteringCrossroadTests());
@@ -183,13 +355,9 @@ public class TestCaseGenerator {
 
         @Override
         public List<NewRobot> initializeScenario() {
-            /*List<NewRobot> newRobots = new ArrayList<>();
-            List<Position> targetsRobotOne = new ArrayList<>();
-            targetsRobotOne.add(new Position(0,5));
-            List<Position> targetsRobotThree = new ArrayList<>();
-            targetsRobotThree.add(new Position(9,4));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));*/
+            for(int i=0; i<newRobots.size(); i++) {
+            	newRobots.get(i).refreshRobot();
+            }
             return newRobots;
         }
     }

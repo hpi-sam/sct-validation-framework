@@ -73,13 +73,6 @@ public class ScenarioManager {
 
 	private void initializeTestGroupsMap() {
 		testGroups = testCaseGenerator.getAllTestCases();
-		ArrayList<TestScenario> drivingToCrossroadTests = new ArrayList<>();
-        drivingToCrossroadTests.add(new OppositeRobotsOnCrossroadScenario());
-        drivingToCrossroadTests.add(new OppositeRobotsOnCrossroadScenarioWithDelay());
-        drivingToCrossroadTests.add(new TwoRobotsOnCrossroadScenario());
-        drivingToCrossroadTests.add(new ThreeRobotsOnCrossroadScenario());
-        drivingToCrossroadTests.add(new FourRobotsOnCrossroadScenario());
-        testGroups.put("Driving at Crossroad", drivingToCrossroadTests);
         ArrayList<TestScenario> drivingInStationTests = new ArrayList<>();
         drivingInStationTests.add(new DriveToQueueEnd());
         drivingInStationTests.add(new DriveToLoadingPosition());
@@ -374,115 +367,6 @@ public class ScenarioManager {
     		}
             return newRobots;
     	}
-    }
-    
-    private class OppositeRobotsOnCrossroadScenario extends TestScenario {
-
-        public OppositeRobotsOnCrossroadScenario() {
-            name = "Opposite Robots on Crossroad";
-            description = "Opposite Robots on Crossroad";
-        }
-
-        @Override
-        public List<NewRobot> initializeScenario() {
-            List<NewRobot> newRobots = new ArrayList<>();
-            List<Position> targetsRobotOne = new ArrayList<>();
-            targetsRobotOne.add(new Position(0,5));
-            List<Position> targetsRobotThree = new ArrayList<>();
-            targetsRobotThree.add(new Position(9,4));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
-            return newRobots;
-        }
-    }
-    
-    private class OppositeRobotsOnCrossroadScenarioWithDelay extends TestScenario {
-
-        public OppositeRobotsOnCrossroadScenarioWithDelay() {
-            name = "Opposite Robots on Crossroad with delay";
-            description = "Opposite Robots on Crossroad with delay";
-        }
-
-        @Override
-        public List<NewRobot> initializeScenario() {
-            List<NewRobot> newRobots = new ArrayList<>();
-            List<Position> targetsRobotOne = new ArrayList<>();
-            targetsRobotOne.add(new Position(0,5));
-            List<Position> targetsRobotThree = new ArrayList<>();
-            targetsRobotThree.add(new Position(9,4));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne, 10, 1000));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree, 0, 3000));
-            return newRobots;
-        }
-    }
-    
-    private class TwoRobotsOnCrossroadScenario extends TestScenario {
-
-        public TwoRobotsOnCrossroadScenario() {
-            name = "2 Robots on Crossroad";
-            description = "2 Robots on Crossroad";
-        }
-
-        @Override
-        public List<NewRobot> initializeScenario() {
-            List<NewRobot> newRobots = new ArrayList<>();
-            List<Position> targetsRobotOne = new ArrayList<>();
-            targetsRobotOne.add(new Position(0,5));
-            List<Position> targetsRobotTwo = new ArrayList<>();
-            targetsRobotTwo.add(new Position(5,9));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
-            return newRobots;
-        }
-    }
-    
-    private class ThreeRobotsOnCrossroadScenario extends TestScenario {
-
-        public ThreeRobotsOnCrossroadScenario() {
-            name = "3 Robots on Crossroad";
-            description = "3 Robots on Crossroad";
-        }
-
-        @Override
-        public List<NewRobot> initializeScenario() {
-            List<NewRobot> newRobots = new ArrayList<>();
-            List<Position> targetsRobotOne = new ArrayList<>();
-            targetsRobotOne.add(new Position(0,5));
-            List<Position> targetsRobotTwo = new ArrayList<>();
-            targetsRobotTwo.add(new Position(5,9));
-            List<Position> targetsRobotThree = new ArrayList<>();
-            targetsRobotThree.add(new Position(9,4));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
-            return newRobots;
-        }
-    }
-
-    private class FourRobotsOnCrossroadScenario extends TestScenario {
-
-        public FourRobotsOnCrossroadScenario() {
-            name = "4 Robots on Crossroad";
-            description = "4 Robots on Crossroad";
-        }
-
-        @Override
-        public List<NewRobot> initializeScenario() {
-            List<NewRobot> newRobots = new ArrayList<>();
-            List<Position> targetsRobotOne = new ArrayList<>();
-            targetsRobotOne.add(new Position(0,5));
-            List<Position> targetsRobotTwo = new ArrayList<>();
-            targetsRobotTwo.add(new Position(5,9));
-            List<Position> targetsRobotThree = new ArrayList<>();
-            targetsRobotThree.add(new Position(9,4));
-            List<Position> targetsRobotFour = new ArrayList<>();
-            targetsRobotFour.add(new Position(4,0));
-            newRobots.add(new NewTestRobot(new Position(6, 5), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne));
-            newRobots.add(new NewTestRobot(new Position(5, 3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo));
-            newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree));
-            newRobots.add(new NewTestRobot(new Position(4, 6), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotFour));
-            return newRobots;
-        }
     }
     
     private class DriveToQueueEnd extends TestScenario {
