@@ -42,12 +42,14 @@ public class ScenarioManager {
     DriveSimFrame frame;
 	private List<TestScenario> tests = new ArrayList<>();
 	private InvalidUnloadingDetector invalidUnloadingDetector;
+	private TestCaseGenerator testCaseGenerator;
 
 
     public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector, DriveSimFrame frame) {
         this.world = world;
         this.collisionDetector = collisionDetector;
         this.frame = frame;
+        this.testCaseGenerator = new TestCaseGenerator(testGroups);
         initializeScenarioList();
         initializeTestGroupsMap();
         initializeTestList();
@@ -70,6 +72,7 @@ public class ScenarioManager {
 	}
 
 	private void initializeTestGroupsMap() {
+		testGroups = testCaseGenerator.getAllTestCases();
 		ArrayList<TestScenario> drivingToCrossroadTests = new ArrayList<>();
         drivingToCrossroadTests.add(new OppositeRobotsOnCrossroadScenario());
         drivingToCrossroadTests.add(new OppositeRobotsOnCrossroadScenarioWithDelay());
@@ -819,70 +822,6 @@ private class MiddleRouteTwoRobots3 extends TestScenario {
             return newRobots;
         }
     }**/
-    
-    private class NewTestRobot extends NewRobot {
-
-        private Position position;
-        private RobotState state;
-        private List<Position> targets = new ArrayList<Position>();
-        private Orientation facing;
-        private int robotSpecificDelay = 0;
-        private int initialDelay = 0;
-
-        public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
-            this.position = position;
-            this.state = startingState;
-            this.targets = targets;
-            this.facing = facing;
-            this.robotSpecificDelay = 0;
-            this.initialDelay = 0;
-        }
-        
-        public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay) {
-            this.position = position;
-            this.state = startingState;
-            this.targets = targets;
-            this.facing = facing;
-            this.robotSpecificDelay = delay;
-            this.initialDelay = 0;
-        }
-        
-        public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay, int initialDelay) {
-            this.position = position;
-            this.state = startingState;
-            this.targets = targets;
-            this.facing = facing;
-            this.robotSpecificDelay = delay;
-            this.initialDelay = initialDelay;
-        }
-
-        @Override
-        public Robot register(SimulationWorld simulationWorld) {
-            return simulationWorld.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay);
-        }
-    }
-    
-    private class NewScenarioRobot extends NewRobot{
-    	private Position position;
-    	private Orientation facing;
-    	private int delay = 0;
-    	
-    	public NewScenarioRobot(Position position, Orientation facing) {
-    		this.position = position;
-    		this.facing = facing;
-    	}
-    	
-    	public NewScenarioRobot(Position position, Orientation facing, int delay) {
-			this.position = position;
-			this.facing = facing;
-			this.delay = delay;
-		}
-
-		@Override
-    	public Robot register(SimulationWorld sim) {
-    		return sim.addRobotInScenarioHPI2(position, facing, delay);
-    	}
-    }
 
 	public void failCurrentTest() {
 		currentTestFailed = true;

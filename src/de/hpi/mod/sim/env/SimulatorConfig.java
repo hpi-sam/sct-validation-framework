@@ -74,6 +74,7 @@ public class SimulatorConfig {
      */
 	public static final int DEFAULT_MAP_HEIGHT = 10;
 	public static final int NOT_USED_ROWS = 3;
+	public static final long MESSAGE_DISPLAY_TIME = 1000; //in ms
 
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
@@ -120,6 +121,7 @@ public class SimulatorConfig {
     private static int unloadingRange = DEFAULT_UNLOADING_RANGE;
     private static Map<Integer,Float> robotSpeedsMap = null;
 	private static int notUsedRows = NOT_USED_ROWS;
+	private static long messageDisplayTime = MESSAGE_DISPLAY_TIME;
 	
     static {
     	robotSpeedsMap = new HashMap<Integer,Float>();
@@ -330,5 +332,9 @@ public class SimulatorConfig {
 
 	public static int getNotUsedRows() {
 		return notUsedRows;
+	}
+
+	public static long getMessageDisplayTime() {
+		return messageDisplayTime ;
 	}
 }

@@ -80,7 +80,7 @@ public class DriveSimFrame extends JFrame {
 		Thread popupHider = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(SimulatorConfig.getMessageDisplayTime());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
