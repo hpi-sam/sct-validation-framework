@@ -220,7 +220,7 @@ public class DriveSimFrame extends JFrame {
         
         testListPanel.setBackground(MAIN_MENU_COLOR);
         
-        testListScrollPane.setPreferredSize(new Dimension(testListPanel.getPreferredSize().width + 50, 750));
+        testListScrollPane.setPreferredSize(new Dimension(testListPanel.getPreferredSize().width + 50, 740));
         testListScrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
 	}
 
