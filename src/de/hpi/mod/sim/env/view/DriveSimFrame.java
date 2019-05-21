@@ -35,6 +35,7 @@ public class DriveSimFrame extends JFrame {
     private RobotInfoPanel robotInfoPanel2;
     private ScenarioPanel scenarioPanel;
     private TestListPanel testListPanel;
+    private JScrollPane testListScrollPane;
     private TestOverviewPanel testOverviewPanel;
     private SimulationPanel simulationPanel;
     private TimerPanel timerPanel;
@@ -140,6 +141,10 @@ public class DriveSimFrame extends JFrame {
     	return testListPanel;
     }
     
+    public JScrollPane getTestListScrollPane() {
+    	return testListScrollPane;
+    }
+    
     public TimerPanel getTimerPanel() {
     	return timerPanel;
     }
@@ -174,6 +179,7 @@ public class DriveSimFrame extends JFrame {
         robotInfoPanel2 = new RobotInfoPanel(world, true);
         simulationPanel = new SimulationPanel(world, scenarioManager);
         testListPanel = new TestListPanel(scenarioManager);
+        testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         testOverviewPanel = new TestOverviewPanel(scenarioManager, this);
         timerPanel = new TimerPanel(world);
         scenarioPanel = new ScenarioPanel(scenarioManager);
@@ -212,8 +218,10 @@ public class DriveSimFrame extends JFrame {
         robotInfoPanel2.setPreferredSize(new Dimension(200, 200));
         robotInfoPanel2.setBackground(MENU_RED);
         
-        testListPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
         testListPanel.setBackground(MAIN_MENU_COLOR);
+        
+        testListScrollPane.setPreferredSize(new Dimension(testListPanel.getPreferredSize().width + 50, 750));
+        testListScrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
 	}
 
 	private void setDesignOfMainWindow() {
@@ -301,8 +309,8 @@ public class DriveSimFrame extends JFrame {
 		testListConstraints.gridheight = 5;
 		testListConstraints.fill = GridBagConstraints.HORIZONTAL;
 		testListConstraints.anchor = GridBagConstraints.PAGE_START;
-		testListPanel.setVisible(false);
-		add(testListPanel, testListConstraints);
+		testListScrollPane.setVisible(false);
+		add(testListScrollPane, testListConstraints);
 		
 		//Set up the color and size of the whole window
 		getContentPane().setBackground(MAIN_MENU_COLOR);
