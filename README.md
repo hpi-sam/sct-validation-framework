@@ -1,50 +1,56 @@
 # Drive System Simulator
 
-### Struktur
-- `model` beinhaltet das Modell des Drive System als `.sct` Datei.
-  Sie kann mit Yakindu modifiziert werden. 
-  Die `.sgen` Datei ist zuständig für die Code-Generierung und wird beim Speichern in Yakindu automatisch ausgeführt.
-- `res` enthält Ressourcen für die GUI, wie z.B. Bilder.
-- `src-gen` enthält die generierte Statemachine. Diese darf nicht per Hand modifiziert werden.
-- `test` enthält Tests für das Projekt.
-- `src` Source für das Projekt
-  - `de.hpi.mod.sim` Von Yakindu generierte Interfaces
-  - `.env` Umgebungs-Klassen 
-    - `Simulator` Controller für die Simulation
-    - `ServerGridManagement` Implementiert das Spielfeld
-    - `StationManager` Kontrolliert die Stationen und die Kommunikation mit Robotern in der Station. Mehr Infos in `stations.md`
-      - `Station` Speichert Daten über eine Station, wie ID, DriveLock, Batterien und Queue
-      - `Battery` Speichert Daten über eine Batterie in einer Station
-    - `PackageManager` Kontrolliert Abladepunkte und zu sendene Packete
-  - `.env.model` Interfaces, Enums und Klassen die zur Kommunikations zwischen Komponenten genutzt werden. Diese sind größtenteils gleich oder ähnlich der ursprünglichen Spezifikation, haben aber auch alle eine eigene Dokumentation
-  - `.env.robot` Klassen die den Robot angehören
-    - `Robot` Controller für den Robot
-    - `DriveSystemWrapper` Wrapper um die Statemachine
-    - `DriveManager` nimmt Fahrbefehle an und berechnet Position
-  - `.env.view`
-    - `DriveSimFrame` Oberste View
-    - `SimulatorView` Zeigt die Simulation mithilfe von `RobotRenderer` und `GridRenderer` an
-    - `RobotRenderer` zeichnet die Robots und Updated den DriveManager
-    - `GridRenderer` zeichnet das Grid
+Dieses Projekt ist ein Simulator für autonom fahrende Logistikroboter, deren Steuerung mithilfe des YAKINDU Statechart Tools implementiert werden kann.
+Das Implementieren einer solchen Steuerung ist die Aufgabe im **Entwurfsprojekt II** in der Veranstaltung **Modellierung II** am Hasso-Plattner-Institut im Sommersemester 2019.
 
-### GUI
-Die GUI zeigt die Simulation und Infos zu einen ausgewählten Roboter an.
-Der Roboter kann durch Mausklick ausgewählt werden.
-Standardmäßig ist der als letzte hinzugefügte Roboter ausgewählt.
-Mit `A` können Roboter hinzugefügt werden.
-Mit den Pfeiltasten kann die Kamera über das Spielfeld bewegt werden.
+**Hinweis:** Damit der den Statecharts generierten Programmcode kompiliert und ausgeführt werden kann ist hier der komplette Quelltext der Simulationsumgebung gegeben. Dieser soll nicht verändert werden.
 
-### Setup
+## Struktur
 
-Either download eclipse from YAKINDU website directly or download latest version from https://www.eclipse.org/downloads/. After succesfully installed go to Help->InstallNewSoftware
-and provide the link to the download repository of YAKINDU state chart tools (Install everything and accept every license). Then checkout the Git repository from source with the option in the Eclipse start screen (third option on the left side). After specifying repository and credentials (SSH only) choose "Use new project wizard window".
+Das Projekt ist in die folgenden Ordner unterteilt:
 
-IMPORTANT NOTICE: You CAN'T use the default workspace location you have to switch to the place, where Eclipse cloned your repository (Usually C://[Local user]/git/[project name]). This is a known bug in Eclipse and maybe will be fixed at some point. But if you get an error, when using the default workspace, do the step specified above.
+- **`model`** beinhaltet das Modell der Robotersteuerung.
+    + Das Modell befindet sich in der `drivesystem.sct`-Datei, die mit YAKINDU bearbeitet werden kann.
+    + Die zugehörige `.sgen`-Datei enthält eine bereits vorbereitete Konfiguration für die Code-Generierung aus dem Statechart.
+- **`src`** enthält den Quelltext der Simulationsumgebung.
+    + Die Klasse `de.hpi.mod.sim.App` muss ausgeführt werden, um die Simulation zu starten.
+- **`src-gen`** enthält den aus den Statecharts generierten Quelltext. Dieser wird automatisch überschrieben.
+- **`res`** enthält Ressourcen für die GUI, wie z.B. Bilder.
+- **`test`** enthält Tests für das Projekt.
 
-Name the local project and press finish. The project needs JRE version 10 or newer (validated with version 10.0.2 and 11.0.2). Please note, that JRE 8 or older will not work! We have not tested if it may work with JRE 9.
 
-NOTICE: It seems like you are only able to use Java 11 either after running the program at least one time with Java 10 or after installed both Java versions. We will do more experiments on this and update this README accordingly
 
-After finished these steps you should be able to execute the main in de.hpi.mod.sim.app.App
+## Setup
 
-NOTE: It is strongly suggested to use the latest Eclipse (current version 2018-12) IDE. If you use other IDEs like IntelliJ the resources may be included in a different hierachy and will cause some errors therefore. Especially InteeliJ is known for using some Macros who interfere with the YAKINDU state chart engine, so we suggest again to not use this IDE.
+**[=> Hier geht es zur Installations-Anleitung für alle Betriebssysteme! <=](INSTALL.md)**
+
+YAKUNDU Statechart Tools ist ein Eclipse-Plugin. Da es Gelegentlich zu Problemen mit einem Nachinstallierten Plugin kommt, empfehlen wir Eclipse und YAKINDU als separates Standalone-Bundle zu installieren ([siehe Anleitung](INSTALL.md)). Um ein Statechart zu modellieren und die Simulation auszuführen werden sowohl die Java-Features von Eclipse als auch die Features des 
+
+Es wird Mindestens Java Version 10 benötigt.
+
+Für Mitarbeiter und Studierende des Hasso-Plattner-Institut steht eine Lizenz für die YAKINDU Statechart Tools Professional Edition bereit. Näheres dazu ebenfalls in der [Installations-Anleitung](INSTALL.md).
+
+
+
+## Benutzung
+
+#### Modellierung
+
+- In der Datei `model/drivesystem.sct` kann in Eclipse/YAKINDU die Roboter-Steuerung modelliert werden.
+- Die Schnittellen des Statecharts sind bereits vorgegeben ("Definition section" links). Diese dürfen **nicht verändert** werden, es können interne Variablen ("internal") ergänzt werden.
+- Damit in der Simulation der aktuelle Zustand angezeigt werden kann sollte die äußerste Region "Drive System" heißen und die Namen aller Unterregionen im Diagramm mir einem "_" beginnen.
+- Auf den Webseiten von YAKINDU findet sich [eine Anleitung zum Modellieren](https://www.itemis.com/en/yakindu/state-machine/documentation/user-guide/edit_editing_statecharts) und eine [Statechart-Referenz](https://www.itemis.com/en/yakindu/state-machine/documentation/user-guide/sclang_statechart_language_reference).
+
+#### Codegenerierung
+
+- Die beigelegte Datei `model/drivesystem.sgen` Datei enthält eine Konfiguration für die Codegenerierung. 
+- Wenn in Eclipse/YAKINDU nach einem Rechtsklick auf die Datei "Generate Code Artifacts" gewählt wird, wird der zum Statechart passende Quelltext automatisch neu generiert.
+
+#### Simulation
+
+- Zum Starten der Simulation wird die Klasse `de.hpi.mod.sim.App` im Ordner `src` rechts geklickt und "Run as" > "Java Application" ausgewählt.
+- Als Shortcut steht danach der "Run" Button oben im Eclipse-Menü zur Verfügung.
+- Ist der Simulator gestartet können entweder "Szenarien" (= dynamisch generierte Abläufe mit einem oder mehreren Robotern) oder "Tests" (= vordefinierte Situationen) ausgewählt werden. Innerhalb dieser Szenarien und Tests wird jeweils für alle Roboter der generierte Quelltext des zuvor modellierten Statecharts ausgeführt.
+- Sobald ein Szenario oder Test gestartet wird läuft ein Timer und die Geschwindigkeit kann verändert werden.
+- Mit den Pfeiltasten kann navigiert werden, mit `Strg +` und `Strg -` gezoomt. `R` setzt die Kamera zurück. `Space` pausiert den aktuelle laufenden Test / das aktuelle Szenario.
+- Mit der linken und rechten Maustaste kann jeweils ein Roboter ausgewählt werden, die dann farblich hervorgehoben sind und deren Eigenschaften rechts explizit ablesbar sind.
