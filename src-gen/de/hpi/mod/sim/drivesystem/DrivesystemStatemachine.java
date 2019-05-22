@@ -115,6 +115,16 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			driveForward = true;
 		}
 		
+		private boolean driveBackward;
+		
+		public boolean isRaisedDriveBackward() {
+			return driveBackward;
+		}
+		
+		protected void raiseDriveBackward() {
+			driveBackward = true;
+		}
+		
 		private boolean turnLeft;
 		
 		public boolean isRaisedTurnLeft() {
@@ -141,6 +151,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		
 		startUnload = false;
 		driveForward = false;
+		driveBackward = false;
 		turnLeft = false;
 		turnRight = false;
 		}
@@ -316,6 +327,12 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		drive_System_driving__driving_waiting_to_ensure_real_deadlock,
 		drive_System_driving__driving_on_crossroad,
 		drive_System_driving__driving_driving_forward_in_station,
+		drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1,
+		drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2,
+		drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4,
+		drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3,
+		drive_System_driving__driving_driving_forward_in_station__funnydriving_drive,
+		drive_System_driving__driving_driving_forward_in_station__funnydriving__final_,
 		drive_System_driving__driving_turning_right_in_station,
 		drive_System_driving__driving_turning_left_in_station,
 		drive_System_driving__driving_exiting_charging_position,
@@ -463,8 +480,23 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			case drive_System_driving__driving_on_crossroad:
 				drive_System_driving__driving_on_crossroad_react(true);
 				break;
-			case drive_System_driving__driving_driving_forward_in_station:
-				drive_System_driving__driving_driving_forward_in_station_react(true);
+			case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1:
+				drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1_react(true);
+				break;
+			case drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2:
+				drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2_react(true);
+				break;
+			case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4:
+				drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4_react(true);
+				break;
+			case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3:
+				drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3_react(true);
+				break;
+			case drive_System_driving__driving_driving_forward_in_station__funnydriving_drive:
+				drive_System_driving__driving_driving_forward_in_station__funnydriving_drive_react(true);
+				break;
+			case drive_System_driving__driving_driving_forward_in_station__funnydriving__final_:
+				drive_System_driving__driving_driving_forward_in_station__funnydriving__final__react(true);
 				break;
 			case drive_System_driving__driving_turning_right_in_station:
 				drive_System_driving__driving_turning_right_in_station_react(true);
@@ -547,12 +579,10 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	/** 
-	* Always returns 'false' since this state machine can never become final.
-	*
 	* @see IStatemachine#isFinal()
 	*/
 	public boolean isFinal() {
-		return false;
+		return (stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station__funnydriving__final_);
 	}
 	/**
 	* This method resets the incoming events (time events included).
@@ -605,7 +635,20 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_driving__driving_on_crossroad:
 			return stateVector[0] == State.drive_System_driving__driving_on_crossroad;
 		case drive_System_driving__driving_driving_forward_in_station:
-			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station;
+			return stateVector[0].ordinal() >= State.
+					drive_System_driving__driving_driving_forward_in_station.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_driving_forward_in_station__funnydriving__final_.ordinal();
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1:
+			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2:
+			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4:
+			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3:
+			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_drive:
+			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station__funnydriving_drive;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving__final_:
+			return stateVector[0] == State.drive_System_driving__driving_driving_forward_in_station__funnydriving__final_;
 		case drive_System_driving__driving_turning_right_in_station:
 			return stateVector[0] == State.drive_System_driving__driving_turning_right_in_station;
 		case drive_System_driving__driving_turning_left_in_station:
@@ -993,9 +1036,29 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		timer.setTimer(this, 0, (1 * 1000), false);
 	}
 	
-	/* Entry action for state 'driving forward in station'. */
-	private void entryAction_Drive_System_driving__driving_driving_forward_in_station() {
-		sCIActors.raiseDriveForward();
+	/* Entry action for state 'turn 1'. */
+	private void entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1() {
+		sCIActors.raiseTurnLeft();
+	}
+	
+	/* Entry action for state 'tun2'. */
+	private void entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2() {
+		sCIActors.raiseTurnLeft();
+	}
+	
+	/* Entry action for state 'turn4'. */
+	private void entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4() {
+		sCIActors.raiseTurnLeft();
+	}
+	
+	/* Entry action for state 'turn3'. */
+	private void entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3() {
+		sCIActors.raiseTurnLeft();
+	}
+	
+	/* Entry action for state 'drive'. */
+	private void entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive() {
+		sCIActors.raiseDriveBackward();
 	}
 	
 	/* Entry action for state 'turning right in station'. */
@@ -1169,9 +1232,48 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* 'default' enter sequence for state driving forward in station */
 	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station_default() {
-		entryAction_Drive_System_driving__driving_driving_forward_in_station();
+		enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_default();
+	}
+	
+	/* 'default' enter sequence for state turn 1 */
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1_default() {
+		entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station;
+		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1;
+	}
+	
+	/* 'default' enter sequence for state tun2 */
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2_default() {
+		entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2;
+	}
+	
+	/* 'default' enter sequence for state turn4 */
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4_default() {
+		entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4;
+	}
+	
+	/* 'default' enter sequence for state turn3 */
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3_default() {
+		entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3;
+	}
+	
+	/* 'default' enter sequence for state drive */
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive_default() {
+		entryAction_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station__funnydriving_drive;
+	}
+	
+	/* Default enter sequence for state null */
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving__final__default() {
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving__driving_driving_forward_in_station__funnydriving__final_;
 	}
 	
 	/* 'default' enter sequence for state turning right in station */
@@ -1359,6 +1461,11 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		react_Drive_System_driving__driving__entry_Default();
 	}
 	
+	/* 'default' enter sequence for region _funnydriving */
+	private void enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_default() {
+		react_Drive_System_driving__driving_driving_forward_in_station__funnydriving__entry_Default();
+	}
+	
 	/* 'default' enter sequence for region _inStationExitCharger */
 	private void enterSequence_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger_default() {
 		react_Drive_System_driving__driving_exiting_charging_position__inStationExitCharger__entry_Default();
@@ -1452,6 +1559,41 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* Default exit sequence for state driving forward in station */
 	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station() {
+		exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving();
+	}
+	
+	/* Default exit sequence for state turn 1 */
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state tun2 */
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state turn4 */
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state turn3 */
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state drive */
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for final state. */
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving__final_() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
@@ -1637,8 +1779,23 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_driving__driving_on_crossroad:
 			exitSequence_Drive_System_driving__driving_on_crossroad();
 			break;
-		case drive_System_driving__driving_driving_forward_in_station:
-			exitSequence_Drive_System_driving__driving_driving_forward_in_station();
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_drive:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving__final_:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving__final_();
 			break;
 		case drive_System_driving__driving_turning_right_in_station:
 			exitSequence_Drive_System_driving__driving_turning_right_in_station();
@@ -1743,8 +1900,23 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_driving__driving_on_crossroad:
 			exitSequence_Drive_System_driving__driving_on_crossroad();
 			break;
-		case drive_System_driving__driving_driving_forward_in_station:
-			exitSequence_Drive_System_driving__driving_driving_forward_in_station();
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_drive:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving__final_:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving__final_();
 			break;
 		case drive_System_driving__driving_turning_right_in_station:
 			exitSequence_Drive_System_driving__driving_turning_right_in_station();
@@ -1808,6 +1980,32 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			break;
 		case drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2:
 			exitSequence_Drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region _funnydriving */
+	private void exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving() {
+		switch (stateVector[0]) {
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving_drive:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive();
+			break;
+		case drive_System_driving__driving_driving_forward_in_station__funnydriving__final_:
+			exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving__final_();
 			break;
 		default:
 			break;
@@ -2049,6 +2247,11 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	/* Default react sequence for initial entry  */
 	private void react_Drive_System_driving__driving__entry_Default() {
 		enterSequence_Drive_System_driving__driving_on_waypoint_or_station_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_Drive_System_driving__driving_driving_forward_in_station__funnydriving__entry_Default() {
+		enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1_default();
 	}
 	
 	/* Default react sequence for initial entry  */
@@ -2328,6 +2531,107 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		}
 		if (did_transition==false) {
 			did_transition = drive_System_driving_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn_1();
+				enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2_default();
+				drive_System_driving__driving_driving_forward_in_station_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_driving_forward_in_station_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_tun2();
+				enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive_default();
+				drive_System_driving__driving_driving_forward_in_station_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_driving_forward_in_station_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4();
+				enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving__final__default();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_driving_forward_in_station_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3();
+				enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn4_default();
+				drive_System_driving__driving_driving_forward_in_station_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_driving_forward_in_station_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_driving_forward_in_station__funnydriving_drive_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_drive();
+				enterSequence_Drive_System_driving__driving_driving_forward_in_station__funnydriving_turn3_default();
+				drive_System_driving__driving_driving_forward_in_station_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_driving_forward_in_station_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving__driving_driving_forward_in_station__funnydriving__final__react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			did_transition = false;
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving__driving_driving_forward_in_station_react(try_transition);
 		}
 		return did_transition;
 	}

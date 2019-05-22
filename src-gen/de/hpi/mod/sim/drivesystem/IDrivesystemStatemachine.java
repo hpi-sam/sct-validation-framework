@@ -38,6 +38,8 @@ public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
 		
 		public boolean isRaisedDriveForward();
 		
+		public boolean isRaisedDriveBackward();
+		
 		public boolean isRaisedTurnLeft();
 		
 		public boolean isRaisedTurnRight();
