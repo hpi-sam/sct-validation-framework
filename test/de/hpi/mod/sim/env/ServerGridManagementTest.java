@@ -33,11 +33,11 @@ public class ServerGridManagementTest {
         assertEquals(CellType.LOADING, grid.cellType(new Position(5, 0)));
         assertEquals(CellType.LOADING, grid.cellType(new Position(-1, 0)));
 
+        assertEquals(CellType.BATTERY, grid.cellType(new Position(0, -1)));
         assertEquals(CellType.BATTERY, grid.cellType(new Position(0, -2)));
         assertEquals(CellType.BATTERY, grid.cellType(new Position(0, -3)));
-        assertEquals(CellType.BATTERY, grid.cellType(new Position(0, -4)));
-        assertEquals(CellType.BATTERY, grid.cellType(new Position(3, -4)));
-        assertEquals(CellType.BATTERY, grid.cellType(new Position(-3, -4)));
+        assertEquals(CellType.BATTERY, grid.cellType(new Position(3, -3)));
+        assertEquals(CellType.BATTERY, grid.cellType(new Position(-3, -3)));
 
         assertEquals(CellType.WAYPOINT, grid.cellType(new Position(0, 1)));
         assertEquals(CellType.WAYPOINT, grid.cellType(new Position(0, 2)));
@@ -738,62 +738,74 @@ public class ServerGridManagementTest {
 
         // Expected results:    	
         // A A A A A
-        // A A A A A
+        // L A A A R
         // L L ^ R R
-        // B B B B B
+        // L B B B R
         // B B B B B
     	
         var grid = getGrid();
         
         // 24 direct neightbours (5x5 grid, except self)
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-10,2)));
-        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-10,1)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-10,1)));
         assertEquals(Direction.LEFT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-10,0)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-10,-1)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-10,-1)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-10,-2)));
+        
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-9,2)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-9,1)));
         assertEquals(Direction.LEFT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-9,0)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-9,-1)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-9,-2)));
+        
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-8,2)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-8,1)));
+        // SELF
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-8,-1)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-8,-2)));
+        
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-7,2)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-7,1)));
         assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-7,0)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-7,-1)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-7,-2)));
+        
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-6,2)));
-        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-6,1)));
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-6,1)));
         assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-6,0)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-6,-1)));
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-6,-1)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-6,-2)));
                 
         // far off positions
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-99,999)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.NORTH, p(-8,0), p(99,999)));
+        
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-9999,9990)));
         assertEquals(Direction.LEFT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-99999,0)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-9999,-9990)));
+
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(5555,5500)));
         assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(5555,0)));
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(5555,-5500)));
+        
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(-99,-99)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.NORTH, p(-8,0), p(99,-99)));
         
         // interesting positions
         assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.NORTH, p(-8,0), p(0,0)));
     	
-    }
+    } 
 
     @Test
     public void targetDirectionInStationFacingEast() {
     	// Robot at (-8,0), facing north:
 
         // Expected results:    	
-        // B B L A A
+        // B L L L A
         // B B L A A
         // B B > A A
         // B B R A A
-        // B B R A A
+        // B R R R A
     	
         var grid = getGrid();
         
@@ -804,22 +816,23 @@ public class ServerGridManagementTest {
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-2,-5)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-2,-6)));
 
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-1,-2)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.EAST, p(0,-4), p(-1,-2)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-1,-3)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-1,-4)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-1,-5)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-1,-6)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.EAST, p(0,-4), p(-1,-6)));
 
         assertEquals(Direction.LEFT,  grid.targetDirection(Orientation.EAST, p(0,-4), p(0,-2)));
         assertEquals(Direction.LEFT,  grid.targetDirection(Orientation.EAST, p(0,-4), p(0,-3)));
+        // SELF
         assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.EAST, p(0,-4), p(0,-5)));
         assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.EAST, p(0,-4), p(0,-6)));
 
-        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(1,-2)));
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.EAST, p(0,-4), p(1,-2)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(1,-3)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(1,-4)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(1,-5)));
-        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(1,-6)));
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.EAST, p(0,-4), p(1,-6)));
 
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(2,-2)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(2,-3)));
@@ -828,12 +841,19 @@ public class ServerGridManagementTest {
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.EAST, p(0,-4), p(2,-6)));
                 
         // far off positions
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-999,999)));
-        assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.EAST, p(0,-4), p(999,999)));
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-999,99)));
+        assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.EAST, p(0,-4), p(999,99)));
+        
+        assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.EAST, p(0,-4), p(77777777,88888888)));
         assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.EAST, p(0,-4), p(0,88888888)));
+        assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.EAST, p(0,-4), p(-77777777,88888888)));
+        
+        assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.EAST, p(0,-4), p(77777777,-88888888)));
         assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.EAST, p(0,-4), p(0,-88888888)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-999,-999)));
-        assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.EAST, p(0,-4), p(999,-999)));
+        assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.EAST, p(0,-4), p(-77777777,-88888888)));
+        
+        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.EAST, p(0,-4), p(-9999,-999)));
+        assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.EAST, p(0,-4), p(9999,-999)));
         
         // interesting positions
         assertEquals(Direction.LEFT, grid.targetDirection(Orientation.EAST, p(0,-4), p(0,0)));
@@ -846,18 +866,18 @@ public class ServerGridManagementTest {
         
         // Expected results:
         // B B B B B
-        // B B B B B
+        // R B B B L
         // R R v L L
-        // A A A A A
+        // R A A A L
         // A A A A A
     	
         var grid = getGrid();
 
         // 24 direct neightbours (5x5 grid, except self)
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5),p(3,-3)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5),p(3,-4)));
+        assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(3,-4)));
         assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(3,-5)));
-        assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(3,-6)));
+        assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(3,-6)));
         assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(3,-7)));
 
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5),p(4,-3)));
@@ -868,6 +888,7 @@ public class ServerGridManagementTest {
 
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5),p(5,-3)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5),p(5,-4)));
+        // SELF
         assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(5,-6)));
         assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(5,-7)));
 
@@ -878,19 +899,26 @@ public class ServerGridManagementTest {
         assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(6,-7)));
 
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5),p(7,-3)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5),p(7,-4)));
+        assertEquals(Direction.LEFT,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(7,-4)));
         assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.SOUTH, p(5,-5),p(7,-5)));
-        assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(7,-6)));
+        assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.SOUTH, p(5,-5),p(7,-6)));
         assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5),p(7,-7)));
          
         
 		// far off positions
-		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5), p(-9999,9999)));
-		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5), p(9999,9999)));
+		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5), p(-9999,99999)));
+		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5), p(9999,99999)));
+		
+		assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.SOUTH, p(5,-5), p(-11111,-10000)));
 		assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.SOUTH, p(5,-5), p(-11111,-5)));
+		assertEquals(Direction.RIGHT,  grid.targetDirection(Orientation.SOUTH, p(5,-5), p(-11111,10000)));
+		
+		assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.SOUTH, p(5,-5), p(11111,-10000)));
 		assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.SOUTH, p(5,-5), p(11111,-5)));
-		assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5), p(-9999,-9999)));
-		assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5), p(9999,-9999)));
+		assertEquals(Direction.LEFT,   grid.targetDirection(Orientation.SOUTH, p(5,-5), p(11111,10000)));
+		
+		assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5), p(-999,-9999)));
+		assertEquals(Direction.AHEAD,  grid.targetDirection(Orientation.SOUTH, p(5,-5), p(999,-9999)));
 		
 		// interesting positions
 		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.SOUTH, p(5,-5), p(0,0)));
@@ -902,11 +930,11 @@ public class ServerGridManagementTest {
         // Robot at (1,-3), facing west
         
         // Expected results:
-        // A A R B B
+        // A R R R B
         // A A R B B
         // A A < B B
         // A A L B B
-        // A A L B B
+        // A L L L B
     	
         var grid = getGrid();
 
@@ -916,20 +944,24 @@ public class ServerGridManagementTest {
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(-1,-3)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(-1,-4)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(-1,-5)));
-        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,-1)));
+        
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,-1)));        
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,-2)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,-3)));
         assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,-4)));
-        assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,-5)));
-        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(1,-1)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,-5)));
+        
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(1,-1)));        
         assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(1,-2)));
         assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3), p(1,-4)));
         assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3), p(1,-5)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(2,-1)));
+        
+        assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(2,-1)));        
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(2,-2)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(2,-3)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(2,-4)));
-        assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(2,-5)));
+        assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3), p(2,-5)));
+        
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(3,-1)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(3,-2)));
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(3,-3)));
@@ -937,12 +969,19 @@ public class ServerGridManagementTest {
         assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(3,-5)));
         
 		// far off positions
-		assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(-99,999)));
-		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(99,999)));
+		assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(-9999,999)));
+		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(9999,999)));
+		
+		assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(50000,55555)));
 		assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(1,55555)));
+		assertEquals(Direction.RIGHT, grid.targetDirection(Orientation.WEST, p(1,-3), p(-50000,55555)));
+		
+		assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3), p(50000,-55555)));
 		assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3), p(1,-55555)));
-		assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(-99,-99)));
-		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(99,-99)));
+		assertEquals(Direction.LEFT, grid.targetDirection(Orientation.WEST, p(1,-3), p(-50000,-55555)));
+		
+		assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(-999,-99)));
+		assertEquals(Direction.BEHIND, grid.targetDirection(Orientation.WEST, p(1,-3), p(999,-99)));
 		
 		// interesting positions
 		assertEquals(Direction.AHEAD, grid.targetDirection(Orientation.WEST, p(1,-3), p(0,0)));
