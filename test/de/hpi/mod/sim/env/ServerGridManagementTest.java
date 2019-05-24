@@ -70,10 +70,10 @@ public class ServerGridManagementTest {
     public void isBlockedByMap() {
         var grid = getGrid();
         assertTrue("", grid.isBlockedByMap(new Position(0, 0)));
-        assertTrue("", grid.isBlockedByMap(new Position(0, -1)));
+        assertFalse("", grid.isBlockedByMap(new Position(0, -1)));
         assertFalse("", grid.isBlockedByMap(new Position(0, -2)));
         assertFalse("", grid.isBlockedByMap(new Position(0, -3)));
-        assertFalse("", grid.isBlockedByMap(new Position(0, -4)));
+        assertTrue("", grid.isBlockedByMap(new Position(0, -4)));
         assertTrue("", grid.isBlockedByMap(new Position(0, -5)));
         assertTrue("", grid.isBlockedByMap(new Position(0, -6)));
         assertTrue("", grid.isBlockedByMap(new Position(0, 3)));
@@ -92,13 +92,13 @@ public class ServerGridManagementTest {
         }, grid.blocked(Orientation.NORTH, new Position(1, 1)));
         assertArrayEquals(new boolean[] { true, false, true, false
         }, grid.blocked(Orientation.NORTH, new Position(1, 0)));
-        assertArrayEquals(new boolean[] { true, false, true, false
+        assertArrayEquals(new boolean[] { false, false, true, false
         }, grid.blocked(Orientation.NORTH, new Position(1, -1)));
         assertArrayEquals(new boolean[] { false, false, true, false
         }, grid.blocked(Orientation.NORTH, new Position(1, -2)));
         assertArrayEquals(new boolean[] { false, false, true, false
         }, grid.blocked(Orientation.NORTH, new Position(1, -3)));
-        assertArrayEquals(new boolean[] { false, false, true, false
+        assertArrayEquals(new boolean[] { true, false, true, false
         }, grid.blocked(Orientation.NORTH, new Position(1, -4)));
         assertArrayEquals(new boolean[] { true, false, false, true
         }, grid.blocked(Orientation.NORTH, new Position(1, -5)));
@@ -286,9 +286,9 @@ public class ServerGridManagementTest {
     @Test
     public void getChargerPositionAtStation() {
         var grid = getGrid();
-        assertEquals(new Position(0, -2), grid.getChargerPositionAtStation(0, 0));
-        assertEquals(new Position(-3, -3), grid.getChargerPositionAtStation(1, 1));
-        assertEquals(new Position(3, -4), grid.getChargerPositionAtStation(2, 2));
+        assertEquals(new Position(0, -1), grid.getChargerPositionAtStation(0, 0));
+        assertEquals(new Position(-3, -2), grid.getChargerPositionAtStation(1, 1));
+        assertEquals(new Position(3, -3), grid.getChargerPositionAtStation(2, 2));
     }
 
     @Test
