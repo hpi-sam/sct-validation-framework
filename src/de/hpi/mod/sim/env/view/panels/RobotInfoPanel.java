@@ -198,8 +198,10 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
 	    	
 	    	//if the state is not in the highest hierarchy it has a region prefix which we want to remove.
 	    	for(int i = 1; i < hierarchyLevels.length; i++) {
-	    		String region = hierarchyLevels[i].split("_")[0];
-	    		hierarchyLevels[i] = hierarchyLevels[i].substring(region.length() + 1);
+	    		String region = hierarchyLevels[i].split("_")[0];	    		
+	    		if(region.length() + 1 < hierarchyLevels[i].length()) {
+	    			hierarchyLevels[i] = hierarchyLevels[i].substring(region.length() + 1);
+	    		}
 	    	}
 	    	
 	    	//YAKINDU replaces spaces with underscores. We undo this.

@@ -184,10 +184,25 @@ public class DriveManager implements IRobotActors {
 
 	@Override
 	public void driveBackward() {
-		// TODO @Tim this is your job.
-		
+		decreaseBattery();
+        if (hasPower()) {
+        	if(maxDelay > 0) {
+        		delay = getCustomRandomisedDelay(maxDelay);
+        		now = System.currentTimeMillis();
+        		isWaitingToMove = true;
+        	} else {
+        		performDriveBackward();
+        	}
+        }
 	}
 	
+	private void performDriveBackward() {
+		oldPosition = currentPosition;
+		currentPosition = Position.nextPositionInOppositeOrientation(targetFacing, oldPosition);
+		battery -= SimulatorConfig.getBatteryLoss();
+		isMoving = true;
+	}
+
 	private long getCustomRandomisedDelay(int upperBound) {
 		//We add 100 in order to guarantee that in all random functions lowerBound < upperBound
 		upperBound = (upperBound/SimulatorConfig.getRobotSpeedLevel()) + 100;
