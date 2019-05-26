@@ -80,12 +80,8 @@ public class StationManager implements IRobotStationDispatcher {
      */
     @Override
     public boolean requestEnteringStation(int robotID, int stationID) {
-    	 if(!getStationByID(stationID).blocked()) {
-    		 getStationByID(stationID).blockQueue();
-    		 return true;
-         } else {
-         	 return false;
-         }
+    	getStationByID(stationID).registerRequestLock(robotID);
+    	return getStationByID(stationID).requestLock(robotID);
     }
 
 	/**
@@ -93,26 +89,19 @@ public class StationManager implements IRobotStationDispatcher {
      */
     @Override
     public boolean requestEnteringBattery(int robotID, int stationID) {
-    	getStationByID(stationID).blockQueue();
-    	getStationByID(stationID).blockQueueLevel2();
     	return true;
     }
     
     @Override
     public boolean requestLeavingBattery(int robotID, int stationID, int batteryID) {
-		if(!getStationByID(stationID).blockedLevel2() && !getStationByID(stationID).hasRobotsBelow(batteryID)) {
-			getStationByID(stationID).blockQueueLevel2();
-			getStationByID(stationID).robotNotPresent(batteryID);
-			return true;
-    	} else {
-    		return false;
-    	}
+    	getStationByID(stationID).registerRequestLock(robotID);
+    	return getStationByID(stationID).requestLock(robotID);
     }
 
     @Override
     public void reportChargingAtStation(int robotID, int stationID, int chargerID) {
     	getStationByID(stationID).robotPresentOnCharger(chargerID);
-        getStationByID(stationID).unblockQueueLevel2();
+        //getStationByID(stationID).unblockQueue();
     }
 
     @Override
@@ -125,7 +114,6 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
         getStationByID(stationID).decreaseQueue();
-        //getStationByID(stationID).unblockQueue();
     }
     
     @Override

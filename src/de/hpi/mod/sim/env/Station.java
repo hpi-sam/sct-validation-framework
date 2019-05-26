@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manages the Queue, Drive-Lock and Batteries of a station
@@ -22,6 +23,8 @@ public class Station {
 
 	private boolean blockedQueue = false;
 	private boolean blockedLevel2 = false;
+
+	private CopyOnWriteArrayList<Integer> requestedLocks = new CopyOnWriteArrayList<Integer>();
 
 
     public Station(int stationID) {
@@ -129,7 +132,7 @@ public class Station {
 		if(chargingRobots > 0) {
 			return true;
 		}*/
-		return blockedQueue || blockedLevel2;
+		return blockedQueue;
 	}
 
 	public void blockQueue() {
@@ -137,12 +140,7 @@ public class Station {
 	}
 
 	public void unblockQueue() {
-		if(noRobotsOnBatteries()) {
-			blockedQueue = false;
-			blockedLevel2 = false;
-		} else {
-			blockedLevel2 = false;
-		}
+		blockedQueue = false;
 	}
 
 	private boolean noRobotsOnBatteries() {
@@ -187,8 +185,25 @@ public class Station {
 	public void releaseLocks() {
 		blockedQueue = false;
 		blockedLevel2 = false;
+		requestedLocks.clear();
 		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
 			batteries[i].setRobotNotPresent();
+		}
+	}
+
+	public void registerRequestLock(int robotID) {
+		if(!requestedLocks .contains(robotID)) {
+			requestedLocks.add(0, robotID);
+		}
+	}
+
+	public boolean requestLock(int robotID) {
+		if(requestedLocks.get(0) == robotID && !blockedQueue) {
+			requestedLocks.remove(0);
+			blockQueue();
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

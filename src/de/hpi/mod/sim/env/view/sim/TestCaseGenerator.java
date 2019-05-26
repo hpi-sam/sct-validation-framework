@@ -26,9 +26,24 @@ public class TestCaseGenerator {
 		testGroups.put("I.Driving in station", generateStationTests());
 		testGroups.put("II. Simple crossroad", generateSimpleCrossroadTests());
 		testGroups.put("III. Crossroad conflicts", generateCrossroadConflicTests());
+		//testGroups.put("V. Complete drive routine", generateCompleteDriveRoutineTests());
 		return testGroups;
 	}
 	
+	private ArrayList<TestScenario> generateCompleteDriveRoutineTests() {
+		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+		List<NewRobot> newRobots = new ArrayList<>();
+        List<Position> targetsRobotOne = new ArrayList<>();
+        List<Position> targetsRobotTwo = new ArrayList<>();
+        targetsRobotOne.add(new Position(2,0));
+        targetsRobotOne.add(new Position(3,10));
+        targetsRobotTwo.add(new Position(2,0));
+        targetsRobotTwo.add(new Position(3,13));
+        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotOne));
+        newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_BATTERY, Orientation.EAST, targetsRobotTwo));
+		return testScenarios;
+	}
+
 	private ArrayList<TestScenario> generateStationTests() {
 		ArrayList<TestScenario> testScenarios = new ArrayList<>();
 		List<NewRobot> newRobots = new ArrayList<>();
