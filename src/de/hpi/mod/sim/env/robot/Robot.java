@@ -176,8 +176,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(!isInTest) {
         	target = location.getLoadingPositionAtStation(stationID);
         } else {
-        	target = testPositionTargets.get(0);
-    		testPositionTargets.remove(0);
+        	if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
+        		target = testPositionTargets.get(0);
+        		testPositionTargets.remove(0);
+        	}
         }
         state = RobotState.TO_LOADING;
         startDriving();
@@ -198,8 +200,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     		if(!isInTest) {
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
-    			target = testPositionTargets.get(0);
-        		testPositionTargets.remove(0);
+    			if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
+            		target = testPositionTargets.get(0);
+            		testPositionTargets.remove(0);
+            	}
     		}
             dispatcher.reportLeaveStation(robotID, stationID);
             state = RobotState.TO_UNLOADING;
@@ -221,9 +225,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         if(!isInTest) {
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
-        	target = testPositionTargets.get(0);
-    		testPositionTargets.remove(0);
-    		stationID = dispatcher.getStationIDFromPosition(target);
+        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !hasPackage) {
+        		target = testPositionTargets.get(0);
+        		testPositionTargets.remove(0);
+        		stationID = dispatcher.getStationIDFromPosition(target);
+        	}
         }
         state = RobotState.TO_STATION;
         hasReservedBattery = needsLoading;
