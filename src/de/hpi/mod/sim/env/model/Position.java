@@ -56,6 +56,21 @@ public class Position {
                 throw new IllegalArgumentException();
         }
     }
+    
+    public static Position nextPositionInOppositeOrientation(Orientation facing, Position current) {
+    	switch (facing) {
+        case NORTH:
+            return new Position(current.getX(), current.getY() - 1);
+        case EAST:
+            return new Position(current.getX() - 1, current.getY());
+        case SOUTH:
+            return new Position(current.getX(), current.getY() + 1);
+        case WEST:
+            return new Position(current.getX() + 1, current.getY());
+        default:
+            throw new IllegalArgumentException();
+    }
+	}
 
 	public boolean is(Position position) {
 		if(position.getX() == x && position.getY() == y) {

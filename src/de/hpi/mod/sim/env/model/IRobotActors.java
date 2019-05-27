@@ -10,6 +10,7 @@ import de.hpi.mod.sim.env.robot.DriveSystemWrapper;
 public interface IRobotActors {
 
     void driveForward();
+    void driveBackward();
     void turnLeft();
     void turnRight();
     void startUnloading();
