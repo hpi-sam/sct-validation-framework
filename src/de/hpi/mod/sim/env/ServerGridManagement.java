@@ -372,9 +372,9 @@ public class ServerGridManagement implements ISensorDataProvider {
 		int steps_right = rightStepsToTarget(facing, current, target);
 		
 		// Try to go forward or backward first
-		if(steps_ahead > 0) {
+		if(steps_ahead > 0 && steps_ahead >= Math.abs(steps_right)) {
 			return Direction.AHEAD;
-		}else if(steps_ahead < 0) {
+		}else if(steps_ahead < 0 && steps_ahead <= -Math.abs(steps_right)) {
 			return Direction.BEHIND;
 			
 		// If no forward/backword steps are needed, go left or right
