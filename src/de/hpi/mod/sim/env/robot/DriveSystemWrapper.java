@@ -266,4 +266,10 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     		return "";
     	}
     }
+
+	@Override
+	public boolean canChargeAtTarget() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
