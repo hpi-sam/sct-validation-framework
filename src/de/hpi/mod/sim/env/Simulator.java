@@ -22,7 +22,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
     public Simulator() {
         grid = new ServerGridManagement(this);
-        stations = new StationManager(10);
+        stations = new StationManager(SimulatorConfig.getChargingStationsInUse());
     }
 
     /**
@@ -34,7 +34,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         int robotID = Robot.incrementID();
         int stationID = stations.getReservationNextForStation(robotID, true);
         int batteryID = stations.getReservedChargerAtStation(robotID, stationID);
-        stations.reportChargingAtStation(robotID, stationID);
+        stations.reportChargingAtStation(robotID, stationID, batteryID);
 
         Robot robot = new Robot(
                 robotID,
@@ -57,14 +57,14 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets) {
+    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets, int delay, int initialDelay) {
     	
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
                 0,
                 grid, stations, this, this,
-                position, state, facing, targets);
+                position, state, facing, targets, delay, initialDelay);
         robots.add(robot);
         return robot;
     }
@@ -154,7 +154,6 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         int id = ThreadLocalRandom.current().nextInt(100) + 1;
         int min_pos = 0;
         int minimum = Integer.MAX_VALUE;
-        boolean negative = false;
         
         if(id > 70) {
         	id = ThreadLocalRandom.current().nextInt(3*unloadingRange/4, unloadingRange);
@@ -186,6 +185,11 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         } else {
         	heights[Math.abs(id)/mapHeight]++;
         }
+        if(id > 0) {
+        	id += SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
+        } else {
+        	id -= SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
+        }
         return id;
     }
 
@@ -203,4 +207,18 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         for (Robot robot : robots)
             robot.close();
     }
+
+	public ServerGridManagement getServerGridManagement() {
+		return grid;
+	}
+
+	public void releaseAllLocks() {
+		stations.releaseAllLocks();
+	}
+
+	public void createNewStationManager(int chargingStationsInUse) {
+		if(chargingStationsInUse != stations.getUsedStations()) {
+			stations = new StationManager(chargingStationsInUse);
+		}
+	}
 }

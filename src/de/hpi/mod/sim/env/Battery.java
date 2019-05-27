@@ -12,7 +12,7 @@ class Battery {
      * Whether there is a robot on the battery
      */
     private boolean blocked = false;
-
+    private boolean robotPresent = false;
     /**
      * A robot which wants to drive to the battery.
      * Is only valid if {@link #blocked} is set to true.
@@ -35,6 +35,10 @@ class Battery {
     boolean isBlocked() {
         return blocked;
     }
+    
+    boolean robotPresent() {
+    	return robotPresent;
+    }
 
     void setBlocked(boolean blocked) {
         this.blocked = blocked;
@@ -52,4 +56,12 @@ class Battery {
         setBlocked(true);
         this.reservedForRobot = reservedForRobot;
     }
+
+	void setRobotPresent() {
+		robotPresent = true;
+	}
+
+	void setRobotNotPresent() {
+		robotPresent = false;
+	}
 }

@@ -30,11 +30,12 @@ public class SimulatorConfig {
     public static final float DEFAULT_ROTATION_SPEED = .5f;
 	public static final long DEFAULT_UNLOADING_TIME = 1000;
 	public static final float BATTERY_FULL = 100;
-	public static final float BATTERY_LOW = 35;
-	public static final float BATTERY_LOSS = .1f;
-	public static final float BATTERY_LOADING_SPEED = .02f;
+	public static final float BATTERY_LOW = 40;
+	public static final float BATTERY_LOSS = .01f;
+	public static final float BATTERY_LOADING_SPEED = .015f;
+	public static final float MIN_BATTERY_RATIO = .5f;
 	public static final int DEFAULT_UNLOADING_RANGE = 50;
-	public static final int DEFAULT_STATION_UNBLOCKING_TIME = 5000; //in ms
+	public static final int DEFAULT_STATION_UNBLOCKING_TIME = 10000; //in ms
 	
 	public static final float DEFAULT_BLOCK_SIZE = 20;
 	public static final float DEFAULT_OFFSET_X = 0;
@@ -72,6 +73,8 @@ public class SimulatorConfig {
      * Number of vertical unloading positions.
      */
 	public static final int DEFAULT_MAP_HEIGHT = 10;
+	public static final int NOT_USED_ROWS = 3;
+	public static final long MESSAGE_DISPLAY_TIME = 1000; //in ms
 
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
@@ -96,6 +99,7 @@ public class SimulatorConfig {
    	private static float batteryLow = BATTERY_LOW;
    	private static float batteryLoss = BATTERY_LOSS;
    	private static float batteryChargingSpeed = BATTERY_LOADING_SPEED;
+   	private static float minBatteryRatio = MIN_BATTERY_RATIO;
    	private static int defaultStationUnblockingTime = DEFAULT_STATION_UNBLOCKING_TIME;
    	
    	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
@@ -116,6 +120,9 @@ public class SimulatorConfig {
     private static int mapHeight = DEFAULT_MAP_HEIGHT;
     private static int unloadingRange = DEFAULT_UNLOADING_RANGE;
     private static Map<Integer,Float> robotSpeedsMap = null;
+	private static int notUsedRows = NOT_USED_ROWS;
+	private static long messageDisplayTime = MESSAGE_DISPLAY_TIME;
+	
     static {
     	robotSpeedsMap = new HashMap<Integer,Float>();
     	robotSpeedsMap.put(0, ROBOT_LEVEL_0_SPEED);
@@ -247,6 +254,10 @@ public class SimulatorConfig {
 		return batteryLoss;
 	}
 	
+	public static float getMinBatteryRatio (){
+		return minBatteryRatio;
+	}
+	
 	public static float getBatteryChargingSpeed() {
 		return batteryChargingSpeed;
 	}
@@ -317,5 +328,13 @@ public class SimulatorConfig {
 
 	public static void setChargingStationsInUse(int chargingStationsInUse) {
 		SimulatorConfig.chargingStationsInUse = chargingStationsInUse;
+	}
+
+	public static int getNotUsedRows() {
+		return notUsedRows;
+	}
+
+	public static long getMessageDisplayTime() {
+		return messageDisplayTime ;
 	}
 }

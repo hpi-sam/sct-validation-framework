@@ -24,11 +24,11 @@ public class TestListPanel extends JPanel implements ITestListener {
     	this.scenarioManager = scenarioManager;
         setLayout(new GridBagLayout());
         
-       Map<String, ArrayList<TestScenario>> testGroups = scenarioManager.getTestGroups();
-       Set<String> keys = testGroups.keySet();
-       for(String key : keys) {
-    	   addTestGroup(key, testGroups.get(key));
-       }   
+        Map<String, ArrayList<TestScenario>> testGroups = scenarioManager.getTestGroups();
+        Set<String> keys = testGroups.keySet();
+        for(String key : keys) {
+        	addTestGroup(key, testGroups.get(key));
+        }   
     }
     
     private void addTestGroup(String key, ArrayList<TestScenario> arrayList) {
@@ -68,6 +68,7 @@ public class TestListPanel extends JPanel implements ITestListener {
 		GridBagConstraints labelConstraints = new GridBagConstraints();
 		labelConstraints.gridx = 0;
         labelConstraints.gridy = yCoordinate;
+        labelConstraints.gridwidth = 2;
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.weightx = 1.0;

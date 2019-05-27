@@ -4,6 +4,7 @@ import de.hpi.mod.sim.env.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -19,6 +20,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * controller to find out if a cells is blocked by a robot.
 	 */
 	private IRobotController control;
+	private ArrayList<Position> invalidPositions = new ArrayList<Position>();
 
 	public ServerGridManagement(IRobotController control) {
 		this.control = control;
@@ -43,7 +45,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 				return CellType.WAYPOINT;
 			return CellType.CROSSROAD;
 		} else {
-			if (position.getX() % 3 == 0 && position.getY() < -1 && position.getY() > -5)
+			if (position.getX() % 3 == 0 && position.getY() < 0 && position.getY() > -4)
 				return CellType.BATTERY;
 			if (position.getX() % 3 == 0 || position.getY() < -SimulatorConfig.QUEUE_SIZE)
 				return CellType.BLOCK;
@@ -55,6 +57,29 @@ public class ServerGridManagement implements ISensorDataProvider {
 			return CellType.STATION;
 		}
 	}
+	
+	public boolean isInvalid(Position position) {
+		CellType cellType = cellType(position);
+		if(cellType == CellType.BLOCK) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean invalidManoeuvre(Position oldPos, Position pos) {
+		if(pos.getY() >= 1) {
+			return false;
+		}
+		if(pos.getX() % 3 == 2 && oldPos.getX() % 3 == 0) {
+			return true;
+		}
+		if(oldPos.getX() % 3 == 1 && oldPos.getY() > -5) {
+			if(pos.getX() % 3 == 2) {
+				return true;
+			}
+		}
+		return false;
+	};
 
 	/**
 	 * Is another Robot on this position?
@@ -71,7 +96,20 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * @param pos The position of the Robot
 	 */
 	public boolean isBlockedByMap(Position pos) {
-		return cellType(pos) == CellType.BLOCK;
+		boolean isBlock = cellType(pos) == CellType.BLOCK;
+		boolean isInvalid = false;
+		for(int i=0; i<invalidPositions.size(); i++) {
+			if(invalidPositions.get(i).is(pos)) {
+				isInvalid = true;
+				break;
+			}
+		}
+		
+		return isBlock || isInvalid;
+	}
+	
+	public void makePositionInvalid(Position pos) {
+		invalidPositions.add(pos);	
 	}
 
 	/**
@@ -334,9 +372,9 @@ public class ServerGridManagement implements ISensorDataProvider {
 		int steps_right = rightStepsToTarget(facing, current, target);
 		
 		// Try to go forward or backward first
-		if(steps_ahead > 0) {
+		if(steps_ahead > 0 && steps_ahead >= Math.abs(steps_right)) {
 			return Direction.AHEAD;
-		}else if(steps_ahead < 0) {
+		}else if(steps_ahead < 0 && steps_ahead <= -Math.abs(steps_right)) {
 			return Direction.BEHIND;
 			
 		// If no forward/backword steps are needed, go left or right
@@ -509,7 +547,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 
 	public Position getArrivalPositionAtStation(int stationID) {
 		int x;
-		if((stationID & 1) == 0) {
+		if((stationID % 2) == 0) {
 			//even station ID means the station is on the right
 			x = stationID/2 * 3 + 1;
 		} else {
@@ -533,20 +571,20 @@ public class ServerGridManagement implements ISensorDataProvider {
 
 	public Position getChargerPositionAtStation(int stationID, int chargerID) {
 		int x;
-		if((stationID & 1) == 0) {
+		if((stationID % 2) == 0) {
 			//even station ID means the station is on the right
 			x = stationID/2 * 3;
 		} else {
 			//odd station ID means the station is on the left
 			x = -(stationID + 1)/2 * 3;
 		}
-		int y = -2 - chargerID;
+		int y = -1 - chargerID;
 		return new Position(x, y);
 	}
 
 	public Position getLoadingPositionAtStation(int stationID) {
 		int x;
-		if((stationID & 1) == 0) {
+		if((stationID % 2) == 0) {
 			//even station ID means the station is on the right
 			x = stationID/2 * 3 + 2;
 		} else {
@@ -692,5 +730,9 @@ public class ServerGridManagement implements ISensorDataProvider {
 		
 		// Return filtered results
 		return cells;
-	};
+	}
+
+	public void clearInvalidPositions() {
+		invalidPositions.clear();
+	}
 }

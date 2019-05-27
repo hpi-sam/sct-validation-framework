@@ -32,6 +32,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private int robotID;
     private int stationID;
     private int packageID;
+    private int robotSpecificDelay = 0;
 
     private RobotState state = RobotState.TO_QUEUE;
     private boolean driving = false;
@@ -45,6 +46,14 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	private boolean isInTest = false;
 
 	private boolean refreshing = false;
+
+	private Position invalidUnloadingPosition = null;
+
+	private int batteryID;
+
+	private int initialDelay = 0;
+
+	private long initialNow;
 
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
@@ -67,10 +76,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
-                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets) {
+                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay) {
         this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
+        this.robotSpecificDelay = robotSpecificDelay;
+        this.initialDelay  = initialDelay;
+        this.initialNow = System.currentTimeMillis();
         this.state = initialState;
     }
 
@@ -84,25 +96,27 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
-        if (!driving) {
-        	if(!isInTest || !testPositionTargets.isEmpty()) {
-	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
-	                handleFinishedCharging();
-	            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
-	            	handleFinishedLoading();
-	            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
-	                handleFinishedUnloading();
-	            } else if (state == RobotState.TO_STATION) {
-	                handleArriveAtStation();
-	            } else if (state == RobotState.TO_QUEUE) {
-	                handleArriveAtQueue();
-	            }
-        	}
-        }
-        if(!isInTest || !testPositionTargets.isEmpty()) {
-        	startDriving();
-        }
-        drive.dataRefresh();
+    	if(System.currentTimeMillis() >= initialNow + initialDelay) {
+    		if (!driving) {
+            	if(!isInTest || !testPositionTargets.isEmpty()) {
+    	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
+    	                handleFinishedCharging();
+    	            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
+    	            	handleFinishedLoading();
+    	            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
+    	                handleFinishedUnloading();
+    	            } else if (state == RobotState.TO_STATION) {
+    	                handleArriveAtStation();
+    	            } else if (state == RobotState.TO_QUEUE) {
+    	                handleArriveAtQueue();
+    	            }
+            	}
+            }
+            if(!isInTest || !testPositionTargets.isEmpty()) {
+            	startDriving();
+            }
+            drive.dataRefresh();
+    	}
     }
 
     /**
@@ -119,26 +133,27 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtStation() {
-        if (dispatcher.requestEnteringStation(robotID, stationID)) {
-
-            if (hasReservedBattery) {
+        if (hasReservedBattery) {
+        	if(dispatcher.requestEnteringBattery(robotID, stationID)) {
+        		batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
         		target = location.getBatteryPositionAtStation(stationID,
-                        dispatcher.getReservedChargerAtStation(robotID, stationID));
+                       batteryID);
                 state = RobotState.TO_BATTERY;
                 hasReservedBattery = false;
                 startDriving();
-
-            } else {
-                target = location.getQueuePositionAtStation(stationID);
+        	}
+        } else {
+        	if (dispatcher.requestEnteringStation(robotID, stationID)) {
+        		target = location.getQueuePositionAtStation(stationID);
                 state = RobotState.TO_QUEUE;
-            }
-
-            startDriving();
+        	}
         }
+
+        startDriving();
     }
 
     private void handleArriveAtBattery() {
-        dispatcher.reportChargingAtStation(robotID, stationID);
+        dispatcher.reportChargingAtStation(robotID, stationID, batteryID);
         manager.setLoading(true);
     }
 
@@ -149,7 +164,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private void handleFinishedCharging() {
         manager.setLoading(false);
 
-        if (dispatcher.requestLeavingBattery(robotID, stationID)) {
+        if (dispatcher.requestLeavingBattery(robotID, stationID, batteryID)) {
         	target = location.getQueuePositionAtStation(stationID);
             state = RobotState.TO_QUEUE;
             startDriving();
@@ -161,8 +176,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(!isInTest) {
         	target = location.getLoadingPositionAtStation(stationID);
         } else {
-        	target = testPositionTargets.get(0);
-    		testPositionTargets.remove(0);
+        	if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
+        		target = testPositionTargets.get(0);
+        		testPositionTargets.remove(0);
+        	}
         }
         state = RobotState.TO_LOADING;
         startDriving();
@@ -183,8 +200,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     		if(!isInTest) {
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
-    			target = testPositionTargets.get(0);
-        		testPositionTargets.remove(0);
+    			if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
+            		target = testPositionTargets.get(0);
+            		testPositionTargets.remove(0);
+            	}
     		}
             dispatcher.reportLeaveStation(robotID, stationID);
             state = RobotState.TO_UNLOADING;
@@ -194,18 +213,23 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtUnloading() {
+    	if(manager.checkUnloadingPosition()) {
+    		invalidUnloadingPosition  = manager.currentPosition();
+    	}
         drive.unload();
     }
 
-    private void handleFinishedUnloading() {
+	private void handleFinishedUnloading() {
         boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
         if(!isInTest) {
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
-        	target = testPositionTargets.get(0);
-    		testPositionTargets.remove(0);
-    		stationID = dispatcher.getStationIDFromPosition(target);
+        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !hasPackage) {
+        		target = testPositionTargets.get(0);
+        		testPositionTargets.remove(0);
+        		stationID = dispatcher.getStationIDFromPosition(target);
+        	}
         }
         state = RobotState.TO_STATION;
         hasReservedBattery = needsLoading;
@@ -414,5 +438,21 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	public void finishRefreshing() {
 		refreshing = false;
+	}
+	
+	public int getRobotSpecificDelay() {
+		return robotSpecificDelay;
+	}
+	
+	public boolean isInTest() {
+		return isInTest;
+	}
+	
+	public Position getInvalidUnloadingPosition() {
+		return invalidUnloadingPosition;
+	}
+
+	public void resetInvalidUnloadingPosition() {
+		invalidUnloadingPosition = null;
 	}
 }

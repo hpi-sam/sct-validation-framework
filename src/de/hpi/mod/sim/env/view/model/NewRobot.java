@@ -5,4 +5,5 @@ import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 public abstract class NewRobot {
     public abstract Robot register(SimulationWorld sim);
+    public abstract void refreshRobot();
 }

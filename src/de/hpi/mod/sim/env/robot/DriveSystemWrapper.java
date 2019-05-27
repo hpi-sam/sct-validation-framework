@@ -61,6 +61,8 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private void update() {
         if (machine.getSCIActors().isRaisedDriveForward())
             actors.driveForward();
+        if (machine.getSCIActors().isRaisedDriveBackward())
+        	actors.driveBackward();
         if (machine.getSCIActors().isRaisedStartUnload())
             actors.startUnloading();
         if (machine.getSCIActors().isRaisedTurnLeft())

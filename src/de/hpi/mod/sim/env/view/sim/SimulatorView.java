@@ -69,6 +69,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     	SimulatorConfig.setChargingStationsInUse(chargingStations);
     	int unloadingRange = (widthBlocks/3)*((heightBlocks-SimulatorConfig.getQueueSize())/3);
     	SimulatorConfig.setUnloadingRange(unloadingRange);
+    	world.updateSimulator(SimulatorConfig.getChargingStationsInUse());
     	
 	}
 

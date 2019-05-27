@@ -116,7 +116,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		button.addActionListener(e -> {
 			listVisible = !listVisible;
 			updateShowHideButton();
-			frame.getTestListPanel().setVisible(listVisible);
+			frame.getTestListScrollPane().setVisible(listVisible);
 			updateFrameSize();
 		});
 		
@@ -127,9 +127,9 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		int height = frame.getHeight();
 		int width = frame.getWidth();
 		if (listVisible)
-			width += frame.getTestListPanel().getPreferredSize().width;
+			width += frame.getTestListScrollPane().getPreferredSize().width;
 		else
-			width -= frame.getTestListPanel().getPreferredSize().width;
+			width -= frame.getTestListScrollPane().getPreferredSize().width;
 		frame.setPreferredSize(new Dimension(width, height));
 		frame.pack();
 	}

@@ -1,11 +1,14 @@
 package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
 import de.hpi.mod.sim.env.view.sim.CollisionDetector;
 import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
+import de.hpi.mod.sim.env.view.sim.InvalidPositionDetector;
+import de.hpi.mod.sim.env.view.sim.InvalidUnloadingDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.view.sim.SimulatorView;
@@ -32,6 +35,7 @@ public class DriveSimFrame extends JFrame {
     private RobotInfoPanel robotInfoPanel2;
     private ScenarioPanel scenarioPanel;
     private TestListPanel testListPanel;
+    private JScrollPane testListScrollPane;
     private TestOverviewPanel testOverviewPanel;
     private SimulationPanel simulationPanel;
     private TimerPanel timerPanel;
@@ -40,6 +44,8 @@ public class DriveSimFrame extends JFrame {
 
     private long lastFrame;
     private boolean running = true;
+	private InvalidPositionDetector invalidPositionDetector;
+	private InvalidUnloadingDetector invalidUnloadingDetector;
 
 	public static Color MAIN_MENU_COLOR = new Color(0xfff3e2);
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
@@ -75,7 +81,7 @@ public class DriveSimFrame extends JFrame {
 		Thread popupHider = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(SimulatorConfig.getMessageDisplayTime());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -87,11 +93,22 @@ public class DriveSimFrame extends JFrame {
 
 	public void reportCollision(Robot r1, Robot r2) {
 		displayMessage("Collision detected!");
-		forbidFurhterRunning();
+		forbidFurtherRunning();
 		sim.renderExplosion(r1);
 	}
 	
-	public void forbidFurhterRunning() {
+	public void reportInvalidPosition(Robot robot1, Position invalidPos) {
+		displayMessage("Robot at invalid position at: (" + String.valueOf(invalidPos.getX()) + 
+				"," + String.valueOf(invalidPos.getY()) + ")!");
+		forbidFurtherRunning();
+	}
+	
+	public void reportInvalidUnloading(Robot robot, Position invalidPosition) {
+		displayMessage("Robot unloaded at invalid position at: (" + String.valueOf(invalidPosition.getX()) + 
+				"," + String.valueOf(invalidPosition.getY()) + ")!");
+	}
+	
+	public void forbidFurtherRunning() {
 		world.setRunForbidden(true);
 	}
 	
@@ -124,6 +141,10 @@ public class DriveSimFrame extends JFrame {
     	return testListPanel;
     }
     
+    public JScrollPane getTestListScrollPane() {
+    	return testListScrollPane;
+    }
+    
     public TimerPanel getTimerPanel() {
     	return timerPanel;
     }
@@ -145,8 +166,12 @@ public class DriveSimFrame extends JFrame {
         scenarioManager = new ScenarioManager(world, collisionDetector, this);
         deadlockDetector = new DeadlockDetector(world, scenarioManager, this);
         collisionDetector = new CollisionDetector(scenarioManager, world, this);
+        invalidPositionDetector = new InvalidPositionDetector(scenarioManager, world, this);
+        invalidUnloadingDetector = new InvalidUnloadingDetector(scenarioManager, world, this);
         scenarioManager.setDeadlockDetector(deadlockDetector);
         scenarioManager.setCollisionDetector(collisionDetector);
+        scenarioManager.setInvalidPositionDetector(invalidPositionDetector);
+        scenarioManager.setInvalidUnloadingDetector(invalidUnloadingDetector);
 	}
     
     private void initializePanels() {
@@ -154,6 +179,7 @@ public class DriveSimFrame extends JFrame {
         robotInfoPanel2 = new RobotInfoPanel(world, true);
         simulationPanel = new SimulationPanel(world, scenarioManager);
         testListPanel = new TestListPanel(scenarioManager);
+        testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         testOverviewPanel = new TestOverviewPanel(scenarioManager, this);
         timerPanel = new TimerPanel(world);
         scenarioPanel = new ScenarioPanel(scenarioManager);
@@ -192,8 +218,16 @@ public class DriveSimFrame extends JFrame {
         robotInfoPanel2.setPreferredSize(new Dimension(200, 200));
         robotInfoPanel2.setBackground(MENU_RED);
         
-        testListPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
         testListPanel.setBackground(MAIN_MENU_COLOR);
+        
+        int testListScrollPanelHeight = testOverviewPanel.getPreferredSize().height +
+        		scenarioPanel.getPreferredSize().height +
+        		simulationPanel.getPreferredSize().height +
+        		timerPanel.getPreferredSize().height +
+        		robotInfoPanel1.getPreferredSize().height;
+        int testListScrollPanelWidth = testListPanel.getPreferredSize().width + 50;
+        testListScrollPane.setPreferredSize(new Dimension(testListScrollPanelWidth, testListScrollPanelHeight));
+        testListScrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
 	}
 
 	private void setDesignOfMainWindow() {
@@ -281,8 +315,8 @@ public class DriveSimFrame extends JFrame {
 		testListConstraints.gridheight = 5;
 		testListConstraints.fill = GridBagConstraints.HORIZONTAL;
 		testListConstraints.anchor = GridBagConstraints.PAGE_START;
-		testListPanel.setVisible(false);
-		add(testListPanel, testListConstraints);
+		testListScrollPane.setVisible(false);
+		add(testListScrollPane, testListConstraints);
 		
 		//Set up the color and size of the whole window
 		getContentPane().setBackground(MAIN_MENU_COLOR);
@@ -376,6 +410,8 @@ public class DriveSimFrame extends JFrame {
         scenarioManager.refresh();
         deadlockDetector.update();
         collisionDetector.update();
+        invalidPositionDetector.update();
+        invalidUnloadingDetector.update();
         sim.getWorld().update(delta);
 
         this.repaint();

@@ -18,22 +18,22 @@ public class StationManagerTest {
     @Test
     public void testNoOtherRobotCanDriveIfDriveLockIsOn() {
         assertTrue(stations.requestEnteringStation(0, 0));
+        //this call shall block the queue and get a lock
         assertFalse(stations.requestEnteringStation(1, 0));
-        assertFalse(stations.requestLeavingBattery(1, 0));
+        assertTrue(stations.requestLeavingBattery(1, 0, 2));
 
         // Other Stations are not affected
         assertTrue(stations.requestEnteringStation(1, 1));
-        assertTrue(stations.requestLeavingBattery(1, 2));
+        assertTrue(stations.requestLeavingBattery(1, 2, 2));
     }
 
     @Test
     public void testArrivalInQueueTurnsOfLock() {
         assertTrue(stations.requestEnteringStation(0, 0));
+        //this call shall block the queue and get a lock
         assertFalse(stations.requestEnteringStation(0, 0));
         stations.reportEnteringQueueAtStation(0, 0);
-        assertTrue(stations.requestLeavingBattery(0, 0));
-        assertFalse(stations.requestEnteringStation(0, 0));
-        stations.reportEnteringQueueAtStation(0, 0);
+        //this shall unblock the queue
         assertTrue(stations.requestEnteringStation(0, 0));
     }
 

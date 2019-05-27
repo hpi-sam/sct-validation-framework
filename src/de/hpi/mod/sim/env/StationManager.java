@@ -21,6 +21,7 @@ public class StationManager implements IRobotStationDispatcher {
      * TODO Free unused stations back to default if not used
      */
     private List<Station> stations = new ArrayList<>();
+	private int usedStations;
 
 
     /**
@@ -28,6 +29,7 @@ public class StationManager implements IRobotStationDispatcher {
      * @param defaultAmountOfStations How many stations to allocate
      */
     StationManager(int defaultAmountOfStations) {
+    	this.usedStations = defaultAmountOfStations;
         for (int i = 0; i < defaultAmountOfStations; i++)
             stations.add(new Station(i));
     }
@@ -78,38 +80,52 @@ public class StationManager implements IRobotStationDispatcher {
      */
     @Override
     public boolean requestEnteringStation(int robotID, int stationID) {
-    	 if(!getStationByID(stationID).blocked()) {
-    		 return true;
-         } else {
-         	 return false;
-         }
+    	getStationByID(stationID).registerRequestLock(robotID);
+    	return getStationByID(stationID).requestLock(robotID);
     }
 
 	/**
      * Checks whether the robot is currently allowed to drive to the queue
      */
     @Override
-    public boolean requestLeavingBattery(int robotID, int stationID) {
-    	getStationByID(stationID).freeBattery();
+    public boolean requestEnteringBattery(int robotID, int stationID) {
     	return true;
+    }
+    
+    @Override
+    public boolean requestLeavingBattery(int robotID, int stationID, int batteryID) {
+    	getStationByID(stationID).registerRequestLock(robotID);
+    	return getStationByID(stationID).requestLock(robotID);
     }
 
     @Override
-    public void reportChargingAtStation(int robotID, int stationID) {
-        getStationByID(stationID).blockBattery();
+    public void reportChargingAtStation(int robotID, int stationID, int chargerID) {
+    	getStationByID(stationID).robotPresentOnCharger(chargerID);
+        //getStationByID(stationID).unblockQueue();
     }
 
     @Override
     public void reportEnteringQueueAtStation(int robotID, int stationID) {
     	Station station = getStationByID(stationID);
         station.unregisterBatteryWithRobotIfPresent(robotID);
-        station.blockQueue();
+        station.unblockQueue();
     }
 
     @Override
     public void reportLeaveStation(int robotID, int stationID) {
         getStationByID(stationID).decreaseQueue();
-        getStationByID(stationID).unblockQueue();
+    }
+    
+    @Override
+    public void releaseAllLocks() {
+    	for(int i=0; i<stations.size(); i++) {
+    		stations.get(i).releaseLocks();
+    	}
+    }
+    
+    @Override
+    public int getUsedStations() {
+    	return usedStations;
     }
 
     public List<Station> getStations() {
@@ -136,12 +152,18 @@ public class StationManager implements IRobotStationDispatcher {
      */
     private Station getRandomStationWithPredicate(Predicate<Station> stationFilter) {
         Random r = new Random();
-
-        List<Station> filteredStations = stations.stream()
-                .filter(stationFilter)  // Only get Stations where the predicate is true
-                .collect(Collectors.toList());
         
-        if (filteredStations.size() > SimulatorConfig.getChargingStationsInUse()) {
+        List<Station> filteredStations = stations.stream()
+             .filter(stationFilter)  // Only get Stations where the predicate is true
+             .collect(Collectors.toList());
+        
+        if(!filteredStations.isEmpty()) {
+        	return filteredStations.get(r.nextInt(filteredStations.size()));
+        } else {
+        	return stations.get(0); //Fallback strategy
+        }
+        
+        /*if (filteredStations.size() > SimulatorConfig.getChargingStationsInUse()) {
         	return filteredStations.isEmpty() ?
 	                addNewStation() :
 	                filteredStations.get(r.nextInt(SimulatorConfig.getChargingStationsInUse()));
@@ -149,19 +171,20 @@ public class StationManager implements IRobotStationDispatcher {
 	        return filteredStations.isEmpty() ?
 	                addNewStation() :
 	                filteredStations.get(r.nextInt(filteredStations.size()));
-        }
+        }*/
     }
 
-    private Station addNewStation() {
+    /*private Station addNewStation() {
         Station created = new Station(stations.size());
         stations.add(created);
         return created;
-    }
+    }*/
 
     private Station getStationByID(int stationID) {
-    	while(stations.size() <= stationID) {
+    	/*while(stations.size() <= stationID) {
     		addNewStation();
-    	}
+    	}*/
+    	stationID = stationID % stations.size();
     	Station station = null;
     	for(int i = 0; i<stations.size(); i++) {
     		if(stations.get(i).getStationID() == stationID) {

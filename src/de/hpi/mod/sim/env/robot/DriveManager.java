@@ -32,7 +32,7 @@ public class DriveManager implements IRobotActors {
 
     private long unloadingTime = SimulatorConfig.getDefaultUnloadingTime();
     
-    private float battery = ThreadLocalRandom.current().nextInt((int) (0.6*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
+    private float battery = ThreadLocalRandom.current().nextInt((int) (SimulatorConfig.getMinBatteryRatio()*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
     
     private int maxDelay = 0;
 	private boolean isWaitingToMove = false;
@@ -89,6 +89,11 @@ public class DriveManager implements IRobotActors {
             loadBattery(delta);
         }
     }
+    
+    public void update(float delta, int robotSpecificDelay) {
+    	this.maxDelay = robotSpecificDelay;
+		update(delta);
+	}
 
 	private void loadBattery(float delta) {
 		battery = Math.min(battery + delta * SimulatorConfig.getBatteryChargingSpeed(), 100);
@@ -174,6 +179,29 @@ public class DriveManager implements IRobotActors {
         	}
         }
     }
+
+
+
+	@Override
+	public void driveBackward() {
+		decreaseBattery();
+        if (hasPower()) {
+        	if(maxDelay > 0) {
+        		delay = getCustomRandomisedDelay(maxDelay);
+        		now = System.currentTimeMillis();
+        		isWaitingToMove = true;
+        	} else {
+        		performDriveBackward();
+        	}
+        }
+	}
+	
+	private void performDriveBackward() {
+		oldPosition = currentPosition;
+		currentPosition = Position.nextPositionInOppositeOrientation(targetFacing, oldPosition);
+		battery -= SimulatorConfig.getBatteryLoss();
+		isMoving = true;
+	}
 
 	private long getCustomRandomisedDelay(int upperBound) {
 		//We add 100 in order to guarantee that in all random functions lowerBound < upperBound
@@ -338,5 +366,12 @@ public class DriveManager implements IRobotActors {
 
 	public void setMaxDelay(int maxDelay) {
 		this.maxDelay = maxDelay;
+	}
+
+	public boolean checkUnloadingPosition() {
+		if(currentPosition.getY() <= 1 || (currentPosition.getY()%3 != 0 && currentPosition.getX()%3 != 0)) {
+			return true;
+		}
+		return false;
 	}
 }

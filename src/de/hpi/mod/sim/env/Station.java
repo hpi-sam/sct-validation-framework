@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manages the Queue, Drive-Lock and Batteries of a station
@@ -8,7 +9,6 @@ import java.util.*;
 public class Station {
 
     private int stationID;
-    private long now;
 
     /**
      * How many robots want to drive or are in the queue.
@@ -21,9 +21,10 @@ public class Station {
      */
     private Battery[] batteries;
 
-	private boolean blockedBattery = false;
-
 	private boolean blockedQueue = false;
+	private boolean blockedLevel2 = false;
+
+	private CopyOnWriteArrayList<Integer> requestedLocks = new CopyOnWriteArrayList<Integer>();
 
 
     public Station(int stationID) {
@@ -103,11 +104,14 @@ public class Station {
      * @return A free battery
      */
     private Battery getFreeBattery() {
-        Optional<Battery> battery = Arrays.stream(batteries)
-                .filter(Battery::isFree).findFirst();
-        if (battery.isPresent())
-            return battery.get();
-        throw new IllegalStateException("There is no free battery");
+    	int freeID = 0;
+        for(int i=0; i<SimulatorConfig.getBatteriesPerStation(); i++) {
+        	if(batteries[i].isFree()) {
+        		freeID = i;
+        	}
+        }
+        return batteries[freeID];
+        // throw new IllegalStateException("There is no free battery");
     }
 
     @Override
@@ -120,30 +124,86 @@ public class Station {
         return stationID == station.stationID;
     }
 
-	public void freeBattery() {
-		blockedBattery = false;
-	}
-
-	public void blockBattery() {
-		blockedBattery = true;
-		now = System.currentTimeMillis();
-	}
-
 	public boolean blocked() {
-		if(now+SimulatorConfig.getDefaultStationUnblockingTime()<=System.currentTimeMillis()) {
-			blockedBattery = false;
+		/*if(now+SimulatorConfig.getDefaultStationUnblockingTime()<=System.currentTimeMillis()) {
 			blockedQueue = false;
 			return false;
 		}
-		return blockedBattery || blockedQueue;
+		if(chargingRobots > 0) {
+			return true;
+		}*/
+		return blockedQueue;
 	}
 
 	public void blockQueue() {
 		blockedQueue  = true;
-		now = System.currentTimeMillis();
 	}
 
 	public void unblockQueue() {
 		blockedQueue = false;
+	}
+
+	private boolean noRobotsOnBatteries() {
+		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+			if(batteries[i].robotPresent()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean blockedLevel2() {
+		return blockedLevel2;
+	}
+
+	public void blockQueueLevel2() {
+		blockedLevel2 = true;
+	}
+
+	public void unblockQueueLevel2() {
+		blockedLevel2 = false;
+		
+	}
+
+	public boolean hasRobotsBelow(int batteryID) {
+		for(int i = batteryID + 1; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+			if(batteries[i].robotPresent()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void robotPresentOnCharger(int chargerID) {
+		batteries[chargerID].setRobotPresent();
+	}
+
+	void robotNotPresent(int batteryID) {
+		batteries[batteryID].setRobotNotPresent();
+	}
+
+	public void releaseLocks() {
+		blockedQueue = false;
+		blockedLevel2 = false;
+		requestedLocks.clear();
+		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+			batteries[i].setRobotNotPresent();
+		}
+	}
+
+	public void registerRequestLock(int robotID) {
+		if(!requestedLocks .contains(robotID)) {
+			requestedLocks.add(0, robotID);
+		}
+	}
+
+	public boolean requestLock(int robotID) {
+		if(requestedLocks.get(0) == robotID && !blockedQueue) {
+			requestedLocks.remove(0);
+			blockQueue();
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
