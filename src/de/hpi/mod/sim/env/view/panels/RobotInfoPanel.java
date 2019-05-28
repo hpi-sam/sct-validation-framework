@@ -193,23 +193,36 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
 	     * 3. No other underscores "_" can be used in state names.
 	     */
 	    private String[] splitStates(String machineState) {
-	    	//remove the top state prefix
-	    	String[] hierarchyLevels = machineState.substring(13).split("__");
-	    	
-	    	//if the state is not in the highest hierarchy it has a region prefix which we want to remove.
-	    	for(int i = 1; i < hierarchyLevels.length; i++) {
-	    		String region = hierarchyLevels[i].split("_")[0];	    		
-	    		if(region.length() + 1 < hierarchyLevels[i].length()) {
-	    			hierarchyLevels[i] = hierarchyLevels[i].substring(region.length() + 1);
+	    	try {
+	    		//Only enabled when the main region is called "Drive System"
+	    		if(machineState.substring(0, 12).equals("drive_System")) {
+		    		
+			    	//remove the top state prefix
+		    		String[] hierarchyLevels = machineState.substring(13).split("__");
+			    	
+			    	//if the state is not in the highest hierarchy it has a region prefix which we want to remove.
+			    	for(int i = 1; i < hierarchyLevels.length; i++) {
+			    		String region = hierarchyLevels[i].split("_")[0];	    		
+			    		if(region.length() + 1 < hierarchyLevels[i].length()) {
+			    			hierarchyLevels[i] = hierarchyLevels[i].substring(region.length() + 1);
+			    		}
+			    	}
+			    	
+			    	//YAKINDU replaces spaces with underscores. We undo this.
+			    	for(int i = 0; i < hierarchyLevels.length; i++) {
+			    		hierarchyLevels[i] = hierarchyLevels[i].replace("_", " ");
+			    	}
+			    	
+			    	return hierarchyLevels;
+			    	
+	    		} else {
+	    			return new String[] {"-"};
 	    		}
+		    	
+	    	} catch(Exception e) {	
+	    		return new String[] {"-"};
 	    	}
 	    	
-	    	//YAKINDU replaces spaces with underscores. We undo this.
-	    	for(int i = 0; i < hierarchyLevels.length; i++) {
-	    		hierarchyLevels[i] = hierarchyLevels[i].replace("_", " ");
-	    	}
-	    	
-			return hierarchyLevels;
 		}
     	
     }
