@@ -216,11 +216,11 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
 			    	return hierarchyLevels;
 			    	
 	    		} else {
-	    			return new String[0];
+	    			return new String[] {"-"};
 	    		}
 		    	
 	    	} catch(Exception e) {	
-	    		return new String[0];
+	    		return new String[] {"-"};
 	    	}
 	    	
 		}
