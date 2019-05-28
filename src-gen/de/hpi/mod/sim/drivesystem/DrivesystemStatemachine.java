@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.drivesystem;
 
+import de.hpi.mod.sim.ITimer;
 
 public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	protected class SCInterfaceImpl implements SCInterface {
@@ -340,14 +341,19 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	private boolean initialized = false;
 	
 	public enum State {
+		_region0__1,
+		_region0__0,
 		$NullState$
 	};
 	
-	private final State[] stateVector = new State[0];
+	private final State[] stateVector = new State[1];
 	
 	private int nextStateIndex;
 	
 	
+	private ITimer timer;
+	
+	private final boolean[] timeEvents = new boolean[1];
 	public DrivesystemStatemachine() {
 		sCInterface = new SCInterfaceImpl();
 		sCIProcessor = new SCIProcessorImpl();
@@ -361,6 +367,9 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	public void init() {
 		this.initialized = true;
+		if (timer == null) {
+			throw new IllegalStateException("timer not set.");
+		}
 		if (this.sCIData.operationCallback == null) {
 			throw new IllegalStateException("Operation callback for interface sCIData must be set.");
 		}
@@ -369,7 +378,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			throw new IllegalStateException("Operation callback for interface sCIRawData must be set.");
 		}
 		
-		for (int i = 0; i < 0; i++) {
+		for (int i = 0; i < 1; i++) {
 			stateVector[i] = State.$NullState$;
 		}
 		clearEvents();
@@ -405,6 +414,10 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 				"The state machine needs to be initialized first by calling the init() function."
 			);
 		}
+		if (timer == null) {
+			throw new IllegalStateException("timer not set.");
+		}
+		enterSequence__region0_default();
 	}
 	
 	public void runCycle() {
@@ -414,6 +427,12 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		clearOutEvents();
 		for (nextStateIndex = 0; nextStateIndex < stateVector.length; nextStateIndex++) {
 			switch (stateVector[nextStateIndex]) {
+			case _region0__1:
+				_region0__1_react(true);
+				break;
+			case _region0__0:
+				_region0__0_react(true);
+				break;
 			default:
 				// $NullState$
 			}
@@ -421,20 +440,23 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		clearEvents();
 	}
 	public void exit() {
+		exitSequence__region0();
 	}
 	
 	/**
 	 * @see IStatemachine#isActive()
 	 */
 	public boolean isActive() {
-		return ;
+		return stateVector[0] != State.$NullState$;
 	}
 	
 	/** 
+	* Always returns 'false' since this state machine can never become final.
+	*
 	* @see IStatemachine#isFinal()
 	*/
 	public boolean isFinal() {
-		return ;
+		return false;
 	}
 	/**
 	* This method resets the incoming events (time events included).
@@ -443,6 +465,9 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCInterface.clearEvents();
 		sCIProcessor.clearEvents();
 		sCIActors.clearEvents();
+		for (int i=0; i<timeEvents.length; i++) {
+			timeEvents[i] = false;
+		}
 	}
 	
 	/**
@@ -459,9 +484,38 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	public boolean isStateActive(State state) {
 	
 		switch (state) {
+		case _region0__1:
+			return stateVector[0] == State._region0__1;
+		case _region0__0:
+			return stateVector[0] == State._region0__0;
 		default:
 			return false;
 		}
+	}
+	
+	/**
+	* Set the {@link ITimer} for the state machine. It must be set
+	* externally on a timed state machine before a run cycle can be correctly
+	* executed.
+	* 
+	* @param timer
+	*/
+	public void setTimer(ITimer timer) {
+		this.timer = timer;
+	}
+	
+	/**
+	* Returns the currently used timer.
+	* 
+	* @return {@link ITimer}
+	*/
+	public ITimer getTimer() {
+		return timer;
+	}
+	
+	public void timeElapsed(int eventID) {
+		timeEvents[eventID] = true;
+		runCycle();
 	}
 	
 	public SCInterface getSCInterface() {
@@ -528,8 +582,111 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCInterface.raiseActionCompleted();
 	}
 	
+	/* Entry action for state '1'. */
+	private void entryAction__region0__1() {
+		timer.setTimer(this, 0, (1 * 1000), false);
+		
+		sCIActors.raiseDriveForward();
+	}
+	
+	/* Exit action for state '1'. */
+	private void exitAction__region0__1() {
+		timer.unsetTimer(this, 0);
+	}
+	
+	/* 'default' enter sequence for state 1 */
+	private void enterSequence__region0__1_default() {
+		entryAction__region0__1();
+		nextStateIndex = 0;
+		stateVector[0] = State._region0__1;
+	}
+	
+	/* 'default' enter sequence for state 0 */
+	private void enterSequence__region0__0_default() {
+		nextStateIndex = 0;
+		stateVector[0] = State._region0__0;
+	}
+	
+	/* 'default' enter sequence for region null */
+	private void enterSequence__region0_default() {
+		react__region0__entry_Default();
+	}
+	
+	/* Default exit sequence for state 1 */
+	private void exitSequence__region0__1() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+		
+		exitAction__region0__1();
+	}
+	
+	/* Default exit sequence for state 0 */
+	private void exitSequence__region0__0() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for region null */
+	private void exitSequence__region0() {
+		switch (stateVector[0]) {
+		case _region0__1:
+			exitSequence__region0__1();
+			break;
+		case _region0__0:
+			exitSequence__region0__0();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react__region0__entry_Default() {
+		enterSequence__region0__0_default();
+	}
+	
 	private boolean react() {
 		return false;
+	}
+	
+	private boolean _region0__1_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (timeEvents[0]) {
+				exitSequence__region0__1();
+				enterSequence__region0__1_default();
+			} else {
+				if (sCInterface.actionCompleted) {
+					exitSequence__region0__1();
+					enterSequence__region0__1_default();
+				} else {
+					did_transition = false;
+				}
+			}
+		}
+		if (did_transition==false) {
+			did_transition = react();
+		}
+		return did_transition;
+	}
+	
+	private boolean _region0__0_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.newTarget) {
+				exitSequence__region0__0();
+				enterSequence__region0__1_default();
+				react();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = react();
+		}
+		return did_transition;
 	}
 	
 }
