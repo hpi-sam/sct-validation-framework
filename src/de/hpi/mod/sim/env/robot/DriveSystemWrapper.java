@@ -1,8 +1,11 @@
 package de.hpi.mod.sim.env.robot;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hpi.mod.sim.ITimer;
 import de.hpi.mod.sim.TimerService;
 import de.hpi.mod.sim.drivesystem.DrivesystemStatemachine;
 import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
@@ -24,16 +27,23 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private IRobotActors actors;
     private IProcessor processor;
 
-    private TimerService timer = null;
+    private TimerService timer;
 
 
     public DriveSystemWrapper(ISensor data, IRobotActors actors, IProcessor processor) {
         DrivesystemStatemachine machine = new DrivesystemStatemachine();
+        Method methodToFind = null;
+        timer = new DynamicTimerService();
         try {
-        	timer = new DynamicTimerService();
-            machine.setTimer(timer);
-        } catch (Exception e) {
-        	
+        	  methodToFind = DrivesystemStatemachine.class.getMethod("setTimer", new Class[] {ITimer.class});
+        	} catch (NoSuchMethodException | SecurityException e) {
+        	}
+        if(methodToFind != null) {
+        	try {
+				methodToFind.invoke(machine, new Object[] {timer});
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
         }
         this.data = data;
         this.actors = actors;
