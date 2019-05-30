@@ -24,13 +24,17 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private IRobotActors actors;
     private IProcessor processor;
 
-    private TimerService timer;
+    private TimerService timer = null;
 
 
     public DriveSystemWrapper(ISensor data, IRobotActors actors, IProcessor processor) {
         DrivesystemStatemachine machine = new DrivesystemStatemachine();
-        timer = new DynamicTimerService();
-        machine.setTimer(timer);
+        try {
+        	timer = new DynamicTimerService();
+            machine.setTimer(timer);
+        } catch (Exception e) {
+        	
+        }
         this.data = data;
         this.actors = actors;
         this.processor = processor;
