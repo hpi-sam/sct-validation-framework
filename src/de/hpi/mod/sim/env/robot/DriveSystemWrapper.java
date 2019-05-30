@@ -27,7 +27,7 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private IRobotActors actors;
     private IProcessor processor;
 
-    private TimerService timer;
+    private TimerService timer = null;
 
 
     public DriveSystemWrapper(ISensor data, IRobotActors actors, IProcessor processor) {
