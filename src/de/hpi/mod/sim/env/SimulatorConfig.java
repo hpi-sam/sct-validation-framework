@@ -14,7 +14,7 @@ public class SimulatorConfig {
     public static final int SPACE_BETWEEN_CHARGING_STATIONS = 3;
     public static final int MAX_ROBOTS_PER_STATION = 3;
     public static final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
-    public static final String TEST_FILE_NAME = "Tests";
+    public static final String TEST_FILE_NAME = ".tests";
     public static final String STRING_PATH_TO_ROBOT_ICON = "res/robot.png";
     public static final String STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON = "res/robot-left-clicked.png";
     public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON = "res/robot-right-clicked.png";
