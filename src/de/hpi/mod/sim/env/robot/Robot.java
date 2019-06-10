@@ -27,7 +27,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private ILocation location;
     private IScanner scanner;
 
-    private Position target;
+    private Position target = null;
     private List<Position> testPositionTargets = null;
     private int robotID;
     private int stationID;
@@ -133,6 +133,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtStation() {
+    	drive.newTarget();
         if (hasReservedBattery) {
         	if(dispatcher.requestEnteringBattery(robotID, stationID)) {
         		batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
@@ -165,6 +166,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         manager.setLoading(false);
 
         if (dispatcher.requestLeavingBattery(robotID, stationID, batteryID)) {
+        	drive.newTarget();
         	target = location.getQueuePositionAtStation(stationID);
             state = RobotState.TO_QUEUE;
             startDriving();
@@ -174,6 +176,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private void handleArriveAtQueue() {
         dispatcher.reportEnteringQueueAtStation(robotID, stationID);
     	if(!isInTest) {
+    		drive.newTarget();
         	target = location.getLoadingPositionAtStation(stationID);
         } else {
         	if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
@@ -198,6 +201,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     		packageID = scanner.getPackageID(stationID, this.pos());
     		hasPackage = true;
     		if(!isInTest) {
+    			drive.newTarget();
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
     			if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
@@ -223,6 +227,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
         if(!isInTest) {
+        	drive.newTarget();
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
         	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !hasPackage) {
@@ -238,7 +243,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private void startDriving() {
         driving = true;
-        drive.newTarget();
+        drive.getUpdate();
+        //drive.newTarget();
     }
 
     public void stop() {

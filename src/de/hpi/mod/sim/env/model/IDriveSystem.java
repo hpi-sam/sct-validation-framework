@@ -17,4 +17,5 @@ public interface IDriveSystem extends IRobotActorInfo {
     void actionCompleted();
     void close();
     String getMachineState();
+	void getUpdate();
 }
