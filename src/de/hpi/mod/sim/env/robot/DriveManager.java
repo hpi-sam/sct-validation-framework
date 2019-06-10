@@ -57,42 +57,43 @@ public class DriveManager implements IRobotActors {
     }
 
     public void update(float delta) {
-    	if(!simulationStarted)
-    	if(maxDelay > 0) {
-    		if(delay + now <= System.currentTimeMillis()) {
-    			if (isWaitingToMove) {
-    				performDriveForward();
-    	            isMoving = true;
-    	            isWaitingToMove = false;
-    	        } else if (isWaitingToTurningLeft ) { 
-    	            performTurnLeft();
-    	            isTurningLeft = true;
-    	            isWaitingToTurningLeft = false;
-    	        } else if (isWaitingToTurningRight) {
-    	            performTurnRight();
-    	            isTurningRight = true;
-    	            isWaitingToTurningRight = false;
-    	        } else if (isWaitingToUnloading ) {
-    	            performUnload();
-    	            isUnloading = true;
-    	            isWaitingToUnloading = false;
-    	        }
-    		}
-    	} 
-    	
-    	if (isMoving) {
-            move(delta);
-        } else if (isTurningLeft) { 
-            turnLeft(delta);
-        } else if (isTurningRight) {
-            turnRight(delta);
-        } else if (isUnloading) {
-            unload();
-        }
-
-        if (loading) {
-            loadBattery(delta);
-        }
+    	if(!simulationStarted) {
+	    	if(maxDelay > 0) {
+	    		if(delay + now <= System.currentTimeMillis()) {
+	    			if (isWaitingToMove) {
+	    				performDriveForward();
+	    	            isMoving = true;
+	    	            isWaitingToMove = false;
+	    	        } else if (isWaitingToTurningLeft ) { 
+	    	            performTurnLeft();
+	    	            isTurningLeft = true;
+	    	            isWaitingToTurningLeft = false;
+	    	        } else if (isWaitingToTurningRight) {
+	    	            performTurnRight();
+	    	            isTurningRight = true;
+	    	            isWaitingToTurningRight = false;
+	    	        } else if (isWaitingToUnloading ) {
+	    	            performUnload();
+	    	            isUnloading = true;
+	    	            isWaitingToUnloading = false;
+	    	        }
+	    		}
+	    	} 
+	    	
+	    	if (isMoving) {
+	            move(delta);
+	        } else if (isTurningLeft) { 
+	            turnLeft(delta);
+	        } else if (isTurningRight) {
+	            turnRight(delta);
+	        } else if (isUnloading) {
+	            unload();
+	        }
+	
+	        if (loading) {
+	            loadBattery(delta);
+	        }
+    	}
     }
     
     public void update(float delta, int robotSpecificDelay) {
