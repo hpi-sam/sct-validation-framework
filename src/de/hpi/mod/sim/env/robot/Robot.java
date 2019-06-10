@@ -54,9 +54,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private long initialNow;
 
-	private boolean hasActionCompleted = true;
-
-
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing) {
@@ -97,7 +94,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
-    	if(System.currentTimeMillis() >= initialNow + initialDelay) {
+    	if(System.currentTimeMillis() >= initialNow + initialDelay && !manager.hasSimulation()) {
     		if (!driving) {
             	if(!isInTest || !testPositionTargets.isEmpty()) {
     	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
@@ -240,12 +237,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private void startDriving() {
         driving = true;
         drive.newTarget();
-        hasActionCompleted = true;
     }
 
     public void stop() {
         drive.stop();
-        hasActionCompleted = true;
     }
 
     @Override
@@ -363,7 +358,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public void actionCompleted() {
         drive.actionCompleted();
-        hasActionCompleted = true;
     }
 
     public int getID() {
@@ -454,11 +448,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 		invalidUnloadingPosition = null;
 	}
 
-	public boolean hasActionCompleted() {
-		return hasActionCompleted ;
+	public void simulationStarted() {
+		manager.simulationStarted();
 	}
 
-	public void gotActionCompleted() {
-		hasActionCompleted=false;
+	public void simulationCompleted() {
+		manager.simulationCompleted();
 	}
 }

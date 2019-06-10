@@ -42,6 +42,8 @@ public class DriveManager implements IRobotActors {
 
 	private boolean hasPackage = false;
 
+	private boolean simulationStarted = false;
+
 
     public DriveManager(DriveListener listener, Position position, Orientation facing) {
         this.listener = listener;
@@ -55,6 +57,7 @@ public class DriveManager implements IRobotActors {
     }
 
     public void update(float delta) {
+    	if(!simulationStarted)
     	if(maxDelay > 0) {
     		if(delay + now <= System.currentTimeMillis()) {
     			if (isWaitingToMove) {
@@ -384,5 +387,17 @@ public class DriveManager implements IRobotActors {
 
 	public boolean hasPackage() {
 		return hasPackage;
+	}
+
+	public void simulationStarted() {
+		simulationStarted=true;
+	}
+
+	public void simulationCompleted() {
+		simulationStarted=false;
+	}
+
+	public boolean hasSimulation() {
+		return simulationStarted;
 	}
 }
