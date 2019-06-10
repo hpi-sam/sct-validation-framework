@@ -299,6 +299,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         		 (manager.currentPosition().equals(target.getModified(0,1)) && manager.currentFacing() == Orientation.EAST) );
     }
     
+    @Override
+    public boolean canChargeAtTarget() {
+    	return this.pos().is(this.oldPos()) && grid.cellType(this.pos()) == CellType.BATTERY;
+    }
+    
     public boolean hasReachedAllTargets() {
     	return testPositionTargets.isEmpty() && this.isOnTarget();
     }

@@ -42,4 +42,6 @@ public interface ISensor {
     boolean blockedCrossroadRight();
 
 	boolean canUnloadToTarget();
+
+	boolean canChargeAtTarget();
 }

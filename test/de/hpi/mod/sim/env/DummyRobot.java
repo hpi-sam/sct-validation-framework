@@ -118,4 +118,9 @@ public class DummyRobot implements ISensor, IRobotActors, IProcessor {
 	public int targetY() {
 		return 0;
 	}
+
+	@Override
+	public boolean canChargeAtTarget() {
+		return false;
+	}
 }
