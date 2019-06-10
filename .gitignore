@@ -3,3 +3,4 @@
 *.iml
 Tests
 *.DS_Store
+.tests
