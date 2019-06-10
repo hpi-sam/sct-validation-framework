@@ -54,6 +54,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private long initialNow;
 
+	private boolean hasActionCompleted = true;
+
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -238,10 +240,12 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private void startDriving() {
         driving = true;
         drive.newTarget();
+        hasActionCompleted = true;
     }
 
     public void stop() {
         drive.stop();
+        hasActionCompleted = true;
     }
 
     @Override
@@ -359,6 +363,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public void actionCompleted() {
         drive.actionCompleted();
+        hasActionCompleted = true;
     }
 
     public int getID() {
@@ -447,5 +452,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	public void resetInvalidUnloadingPosition() {
 		invalidUnloadingPosition = null;
+	}
+
+	public boolean hasActionCompleted() {
+		return hasActionCompleted ;
+	}
+
+	public void gotActionCompleted() {
+		hasActionCompleted=false;
 	}
 }
