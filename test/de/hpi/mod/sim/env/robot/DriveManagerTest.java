@@ -108,11 +108,6 @@ public class DriveManagerTest {
             callCount++;
         }
 
-        @Override
-        public void unloadingCompleted() {
-
-        }
-
         int getCallCount() {
             return callCount;
         }

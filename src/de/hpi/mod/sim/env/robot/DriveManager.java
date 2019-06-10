@@ -40,6 +40,8 @@ public class DriveManager implements IRobotActors {
 	private boolean isWaitingToTurningRight = false;
 	private boolean isWaitingToUnloading = false;
 
+	private boolean hasPackage = false;
+
 
     public DriveManager(DriveListener listener, Position position, Orientation facing) {
         this.listener = listener;
@@ -101,8 +103,9 @@ public class DriveManager implements IRobotActors {
 
 	private void unload() {
 		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(SimulatorConfig.getRobotSpeedLevel()+1))) {
-		    isUnloading = false;
-		    listener.unloadingCompleted();
+			isUnloading = false;
+			hasPackage = false;
+		    listener.actionCompleted();
 		}
 	}
 
@@ -373,5 +376,13 @@ public class DriveManager implements IRobotActors {
 			return true;
 		}
 		return false;
+	}
+
+	public void setHasPackage(boolean b) {
+		hasPackage = b;
+	}
+
+	public boolean hasPackage() {
+		return hasPackage;
 	}
 }

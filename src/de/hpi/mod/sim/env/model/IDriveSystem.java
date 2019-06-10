@@ -8,7 +8,7 @@ import de.hpi.mod.sim.env.robot.Robot;
  * It is used for communication between the Environment ({@link Robot})
  * and the Statechard-Wrapper ({@link DriveSystemWrapper})
  */
-public interface IDriveSystem extends IRobotActorInfo {
+public interface IDriveSystem {
 
     void unload();
     void stop();

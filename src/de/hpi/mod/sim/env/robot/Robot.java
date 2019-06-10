@@ -36,7 +36,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private RobotState state = RobotState.TO_QUEUE;
     private boolean driving = false;
-    private boolean hasPackage = false;
 
     private boolean hasReservedBattery = false;
     
@@ -103,7 +102,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	                handleFinishedCharging();
     	            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
     	            	handleFinishedLoading();
-    	            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
+    	            } else if (state == RobotState.TO_UNLOADING && !manager.hasPackage()) {
     	                handleFinishedUnloading();
     	            } else if (state == RobotState.TO_STATION) {
     	                handleArriveAtStation();
@@ -196,7 +195,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(now < System.currentTimeMillis() - delay)
         {
     		packageID = scanner.getPackageID(stationID, this.pos());
-    		hasPackage = true;
+    		manager.setHasPackage(true);
     		if(!isInTest) {
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
@@ -225,7 +224,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         if(!isInTest) {
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
-        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !hasPackage) {
+        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !manager.hasPackage()) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
         		stationID = dispatcher.getStationIDFromPosition(target);
@@ -243,12 +242,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     public void stop() {
         drive.stop();
-    }
-
-    @Override
-    public void unloaded() {
-        manager.startUnloading();
-        hasPackage = false;
     }
 
     @Override
@@ -363,11 +356,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         drive.actionCompleted();
     }
 
-    @Override
-    public void unloadingCompleted() {
-        drive.unloaded();
-    }
-
     public int getID() {
         return robotID;
     }
@@ -413,7 +401,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     public boolean isHasPackage() {
-        return hasPackage;
+        return manager.hasPackage();
     }
 
     public static int incrementID() {
