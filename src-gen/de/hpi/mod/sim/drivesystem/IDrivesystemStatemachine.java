@@ -175,4 +175,26 @@ public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
 	
 	public SCIDirection getSCIDirection();
 	
+	public interface SCIDriveMode {
+	
+		public long getUNSET();
+		
+		public void setUNSET(long value);
+		
+		public long getDRIVE();
+		
+		public void setDRIVE(long value);
+		
+		public long getCHARGE();
+		
+		public void setCHARGE(long value);
+		
+		public long getUNLOAD();
+		
+		public void setUNLOAD(long value);
+		
+	}
+	
+	public SCIDriveMode getSCIDriveMode();
+	
 }

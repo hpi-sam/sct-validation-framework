@@ -325,6 +325,51 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	
+	protected class SCIDriveModeImpl implements SCIDriveMode {
+	
+		private long uNSET;
+		
+		public long getUNSET() {
+			return uNSET;
+		}
+		
+		public void setUNSET(long value) {
+			this.uNSET = value;
+		}
+		
+		private long dRIVE;
+		
+		public long getDRIVE() {
+			return dRIVE;
+		}
+		
+		public void setDRIVE(long value) {
+			this.dRIVE = value;
+		}
+		
+		private long cHARGE;
+		
+		public long getCHARGE() {
+			return cHARGE;
+		}
+		
+		public void setCHARGE(long value) {
+			this.cHARGE = value;
+		}
+		
+		private long uNLOAD;
+		
+		public long getUNLOAD() {
+			return uNLOAD;
+		}
+		
+		public void setUNLOAD(long value) {
+			this.uNLOAD = value;
+		}
+		
+	}
+	
+	
 	protected SCInterfaceImpl sCInterface;
 	
 	protected SCIProcessorImpl sCIProcessor;
@@ -341,11 +386,12 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	protected SCIDirectionImpl sCIDirection;
 	
+	protected SCIDriveModeImpl sCIDriveMode;
+	
 	private boolean initialized = false;
 	
 	public enum State {
 		drive_System_idle,
-		drive_System_unloading,
 		drive_System_driving,
 		drive_System_driving__driving_on_waypoint_or_station,
 		drive_System_driving__driving_waiting_in_station,
@@ -401,6 +447,17 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	
+	private long driveMode;
+	
+	protected long getDriveMode() {
+		return driveMode;
+	}
+	
+	protected void setDriveMode(long value) {
+		this.driveMode = value;
+	}
+	
+	
 	public DrivesystemStatemachine() {
 		sCInterface = new SCInterfaceImpl();
 		sCIProcessor = new SCIProcessorImpl();
@@ -410,6 +467,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCIPositionType = new SCIPositionTypeImpl();
 		sCIOrientation = new SCIOrientationImpl();
 		sCIDirection = new SCIDirectionImpl();
+		sCIDriveMode = new SCIDriveModeImpl();
 	}
 	
 	public void init() {
@@ -431,6 +489,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		clearEvents();
 		clearOutEvents();
 		setWaitedForDeadlock(0);
+		
+		setDriveMode(0);
 		
 		sCIPositionType.setWAYPOINT(0);
 		
@@ -455,6 +515,14 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCIDirection.setRIGHT(2);
 		
 		sCIDirection.setBEHIND(3);
+		
+		sCIDriveMode.setUNSET(0);
+		
+		sCIDriveMode.setDRIVE(1);
+		
+		sCIDriveMode.setCHARGE(2);
+		
+		sCIDriveMode.setUNLOAD(3);
 	}
 	
 	public void enter() {
@@ -478,9 +546,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			switch (stateVector[nextStateIndex]) {
 			case drive_System_idle:
 				drive_System_idle_react(true);
-				break;
-			case drive_System_unloading:
-				drive_System_unloading_react(true);
 				break;
 			case drive_System_driving__driving_on_waypoint_or_station:
 				drive_System_driving__driving_on_waypoint_or_station_react(true);
@@ -616,8 +681,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		switch (state) {
 		case drive_System_idle:
 			return stateVector[0] == State.drive_System_idle;
-		case drive_System_unloading:
-			return stateVector[0] == State.drive_System_unloading;
 		case drive_System_driving:
 			return stateVector[0].ordinal() >= State.
 					drive_System_driving.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving__driving_turning_around_on_crossroad__turningAroundOnCrossroad_driving_forward_2.ordinal();
@@ -752,6 +815,10 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return sCIDirection;
 	}
 	
+	public SCIDriveMode getSCIDriveMode() {
+		return sCIDriveMode;
+	}
+	
 	public void raiseUnload() {
 		sCInterface.raiseUnload();
 	}
@@ -856,7 +923,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return (((sCIData.operationCallback.posOrientation()==sCIOrientation.getSOUTH() || sCIData.operationCallback.posOrientation()==sCIOrientation.getNORTH())) && !sCIData.operationCallback.blockedWaypointRight());
 	}
 	
-	private void effect_Drive_System_driving_tr1() {
+	private void effect_Drive_System_driving_tr0() {
 		exitSequence_Drive_System_driving();
 		sCIProcessor.raiseArrived();
 		
@@ -1135,12 +1202,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		stateVector[0] = State.drive_System_idle;
 	}
 	
-	/* 'default' enter sequence for state unloading */
-	private void enterSequence_Drive_System_unloading_default() {
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_unloading;
-	}
-	
 	/* 'default' enter sequence for state driving */
 	private void enterSequence_Drive_System_driving_default() {
 		enterSequence_Drive_System_driving__driving_default();
@@ -1395,12 +1456,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		stateVector[0] = State.$NullState$;
 	}
 	
-	/* Default exit sequence for state unloading */
-	private void exitSequence_Drive_System_unloading() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
 	/* Default exit sequence for state driving */
 	private void exitSequence_Drive_System_driving() {
 		exitSequence_Drive_System_driving__driving();
@@ -1600,9 +1655,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		switch (stateVector[0]) {
 		case drive_System_idle:
 			exitSequence_Drive_System_idle();
-			break;
-		case drive_System_unloading:
-			exitSequence_Drive_System_unloading();
 			break;
 		case drive_System_driving__driving_on_waypoint_or_station:
 			exitSequence_Drive_System_driving__driving_on_waypoint_or_station();
@@ -2066,7 +2118,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	
 	/* The reactions of exit default. */
 	private void react_Drive_System_driving__driving__exit_Default() {
-		effect_Drive_System_driving_tr1();
+		effect_Drive_System_driving_tr0();
 	}
 	
 	/* The reactions of exit default. */
@@ -2082,38 +2134,30 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (sCInterface.unload) {
+			if (sCInterface.newTarget) {
 				exitSequence_Drive_System_idle();
-				sCIActors.raiseStartUnload();
+				setDriveMode(sCIDriveMode.dRIVE);
 				
-				enterSequence_Drive_System_unloading_default();
+				enterSequence_Drive_System_driving_default();
 				react();
 			} else {
-				if (sCInterface.newTarget) {
+				if (sCInterface.newUnloadingTarget) {
 					exitSequence_Drive_System_idle();
+					setDriveMode(sCIDriveMode.uNLOAD);
+					
 					enterSequence_Drive_System_driving_default();
 					react();
 				} else {
-					did_transition = false;
+					if (sCInterface.newChargingTarget) {
+						exitSequence_Drive_System_idle();
+						setDriveMode(sCIDriveMode.cHARGE);
+						
+						enterSequence_Drive_System_driving_default();
+						react();
+					} else {
+						did_transition = false;
+					}
 				}
-			}
-		}
-		if (did_transition==false) {
-			did_transition = react();
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_unloading_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_unloading();
-				enterSequence_Drive_System_idle_default();
-				react();
-			} else {
-				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
@@ -2126,13 +2170,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if (sCInterface.stop) {
-				exitSequence_Drive_System_driving();
-				enterSequence_Drive_System_idle_default();
-				react();
-			} else {
-				did_transition = false;
-			}
+			did_transition = false;
 		}
 		if (did_transition==false) {
 			did_transition = react();
