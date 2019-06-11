@@ -395,16 +395,10 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		drive_System_entering_crossroad__onWaypointEnteringCrossroad_waiting_to_ensure_real_deadlock,
 		drive_System_entering_crossroad__onWaypointEnteringCrossroad_entering_crossroad,
 		drive_System_driving_in_station,
-		drive_System_driving_in_station__inStation_driving_forward_in_station,
-		drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive,
-		drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait,
-		drive_System_driving_in_station__inStation_turning_right_in_station,
-		drive_System_driving_in_station__inStation_turning_left_in_station,
-		drive_System_driving_in_station__inStation_exiting_charging_position,
-		drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1,
-		drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2,
-		drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward,
-		drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3,
+		drive_System_driving_in_station__inStation_turn_right,
+		drive_System_driving_in_station__inStation_turn_left,
+		drive_System_driving_in_station__inStation_drive,
+		drive_System_driving_in_station__inStation_wait_to_drive,
 		drive_System_unloading,
 		drive_System_unloading__unloading_unloading,
 		drive_System_unloading__unloading_turning,
@@ -590,29 +584,17 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			case drive_System_entering_crossroad__onWaypointEnteringCrossroad_entering_crossroad:
 				drive_System_entering_crossroad__onWaypointEnteringCrossroad_entering_crossroad_react(true);
 				break;
-			case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive:
-				drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive_react(true);
+			case drive_System_driving_in_station__inStation_turn_right:
+				drive_System_driving_in_station__inStation_turn_right_react(true);
 				break;
-			case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait:
-				drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait_react(true);
+			case drive_System_driving_in_station__inStation_turn_left:
+				drive_System_driving_in_station__inStation_turn_left_react(true);
 				break;
-			case drive_System_driving_in_station__inStation_turning_right_in_station:
-				drive_System_driving_in_station__inStation_turning_right_in_station_react(true);
+			case drive_System_driving_in_station__inStation_drive:
+				drive_System_driving_in_station__inStation_drive_react(true);
 				break;
-			case drive_System_driving_in_station__inStation_turning_left_in_station:
-				drive_System_driving_in_station__inStation_turning_left_in_station_react(true);
-				break;
-			case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1:
-				drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1_react(true);
-				break;
-			case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2:
-				drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2_react(true);
-				break;
-			case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward:
-				drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward_react(true);
-				break;
-			case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3:
-				drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3_react(true);
+			case drive_System_driving_in_station__inStation_wait_to_drive:
+				drive_System_driving_in_station__inStation_wait_to_drive_react(true);
 				break;
 			case drive_System_unloading__unloading_unloading:
 				drive_System_unloading__unloading_unloading_react(true);
@@ -743,29 +725,15 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			return stateVector[0] == State.drive_System_entering_crossroad__onWaypointEnteringCrossroad_entering_crossroad;
 		case drive_System_driving_in_station:
 			return stateVector[0].ordinal() >= State.
-					drive_System_driving_in_station.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3.ordinal();
-		case drive_System_driving_in_station__inStation_driving_forward_in_station:
-			return stateVector[0].ordinal() >= State.
-					drive_System_driving_in_station__inStation_driving_forward_in_station.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait.ordinal();
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive;
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait;
-		case drive_System_driving_in_station__inStation_turning_right_in_station:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_turning_right_in_station;
-		case drive_System_driving_in_station__inStation_turning_left_in_station:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_turning_left_in_station;
-		case drive_System_driving_in_station__inStation_exiting_charging_position:
-			return stateVector[0].ordinal() >= State.
-					drive_System_driving_in_station__inStation_exiting_charging_position.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3.ordinal();
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3:
-			return stateVector[0] == State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3;
+					drive_System_driving_in_station.ordinal()&& stateVector[0].ordinal() <= State.drive_System_driving_in_station__inStation_wait_to_drive.ordinal();
+		case drive_System_driving_in_station__inStation_turn_right:
+			return stateVector[0] == State.drive_System_driving_in_station__inStation_turn_right;
+		case drive_System_driving_in_station__inStation_turn_left:
+			return stateVector[0] == State.drive_System_driving_in_station__inStation_turn_left;
+		case drive_System_driving_in_station__inStation_drive:
+			return stateVector[0] == State.drive_System_driving_in_station__inStation_drive;
+		case drive_System_driving_in_station__inStation_wait_to_drive:
+			return stateVector[0] == State.drive_System_driving_in_station__inStation_wait_to_drive;
 		case drive_System_unloading:
 			return stateVector[0].ordinal() >= State.
 					drive_System_unloading.ordinal()&& stateVector[0].ordinal() <= State.drive_System_unloading__unloading_waiting_for_data.ordinal();
@@ -934,19 +902,15 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return sCIData.operationCallback.targetDirection()==sCIDirection.getAHEAD();
 	}
 	
-	private boolean check_Drive_System_driving_in_station__inStation__choice_0_tr1_tr1() {
-		return sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT();
-	}
-	
-	private boolean check_Drive_System_driving_in_station__inStation__choice_0_tr2_tr2() {
+	private boolean check_Drive_System_driving_in_station__inStation__choice_2_tr0_tr0() {
 		return sCIData.operationCallback.targetDirection()==sCIDirection.getLEFT();
 	}
 	
-	private boolean check_Drive_System_driving_in_station__inStation__choice_0_tr3_tr3() {
-		return sCIData.operationCallback.targetDirection()==sCIDirection.getBEHIND();
+	private boolean check_Drive_System_driving_in_station__inStation__choice_3_tr0_tr0() {
+		return !sCIData.operationCallback.blockedFront();
 	}
 	
-	private boolean check_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1_tr0_tr0() {
+	private boolean check_Drive_System_driving_in_station__inStation__choice_4_tr0_tr0() {
 		return !sCIData.operationCallback.blockedFront();
 	}
 	
@@ -1008,16 +972,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	private void effect_Drive_System_driving_in_station_tr0() {
 		exitSequence_Drive_System_driving_in_station();
 		react_Drive_System__choice_4();
-	}
-	
-	private void effect_Drive_System_driving_in_station__inStation_driving_forward_in_station_tr0() {
-		exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station();
-		react_Drive_System_driving_in_station__inStation__choice_1();
-	}
-	
-	private void effect_Drive_System_driving_in_station__inStation_exiting_charging_position_tr0() {
-		exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position();
-		react_Drive_System_driving_in_station__inStation__choice_1();
 	}
 	
 	private void effect_Drive_System_unloading_tr0() {
@@ -1119,35 +1073,39 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private void effect_Drive_System_driving_in_station__inStation__choice_0_tr0() {
-		enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station_default();
+		react_Drive_System_driving_in_station__inStation__choice_4();
 	}
 	
 	private void effect_Drive_System_driving_in_station__inStation__choice_0_tr1() {
-		enterSequence_Drive_System_driving_in_station__inStation_turning_right_in_station_default();
-	}
-	
-	private void effect_Drive_System_driving_in_station__inStation__choice_0_tr2() {
-		enterSequence_Drive_System_driving_in_station__inStation_turning_left_in_station_default();
-	}
-	
-	private void effect_Drive_System_driving_in_station__inStation__choice_0_tr3() {
-		enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position_default();
-	}
-	
-	private void effect_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_0_tr0() {
-		react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1();
-	}
-	
-	private void effect_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1_tr0() {
-		enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive_default();
-	}
-	
-	private void effect_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1_tr1() {
-		enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait_default();
+		react_Drive_System_driving_in_station__inStation__choice_3();
 	}
 	
 	private void effect_Drive_System_driving_in_station__inStation__choice_1_tr0() {
 		react_Drive_System_driving_in_station__inStation__exit_Default();
+	}
+	
+	private void effect_Drive_System_driving_in_station__inStation__choice_2_tr0() {
+		enterSequence_Drive_System_driving_in_station__inStation_turn_left_default();
+	}
+	
+	private void effect_Drive_System_driving_in_station__inStation__choice_2_tr1() {
+		enterSequence_Drive_System_driving_in_station__inStation_turn_right_default();
+	}
+	
+	private void effect_Drive_System_driving_in_station__inStation__choice_3_tr0() {
+		enterSequence_Drive_System_driving_in_station__inStation_drive_default();
+	}
+	
+	private void effect_Drive_System_driving_in_station__inStation__choice_3_tr1() {
+		react_Drive_System_driving_in_station__inStation__choice_2();
+	}
+	
+	private void effect_Drive_System_driving_in_station__inStation__choice_4_tr0() {
+		enterSequence_Drive_System_driving_in_station__inStation_drive_default();
+	}
+	
+	private void effect_Drive_System_driving_in_station__inStation__choice_4_tr1() {
+		enterSequence_Drive_System_driving_in_station__inStation_wait_to_drive_default();
 	}
 	
 	private void effect_Drive_System__choice_1_tr0() {
@@ -1290,39 +1248,19 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		setWaitedForDeadlock(0);
 	}
 	
-	/* Entry action for state 'drive'. */
-	private void entryAction_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive() {
-		sCIActors.raiseDriveForward();
-	}
-	
-	/* Entry action for state 'turning right in station'. */
-	private void entryAction_Drive_System_driving_in_station__inStation_turning_right_in_station() {
+	/* Entry action for state 'turn right'. */
+	private void entryAction_Drive_System_driving_in_station__inStation_turn_right() {
 		sCIActors.raiseTurnRight();
 	}
 	
-	/* Entry action for state 'turning left in station'. */
-	private void entryAction_Drive_System_driving_in_station__inStation_turning_left_in_station() {
+	/* Entry action for state 'turn left'. */
+	private void entryAction_Drive_System_driving_in_station__inStation_turn_left() {
 		sCIActors.raiseTurnLeft();
 	}
 	
-	/* Entry action for state 'right1'. */
-	private void entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1() {
-		sCIActors.raiseTurnRight();
-	}
-	
-	/* Entry action for state 'right2'. */
-	private void entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2() {
-		sCIActors.raiseTurnRight();
-	}
-	
-	/* Entry action for state 'forward'. */
-	private void entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward() {
+	/* Entry action for state 'drive'. */
+	private void entryAction_Drive_System_driving_in_station__inStation_drive() {
 		sCIActors.raiseDriveForward();
-	}
-	
-	/* Entry action for state 'right3'. */
-	private void entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3() {
-		sCIActors.raiseTurnRight();
 	}
 	
 	/* Entry action for state 'unloading'. */
@@ -1519,69 +1457,31 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		enterSequence_Drive_System_driving_in_station__inStation_default();
 	}
 	
-	/* 'default' enter sequence for state driving forward in station */
-	private void enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station_default() {
-		enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_default();
+	/* 'default' enter sequence for state turn right */
+	private void enterSequence_Drive_System_driving_in_station__inStation_turn_right_default() {
+		entryAction_Drive_System_driving_in_station__inStation_turn_right();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving_in_station__inStation_turn_right;
+	}
+	
+	/* 'default' enter sequence for state turn left */
+	private void enterSequence_Drive_System_driving_in_station__inStation_turn_left_default() {
+		entryAction_Drive_System_driving_in_station__inStation_turn_left();
+		nextStateIndex = 0;
+		stateVector[0] = State.drive_System_driving_in_station__inStation_turn_left;
 	}
 	
 	/* 'default' enter sequence for state drive */
-	private void enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive_default() {
-		entryAction_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive();
+	private void enterSequence_Drive_System_driving_in_station__inStation_drive_default() {
+		entryAction_Drive_System_driving_in_station__inStation_drive();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive;
+		stateVector[0] = State.drive_System_driving_in_station__inStation_drive;
 	}
 	
-	/* 'default' enter sequence for state wait */
-	private void enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait_default() {
+	/* 'default' enter sequence for state wait to drive */
+	private void enterSequence_Drive_System_driving_in_station__inStation_wait_to_drive_default() {
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait;
-	}
-	
-	/* 'default' enter sequence for state turning right in station */
-	private void enterSequence_Drive_System_driving_in_station__inStation_turning_right_in_station_default() {
-		entryAction_Drive_System_driving_in_station__inStation_turning_right_in_station();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_turning_right_in_station;
-	}
-	
-	/* 'default' enter sequence for state turning left in station */
-	private void enterSequence_Drive_System_driving_in_station__inStation_turning_left_in_station_default() {
-		entryAction_Drive_System_driving_in_station__inStation_turning_left_in_station();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_turning_left_in_station;
-	}
-	
-	/* 'default' enter sequence for state exiting charging position */
-	private void enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position_default() {
-		enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_default();
-	}
-	
-	/* 'default' enter sequence for state right1 */
-	private void enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1_default() {
-		entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1;
-	}
-	
-	/* 'default' enter sequence for state right2 */
-	private void enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2_default() {
-		entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2;
-	}
-	
-	/* 'default' enter sequence for state forward */
-	private void enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward_default() {
-		entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward;
-	}
-	
-	/* 'default' enter sequence for state right3 */
-	private void enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3_default() {
-		entryAction_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3();
-		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3;
+		stateVector[0] = State.drive_System_driving_in_station__inStation_wait_to_drive;
 	}
 	
 	/* 'default' enter sequence for state unloading */
@@ -1672,16 +1572,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	/* 'default' enter sequence for region _inStation */
 	private void enterSequence_Drive_System_driving_in_station__inStation_default() {
 		react_Drive_System_driving_in_station__inStation__entry_Default();
-	}
-	
-	/* 'default' enter sequence for region _inStationDriveForward */
-	private void enterSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_default() {
-		react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_default();
-	}
-	
-	/* 'default' enter sequence for region _inStationExitCharger */
-	private void enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_default() {
-		react_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _unloading */
@@ -1851,60 +1741,26 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		exitSequence_Drive_System_driving_in_station__inStation();
 	}
 	
-	/* Default exit sequence for state driving forward in station */
-	private void exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station() {
-		exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward();
+	/* Default exit sequence for state turn right */
+	private void exitSequence_Drive_System_driving_in_station__inStation_turn_right() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
+	}
+	
+	/* Default exit sequence for state turn left */
+	private void exitSequence_Drive_System_driving_in_station__inStation_turn_left() {
+		nextStateIndex = 0;
+		stateVector[0] = State.$NullState$;
 	}
 	
 	/* Default exit sequence for state drive */
-	private void exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive() {
+	private void exitSequence_Drive_System_driving_in_station__inStation_drive() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
 	
-	/* Default exit sequence for state wait */
-	private void exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state turning right in station */
-	private void exitSequence_Drive_System_driving_in_station__inStation_turning_right_in_station() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state turning left in station */
-	private void exitSequence_Drive_System_driving_in_station__inStation_turning_left_in_station() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state exiting charging position */
-	private void exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position() {
-		exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger();
-	}
-	
-	/* Default exit sequence for state right1 */
-	private void exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state right2 */
-	private void exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state forward */
-	private void exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NullState$;
-	}
-	
-	/* Default exit sequence for state right3 */
-	private void exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3() {
+	/* Default exit sequence for state wait to drive */
+	private void exitSequence_Drive_System_driving_in_station__inStation_wait_to_drive() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
@@ -2018,29 +1874,17 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_entering_crossroad__onWaypointEnteringCrossroad_entering_crossroad:
 			exitSequence_Drive_System_entering_crossroad__onWaypointEnteringCrossroad_entering_crossroad();
 			break;
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive:
-			exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive();
+		case drive_System_driving_in_station__inStation_turn_right:
+			exitSequence_Drive_System_driving_in_station__inStation_turn_right();
 			break;
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait:
-			exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait();
+		case drive_System_driving_in_station__inStation_turn_left:
+			exitSequence_Drive_System_driving_in_station__inStation_turn_left();
 			break;
-		case drive_System_driving_in_station__inStation_turning_right_in_station:
-			exitSequence_Drive_System_driving_in_station__inStation_turning_right_in_station();
+		case drive_System_driving_in_station__inStation_drive:
+			exitSequence_Drive_System_driving_in_station__inStation_drive();
 			break;
-		case drive_System_driving_in_station__inStation_turning_left_in_station:
-			exitSequence_Drive_System_driving_in_station__inStation_turning_left_in_station();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3();
+		case drive_System_driving_in_station__inStation_wait_to_drive:
+			exitSequence_Drive_System_driving_in_station__inStation_wait_to_drive();
 			break;
 		case drive_System_unloading__unloading_unloading:
 			exitSequence_Drive_System_unloading__unloading_unloading();
@@ -2212,63 +2056,17 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	/* Default exit sequence for region _inStation */
 	private void exitSequence_Drive_System_driving_in_station__inStation() {
 		switch (stateVector[0]) {
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive:
-			exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive();
+		case drive_System_driving_in_station__inStation_turn_right:
+			exitSequence_Drive_System_driving_in_station__inStation_turn_right();
 			break;
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait:
-			exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait();
+		case drive_System_driving_in_station__inStation_turn_left:
+			exitSequence_Drive_System_driving_in_station__inStation_turn_left();
 			break;
-		case drive_System_driving_in_station__inStation_turning_right_in_station:
-			exitSequence_Drive_System_driving_in_station__inStation_turning_right_in_station();
+		case drive_System_driving_in_station__inStation_drive:
+			exitSequence_Drive_System_driving_in_station__inStation_drive();
 			break;
-		case drive_System_driving_in_station__inStation_turning_left_in_station:
-			exitSequence_Drive_System_driving_in_station__inStation_turning_left_in_station();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3();
-			break;
-		default:
-			break;
-		}
-	}
-	
-	/* Default exit sequence for region _inStationDriveForward */
-	private void exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward() {
-		switch (stateVector[0]) {
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive:
-			exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive();
-			break;
-		case drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait:
-			exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait();
-			break;
-		default:
-			break;
-		}
-	}
-	
-	/* Default exit sequence for region _inStationExitCharger */
-	private void exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger() {
-		switch (stateVector[0]) {
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward();
-			break;
-		case drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3:
-			exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3();
+		case drive_System_driving_in_station__inStation_wait_to_drive:
+			exitSequence_Drive_System_driving_in_station__inStation_wait_to_drive();
 			break;
 		default:
 			break;
@@ -2411,37 +2209,40 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		if (check_Drive_System_driving_in_station__inStation__choice_0_tr0_tr0()) {
 			effect_Drive_System_driving_in_station__inStation__choice_0_tr0();
 		} else {
-			if (check_Drive_System_driving_in_station__inStation__choice_0_tr1_tr1()) {
-				effect_Drive_System_driving_in_station__inStation__choice_0_tr1();
-			} else {
-				if (check_Drive_System_driving_in_station__inStation__choice_0_tr2_tr2()) {
-					effect_Drive_System_driving_in_station__inStation__choice_0_tr2();
-				} else {
-					if (check_Drive_System_driving_in_station__inStation__choice_0_tr3_tr3()) {
-						effect_Drive_System_driving_in_station__inStation__choice_0_tr3();
-					}
-				}
-			}
-		}
-	}
-	
-	/* The reactions of state null. */
-	private void react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_0() {
-		effect_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_0_tr0();
-	}
-	
-	/* The reactions of state null. */
-	private void react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1() {
-		if (check_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1_tr0_tr0()) {
-			effect_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1_tr0();
-		} else {
-			effect_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_1_tr1();
+			effect_Drive_System_driving_in_station__inStation__choice_0_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
 	private void react_Drive_System_driving_in_station__inStation__choice_1() {
 		effect_Drive_System_driving_in_station__inStation__choice_1_tr0();
+	}
+	
+	/* The reactions of state null. */
+	private void react_Drive_System_driving_in_station__inStation__choice_2() {
+		if (check_Drive_System_driving_in_station__inStation__choice_2_tr0_tr0()) {
+			effect_Drive_System_driving_in_station__inStation__choice_2_tr0();
+		} else {
+			effect_Drive_System_driving_in_station__inStation__choice_2_tr1();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_Drive_System_driving_in_station__inStation__choice_3() {
+		if (check_Drive_System_driving_in_station__inStation__choice_3_tr0_tr0()) {
+			effect_Drive_System_driving_in_station__inStation__choice_3_tr0();
+		} else {
+			effect_Drive_System_driving_in_station__inStation__choice_3_tr1();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_Drive_System_driving_in_station__inStation__choice_4() {
+		if (check_Drive_System_driving_in_station__inStation__choice_4_tr0_tr0()) {
+			effect_Drive_System_driving_in_station__inStation__choice_4_tr0();
+		} else {
+			effect_Drive_System_driving_in_station__inStation__choice_4_tr1();
+		}
 	}
 	
 	/* The reactions of state null. */
@@ -2553,16 +2354,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		react_Drive_System_entering_crossroad__onWaypointEnteringCrossroad__choice_2();
 	}
 	
-	/* Default react sequence for initial entry default */
-	private void react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_default() {
-		react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_0();
-	}
-	
-	/* Default react sequence for initial entry  */
-	private void react_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger__entry_Default() {
-		enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1_default();
-	}
-	
 	/* Default react sequence for initial entry  */
 	private void react_Drive_System_driving_in_station__inStation__entry_Default() {
 		react_Drive_System_driving_in_station__inStation__choice_0();
@@ -2606,16 +2397,6 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	/* The reactions of exit default. */
 	private void react_Drive_System_entering_crossroad__onWaypointEnteringCrossroad__exit_Default() {
 		effect_Drive_System_entering_crossroad_tr0();
-	}
-	
-	/* The reactions of exit default. */
-	private void react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__exit_Default() {
-		effect_Drive_System_driving_in_station__inStation_driving_forward_in_station_tr0();
-	}
-	
-	/* The reactions of exit default. */
-	private void react_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger__exit_Default() {
-		effect_Drive_System_driving_in_station__inStation_exiting_charging_position_tr0();
 	}
 	
 	/* The reactions of exit default. */
@@ -3091,11 +2872,16 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving_in_station__inStation_driving_forward_in_station_react(boolean try_transition) {
+	private boolean drive_System_driving_in_station__inStation_turn_right_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			did_transition = false;
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving_in_station__inStation_turn_right();
+				react_Drive_System_driving_in_station__inStation__choice_1();
+			} else {
+				did_transition = false;
+			}
 		}
 		if (did_transition==false) {
 			did_transition = drive_System_driving_in_station_react(try_transition);
@@ -3103,153 +2889,53 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive_react(boolean try_transition) {
+	private boolean drive_System_driving_in_station__inStation_turn_left_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_drive();
-				react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__exit_Default();
+				exitSequence_Drive_System_driving_in_station__inStation_turn_left();
+				react_Drive_System_driving_in_station__inStation__choice_1();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station__inStation_driving_forward_in_station_react(try_transition);
+			did_transition = drive_System_driving_in_station_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait_react(boolean try_transition) {
+	private boolean drive_System_driving_in_station__inStation_drive_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (sCInterface.actionCompleted) {
+				exitSequence_Drive_System_driving_in_station__inStation_drive();
+				react_Drive_System_driving_in_station__inStation__choice_1();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = drive_System_driving_in_station_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean drive_System_driving_in_station__inStation_wait_to_drive_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.dataRefresh) {
-				exitSequence_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward_wait();
-				react_Drive_System_driving_in_station__inStation_driving_forward_in_station__inStationDriveForward__choice_0();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station__inStation_driving_forward_in_station_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving_in_station__inStation_turning_right_in_station_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving_in_station__inStation_turning_right_in_station();
-				react_Drive_System_driving_in_station__inStation__choice_1();
+				exitSequence_Drive_System_driving_in_station__inStation_wait_to_drive();
+				react_Drive_System_driving_in_station__inStation__choice_4();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
 			did_transition = drive_System_driving_in_station_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving_in_station__inStation_turning_left_in_station_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving_in_station__inStation_turning_left_in_station();
-				react_Drive_System_driving_in_station__inStation__choice_1();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving_in_station__inStation_exiting_charging_position_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			did_transition = false;
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right1();
-				enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2_default();
-				drive_System_driving_in_station__inStation_exiting_charging_position_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station__inStation_exiting_charging_position_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right2();
-				enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward_default();
-				drive_System_driving_in_station__inStation_exiting_charging_position_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station__inStation_exiting_charging_position_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_forward();
-				enterSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3_default();
-				drive_System_driving_in_station__inStation_exiting_charging_position_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station__inStation_exiting_charging_position_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger_right3();
-				react_Drive_System_driving_in_station__inStation_exiting_charging_position__inStationExitCharger__exit_Default();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = drive_System_driving_in_station__inStation_exiting_charging_position_react(try_transition);
 		}
 		return did_transition;
 	}
