@@ -292,7 +292,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean canUnloadToTarget() {
-        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&
+        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&  grid.cellType(target) == CellType.BLOCK &&
         		((manager.currentPosition().equals(target.getModified(-1,0)) ) || // && manager.currentFacing() == Orientation.NORTH) ||
         		 (manager.currentPosition().equals(target.getModified(1,0)) ) || // && manager.currentFacing() == Orientation.SOUTH) ||
         		 (manager.currentPosition().equals(target.getModified(0,-1)) ) || // && manager.currentFacing() == Orientation.WEST) ||
