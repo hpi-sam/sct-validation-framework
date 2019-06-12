@@ -291,16 +291,17 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean canUnloadToTarget() {
-        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&
-        		((manager.currentPosition().equals(target.getModified(-1,0)) && manager.currentFacing() == Orientation.NORTH) ||
-        		 (manager.currentPosition().equals(target.getModified(1,0)) && manager.currentFacing() == Orientation.SOUTH) ||
-        		 (manager.currentPosition().equals(target.getModified(0,-1)) && manager.currentFacing() == Orientation.WEST) ||
-        		 (manager.currentPosition().equals(target.getModified(0,1)) && manager.currentFacing() == Orientation.EAST) );
+        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&  grid.cellType(target) == CellType.BLOCK &&
+        		((manager.currentPosition().equals(target.getModified(-1,0)) ) || // && manager.currentFacing() == Orientation.NORTH) ||
+        		 (manager.currentPosition().equals(target.getModified(1,0)) ) || // && manager.currentFacing() == Orientation.SOUTH) ||
+        		 (manager.currentPosition().equals(target.getModified(0,-1)) ) || // && manager.currentFacing() == Orientation.WEST) ||
+        		 (manager.currentPosition().equals(target.getModified(0,1)) )); //&& manager.currentFacing() == Orientation.EAST) );
     }
     
     @Override
     public boolean canChargeAtTarget() {
-    	return this.pos().is(this.oldPos()) && grid.cellType(this.pos()) == CellType.BATTERY;
+    	return this.pos().is(this.oldPos()) && grid.cellType(this.pos()) == CellType.STATION && 
+    			grid.cellType(target) == CellType.BATTERY && manager.currentPosition().equals(target.getModified(1,0));
     }
     
     public boolean hasReachedAllTargets() {

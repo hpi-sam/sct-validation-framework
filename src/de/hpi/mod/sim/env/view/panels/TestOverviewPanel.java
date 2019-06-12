@@ -28,7 +28,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	
 	private DriveSimFrame frame;
 		
-	private boolean listVisible = false;
+	private boolean listVisible = true;
 	
 	public TestOverviewPanel(ScenarioManager scenarioManager, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
@@ -111,7 +111,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	}
 	
 	private JButton newShowHideButton() {
-		JButton button = new JButton("Show");
+		JButton button = new JButton("Hide");
 		
 		button.addActionListener(e -> {
 			listVisible = !listVisible;

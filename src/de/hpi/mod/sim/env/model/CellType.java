@@ -12,7 +12,7 @@ public enum CellType {
     static {
         WAYPOINT.posType = PositionType.WAYPOINT;
         CROSSROAD.posType = PositionType.CROSSROAD;
-        BLOCK.posType = null;
+        BLOCK.posType = PositionType.BLOCKED;
         BATTERY.posType = PositionType.STATION;
         LOADING.posType = PositionType.WAYPOINT;
         STATION.posType = PositionType.STATION;
