@@ -94,7 +94,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
-    	if(System.currentTimeMillis() >= initialNow + initialDelay && !manager.hasSimulation()) {
+    	if(System.currentTimeMillis() >= initialNow + initialDelay) {
     		if (!driving) {
             	if(!isInTest || !testPositionTargets.isEmpty()) {
     	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
@@ -447,13 +447,5 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	public void resetInvalidUnloadingPosition() {
 		invalidUnloadingPosition = null;
-	}
-
-	public void simulationStarted() {
-		manager.simulationStarted();
-	}
-
-	public void simulationCompleted() {
-		manager.simulationCompleted();
 	}
 }
