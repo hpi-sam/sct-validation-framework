@@ -847,7 +847,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System__choice_0_tr0_tr0() {
-		return (getDriveMode()!=sCIDriveMode.getUNLOAD() && sCIData.operationCallback.canUnloadToTarget());
+		return (getDriveMode()==sCIDriveMode.getUNLOAD() && sCIData.operationCallback.canUnloadToTarget());
 	}
 	
 	private boolean check_Drive_System_leaving_corassroad__onCrossroadExiting__choice_0_tr0_tr0() {
@@ -907,7 +907,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System_driving_in_station__inStation__choice_3_tr0_tr0() {
-		return !sCIData.operationCallback.blockedFront();
+		return (((sCIData.operationCallback.targetDirection()==sCIDirection.getLEFT() || sCIData.operationCallback.targetDirection()==sCIDirection.getRIGHT())) && !sCIData.operationCallback.blockedFront());
 	}
 	
 	private boolean check_Drive_System_driving_in_station__inStation__choice_4_tr0_tr0() {
@@ -931,7 +931,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private boolean check_Drive_System__choice_3_tr0_tr0() {
-		return (getDriveMode()!=sCIDriveMode.getCHARGE() && sCIData.operationCallback.canChargeAtTarget());
+		return (getDriveMode()==sCIDriveMode.getCHARGE() && sCIData.operationCallback.canChargeAtTarget());
 	}
 	
 	private boolean check_Drive_System_entering_charger__startCharging__choice_1_tr1_tr1() {
