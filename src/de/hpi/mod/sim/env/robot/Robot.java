@@ -54,7 +54,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private long initialNow;
 
-
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing) {
