@@ -78,13 +78,13 @@ public class DriveManager implements IRobotActors {
     	} 
     	
     	if (isMoving) {
-            move(delta);
+            calculateMovement(delta);
         } else if (isTurningLeft) { 
-            turnLeft(delta);
+            calculateTurnLeft(delta);
         } else if (isTurningRight) {
-            turnRight(delta);
+            calculateTurnRight(delta);
         } else if (isUnloading) {
-            unload();
+            calculateUnload();
         }
 
         if (loading) {
@@ -96,12 +96,16 @@ public class DriveManager implements IRobotActors {
     	this.maxDelay = robotSpecificDelay;
 		update(delta);
 	}
+    
+    private boolean animationRunning() {
+    	return isMoving || isTurningLeft || isTurningRight || isUnloading;
+    }
 
 	private void loadBattery(float delta) {
 		battery = Math.min(battery + delta * SimulatorConfig.getBatteryChargingSpeed(), 100);
 	}
 
-	private void unload() {
+	private void calculateUnload() {
 		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(SimulatorConfig.getRobotSpeedLevel()+1))) {
 			isUnloading = false;
 			hasPackage = false;
@@ -109,7 +113,7 @@ public class DriveManager implements IRobotActors {
 		}
 	}
 
-	private void turnRight(float delta) {
+	private void calculateTurnRight(float delta) {
 		float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
 		while (deltaAngle < 0) deltaAngle += 360;
 
@@ -124,21 +128,21 @@ public class DriveManager implements IRobotActors {
 		}
 	}
 
-	private void turnLeft(float delta) {
-		float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
-		while (deltaAngle > 0) deltaAngle -= 360;
-
-		angle += Math.copySign(getRotationSpeed() * delta, deltaAngle);
-
-		if (angle <= targetFacing.getAngle()) {
-		    angle = targetFacing.getAngle();
-		    oldFacing = targetFacing;
-		    isTurningLeft = false;
-		    listener.actionCompleted();
-		}
+	private void calculateTurnLeft(float delta) {
+			float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
+			while (deltaAngle > 0) deltaAngle -= 360;
+	
+			angle += Math.copySign(getRotationSpeed() * delta, deltaAngle);
+	
+			if (angle <= targetFacing.getAngle()) {
+			    angle = targetFacing.getAngle();
+			    oldFacing = targetFacing;
+			    isTurningLeft = false;
+			    listener.actionCompleted();
+			}
 	}
 
-	private void move(float delta) {
+	private void calculateMovement(float delta) {
 		int deltaX = currentPosition.getX() - oldPosition.getX();
 		int deltaY = currentPosition.getY() - oldPosition.getY();
 
@@ -171,32 +175,36 @@ public class DriveManager implements IRobotActors {
 
     @Override
     public void driveForward() {
-        decreaseBattery();
-        if (hasPower()) {
-        	if(maxDelay > 0) {
-        		delay = getCustomRandomisedDelay(maxDelay);
-        		now = System.currentTimeMillis();
-        		isWaitingToMove = true;
-        	} else {
-        		performDriveForward();
-        	}
-        }
+    	if(!animationRunning()) {  	
+	        decreaseBattery();
+	        if (hasPower()) {
+	        	if(maxDelay > 0) {
+	        		delay = getCustomRandomisedDelay(maxDelay);
+	        		now = System.currentTimeMillis();
+	        		isWaitingToMove = true;
+	        	} else {
+	        		performDriveForward();
+	        	}
+	        } 
+    	}
     }
 
 
 
 	@Override
 	public void driveBackward() {
-		decreaseBattery();
-        if (hasPower()) {
-        	if(maxDelay > 0) {
-        		delay = getCustomRandomisedDelay(maxDelay);
-        		now = System.currentTimeMillis();
-        		isWaitingToMove = true;
-        	} else {
-        		performDriveBackward();
-        	}
-        }
+		if(!animationRunning()) { //TODO: Do this also for other main operations
+			decreaseBattery();
+	        if (hasPower()) {
+	        	if(maxDelay > 0) {
+	        		delay = getCustomRandomisedDelay(maxDelay);
+	        		now = System.currentTimeMillis();
+	        		isWaitingToMove = true;
+	        	} else {
+	        		performDriveBackward();
+	        	}
+	        }
+		}
 	}
 	
 	private void performDriveBackward() {
@@ -232,16 +240,18 @@ public class DriveManager implements IRobotActors {
 
     @Override
     public void turnLeft() {
-        decreaseBattery();
-        if (hasPower()) {
-        	if(maxDelay > 0) {
-        		delay = getCustomRandomisedDelay(maxDelay/3);
-        		now = System.currentTimeMillis();
-        		isWaitingToTurningLeft = true;
-        	} else {
-	            performTurnLeft();
-        	}
-        }
+    	if(!animationRunning()) {
+    		decreaseBattery();
+            if (hasPower()) {
+            	if(maxDelay > 0) {
+            		delay = getCustomRandomisedDelay(maxDelay/3);
+            		now = System.currentTimeMillis();
+            		isWaitingToTurningLeft = true;
+            	} else {
+    	            performTurnLeft();
+            	}
+            }
+    	}
     }
 
 	private void performTurnLeft() {
@@ -252,16 +262,18 @@ public class DriveManager implements IRobotActors {
 
     @Override
     public void turnRight() {
-        decreaseBattery();
-        if (hasPower()) {
-        	if(maxDelay > 0) {
-        		delay = getCustomRandomisedDelay(maxDelay/3);
-        		now = System.currentTimeMillis();
-        		isWaitingToTurningRight = true;
-        	} else {
-	            performTurnRight();
-        	}
-        }
+    	if(!animationRunning()) {
+    		decreaseBattery();
+            if (hasPower()) {
+            	if(maxDelay > 0) {
+            		delay = getCustomRandomisedDelay(maxDelay/3);
+            		now = System.currentTimeMillis();
+            		isWaitingToTurningRight = true;
+            	} else {
+    	            performTurnRight();
+            	}
+            }
+    	}
     }
 
 	private void performTurnRight() {

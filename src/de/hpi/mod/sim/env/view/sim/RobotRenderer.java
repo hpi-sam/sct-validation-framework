@@ -44,24 +44,26 @@ public class RobotRenderer {
     void render(Graphics graphic) {
         // Draw Robots
         for (Robot robot : world.getRobots()) {
-            DriveManager drive = robot.getDriveManager();
-            Point2D drawPosition = world.toDrawPosition(drive.getX(), drive.getY());
-
-            boolean leftClicked = robot.equals(world.getHighlightedRobot1());
-            boolean rightClicked = robot.equals(world.getHighlightedRobot2());
-
-            drawRobot(graphic, drawPosition, drive.getAngle(), leftClicked, rightClicked, robot.isHasPackage(), robot.getBattery() < .1);
+        		//robot.simulationStarted();
+	            DriveManager drive = robot.getDriveManager();
+	            Point2D drawPosition = world.toDrawPosition(drive.getX(), drive.getY());
+	
+	            boolean leftClicked = robot.equals(world.getHighlightedRobot1());
+	            boolean rightClicked = robot.equals(world.getHighlightedRobot2());
+	
+	            drawRobot(graphic, drawPosition, drive.getAngle(), leftClicked, rightClicked, robot.isHasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets
         for (Robot r : world.getRobots()) {
             if (r.equals(world.getHighlightedRobot1()) || r.equals(world.getHighlightedRobot2())) {
-                DriveManager drive = r.getDriveManager();
-                Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
-                Point2D targetPos = world.toDrawPosition(r.getTarget());
-
-                drawTarget(graphic, drawPos, targetPos);
+	                DriveManager drive = r.getDriveManager();
+	                Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
+	                Point2D targetPos = world.toDrawPosition(r.getTarget());
+	
+	                drawTarget(graphic, drawPos, targetPos);
             }
+            //r.simulationCompleted();
         }
     }
 
