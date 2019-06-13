@@ -216,7 +216,7 @@ public class DriveManager implements IRobotActors {
 
 	private long getCustomRandomisedDelay(int upperBound) {
 		//We add 100 in order to guarantee that in all random functions lowerBound < upperBound
-		upperBound = (upperBound/SimulatorConfig.getRobotSpeedLevel()) + 100;
+		upperBound = (upperBound/Math.max(1, SimulatorConfig.getRobotSpeedLevel())) + 100;
 		int percentage = ThreadLocalRandom.current().nextInt(100);
 		if(percentage < 50) {
 			return ThreadLocalRandom.current().nextLong(upperBound/10);
