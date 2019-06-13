@@ -149,36 +149,81 @@ public class TestCaseGenerator {
 		ArrayList<TestScenario> testScenarios = new ArrayList<>();
 		List<NewRobot> newRobots = new ArrayList<>();
         List<Position> targets = new ArrayList<>();
+        targets.add(new Position(1,-1));
+        newRobots.add(new NewTestRobot(new Position(0, -1), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive one step 1", "Drive one step from battery position 1", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
         targets.add(new Position(1,-2));
         newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive one step", "Drive one step", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Drive one step 2", "Drive one step from battery position 2", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(1,-3));
+        newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive one step 3", "Drive one step from battery position 3", newRobots));
         
 		newRobots = new ArrayList<>();
         targets = new ArrayList<>();
-        targets.add(new Position(1,-5));
         targets.add(new Position(2,-5));
-        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_UNLOADING, Orientation.EAST, targets, 0, 1000)); //RobotState is arbitrary here
-        testScenarios.add(new ConcreteTestScenario("Drive to end of queue", "Drive to end of queue", newRobots));
+        newRobots.add(new NewTestRobot(new Position(0, -1), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive to end of queue 1", "Drive to end of queue from battery position 1", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(2,-5));
+        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive to end of queue 2", "Drive to end of queue from battery position 2", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(2,-5));
+        newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive to end of queue 3", "Drive to end of queue from battery position 3", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(0,-1));
+        newRobots.add(new NewTestRobot(new Position(1, 0), RobotState.TO_UNLOADING, Orientation.SOUTH, targets, 0, 1000)); //RobotState is arbitrary here
+        testScenarios.add(new ConcreteTestScenario("Drive to battery 1", "Drive to battery position 1", newRobots));
         
         newRobots = new ArrayList<>();
         targets = new ArrayList<>();
         targets.add(new Position(0,-2));
         newRobots.add(new NewTestRobot(new Position(1, 0), RobotState.TO_UNLOADING, Orientation.SOUTH, targets, 0, 1000)); //RobotState is arbitrary here
-        testScenarios.add(new ConcreteTestScenario("Drive to battery", "Drive to battery", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Drive to battery 2", "Drive to battery position 2", newRobots));
         
         newRobots = new ArrayList<>();
         targets = new ArrayList<>();
-        targets.add(new Position(1,-5));
-        targets.add(new Position(2,0));
+        targets.add(new Position(0,-3));
         newRobots.add(new NewTestRobot(new Position(1, 0), RobotState.TO_UNLOADING, Orientation.SOUTH, targets, 0, 1000)); //RobotState is arbitrary here
+        testScenarios.add(new ConcreteTestScenario("Drive to battery 3", "Drive to battery position 3", newRobots));
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(2,0));
+        newRobots.add(new NewTestRobot(new Position(1, 3), RobotState.TO_STATION, Orientation.SOUTH, targets, 0, 1000)); //RobotState is arbitrary here
         testScenarios.add(new ConcreteTestScenario("Drive to loading 1", "Drive to loading position from station entry", newRobots));
         
         newRobots = new ArrayList<>();
         targets = new ArrayList<>();
-        targets.add(new Position(1,-5));
         targets.add(new Position(2,0));
-        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_UNLOADING, Orientation.EAST, targets, 0, 1000)); //RobotState is arbitrary here
-        testScenarios.add(new ConcreteTestScenario("Drive to loading 2", "Drive to loading position from battery", newRobots)); 
+        newRobots.add(new NewTestRobot(new Position(0, -1), RobotState.TO_STATION, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive to loading 2", "Drive to loading position from battery position 1", newRobots)); 
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(2,0));
+        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_STATION, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive to loading 3", "Drive to loading position from battery position 2", newRobots)); 
+        
+        newRobots = new ArrayList<>();
+        targets = new ArrayList<>();
+        targets.add(new Position(2,0));
+        newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_STATION, Orientation.EAST, targets, 0, 1000));
+        testScenarios.add(new ConcreteTestScenario("Drive to loading 4", "Drive to loading position from battery position 3", newRobots)); 
         
         return testScenarios;
 	}
