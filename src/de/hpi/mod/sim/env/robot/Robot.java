@@ -218,6 +218,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
 	private void handleFinishedUnloading() {
+		if(manager.checkUnloadingPosition()) {
+    		invalidUnloadingPosition  = manager.currentPosition();
+    	}
+		
         boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
         if(!isInTest) {
