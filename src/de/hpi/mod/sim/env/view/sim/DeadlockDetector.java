@@ -12,8 +12,8 @@ import de.hpi.mod.sim.env.view.DriveSimFrame;
 public class DeadlockDetector {
 	
 	private long currentTime = System.currentTimeMillis();
-	private long defaultOffset = 10000;
-	private long offset = 10000;
+	private long defaultOffset = 7000;
+	private long offset = 7000;
 	private SimulationWorld simulationWorld;
 	private ScenarioManager scenarioManager;
 	private DriveSimFrame frame;
