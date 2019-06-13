@@ -161,7 +161,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         	id = ThreadLocalRandom.current().nextInt(unloadingRange/2, 3*unloadingRange/4);
         } else if (id > 40) {
         	id = ThreadLocalRandom.current().nextInt(unloadingRange/4, unloadingRange/2);
-        } else if (id > 20) {
+        } else if (id > 15) {
         	id = ThreadLocalRandom.current().nextInt(0, unloadingRange/4);
         } else {
         	id = ThreadLocalRandom.current().nextInt(-unloadingRange, 0);
@@ -185,11 +185,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         } else {
         	heights[Math.abs(id)/mapHeight]++;
         }
-        if(id > 0) {
-        	id += SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
-        } else {
-        	id -= SimulatorConfig.getChargingStationsInUse() * SimulatorConfig.getNotUsedRows();
-        }
+        
         return id;
     }
 

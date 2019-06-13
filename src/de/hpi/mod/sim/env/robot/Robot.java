@@ -36,7 +36,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private RobotState state = RobotState.TO_QUEUE;
     private boolean driving = false;
-    private boolean hasPackage = false;
 
     private boolean hasReservedBattery = false;
     
@@ -54,7 +53,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	private int initialDelay = 0;
 
 	private long initialNow;
-
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -103,7 +101,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	                handleFinishedCharging();
     	            } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
     	            	handleFinishedLoading();
-    	            } else if (state == RobotState.TO_UNLOADING && !hasPackage) {
+    	            } else if (state == RobotState.TO_UNLOADING && !manager.hasPackage()) {
     	                handleFinishedUnloading();
     	            } else if (state == RobotState.TO_STATION) {
     	                handleArriveAtStation();
@@ -199,7 +197,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(now < System.currentTimeMillis() - delay)
         {
     		packageID = scanner.getPackageID(stationID, this.pos());
-    		hasPackage = true;
+    		manager.setHasPackage(true);
     		if(!isInTest) {
     			drive.newTarget();
     			target = location.getUnloadingPositionFromID(packageID);
@@ -230,7 +228,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         	drive.newTarget();
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
-        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !hasPackage) {
+        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !manager.hasPackage()) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
         		stationID = dispatcher.getStationIDFromPosition(target);
@@ -249,12 +247,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     public void stop() {
         drive.stop();
-    }
-
-    @Override
-    public void unloaded() {
-        manager.startUnloading();
-        hasPackage = false;
     }
 
     @Override
@@ -305,11 +297,17 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean canUnloadToTarget() {
-        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&
-        		((manager.currentPosition().equals(target.getModified(-1,0)) && manager.currentFacing() == Orientation.NORTH) ||
-        		 (manager.currentPosition().equals(target.getModified(1,0)) && manager.currentFacing() == Orientation.SOUTH) ||
-        		 (manager.currentPosition().equals(target.getModified(0,-1)) && manager.currentFacing() == Orientation.WEST) ||
-        		 (manager.currentPosition().equals(target.getModified(0,1)) && manager.currentFacing() == Orientation.EAST) );
+        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&  grid.cellType(target) == CellType.BLOCK &&
+        		((manager.currentPosition().equals(target.getModified(-1,0)) ) || // && manager.currentFacing() == Orientation.NORTH) ||
+        		 (manager.currentPosition().equals(target.getModified(1,0)) ) || // && manager.currentFacing() == Orientation.SOUTH) ||
+        		 (manager.currentPosition().equals(target.getModified(0,-1)) ) || // && manager.currentFacing() == Orientation.WEST) ||
+        		 (manager.currentPosition().equals(target.getModified(0,1)) )); //&& manager.currentFacing() == Orientation.EAST) );
+    }
+    
+    @Override
+    public boolean canChargeAtTarget() {
+    	return this.pos().is(this.oldPos()) && grid.cellType(this.pos()) == CellType.STATION && 
+    			grid.cellType(target) == CellType.BATTERY && manager.currentPosition().equals(target.getModified(1,0));
     }
     
     public boolean hasReachedAllTargets() {
@@ -369,11 +367,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         drive.actionCompleted();
     }
 
-    @Override
-    public void unloadingCompleted() {
-        drive.unloaded();
-    }
-
     public int getID() {
         return robotID;
     }
@@ -419,7 +412,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     public boolean isHasPackage() {
-        return hasPackage;
+        return manager.hasPackage();
     }
 
     public static int incrementID() {

@@ -315,14 +315,13 @@ public class DriveSimFrame extends JFrame {
 		testListConstraints.gridheight = 5;
 		testListConstraints.fill = GridBagConstraints.HORIZONTAL;
 		testListConstraints.anchor = GridBagConstraints.PAGE_START;
-		testListScrollPane.setVisible(false);
 		add(testListScrollPane, testListConstraints);
 		
 		//Set up the color and size of the whole window
 		getContentPane().setBackground(MAIN_MENU_COLOR);
 		setBackground(MAIN_MENU_COLOR);
-		setMinimumSize(new Dimension(1022, 800));
-		setPreferredSize(new Dimension(1022, 800));
+		setMinimumSize(new Dimension(902, 800));
+		setPreferredSize(new Dimension(1212, 800));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
         setVisible(true);

@@ -35,11 +35,6 @@ public class DummyRobot implements ISensor, IRobotActors, IProcessor {
     }
 
     @Override
-    public void unloaded() {
-
-    }
-
-    @Override
     public Orientation posOrientation() {
         return null;
     }
@@ -122,5 +117,10 @@ public class DummyRobot implements ISensor, IRobotActors, IProcessor {
 	@Override
 	public int targetY() {
 		return 0;
+	}
+
+	@Override
+	public boolean canChargeAtTarget() {
+		return false;
 	}
 }

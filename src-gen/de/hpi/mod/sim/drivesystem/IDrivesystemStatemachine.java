@@ -9,8 +9,6 @@ public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
 	
 		public void raiseUnload();
 		
-		public void raiseUnloaded();
-		
 		public void raiseStop();
 		
 		public void raiseDataRefresh();
@@ -29,8 +27,6 @@ public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
 	
 	public interface SCIProcessor {
 	
-		public boolean isRaisedUnloaded();
-		
 		public boolean isRaisedArrived();
 		
 	}

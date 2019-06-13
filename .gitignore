@@ -3,3 +3,6 @@
 *.iml
 Tests
 *.DS_Store
+.tests
+.classpath
+.project

@@ -10,5 +10,4 @@ import de.hpi.mod.sim.env.robot.DriveSystemWrapper;
 public interface IProcessor {
 
     void arrived();
-    void unloaded();
 }

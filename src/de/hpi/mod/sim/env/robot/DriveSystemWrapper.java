@@ -85,8 +85,6 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
             actors.turnRight();
         if (machine.getSCIProcessor().isRaisedArrived())
             processor.arrived();
-        if (machine.getSCIProcessor().isRaisedUnloaded())
-            processor.unloaded();
     }
 
     @Override
@@ -103,12 +101,6 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     @Override
     public void unload() {
         machine.getSCInterface().raiseUnload();
-        update();
-    }
-
-    @Override
-    public void unloaded() {
-        machine.getSCInterface().raiseUnloaded();
         update();
     }
 
@@ -288,7 +280,6 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
 
 	@Override
 	public boolean canChargeAtTarget() {
-		// TODO Auto-generated method stub
-		return false;
+		return data.canChargeAtTarget();
 	}
 }

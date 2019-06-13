@@ -598,6 +598,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 		int x, y;
 
 		y = (Math.abs(unloadingID) % SimulatorConfig.getMapHeight()) * 3 + 4;
+		y += 3*SimulatorConfig.getNotUsedRows();
 		x = unloadingID / SimulatorConfig.getMapHeight() * 3;
 		
 		// Hotfix to make the unloading shafts the targets!
