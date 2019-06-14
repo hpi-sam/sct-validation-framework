@@ -26,6 +26,18 @@ public class Position {
 
         return x == position.x && y == position.y;
     }
+    
+    public boolean fuzzyEquals(Position p) {
+    	if(((Math.abs(this.getX() - p.getX()) <= 1 && Math.abs(this.getY() - p.getY()) == 0) ||
+    			(Math.abs(this.getX() - p.getX()) == 0 && Math.abs(this.getY() - p.getY()) <= 1)) &&
+    			this.getY()>0) {
+    		return true;
+    	}
+    	if(this.equals(p)) {
+    		return true;
+    	}
+    	return false;
+    }
 
     @Override
     public int hashCode() {

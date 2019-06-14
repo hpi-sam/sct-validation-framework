@@ -54,6 +54,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private long initialNow;
 
+	private boolean fuzzyTestCompletion;
+
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing) {
@@ -70,11 +72,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     /**
      * This constructor is only used for test-scenarios and sets the Robots state to Scenario
+     * @param fuzzyEnd 
+     * @param hasReservedBattery2 
      * @param state 
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
-                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay) {
+                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean hasReservedBattery) {
         this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
@@ -82,6 +86,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         this.initialDelay  = initialDelay;
         this.initialNow = System.currentTimeMillis();
         this.state = initialState;
+        this.fuzzyTestCompletion = fuzzyEnd;
+        this.hasReservedBattery = hasReservedBattery;
     }
 
     public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, ILocation simulator,
@@ -110,9 +116,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	            }
             	}
             }
-            if(!testPositionTargets.isEmpty()) {
-            	//startDriving();
-            }
+    		/*if(!testPositionTargets.isEmpty()) {
+            	startDriving();
+            }*/
             drive.dataRefresh();
     	}
     }
@@ -134,7 +140,20 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         if (hasReservedBattery) {
         	startDrivingToCharging();
         	if(dispatcher.requestEnteringBattery(robotID, stationID)) {
-        		batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
+        		if(!isInTest) {
+        			batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
+        		} else {
+        			target = testPositionTargets.get(0);
+        			System.out.println(target.getY());
+        			if(Math.abs(target.getY()) == 1){
+        				batteryID = 2;
+        			} else if (Math.abs(target.getY()) == 2) {
+        				batteryID = 1;
+        			} else {
+        				batteryID = 0;
+        			}
+        			testPositionTargets.remove(0);
+        		}
         		target = location.getBatteryPositionAtStation(stationID,
                        batteryID);
                 state = RobotState.TO_BATTERY;
@@ -174,8 +193,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private void handleArriveAtQueue() {
         dispatcher.reportEnteringQueueAtStation(robotID, stationID);
+        drive.newTarget();
     	if(!isInTest) {
-    		drive.newTarget();
         	target = location.getLoadingPositionAtStation(stationID);
         } else {
         	if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
@@ -203,7 +222,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     			startDrivingToUnload();
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
-    			if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
+    			startDrivingToUnload();
+    			if(manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) {
             		target = testPositionTargets.get(0);
             		testPositionTargets.remove(0);
             	}
@@ -233,11 +253,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 		
         boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
+        drive.newTarget();
         if(!isInTest) {
-        	drive.newTarget();
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
-        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && !manager.hasPackage()) {
+        	if((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && !manager.hasPackage()) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
         		stationID = dispatcher.getStationIDFromPosition(target);
@@ -298,10 +318,18 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     @Override
     public boolean isOnTarget() {
-        return isOnTargetOrNearby() && this.pos().equals(this.oldPos());
+    	if(this.fuzzyTestCompletion) {
+    		return isOnTargetFuzzy() && this.pos().equals(this.oldPos());
+    	} else {
+    		return isOnTargetOrNearby() && this.pos().equals(this.oldPos());
+    	}
     }
 
-    public boolean isOnTargetOrNearby() {
+    private boolean isOnTargetFuzzy() {
+		return manager.currentPosition().fuzzyEquals(target);
+	}
+
+	public boolean isOnTargetOrNearby() {
         return manager.currentPosition().equals(target);
     }
 

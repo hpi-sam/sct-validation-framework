@@ -35,12 +35,14 @@ public class DriveManager implements IRobotActors {
     private float battery = ThreadLocalRandom.current().nextInt((int) (SimulatorConfig.getMinBatteryRatio()*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
     
     private int maxDelay = 0;
-	private boolean isWaitingToMove = false;
+	private boolean isWaitingToMoveForward = false;
 	private boolean isWaitingToTurningLeft = false;
 	private boolean isWaitingToTurningRight = false;
 	private boolean isWaitingToUnloading = false;
 
 	private boolean hasPackage = false;
+
+	private boolean isWaitingToMoveBackward;
 
 
     public DriveManager(DriveListener listener, Position position, Orientation facing) {
@@ -57,10 +59,14 @@ public class DriveManager implements IRobotActors {
     public void update(float delta) {
     	if(maxDelay > 0) {
     		if(delay + now <= System.currentTimeMillis()) {
-    			if (isWaitingToMove) {
+    			if (isWaitingToMoveForward) {
     				performDriveForward();
     	            isMoving = true;
-    	            isWaitingToMove = false;
+    	            isWaitingToMoveForward = false;
+    			} else if (isWaitingToMoveBackward) {
+    				performDriveBackward();
+    				isMoving = true;
+    				isWaitingToMoveBackward = false;
     	        } else if (isWaitingToTurningLeft ) { 
     	            performTurnLeft();
     	            isTurningLeft = true;
@@ -181,7 +187,7 @@ public class DriveManager implements IRobotActors {
 	        	if(maxDelay > 0) {
 	        		delay = getCustomRandomisedDelay(maxDelay);
 	        		now = System.currentTimeMillis();
-	        		isWaitingToMove = true;
+	        		isWaitingToMoveForward = true;
 	        	} else {
 	        		performDriveForward();
 	        	}
@@ -199,7 +205,7 @@ public class DriveManager implements IRobotActors {
 	        	if(maxDelay > 0) {
 	        		delay = getCustomRandomisedDelay(maxDelay);
 	        		now = System.currentTimeMillis();
-	        		isWaitingToMove = true;
+	        		isWaitingToMoveBackward = true;
 	        	} else {
 	        		performDriveBackward();
 	        	}

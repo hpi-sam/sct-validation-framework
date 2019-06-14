@@ -54,17 +54,19 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * @param position The Waypoint where the Robot will be placed
      * @param state 
      * @param facing The Orientation of the Robot at its starting position
+     * @param fuzzyEnd 
+     * @param hasReservedBattery 
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets, int delay, int initialDelay) {
+    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets, int delay, int initialDelay, boolean fuzzyEnd, boolean hasReservedBattery) {
     	
         int robotID = Robot.incrementID();
         Robot robot = new Robot(
                 robotID,
                 0,
                 grid, stations, this, this,
-                position, state, facing, targets, delay, initialDelay);
+                position, state, facing, targets, delay, initialDelay, fuzzyEnd, hasReservedBattery);
         robots.add(robot);
         return robot;
     }

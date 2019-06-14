@@ -418,7 +418,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		drive_System_unloading__unloading_turning,
 		drive_System_unloading__unloading_waiting_for_data,
 		drive_System_entering_charger,
-		drive_System_entering_charger__startCharging_unloading,
+		drive_System_entering_charger__startCharging_parking,
 		drive_System_entering_charger__startCharging_turning,
 		drive_System_entering_charger__startCharging_waiting_for_data,
 		$NullState$
@@ -621,8 +621,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 			case drive_System_unloading__unloading_waiting_for_data:
 				drive_System_unloading__unloading_waiting_for_data_react(true);
 				break;
-			case drive_System_entering_charger__startCharging_unloading:
-				drive_System_entering_charger__startCharging_unloading_react(true);
+			case drive_System_entering_charger__startCharging_parking:
+				drive_System_entering_charger__startCharging_parking_react(true);
 				break;
 			case drive_System_entering_charger__startCharging_turning:
 				drive_System_entering_charger__startCharging_turning_react(true);
@@ -762,8 +762,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_entering_charger:
 			return stateVector[0].ordinal() >= State.
 					drive_System_entering_charger.ordinal()&& stateVector[0].ordinal() <= State.drive_System_entering_charger__startCharging_waiting_for_data.ordinal();
-		case drive_System_entering_charger__startCharging_unloading:
-			return stateVector[0] == State.drive_System_entering_charger__startCharging_unloading;
+		case drive_System_entering_charger__startCharging_parking:
+			return stateVector[0] == State.drive_System_entering_charger__startCharging_parking;
 		case drive_System_entering_charger__startCharging_turning:
 			return stateVector[0] == State.drive_System_entering_charger__startCharging_turning;
 		case drive_System_entering_charger__startCharging_waiting_for_data:
@@ -1165,7 +1165,7 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	}
 	
 	private void effect_Drive_System_entering_charger__startCharging__choice_1_tr1() {
-		enterSequence_Drive_System_entering_charger__startCharging_unloading_default();
+		enterSequence_Drive_System_entering_charger__startCharging_parking_default();
 	}
 	
 	private void effect_Drive_System_entering_charger__startCharging__choice_1_tr0() {
@@ -1285,8 +1285,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		sCIActors.raiseTurnLeft();
 	}
 	
-	/* Entry action for state 'unloading'. */
-	private void entryAction_Drive_System_entering_charger__startCharging_unloading() {
+	/* Entry action for state 'parking'. */
+	private void entryAction_Drive_System_entering_charger__startCharging_parking() {
 		sCIActors.raiseDriveBackward();
 	}
 	
@@ -1526,11 +1526,11 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		enterSequence_Drive_System_entering_charger__startCharging_default();
 	}
 	
-	/* 'default' enter sequence for state unloading */
-	private void enterSequence_Drive_System_entering_charger__startCharging_unloading_default() {
-		entryAction_Drive_System_entering_charger__startCharging_unloading();
+	/* 'default' enter sequence for state parking */
+	private void enterSequence_Drive_System_entering_charger__startCharging_parking_default() {
+		entryAction_Drive_System_entering_charger__startCharging_parking();
 		nextStateIndex = 0;
-		stateVector[0] = State.drive_System_entering_charger__startCharging_unloading;
+		stateVector[0] = State.drive_System_entering_charger__startCharging_parking;
 	}
 	
 	/* 'default' enter sequence for state turning */
@@ -1805,8 +1805,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		exitSequence_Drive_System_entering_charger__startCharging();
 	}
 	
-	/* Default exit sequence for state unloading */
-	private void exitSequence_Drive_System_entering_charger__startCharging_unloading() {
+	/* Default exit sequence for state parking */
+	private void exitSequence_Drive_System_entering_charger__startCharging_parking() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NullState$;
 	}
@@ -1907,8 +1907,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		case drive_System_unloading__unloading_waiting_for_data:
 			exitSequence_Drive_System_unloading__unloading_waiting_for_data();
 			break;
-		case drive_System_entering_charger__startCharging_unloading:
-			exitSequence_Drive_System_entering_charger__startCharging_unloading();
+		case drive_System_entering_charger__startCharging_parking:
+			exitSequence_Drive_System_entering_charger__startCharging_parking();
 			break;
 		case drive_System_entering_charger__startCharging_turning:
 			exitSequence_Drive_System_entering_charger__startCharging_turning();
@@ -2105,8 +2105,8 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	/* Default exit sequence for region _startCharging */
 	private void exitSequence_Drive_System_entering_charger__startCharging() {
 		switch (stateVector[0]) {
-		case drive_System_entering_charger__startCharging_unloading:
-			exitSequence_Drive_System_entering_charger__startCharging_unloading();
+		case drive_System_entering_charger__startCharging_parking:
+			exitSequence_Drive_System_entering_charger__startCharging_parking();
 			break;
 		case drive_System_entering_charger__startCharging_turning:
 			exitSequence_Drive_System_entering_charger__startCharging_turning();
@@ -3028,12 +3028,12 @@ public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 		return did_transition;
 	}
 	
-	private boolean drive_System_entering_charger__startCharging_unloading_react(boolean try_transition) {
+	private boolean drive_System_entering_charger__startCharging_parking_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (sCInterface.actionCompleted) {
-				exitSequence_Drive_System_entering_charger__startCharging_unloading();
+				exitSequence_Drive_System_entering_charger__startCharging_parking();
 				react_Drive_System_entering_charger__startCharging__exit_Default();
 			} else {
 				did_transition = false;
