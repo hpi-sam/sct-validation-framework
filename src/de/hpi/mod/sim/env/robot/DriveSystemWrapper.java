@@ -105,12 +105,6 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     }
 
     @Override
-    public void stop() {
-        machine.getSCInterface().raiseStop();
-        update();
-    }
-
-    @Override
     public void newTarget() {
         machine.getSCInterface().raiseNewTarget();
         update();

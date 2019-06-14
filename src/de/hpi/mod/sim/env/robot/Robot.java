@@ -263,10 +263,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         //drive.newTarget();
     }
 
-    public void stop() {
-        drive.stop();
-    }
-
     @Override
     public Orientation posOrientation() {
         return manager.currentFacing();

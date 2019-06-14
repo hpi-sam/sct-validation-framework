@@ -11,7 +11,6 @@ import de.hpi.mod.sim.env.robot.Robot;
 public interface IDriveSystem {
 
     void unload();
-    void stop();
     void dataRefresh();
     void newTarget();
     void newUnloadingTarget();
