@@ -14,6 +14,8 @@ public interface IDriveSystem {
     void stop();
     void dataRefresh();
     void newTarget();
+    void newUnloadingTarget();
+    void newChargingTarget();
     void actionCompleted();
     void close();
     String getMachineState();

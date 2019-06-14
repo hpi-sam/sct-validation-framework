@@ -209,12 +209,17 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     		}
             dispatcher.reportLeaveStation(robotID, stationID);
             state = RobotState.TO_UNLOADING;
-            startDriving();
+            startDrivingToUnload();
             now = 0;
         }
     }
 
-    private void handleArriveAtUnloading() {
+    private void startDrivingToUnload() {
+		driving = true;
+		drive.newUnloadingTarget();
+	}
+
+	private void handleArriveAtUnloading() {
     	if(manager.checkUnloadingPosition()) {
     		invalidUnloadingPosition  = manager.currentPosition();
     	}
@@ -240,10 +245,19 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         }
         state = RobotState.TO_STATION;
         hasReservedBattery = needsLoading;
-        startDriving();
+        if(needsLoading) {
+        	startDrivingToCharging();
+        } else {
+        	startDriving();
+        }
     }
 
-    private void startDriving() {
+    private void startDrivingToCharging() {
+		driving = true;
+		drive.newChargingTarget();		
+	}
+
+	private void startDriving() {
         driving = true;
         drive.getUpdate();
         //drive.newTarget();
