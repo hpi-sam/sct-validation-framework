@@ -182,7 +182,6 @@ public class DriveManager implements IRobotActors {
     @Override
     public void driveForward() {
     	if(!animationRunning()) {  	
-	        decreaseBattery();
 	        if (hasPower()) {
 	        	if(maxDelay > 0) {
 	        		delay = getCustomRandomisedDelay(maxDelay);
@@ -200,7 +199,6 @@ public class DriveManager implements IRobotActors {
 	@Override
 	public void driveBackward() {
 		if(!animationRunning()) { //TODO: Do this also for other main operations
-			decreaseBattery();
 	        if (hasPower()) {
 	        	if(maxDelay > 0) {
 	        		delay = getCustomRandomisedDelay(maxDelay);
@@ -216,7 +214,7 @@ public class DriveManager implements IRobotActors {
 	private void performDriveBackward() {
 		oldPosition = currentPosition;
 		currentPosition = Position.nextPositionInOppositeOrientation(targetFacing, oldPosition);
-		battery -= SimulatorConfig.getBatteryLoss();
+		decreaseBattery();
 		isMoving = true;
 	}
 
@@ -240,14 +238,13 @@ public class DriveManager implements IRobotActors {
 	private void performDriveForward() {
 		oldPosition = currentPosition;
 		currentPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
-		battery -= SimulatorConfig.getBatteryLoss();
+		decreaseBattery();
 		isMoving = true;
 	}
 
     @Override
     public void turnLeft() {
     	if(!animationRunning()) {
-    		decreaseBattery();
             if (hasPower()) {
             	if(maxDelay > 0) {
             		delay = getCustomRandomisedDelay(maxDelay/3);
@@ -263,13 +260,13 @@ public class DriveManager implements IRobotActors {
 	private void performTurnLeft() {
 		oldFacing = targetFacing;
 		targetFacing = targetFacing.getTurnedLeft();
+		decreaseBattery();
 		isTurningLeft = true;
 	}
 
     @Override
     public void turnRight() {
     	if(!animationRunning()) {
-    		decreaseBattery();
             if (hasPower()) {
             	if(maxDelay > 0) {
             		delay = getCustomRandomisedDelay(maxDelay/3);
@@ -285,6 +282,7 @@ public class DriveManager implements IRobotActors {
 	private void performTurnRight() {
 		oldFacing = targetFacing;
 		targetFacing = targetFacing.getTurnedRight();
+		decreaseBattery();
 		isTurningRight = true;
 	}
 
@@ -308,6 +306,10 @@ public class DriveManager implements IRobotActors {
         battery -= SimulatorConfig.getBatteryLoss();
         if (battery < 0)
             battery = 0;
+    }
+    
+    private void decreasePerTick() {
+    	//TODO: Implement and use this
     }
 
     private boolean hasPower() {
