@@ -110,8 +110,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	            }
             	}
             }
-            if(!isInTest || !testPositionTargets.isEmpty()) {
-            	startDriving();
+            if(!testPositionTargets.isEmpty()) {
+            	//startDriving();
             }
             drive.dataRefresh();
     	}
@@ -131,8 +131,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtStation() {
-    	drive.newTarget();
         if (hasReservedBattery) {
+        	startDrivingToCharging();
         	if(dispatcher.requestEnteringBattery(robotID, stationID)) {
         		batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
         		target = location.getBatteryPositionAtStation(stationID,
@@ -142,6 +142,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
                 startDriving();
         	}
         } else {
+        	drive.newTarget();
         	if (dispatcher.requestEnteringStation(robotID, stationID)) {
         		target = location.getQueuePositionAtStation(stationID);
                 state = RobotState.TO_QUEUE;
@@ -199,7 +200,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     		packageID = scanner.getPackageID(stationID, this.pos());
     		manager.setHasPackage(true);
     		if(!isInTest) {
-    			drive.newTarget();
+    			startDrivingToUnload();
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
     			if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
@@ -209,7 +210,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     		}
             dispatcher.reportLeaveStation(robotID, stationID);
             state = RobotState.TO_UNLOADING;
-            startDrivingToUnload();
             now = 0;
         }
     }
@@ -245,11 +245,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         }
         state = RobotState.TO_STATION;
         hasReservedBattery = needsLoading;
-        if(needsLoading) {
-        	startDrivingToCharging();
-        } else {
-        	startDriving();
-        }
+        startDriving();
     }
 
     private void startDrivingToCharging() {
