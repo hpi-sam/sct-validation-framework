@@ -110,6 +110,18 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         machine.getSCInterface().raiseNewTarget();
         update();
     }
+    
+    @Override
+    public void newUnloadingTarget() {
+    	machine.getSCInterface().raiseNewUnloadingTarget();
+    	update();
+    }
+    
+    @Override
+    public void newChargingTarget() {
+    	machine.getSCInterface().raiseNewChargingTarget();
+    	update();
+    }
 
     @Override
     public void actionCompleted() {
