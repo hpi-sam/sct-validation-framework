@@ -4,7 +4,6 @@ import de.hpi.mod.sim.env.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -67,14 +66,21 @@ public class ServerGridManagement implements ISensorDataProvider {
 	}
 	
 	public boolean invalidManoeuvre(Position oldPos, Position pos) {
+		int x_coordinate = Math.abs(pos.getX() % 3);
+		int x_coordinateOld = Math.abs(oldPos.getX() % 3);
 		if(pos.getY() >= 1) {
 			return false;
 		}
-		if(pos.getX() % 3 == 2 && oldPos.getX() % 3 == 0) {
+		if((x_coordinate == 2 && x_coordinateOld == 0) || (x_coordinate == 0 && x_coordinateOld == 2)) {
 			return true;
 		}
-		if(oldPos.getX() % 3 == 1 && oldPos.getY() > -5) {
-			if(pos.getX() % 3 == 2) {
+		if(x_coordinateOld == 1 && oldPos.getY() > -5) {
+			if(x_coordinate == 2) {
+				return true;
+			}
+		}
+		if(x_coordinate % 3 == 1 && pos.getY() > -5) {
+			if(x_coordinateOld == 2) {
 				return true;
 			}
 		}

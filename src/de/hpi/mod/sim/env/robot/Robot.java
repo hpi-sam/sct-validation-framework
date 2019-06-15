@@ -144,7 +144,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         			batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
         		} else {
         			target = testPositionTargets.get(0);
-        			System.out.println(target.getY());
         			if(Math.abs(target.getY()) == 1){
         				batteryID = 2;
         			} else if (Math.abs(target.getY()) == 2) {
