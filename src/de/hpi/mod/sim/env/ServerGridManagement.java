@@ -71,8 +71,17 @@ public class ServerGridManagement implements ISensorDataProvider {
 		if(pos.getY() >= 1) {
 			return false;
 		}
-		if((x_coordinate == 2 && x_coordinateOld == 0) || (x_coordinate == 0 && x_coordinateOld == 2)) {
-			return true;
+		
+		if(pos.getX() < 0 || oldPos.getX() < 0) {
+			if((x_coordinate == 1 && x_coordinateOld == 0) || (x_coordinate == 0 && x_coordinateOld == 1)) {
+				System.out.println("First");
+				return true;
+			}
+		} else {
+			if((x_coordinate == 2 && x_coordinateOld == 0) || (x_coordinate == 0 && x_coordinateOld == 2)) {
+				System.out.println("First");
+				return true;
+			}
 		}
 		if(x_coordinateOld == 1 && oldPos.getY() > -5) {
 			if(x_coordinate == 2) {
