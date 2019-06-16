@@ -8,6 +8,7 @@ import de.hpi.mod.sim.env.view.panels.*;
 import de.hpi.mod.sim.env.view.sim.CollisionDetector;
 import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
 import de.hpi.mod.sim.env.view.sim.InvalidPositionDetector;
+import de.hpi.mod.sim.env.view.sim.InvalidTurningDetector;
 import de.hpi.mod.sim.env.view.sim.InvalidUnloadingDetector;
 import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -46,6 +47,7 @@ public class DriveSimFrame extends JFrame {
     private boolean running = true;
 	private InvalidPositionDetector invalidPositionDetector;
 	private InvalidUnloadingDetector invalidUnloadingDetector;
+	private InvalidTurningDetector invalidTurningDetector;
 
 	public static Color MAIN_MENU_COLOR = new Color(0xfff3e2);
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
@@ -100,6 +102,11 @@ public class DriveSimFrame extends JFrame {
 	public void reportInvalidPosition(Robot robot1, Position invalidPos) {
 		displayMessage("Robot at invalid position at: (" + String.valueOf(invalidPos.getX()) + 
 				"," + String.valueOf(invalidPos.getY()) + ")!");
+		forbidFurtherRunning();
+	}
+	
+	public void reportInvalidTurning(Robot robot) {
+		displayMessage("Robot destroyed charging apparature because robot turned on battery!");
 		forbidFurtherRunning();
 	}
 	
@@ -168,10 +175,12 @@ public class DriveSimFrame extends JFrame {
         collisionDetector = new CollisionDetector(scenarioManager, world, this);
         invalidPositionDetector = new InvalidPositionDetector(scenarioManager, world, this);
         invalidUnloadingDetector = new InvalidUnloadingDetector(scenarioManager, world, this);
+        invalidTurningDetector = new InvalidTurningDetector(scenarioManager, world, this);
         scenarioManager.setDeadlockDetector(deadlockDetector);
         scenarioManager.setCollisionDetector(collisionDetector);
         scenarioManager.setInvalidPositionDetector(invalidPositionDetector);
         scenarioManager.setInvalidUnloadingDetector(invalidUnloadingDetector);
+        scenarioManager.setInvalidTurningDetector(invalidTurningDetector);
 	}
     
     private void initializePanels() {
@@ -411,6 +420,7 @@ public class DriveSimFrame extends JFrame {
         collisionDetector.update();
         invalidPositionDetector.update();
         invalidUnloadingDetector.update();
+        invalidTurningDetector.update();
         sim.getWorld().update(delta);
 
         this.repaint();

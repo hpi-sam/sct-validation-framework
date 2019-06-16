@@ -41,6 +41,7 @@ public class ScenarioManager {
 	private List<TestScenario> tests = new ArrayList<>();
 	private InvalidUnloadingDetector invalidUnloadingDetector;
 	private TestCaseGenerator testCaseGenerator;
+	private InvalidTurningDetector invalidTurningDetector;
 
 
     public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector, DriveSimFrame frame) {
@@ -85,6 +86,7 @@ public class ScenarioManager {
         collisionDetector.reset();
         invalidPositionDetector.reset();
         invalidUnloadingDetector.reset();
+        invalidTurningDetector.reset();
         if(!world.isRunning()) 
         	world.toggleRunning();
         
@@ -370,6 +372,11 @@ public class ScenarioManager {
 
 	public void setInvalidUnloadingDetector(InvalidUnloadingDetector invalidUnloadingDetector) {
 		this.invalidUnloadingDetector = invalidUnloadingDetector;
+		
+	}
+
+	public void setInvalidTurningDetector(InvalidTurningDetector invalidTurningDetector) {
+		this.invalidTurningDetector = invalidTurningDetector;
 		
 	}
 }

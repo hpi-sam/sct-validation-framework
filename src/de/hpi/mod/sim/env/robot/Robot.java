@@ -171,8 +171,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleArriveAtBattery() {
-        dispatcher.reportChargingAtStation(robotID, stationID, batteryID);
-        manager.setLoading(true);
+        if(manager.currentFacing() == Orientation.EAST) {
+        	dispatcher.reportChargingAtStation(robotID, stationID, batteryID);
+        	manager.setLoading(true);
+        }
     }
 
     /**
