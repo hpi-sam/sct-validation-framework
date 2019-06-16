@@ -320,13 +320,22 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public boolean isOnTarget() {
     	if(this.fuzzyTestCompletion) {
-    		return isOnTargetFuzzy() && this.pos().equals(this.oldPos());
+    		return isOnTargetFuzzy() && this.pos().equals(this.oldPos()) && correctFacing(this.pos());
     	} else {
-    		return isOnTargetOrNearby() && this.pos().equals(this.oldPos());
+    		return isOnTargetOrNearby() && this.pos().equals(this.oldPos()) && correctFacing(this.pos());
     	}
     }
 
-    private boolean isOnTargetFuzzy() {
+    private boolean correctFacing(Position position) {
+		if(grid.cellType(position) == CellType.BATTERY) {
+			if(manager.currentFacing() != Orientation.EAST) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isOnTargetFuzzy() {
 		return manager.currentPosition().fuzzyEquals(target);
 	}
 
