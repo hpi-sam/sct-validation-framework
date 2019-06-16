@@ -394,6 +394,22 @@ public class DriveManager implements IRobotActors {
 	public boolean checkUnloadingPosition() {
 		if(currentPosition.getY() <= 1 || (currentPosition.getY()%3 != 0 && currentPosition.getX()%3 != 0)) {
 			return true;
+		} else if((currentPosition.getX() % 3 == 2 || currentPosition.getX() % 3 == -1) && currentPosition.getY() % 3 == 0) {
+			if(targetFacing != Orientation.NORTH) {
+				return true;
+			}
+		} else if((currentPosition.getX() % 3 == 1 || currentPosition.getX() % 3 == -2) && currentPosition.getY() % 3 == 0) {
+			if(targetFacing != Orientation.SOUTH) {
+				return true;
+			}
+		} else if(currentPosition.getX() % 3 == 0 && currentPosition.getY() % 3 == 1) {
+			if(targetFacing != Orientation.EAST) {
+				return true;
+			}
+		} else if(currentPosition.getX() % 3 == 0 && currentPosition.getY() % 3 == 2) {
+			if(targetFacing != Orientation.WEST) {
+				return true;
+			}
 		}
 		return false;
 	}
