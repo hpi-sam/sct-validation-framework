@@ -3,9 +3,7 @@ package de.hpi.mod.sim.env.view.sim;
 import java.util.List;
 
 import de.hpi.mod.sim.env.model.CellType;
-import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
-import de.hpi.mod.sim.env.robot.Robot.RobotState;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 
 public class InvalidTurningDetector {

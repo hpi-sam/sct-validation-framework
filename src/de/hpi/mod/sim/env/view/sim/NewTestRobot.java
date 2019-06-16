@@ -19,6 +19,7 @@ public class NewTestRobot extends NewRobot{
 	private List<Position> targetsCopy = new ArrayList<Position>();
 	private boolean fuzzyEnd = false;
 	private boolean hasReservedBattery = false;
+	private boolean hardArrivedConstraint = false;
 
     public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
         this.position = position;
@@ -60,6 +61,43 @@ public class NewTestRobot extends NewRobot{
         this.initialDelay = 0;
         this.fuzzyEnd  = fuzzy; 
 	}
+    
+    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy, boolean initialBatteryStatus) {
+    	this.position = position;
+        this.state = startingState;
+        this.targets = targets;
+        this.targetsCopy.addAll(targets);
+        this.facing = facing;
+        this.robotSpecificDelay = 0;
+        this.initialDelay = 0;
+        this.fuzzyEnd  = fuzzy; 
+        this.hasReservedBattery = initialBatteryStatus;
+	}
+    
+    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy, boolean initialBatteryStatus, boolean hardArrivedConstraint) {
+		this.position = position;
+        this.state = startingState;
+        this.targets = targets;
+        this.targetsCopy.addAll(targets);
+        this.facing = facing;
+        this.robotSpecificDelay = 0;
+        this.initialDelay = 0;
+        this.fuzzyEnd  = fuzzy; 
+        this.hasReservedBattery  = initialBatteryStatus;
+        this.hardArrivedConstraint  = hardArrivedConstraint;
+	}
+    
+    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
+			int initialDelay, boolean fuzzy) {
+		this.position = position;
+        this.state = startingState;
+        this.targets = targets;
+        this.targetsCopy.addAll(targets);
+        this.facing = facing;
+        this.robotSpecificDelay = initialDelay;
+        this.initialDelay = delay;
+        this.fuzzyEnd  = fuzzy;
+	}
 
 	public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
 			int initialDelay, boolean fuzzy, boolean initialBatteryStatus) {
@@ -73,10 +111,24 @@ public class NewTestRobot extends NewRobot{
         this.fuzzyEnd  = fuzzy; 
         this.hasReservedBattery  = initialBatteryStatus;
 	}
+	
+	public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
+			int initialDelay, boolean fuzzy, boolean initialBatteryStatus, boolean hardArrivedConstraint) {
+		this.position = position;
+        this.state = startingState;
+        this.targets = targets;
+        this.targetsCopy.addAll(targets);
+        this.facing = facing;
+        this.robotSpecificDelay = initialDelay;
+        this.initialDelay = delay;
+        this.fuzzyEnd  = fuzzy; 
+        this.hasReservedBattery  = initialBatteryStatus;
+        this.hardArrivedConstraint  = hardArrivedConstraint;
+	}
 
 	@Override
     public Robot register(SimulationWorld simulationWorld) {
-        return simulationWorld.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd, hasReservedBattery);
+        return simulationWorld.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd, hasReservedBattery, hardArrivedConstraint);
     }
 
     @Override

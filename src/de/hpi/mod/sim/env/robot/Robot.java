@@ -54,7 +54,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
 	private long initialNow;
 
-	private boolean fuzzyTestCompletion;
+	private boolean fuzzyTestCompletion = false;
+
+	private boolean hardArrivedConstraint = false;
+
+	private boolean gotArrived = true;
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -73,12 +77,13 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     /**
      * This constructor is only used for test-scenarios and sets the Robots state to Scenario
      * @param fuzzyEnd 
+     * @param hardArrivedConstraint 
      * @param hasReservedBattery2 
      * @param state 
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
-                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean hasReservedBattery) {
+                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean hasReservedBattery, boolean hardArrivedConstraint) {
         this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
@@ -88,6 +93,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         this.state = initialState;
         this.fuzzyTestCompletion = fuzzyEnd;
         this.hasReservedBattery = hasReservedBattery;
+        this.hardArrivedConstraint = hardArrivedConstraint;
     }
 
     public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, ILocation simulator,
@@ -128,6 +134,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      */
     @Override
     public void arrived() {
+    	if(isInTest) {
+    		gotArrived = true;
+    	}
         driving = false;
         if (state == RobotState.TO_UNLOADING) {
             handleArriveAtUnloading();
@@ -198,9 +207,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(!isInTest) {
         	target = location.getLoadingPositionAtStation(stationID);
         } else {
-        	if(manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) {
+        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && (!hardArrivedConstraint || gotArrived)) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
+        		gotArrived = false;
         	}
         }
         state = RobotState.TO_LOADING;
@@ -224,9 +234,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
     			startDrivingToUnload();
-    			if(manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) {
+    			if((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && (!hardArrivedConstraint || gotArrived)) {
             		target = testPositionTargets.get(0);
             		testPositionTargets.remove(0);
+            		gotArrived = false;
             	}
     		}
             dispatcher.reportLeaveStation(robotID, stationID);
@@ -258,10 +269,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         if(!isInTest) {
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
-        	if((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && !manager.hasPackage()) {
+        	if(((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && !manager.hasPackage()) && (!hardArrivedConstraint || gotArrived)) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
         		stationID = dispatcher.getStationIDFromPosition(target);
+        		gotArrived = false;
         	}
         }
         state = RobotState.TO_STATION;
@@ -322,7 +334,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(this.fuzzyTestCompletion) {
     		return isOnTargetFuzzy() && this.pos().equals(this.oldPos()) && correctFacing(this.pos());
     	} else {
-    		return isOnTargetOrNearby() && this.pos().equals(this.oldPos()) && correctFacing(this.pos());
+    		return isOnTargetOrNearby() && this.pos().equals(this.oldPos())  && correctFacing(this.pos());
     	}
     }
 
@@ -359,7 +371,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
     
     public boolean hasReachedAllTargets() {
-    	return testPositionTargets.isEmpty() && this.isOnTarget();
+    	return testPositionTargets.isEmpty() && this.isOnTarget() && (!hardArrivedConstraint || gotArrived);
     }
 
     @Override

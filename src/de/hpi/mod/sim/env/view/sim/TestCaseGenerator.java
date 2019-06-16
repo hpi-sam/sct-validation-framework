@@ -521,16 +521,16 @@ public class TestCaseGenerator {
 		biasY = rand.nextInt(5);
 		newRobots = new ArrayList<>();
 		targetsRobotOne = new ArrayList<>();
-        targetsRobotOne.add(new Position(-8+biasX*3,8+biasY*3));
-        newRobots.add(new NewTestRobot(new Position(-9+biasX*3, 8+biasY*3), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotOne, 1000, 3000));
+        targetsRobotOne.add(new Position(-8+biasX*3,7+biasY*3));
+        newRobots.add(new NewTestRobot(new Position(-9+biasX*3, 7+biasY*3), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotOne, 1000, 3000));
         testScenarios.add(new ConcreteTestScenario("Entering east", "Entering crossroad east", newRobots));
         
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
 		newRobots = new ArrayList<>();
 		targetsRobotOne = new ArrayList<>();
-        targetsRobotOne.add(new Position(-7+biasX*3,7+biasY*3));
-        newRobots.add(new NewTestRobot(new Position(-6+biasX*3, 7+biasY*3), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne, 1000, 3000));
+        targetsRobotOne.add(new Position(-7+biasX*3,8+biasY*3));
+        newRobots.add(new NewTestRobot(new Position(-6+biasX*3, 8+biasY*3), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne, 1000, 3000));
         testScenarios.add(new ConcreteTestScenario("Entering west", "Entering crossroad west", newRobots));
         
         return testScenarios;

@@ -203,8 +203,8 @@ public class SimulationWorld {
 		return addRobotRunner(() -> simulator.addRobot());
 	}
 
-	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets, int delay, int initialDelay, boolean fuzzyEnd, boolean hasReservedBattery) {
-		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets, delay, initialDelay, fuzzyEnd, hasReservedBattery));
+	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets, int delay, int initialDelay, boolean fuzzyEnd, boolean hasReservedBattery, boolean hardArrivedConstraint) {
+		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets, delay, initialDelay, fuzzyEnd, hasReservedBattery, hardArrivedConstraint));
 	}
 
 	public Robot addRobotInScenarioHPI2(Position pos, Orientation facing, int delay) {
