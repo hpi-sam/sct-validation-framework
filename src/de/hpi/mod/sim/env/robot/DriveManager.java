@@ -198,7 +198,7 @@ public class DriveManager implements IRobotActors {
 
 	@Override
 	public void driveBackward() {
-		if(!animationRunning()) { //TODO: Do this also for other main operations
+		if(!animationRunning()) {
 	        if (hasPower()) {
 	        	if(maxDelay > 0) {
 	        		delay = getCustomRandomisedDelay(maxDelay);

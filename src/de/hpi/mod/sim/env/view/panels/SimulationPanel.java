@@ -119,7 +119,6 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	}
 	
 	private JButton newStopButton() {
-		// JButton stopButton = new JButton("Stop");
 		JButton stopButton = new JButton();
 		stopButton.setIcon(stopIcon);
 		stopButton.addActionListener(e -> {
@@ -138,7 +137,6 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	}
 	
 	private JButton newRestartButton() {
-		// JButton restartButton = new JButton("Restart");
 		JButton restartButton = new JButton();
 		restartButton.setIcon(resetIcon);
 		restartButton.addActionListener(e -> {

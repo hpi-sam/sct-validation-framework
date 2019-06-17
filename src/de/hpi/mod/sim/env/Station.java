@@ -22,7 +22,6 @@ public class Station {
     private Battery[] batteries;
 
 	private boolean blockedQueue = false;
-	private boolean blockedLevel2 = false;
 
 	private CopyOnWriteArrayList<Integer> requestedLocks = new CopyOnWriteArrayList<Integer>();
 
@@ -111,7 +110,6 @@ public class Station {
         	}
         }
         return batteries[freeID];
-        // throw new IllegalStateException("There is no free battery");
     }
 
     @Override
@@ -125,13 +123,6 @@ public class Station {
     }
 
 	public boolean blocked() {
-		/*if(now+SimulatorConfig.getDefaultStationUnblockingTime()<=System.currentTimeMillis()) {
-			blockedQueue = false;
-			return false;
-		}
-		if(chargingRobots > 0) {
-			return true;
-		}*/
 		return blockedQueue;
 	}
 
@@ -142,38 +133,7 @@ public class Station {
 	public void unblockQueue() {
 		blockedQueue = false;
 	}
-
-	private boolean noRobotsOnBatteries() {
-		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
-			if(batteries[i].robotPresent()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public boolean blockedLevel2() {
-		return blockedLevel2;
-	}
-
-	public void blockQueueLevel2() {
-		blockedLevel2 = true;
-	}
-
-	public void unblockQueueLevel2() {
-		blockedLevel2 = false;
-		
-	}
-
-	public boolean hasRobotsBelow(int batteryID) {
-		for(int i = batteryID + 1; i < SimulatorConfig.getBatteriesPerStation(); i++) {
-			if(batteries[i].robotPresent()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
+	
 	public void robotPresentOnCharger(int chargerID) {
 		batteries[chargerID].setRobotPresent();
 	}
@@ -184,7 +144,6 @@ public class Station {
 
 	public void releaseLocks() {
 		blockedQueue = false;
-		blockedLevel2 = false;
 		requestedLocks.clear();
 		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
 			batteries[i].setRobotNotPresent();

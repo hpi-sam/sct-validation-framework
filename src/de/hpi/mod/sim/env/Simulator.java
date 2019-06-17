@@ -54,9 +54,9 @@ public class Simulator implements IRobotController, ILocation, IScanner {
      * @param position The Waypoint where the Robot will be placed
      * @param state 
      * @param facing The Orientation of the Robot at its starting position
-     * @param fuzzyEnd 
-     * @param hasReservedBattery 
-     * @param hardArrivedConstraint 
+     * @param fuzzyEnd whether or not the robot is allowed to be near the last target or has to be exactly on it
+     * @param hasReservedBattery whether or not the robot should drive to battery
+     * @param hardArrivedConstraint  whether 
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
@@ -72,7 +72,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         return robot;
     }
     
-    public Robot addRobotInScenarioHPI(Position position, Orientation facing, int delay) {
+    public Robot addRobotInScenario(Position position, Orientation facing, int delay) {
 
 		if (grid.posType(position) == PositionType.STATION || grid.posType(position) == PositionType.WAYPOINT) {
 	        int robotID = Robot.incrementID();

@@ -33,21 +33,16 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         this.world = world;
         this.isRightClickedRobot = isRightClickedRobot;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        //setLayout(new GridLayout(0, 1));
         	
         // Add information
         addInfo("ID", robot -> Integer.toString(robot.getID()));
         addInfo("Battery", robot -> Integer.toString((int) robot.getBattery()));
         addInfo("Pos", robot -> stringify(robot.pos()) + " (" + robot.posType().toString() +")");
-        //addInfo("Blocked sides", robot -> (robot.blockedFront() ? "front " : "") +
-        //								  (robot.blockedLeft() ? "left " : "") +
-        //								  (robot.blockedRight() ? "right " : ""));
         addInfo("Target", robot -> stringify(robot.getTarget()));
         addInfo("Facing", robot -> robot.posOrientation().toString());
         addInfo("Target Direction", robot ->
                 robot.isOnTargetOrNearby() ? "-" : robot.targetDirection().toString());
         addStateTree();
-        //addInfo("State", robot -> trimStateName(robot.getMachineState()));
     }
 
     private void addStateTree() {

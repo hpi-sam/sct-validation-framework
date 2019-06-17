@@ -101,7 +101,6 @@ public class StationManager implements IRobotStationDispatcher {
     @Override
     public void reportChargingAtStation(int robotID, int stationID, int chargerID) {
     	getStationByID(stationID).robotPresentOnCharger(chargerID);
-        //getStationByID(stationID).unblockQueue();
     }
 
     @Override
@@ -162,28 +161,9 @@ public class StationManager implements IRobotStationDispatcher {
         } else {
         	return stations.get(0); //Fallback strategy
         }
-        
-        /*if (filteredStations.size() > SimulatorConfig.getChargingStationsInUse()) {
-        	return filteredStations.isEmpty() ?
-	                addNewStation() :
-	                filteredStations.get(r.nextInt(SimulatorConfig.getChargingStationsInUse()));
-        } else {
-	        return filteredStations.isEmpty() ?
-	                addNewStation() :
-	                filteredStations.get(r.nextInt(filteredStations.size()));
-        }*/
     }
 
-    /*private Station addNewStation() {
-        Station created = new Station(stations.size());
-        stations.add(created);
-        return created;
-    }*/
-
     private Station getStationByID(int stationID) {
-    	/*while(stations.size() <= stationID) {
-    		addNewStation();
-    	}*/
     	stationID = stationID % stations.size();
     	Station station = null;
     	for(int i = 0; i<stations.size(); i++) {

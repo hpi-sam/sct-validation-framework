@@ -122,9 +122,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	            }
             	}
             }
-    		/*if(!testPositionTargets.isEmpty()) {
-            	startDriving();
-            }*/
             drive.dataRefresh();
     	}
     }
@@ -289,7 +286,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	private void startDriving() {
         driving = true;
         drive.getUpdate();
-        //drive.newTarget();
     }
 
     @Override
@@ -305,8 +301,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public Direction targetDirection() {
     	return grid.targetDirection(manager.currentFacing(), manager.currentPosition(), target);
-    	// return Orientation.difference(
-    	//          manager.currentFacing(), grid.targetOrientation(manager.currentPosition(), target));
     }
     
     @Override
@@ -358,10 +352,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public boolean canUnloadToTarget() {
         return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&  grid.cellType(target) == CellType.BLOCK &&
-        		((manager.currentPosition().equals(target.getModified(-1,0)) ) || // && manager.currentFacing() == Orientation.NORTH) ||
-        		 (manager.currentPosition().equals(target.getModified(1,0)) ) || // && manager.currentFacing() == Orientation.SOUTH) ||
-        		 (manager.currentPosition().equals(target.getModified(0,-1)) ) || // && manager.currentFacing() == Orientation.WEST) ||
-        		 (manager.currentPosition().equals(target.getModified(0,1)) )); //&& manager.currentFacing() == Orientation.EAST) );
+        		((manager.currentPosition().equals(target.getModified(-1,0)) ) ||
+        		 (manager.currentPosition().equals(target.getModified(1,0)) ) ||
+        		 (manager.currentPosition().equals(target.getModified(0,-1)) ) ||
+        		 (manager.currentPosition().equals(target.getModified(0,1)) ));
     }
     
     @Override

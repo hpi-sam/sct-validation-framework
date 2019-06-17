@@ -44,7 +44,6 @@ public class RobotRenderer {
     void render(Graphics graphic) {
         // Draw Robots
         for (Robot robot : world.getRobots()) {
-        		//robot.simulationStarted();
 	            DriveManager drive = robot.getDriveManager();
 	            Point2D drawPosition = world.toDrawPosition(drive.getX(), drive.getY());
 	
@@ -63,7 +62,6 @@ public class RobotRenderer {
 	
 	                drawTarget(graphic, drawPos, targetPos);
             }
-            //r.simulationCompleted();
         }
     }
 
