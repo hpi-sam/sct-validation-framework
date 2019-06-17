@@ -37,12 +37,13 @@ public class InvalidTurningDetector {
 	}
 
 	private void reportInvalidTurning(Robot robot) {
-		frame.reportInvalidTurning(robot);
+		String reason = "Robot destroyed charging apparature because robot turned on battery!";
+		frame.reportInvalidTurning(robot, reason);
 		world.setHighlightedRobot1(robot);
 		if(world.isRunning())
 			world.toggleRunning();
 		if(scenarioManager.isRunningTest()) {
-			scenarioManager.failCurrentTest();
+			scenarioManager.failCurrentTest(reason);
 		}
 	}
 

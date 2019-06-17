@@ -33,6 +33,8 @@ public class ScenarioManager {
 	private boolean currentTestFailed = false;
 	private boolean isRunningTest = false;
 	
+	private String failReason = "";
+	
 	private TestScenario activeTest = null;
     CollisionDetector collisionDetector;
     InvalidPositionDetector invalidPositionDetector;
@@ -172,7 +174,7 @@ public class ScenarioManager {
     			for (ITestListener listener : listeners) {
                     listener.failTest(activeTest);
                 }
-    			activeTest.notifyFailToUser(frame);
+    			activeTest.notifyFailToUser(frame, failReason);
     			currentTestFailed = false;
     			isRunningTest = false;
     			activeTest = null;
@@ -350,7 +352,8 @@ public class ScenarioManager {
     	}
     }
 
-	public void failCurrentTest() {
+	public void failCurrentTest(String reason) {
+		failReason = reason;
 		currentTestFailed = true;
 	}
 

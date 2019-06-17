@@ -38,13 +38,14 @@ public class CollisionDetector {
 	}
 
 	private void reportCollision(Robot robot1, Robot robot2) {
-		frame.reportCollision(robot1, robot2);
+		String reason = "Collision detected!";
+		frame.reportCollision(robot1, robot2, reason);
 		world.setHighlightedRobot1(robot1);
 		world.setHighlightedRobot2(robot2);
 		if(world.isRunning())
 			world.toggleRunning();
 		if(scenarioManager.isRunningTest()) {
-			scenarioManager.failCurrentTest();
+			scenarioManager.failCurrentTest(reason);
 		}
 	}
 }

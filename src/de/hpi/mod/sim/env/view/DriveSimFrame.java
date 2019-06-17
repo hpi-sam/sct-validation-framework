@@ -97,26 +97,24 @@ public class DriveSimFrame extends JFrame {
 		popupHider.start();
 	}
 
-	public void reportCollision(Robot r1, Robot r2) {
-		displayMessage("Collision detected!", MENU_RED);
+	public void reportCollision(Robot r1, Robot r2, String reason) {
+		displayMessage(reason, MENU_RED);
 		forbidFurtherRunning();
 		sim.renderExplosion(r1);
 	}
 	
-	public void reportInvalidPosition(Robot robot1, Position invalidPos) {
-		displayMessage("Robot at invalid position at: (" + String.valueOf(invalidPos.getX()) + 
-				"," + String.valueOf(invalidPos.getY()) + ")!", MENU_RED);
+	public void reportInvalidPosition(Robot robot1, String reason) {
+		displayMessage(reason, MENU_RED);
 		forbidFurtherRunning();
 	}
 	
-	public void reportInvalidTurning(Robot robot) {
-		displayMessage("Robot destroyed charging apparature because robot turned on battery!", MENU_RED);
+	public void reportInvalidTurning(Robot robot, String reason) {
+		displayMessage(reason, MENU_RED);
 		forbidFurtherRunning();
 	}
 	
-	public void reportInvalidUnloading(Robot robot, Position invalidPosition) {
-		displayMessage("Robot unloaded at invalid position at: (" + String.valueOf(invalidPosition.getX()) + 
-				"," + String.valueOf(invalidPosition.getY()) + ")!", MENU_RED);
+	public void reportInvalidUnloading(Robot robot, String reason) {
+		displayMessage(reason, MENU_RED);
 	}
 	
 	public void forbidFurtherRunning() {

@@ -39,9 +39,9 @@ public abstract class TestScenario extends Scenario {
 		alreadyPrinted = false;
 	}
 
-	public void notifyFailToUser(DriveSimFrame frame) {
+	public void notifyFailToUser(DriveSimFrame frame, String reason) {
 		if(!alreadyPrinted) {
-    		frame.displayMessage("Test \"" + name + "\" failed!", DriveSimFrame.MENU_RED);
+    		frame.displayMessage("Test \"" + name + "\" failed beacuse " + reason, DriveSimFrame.MENU_RED);
     		alreadyPrinted = true;
     	}
 	}
