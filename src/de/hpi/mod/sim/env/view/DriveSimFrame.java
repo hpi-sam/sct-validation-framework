@@ -14,6 +14,7 @@ import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.view.sim.SimulatorView;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
@@ -332,6 +333,12 @@ public class DriveSimFrame extends JFrame {
 		setMinimumSize(new Dimension(902, 800));
 		setPreferredSize(new Dimension(1212, 800));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        try {
+			setIconImage(ImageIO.read(new File(SimulatorConfig.getStringPathToRobotIcon())));
+		} catch (IOException e) {
+			System.out.println("hi");
+			e.printStackTrace();
+		}
         pack();
         setVisible(true);
 	}
