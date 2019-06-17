@@ -436,17 +436,17 @@ public class DriveSimFrame extends JFrame {
     //create a new popup with the provided text 
     private Popup createPopup(String message) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
-		popupPanel.setPreferredSize(new Dimension(600, 100));
+		popupPanel.setPreferredSize(new Dimension(460, 100));
 		popupPanel.setBackground(new Color(MAIN_MENU_COLOR.getRed(), MAIN_MENU_COLOR.getGreen(), MAIN_MENU_COLOR.getBlue(), 192));
-		JLabel popupLabel = new JLabel(message, SwingConstants.CENTER);
+		String labelText = String.format("<html><div WIDTH=%d text-align: center>%s</div></html>", 350, message);
+		JLabel popupLabel = new JLabel(labelText, SwingConstants.CENTER);
 		Font original = (Font) UIManager.get("Label.font");
 		popupLabel.setFont(original.deriveFont(Font.BOLD, 16));
 		popupPanel.add(popupLabel);
 		
 		PopupFactory pf = PopupFactory.getSharedInstance();
 		
-		Popup popup = pf.getPopup(this, popupPanel, (int)this.getLocation().getX()+this.getWidth()/2-300, 
-													(int)this.getLocation().getY()+this.getHeight()/2-50);
+		Popup popup = pf.getPopup(this, popupPanel, 10, 80);
 		return popup;
 	}
 }
