@@ -69,9 +69,10 @@ public class DeadlockDetector {
 
 	private void reportDeadlock() {
 		deactivate();
-		frame.displayMessage("Deadlock detected!");
+		String reason = "Deadlock detected!";
+		frame.displayMessage(reason, DriveSimFrame.MENU_RED);
 		if(scenarioManager.isRunningTest()) {
-			scenarioManager.failCurrentTest();
+			scenarioManager.failCurrentTest(reason);
 		}
 	}
 

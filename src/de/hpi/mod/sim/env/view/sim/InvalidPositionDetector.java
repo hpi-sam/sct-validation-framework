@@ -44,12 +44,14 @@ public class InvalidPositionDetector {
 	}
 
 	private void reportInvalidPosition(Robot robot, Position invalidPosition) {
-		frame.reportInvalidPosition(robot, invalidPosition);
+		String reason = "Robot at invalid position at: (" + String.valueOf(invalidPosition.getX()) + 
+				"," + String.valueOf(invalidPosition.getY()) + ")!";
+		frame.reportInvalidPosition(robot, reason);
 		world.setHighlightedRobot1(robot);
 		if(world.isRunning())
 			world.toggleRunning();
 		if(scenarioManager.isRunningTest()) {
-			scenarioManager.failCurrentTest();
+			scenarioManager.failCurrentTest(reason);
 		}
 	}
 

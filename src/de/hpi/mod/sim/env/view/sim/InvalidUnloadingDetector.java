@@ -39,11 +39,13 @@ public class InvalidUnloadingDetector {
 	}
 
 	private void reportInvalidPosition(Robot robot, Position invalidPosition) {
-		frame.reportInvalidUnloading(robot, invalidPosition);
+		String reason = "Robot unloaded at invalid position at: (" + String.valueOf(invalidPosition.getX()) + 
+				"," + String.valueOf(invalidPosition.getY()) + ")!";
+		frame.reportInvalidUnloading(robot, reason);
 		world.setHighlightedRobot1(robot);
 		
 		if(scenarioManager.isRunningTest()) {
-			scenarioManager.failCurrentTest();
+			scenarioManager.failCurrentTest(reason);
 		}
 	}
 

@@ -29,7 +29,7 @@ public abstract class TestScenario extends Scenario {
     
     public void notifySuccessToUser(DriveSimFrame frame) {
     	if(!alreadyPrinted) {
-    		frame.displayMessage("Finished test \"" + name + "\" succesfully");
+    		frame.displayMessage("Finished test \"" + name + "\" succesfully", DriveSimFrame.MENU_GREEN);
     		alreadyPrinted = true;
     	}
     }
@@ -39,9 +39,9 @@ public abstract class TestScenario extends Scenario {
 		alreadyPrinted = false;
 	}
 
-	public void notifyFailToUser(DriveSimFrame frame) {
+	public void notifyFailToUser(DriveSimFrame frame, String reason) {
 		if(!alreadyPrinted) {
-    		frame.displayMessage("Test \"" + name + "\" failed!");
+    		frame.displayMessage("Test \"" + name + "\" failed beacuse " + reason, DriveSimFrame.MENU_RED);
     		alreadyPrinted = true;
     	}
 	}
