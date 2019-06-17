@@ -77,7 +77,11 @@ public class DriveSimFrame extends JFrame {
     }
     
     public void displayMessage(String message) {
-		Popup popup = createPopup(message);
+    	displayMessage(message, MAIN_MENU_COLOR);
+    }
+    
+    public void displayMessage(String message, Color color) {
+		Popup popup = createPopup(message, color);
 		popup.show();
 		
 		Thread popupHider = new Thread() {
@@ -94,25 +98,25 @@ public class DriveSimFrame extends JFrame {
 	}
 
 	public void reportCollision(Robot r1, Robot r2) {
-		displayMessage("Collision detected!");
+		displayMessage("Collision detected!", MENU_RED);
 		forbidFurtherRunning();
 		sim.renderExplosion(r1);
 	}
 	
 	public void reportInvalidPosition(Robot robot1, Position invalidPos) {
 		displayMessage("Robot at invalid position at: (" + String.valueOf(invalidPos.getX()) + 
-				"," + String.valueOf(invalidPos.getY()) + ")!");
+				"," + String.valueOf(invalidPos.getY()) + ")!", MENU_RED);
 		forbidFurtherRunning();
 	}
 	
 	public void reportInvalidTurning(Robot robot) {
-		displayMessage("Robot destroyed charging apparature because robot turned on battery!");
+		displayMessage("Robot destroyed charging apparature because robot turned on battery!", MENU_RED);
 		forbidFurtherRunning();
 	}
 	
 	public void reportInvalidUnloading(Robot robot, Position invalidPosition) {
 		displayMessage("Robot unloaded at invalid position at: (" + String.valueOf(invalidPosition.getX()) + 
-				"," + String.valueOf(invalidPosition.getY()) + ")!");
+				"," + String.valueOf(invalidPosition.getY()) + ")!", MENU_RED);
 	}
 	
 	public void forbidFurtherRunning() {
@@ -434,10 +438,10 @@ public class DriveSimFrame extends JFrame {
     }
     
     //create a new popup with the provided text 
-    private Popup createPopup(String message) {
+    private Popup createPopup(String message, Color color) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
 		popupPanel.setPreferredSize(new Dimension(460, 100));
-		popupPanel.setBackground(new Color(MAIN_MENU_COLOR.getRed(), MAIN_MENU_COLOR.getGreen(), MAIN_MENU_COLOR.getBlue(), 192));
+		popupPanel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 192));
 		String labelText = String.format("<html><div WIDTH=%d text-align: center>%s</div></html>", 350, message);
 		JLabel popupLabel = new JLabel(labelText, SwingConstants.CENTER);
 		Font original = (Font) UIManager.get("Label.font");
