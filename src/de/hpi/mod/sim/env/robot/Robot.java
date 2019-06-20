@@ -253,7 +253,6 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(manager.checkUnloadingPosition() && manager.hasPackage()) {
     		invalidUnloadingPosition  = manager.currentPosition();
     	}
-        drive.unload();
     }
 
 	private void handleFinishedUnloading() {

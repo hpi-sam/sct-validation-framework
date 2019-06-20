@@ -12,7 +12,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature GeneralFeatures {
-            TimerService = true
+            TimerService = false
         }
 	}
 }
