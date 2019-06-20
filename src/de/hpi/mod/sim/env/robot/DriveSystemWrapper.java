@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.mod.sim.ITimer;
-import de.hpi.mod.sim.TimerService;
 import de.hpi.mod.sim.drivesystem.DrivesystemStatemachine;
 import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
-import de.hpi.mod.sim.env.DynamicTimerService;
 import de.hpi.mod.sim.env.model.*;
 
 /**
@@ -27,14 +25,12 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private IRobotActors actors;
     private IProcessor processor;
 
-    //private TimerService timer = null;
     private RobotTimerService timer = null;
 
 
     public DriveSystemWrapper(ISensor data, IRobotActors actors, IProcessor processor) {
         DrivesystemStatemachine machine = new DrivesystemStatemachine();
         Method methodToFind = null;
-        // timer = new DynamicTimerService();
         timer = new RobotTimerService();
         try {
         	  methodToFind = DrivesystemStatemachine.class.getMethod("setTimer", new Class[] {ITimer.class});
