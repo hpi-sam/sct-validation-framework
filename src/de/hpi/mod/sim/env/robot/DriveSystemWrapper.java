@@ -294,6 +294,7 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
 	public void updateTimer() {
 		if(this.timer != null) {
 			this.timer.update();
+			update();
 		}
 	}
 }

@@ -124,11 +124,12 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	            }
             	}
             }
-    		// Update timer
-            drive.updateTimer();
             
             // send datarefresh() Signal
             drive.dataRefresh();
+            
+    		// Update timer
+            drive.updateTimer();
     	}
     }
 
