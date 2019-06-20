@@ -24,7 +24,7 @@ Das Projekt ist in die folgenden Ordner unterteilt:
 
 **[=> Hier geht es zur Installations-Anleitung für alle Betriebssysteme! <=](INSTALL.md)**
 
-YAKUNDU Statechart Tools ist ein Eclipse-Plugin. Da es Gelegentlich zu Problemen mit einem Nachinstallierten Plugin kommt, empfehlen wir Eclipse und YAKINDU als separates Standalone-Bundle zu installieren ([siehe Anleitung](INSTALL.md)). Um ein Statechart zu modellieren und die Simulation auszuführen werden sowohl die Java-Features von Eclipse als auch die Features des 
+YAKUNDU Statechart Tools ist ein Eclipse-Plugin. Da es Gelegentlich zu Problemen mit einem Nachinstallierten Plugin kommt, empfehlen wir Eclipse und YAKINDU als separates Standalone-Bundle zu installieren ([siehe Anleitung](INSTALL.md)).
 
 Es wird Mindestens Java Version 10 benötigt.
 
