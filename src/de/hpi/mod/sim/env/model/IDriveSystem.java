@@ -18,4 +18,5 @@ public interface IDriveSystem {
     void close();
     String getMachineState();
 	void getUpdate();
+	void updateTimer();
 }
