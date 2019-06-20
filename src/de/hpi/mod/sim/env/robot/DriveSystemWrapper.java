@@ -27,13 +27,15 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private IRobotActors actors;
     private IProcessor processor;
 
-    private TimerService timer = null;
+    //private TimerService timer = null;
+    private RobotTimerService timer = null;
 
 
     public DriveSystemWrapper(ISensor data, IRobotActors actors, IProcessor processor) {
         DrivesystemStatemachine machine = new DrivesystemStatemachine();
         Method methodToFind = null;
-        timer = new DynamicTimerService();
+        // timer = new DynamicTimerService();
+        timer = new RobotTimerService();
         try {
         	  methodToFind = DrivesystemStatemachine.class.getMethod("setTimer", new Class[] {ITimer.class});
         	} catch (NoSuchMethodException | SecurityException e) {
@@ -287,5 +289,11 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
 	@Override
 	public boolean canChargeAtTarget() {
 		return data.canChargeAtTarget();
+	}
+
+	public void updateTimer() {
+		if(this.timer != null) {
+			this.timer.update();
+		}
 	}
 }

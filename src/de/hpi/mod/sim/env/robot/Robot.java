@@ -35,7 +35,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private int robotSpecificDelay = 0;
 
     private RobotState state = RobotState.TO_QUEUE;
-    private boolean driving = false;
+    private boolean robotHasDriveTarget = false;
 
     private boolean hasReservedBattery = false;
     
@@ -106,8 +106,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
+    	
+    	
     	if(System.currentTimeMillis() >= initialNow + initialDelay) {
-    		if (!driving) {
+    		if (!robotHasDriveTarget) {
             	if(!isInTest || !testPositionTargets.isEmpty()) {
     	            if (state == RobotState.TO_BATTERY && manager.isBatteryFull()) {
     	                handleFinishedCharging();
@@ -122,6 +124,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	            }
             	}
             }
+    		// Update timer
+            drive.updateTimer();
+            
+            // send datarefresh() Signal
             drive.dataRefresh();
     	}
     }
@@ -134,7 +140,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(isInTest) {
     		gotArrived = true;
     	}
-        driving = false;
+        robotHasDriveTarget = false;
         if (state == RobotState.TO_UNLOADING) {
             handleArriveAtUnloading();
         } else if (state == RobotState.TO_BATTERY) {
@@ -245,7 +251,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void startDrivingToUnload() {
-		driving = true;
+		robotHasDriveTarget = true;
 		drive.newUnloadingTarget();
 	}
 
@@ -280,12 +286,12 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void startDrivingToCharging() {
-		driving = true;
+		robotHasDriveTarget = true;
 		drive.newChargingTarget();		
 	}
 
 	private void startDriving() {
-        driving = true;
+        robotHasDriveTarget = true;
         drive.getUpdate();
     }
 
