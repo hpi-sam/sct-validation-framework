@@ -248,7 +248,7 @@ public class ScenarioManager {
     
     private class EasyScenario extends Scenario{
     	public EasyScenario() {
-    		name = "Easy Scenario";
+    		name = "Few Robots";
     	}
     	
     	@Override
@@ -274,7 +274,7 @@ public class ScenarioManager {
     
     private class MediumScenario extends Scenario{
     	public MediumScenario() {
-    		name = "Medium Scenario";
+    		name = "Average number of Robots";
     	}
     	
     	@Override
@@ -301,7 +301,7 @@ public class ScenarioManager {
     
     private class HardScenario extends Scenario{
     	public HardScenario() {
-    		name = "Hard Scenario";
+    		name = "Many Robots";
     	}
     	
     	@Override
@@ -327,7 +327,7 @@ public class ScenarioManager {
     
     private class HardcoreScenario extends Scenario{
     	public HardcoreScenario() {
-    		name = "Hardcore mode";
+    		name = "Many Robots + Reaction Delay [Extreme mode]";
     	}
     	
     	@Override
