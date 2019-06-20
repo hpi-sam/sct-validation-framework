@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.sim;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
@@ -21,14 +22,26 @@ public class NewTestRobot extends NewRobot{
 	private boolean hasReservedBattery = false;
 	private boolean hardArrivedConstraint = false;
 
-    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
+    public void setRequireArrived(boolean hardArrivedConstraint) {
+		this.hardArrivedConstraint = hardArrivedConstraint;
+	}
+
+    public void setBatteryReservation(boolean batteryReservation) {
+		this.hasReservedBattery = batteryReservation;
+	}
+
+    public void setDelayBeforeStart(int initialDelay) {
+		this.initialDelay = initialDelay;
+	}
+
+	public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
         this.position = position;
         this.state = startingState;
         this.targets = targets;
         this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
-        this.initialDelay = 0;
+        this.initialDelay = SimulatorConfig.getDefaultWaitingTimeBeforeTest();
     }
     
     public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay) {
@@ -38,7 +51,7 @@ public class NewTestRobot extends NewRobot{
         this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = delay;
-        this.initialDelay = 0;
+        this.initialDelay = SimulatorConfig.getDefaultWaitingTimeBeforeTest();
     }
     
     public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay, int initialDelay) {
@@ -58,7 +71,7 @@ public class NewTestRobot extends NewRobot{
         this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
-        this.initialDelay = 0;
+        this.initialDelay = SimulatorConfig.getDefaultWaitingTimeBeforeTest();
         this.fuzzyEnd  = fuzzy; 
 	}
     
@@ -69,7 +82,7 @@ public class NewTestRobot extends NewRobot{
         this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
-        this.initialDelay = 0;
+        this.initialDelay = SimulatorConfig.getDefaultWaitingTimeBeforeTest();
         this.fuzzyEnd  = fuzzy; 
         this.hasReservedBattery = initialBatteryStatus;
 	}
@@ -81,7 +94,7 @@ public class NewTestRobot extends NewRobot{
         this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
-        this.initialDelay = 0;
+        this.initialDelay = SimulatorConfig.getDefaultWaitingTimeBeforeTest();
         this.fuzzyEnd  = fuzzy; 
         this.hasReservedBattery  = initialBatteryStatus;
         this.hardArrivedConstraint  = hardArrivedConstraint;

@@ -37,6 +37,8 @@ public class SimulatorConfig {
 	public static final int DEFAULT_UNLOADING_RANGE = 50;
 	public static final int DEFAULT_STATION_UNBLOCKING_TIME = 10000; //in ms
 	
+	public static final int DEFAULT_WAITING_TIME_BEFORE_TEST = 1000; //in ms
+	
 	public static final float DEFAULT_BLOCK_SIZE = 20;
 	public static final float DEFAULT_OFFSET_X = 0;
 	public static final float DEFAULT_OFFSET_Y = 0;
@@ -102,7 +104,13 @@ public class SimulatorConfig {
    	private static float minBatteryRatio = MIN_BATTERY_RATIO;
    	private static int defaultStationUnblockingTime = DEFAULT_STATION_UNBLOCKING_TIME;
    	
-   	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
+   	private static int defaultWaitingTimeBeforeTest = DEFAULT_WAITING_TIME_BEFORE_TEST;
+   	
+   	public static int getDefaultWaitingTimeBeforeTest() {
+		return defaultWaitingTimeBeforeTest;
+	}
+
+	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
    	private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
    	private static float defaultOffsetX = DEFAULT_OFFSET_X;
    	private static float defaultOffsetY = DEFAULT_OFFSET_Y;

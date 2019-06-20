@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -23,11 +24,11 @@ public class TestCaseGenerator {
 	}
 	
 	public Map<String, ArrayList<TestScenario>> getAllTestCases(){
-		testGroups.put("I.Driving in station", generateStationTests());
-		testGroups.put("II. Simple crossroad", generateSimpleCrossroadTests());
-		testGroups.put("III. Crossroad conflicts", generateCrossroadConflicTests());
-		testGroups.put("IV. Unloading correctly", generateUnloadingTests());
-		testGroups.put("V. Complete drive routine", generateCompleteDriveRoutineTests());
+		testGroups.put("I. Driving in Station", generateStationTests());
+		testGroups.put("II. Simple Crossroad Driving", generateSimpleCrossroadTests());
+		testGroups.put("III. Crossroad Conflicts", generateCrossroadConflicTests());
+		testGroups.put("IV. Unloading Correctly", generateUnloadingTests());
+		testGroups.put("V. Complete Drive Routine", generateCompleteDriveRoutineTests());
 		//testGroups.put("VI. Bonus: Deadlock tests", generateDeadlockTests());
 		return testGroups;
 	}
@@ -139,85 +140,140 @@ public class TestCaseGenerator {
         return testScenarios;
 	}
 
+    private Position p(int x, int y) {
+        return new Position(x, y);
+    }
+    
+    private ArrayList<Position> p_list(Position... p){
+    	return new ArrayList<Position>(Arrays.asList(p));
+    }
+    
+    private ArrayList<NewRobot> r_list(NewRobot... r){
+    	return new ArrayList<NewRobot>(Arrays.asList(r));
+    }
+	
 	private ArrayList<TestScenario> generateStationTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
-		List<NewRobot> newRobots = new ArrayList<>();
-        List<Position> targets = new ArrayList<>();
-        targets.add(new Position(1,-1));
-        newRobots.add(new NewTestRobot(new Position(0, -1), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive one step 1", "Drive one step from battery position 1", newRobots));
+		// Start list of test scenarios
+		ArrayList<TestScenario> testScenarios  = new ArrayList<>();
+        NewTestRobot testRobot1,testRobot2,testRobot3;
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(1,-2));
-        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive one step 2", "Drive one step from battery position 2", newRobots));
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(1,-3));
-        newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive one step 3", "Drive one step from battery position 3", newRobots));
+        // Drive single step
         
-		newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(2,-5));
-        newRobots.add(new NewTestRobot(new Position(0, -1), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive to end of queue 1", "Drive to end of queue from battery position 1", newRobots));
+        testRobot1 = new NewTestRobot(p(1, -2), RobotState.TO_QUEUE, Orientation.SOUTH, p_list(p(1,-3)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Drive single step 1", "Drive single step forward and report arrival. (Version 1)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(1, -5), RobotState.TO_QUEUE, Orientation.EAST, p_list(p(2,-5)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Drive single step 2", "Drive single step forward and report arrival. (Version 2)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(2, -4), RobotState.TO_QUEUE, Orientation.NORTH, p_list(p(2,-3)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Drive single step 3", "Drive single step forward and report arrival. (Version 3)", r_list(testRobot1)));
+
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(2,-5));
-        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive to end of queue 2", "Drive to end of queue from battery position 2", newRobots));
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(2,-5));
-        newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_QUEUE, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive to end of queue 3", "Drive to end of queue from battery position 3", newRobots));
+        // Leave battery
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(0,-1));
-        newRobots.add(new NewTestRobot(new Position(1, 3), RobotState.TO_STATION, Orientation.SOUTH, targets, 0, 1000, false, true));
-        testScenarios.add(new ConcreteTestScenario("Drive to battery 1", "Drive to battery position 1", newRobots));
+        testRobot1 = new NewTestRobot(p(0, -1), RobotState.TO_QUEUE, Orientation.EAST, p_list(p(1,-1)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Leave battery 1", "Drive single step forward out of battery position and report arrival. (Version 1)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(0, -2), RobotState.TO_QUEUE, Orientation.EAST, p_list(p(1,-2)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Leave battery 2", "Drive single step forward out of battery position and report arrival. (Version 2)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(0, -3), RobotState.TO_QUEUE, Orientation.EAST, p_list(p(1,-3)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Leave battery 3", "Drive single step forward out of battery position and report arrival. (Version 3)", r_list(testRobot1)));
+
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(0,-2));
-        newRobots.add(new NewTestRobot(new Position(1, 3), RobotState.TO_STATION, Orientation.SOUTH, targets, 0, 1000, false, true));
-        testScenarios.add(new ConcreteTestScenario("Drive to battery 2", "Drive to battery position 2", newRobots));
+
+        // From station entry to queue
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(0,-3));
-        newRobots.add(new NewTestRobot(new Position(1, 3), RobotState.TO_STATION, Orientation.SOUTH, targets, 0, 1000, false, true));
-        testScenarios.add(new ConcreteTestScenario("Drive to battery 3", "Drive to battery position 3", newRobots));
+        testRobot1 = new NewTestRobot(p(1, 0), RobotState.TO_STATION, Orientation.SOUTH, p_list(p(2,-5)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From entry to queue end", "Drive from station entry to beginning of queue and report arrival.", r_list(testRobot1)));
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(2,0));
-        newRobots.add(new NewTestRobot(new Position(1, 3), RobotState.TO_STATION, Orientation.SOUTH, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive to loading 1", "Drive to loading position from station entry", newRobots));
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(2,0));
-        newRobots.add(new NewTestRobot(new Position(0, -1), RobotState.TO_STATION, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive to loading 2", "Drive to loading position from battery position 1", newRobots)); 
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(2,0));
-        newRobots.add(new NewTestRobot(new Position(0, -2), RobotState.TO_STATION, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive to loading 3", "Drive to loading position from battery position 2", newRobots)); 
+        // From battery to queue
         
-        newRobots = new ArrayList<>();
-        targets = new ArrayList<>();
-        targets.add(new Position(2,0));
-        newRobots.add(new NewTestRobot(new Position(0, -3), RobotState.TO_STATION, Orientation.EAST, targets, 0, 1000));
-        testScenarios.add(new ConcreteTestScenario("Drive to loading 4", "Drive to loading position from battery position 3", newRobots)); 
+        testRobot1 = new NewTestRobot(p(0, -1), RobotState.TO_STATION, Orientation.EAST, p_list(p(2,-5)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From battery to queue end 1", "Drive from battery position to beginning of queue and report arrival. (Version 1)", r_list(testRobot1)));
+        
+        testRobot1 = new NewTestRobot(p(0, -2), RobotState.TO_STATION, Orientation.EAST, p_list(p(2,-5)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From battery to queue end 2", "Drive from battery position to beginning of queue and report arrival. (Version 2)", r_list(testRobot1)));
+             
+        testRobot1 = new NewTestRobot(p(0, -3), RobotState.TO_STATION, Orientation.EAST, p_list(p(2,-5)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From battery to queue end 3", "Drive from battery position to beginning of queue and report arrival. (Version 3)", r_list(testRobot1)));
+        
+        
+
+        // From station entry to battery
+        
+        testRobot1 = new NewTestRobot(p(1, 0), RobotState.TO_STATION, Orientation.SOUTH, p_list(p(0,-1)));
+        testRobot1.setBatteryReservation(true);
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Enter battery 1", "Drive from station entry to battery position, enter battery backward, report arrival. (Version 1)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(1, 0), RobotState.TO_STATION, Orientation.SOUTH, p_list(p(0,-2)));
+        testRobot1.setBatteryReservation(true);
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Enter battery 2", "Drive from station entry to battery position, enter battery backward, report arrival. (Version 2)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(1, 0), RobotState.TO_STATION, Orientation.SOUTH, p_list(p(0,-3)));
+        testRobot1.setBatteryReservation(true);
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("Enter battery 3", "Drive from station entry to battery position, enter battery backward, report arrival. (Version 3)", r_list(testRobot1)));
+
+        
+
+        // In queue
+
+        testRobot1 = new NewTestRobot(p(2, -5), RobotState.TO_QUEUE, Orientation.EAST, p_list(p(2,0)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("One robot in queue", "Drive from beginning queue to loading position and report arrival.", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(2, -5), RobotState.TO_QUEUE, Orientation.EAST, p_list(p(2,-1)));
+        testRobot1.setDelayBeforeStart(0);
+        testRobot2 = new NewTestRobot(p(2, -4), RobotState.TO_QUEUE, Orientation.NORTH, p_list(p(2,0)));
+        testRobot2.setDelayBeforeStart(2000);
+        testScenarios.add(new ConcreteTestScenario("Two robots in queue", "Two robots drive forward in queue without crash.", r_list(testRobot1,testRobot2)));
+
+        testRobot1 = new NewTestRobot(p(2, -5), RobotState.TO_QUEUE, Orientation.EAST, p_list(p(2,-2)));
+        testRobot1.setDelayBeforeStart(0);
+        testRobot2 = new NewTestRobot(p(2, -4), RobotState.TO_QUEUE, Orientation.NORTH, p_list(p(2,-1)));
+        testRobot2.setDelayBeforeStart(1000);
+        testRobot3 = new NewTestRobot(p(2, -1), RobotState.TO_QUEUE, Orientation.NORTH, p_list(p(2,0)));
+        testRobot3.setDelayBeforeStart(5000);
+        testScenarios.add(new ConcreteTestScenario("Three robots in queue", "Two robots drive forward in queue without crash.", r_list(testRobot1,testRobot2,testRobot3)));
+
+        
+        
+
+        // Complete sequence
+
+        testRobot1 = new NewTestRobot(p(1, 0), RobotState.TO_STATION, Orientation.SOUTH, p_list(p(2,0)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From entry to loading", "Drive from station entry start loading position and report arrival.", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(0, -1), RobotState.TO_STATION, Orientation.EAST, p_list(p(2,0)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From battery to loading 1", "Drive from battery to loading position and report arrival. (Version 1)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(0, -2), RobotState.TO_STATION, Orientation.EAST, p_list(p(2,0)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From battery to loading 2", "Drive from battery to loading position and report arrival. (Version 2)", r_list(testRobot1)));
+
+        testRobot1 = new NewTestRobot(p(0, -3), RobotState.TO_STATION, Orientation.EAST, p_list(p(2,0)));
+        testRobot1.setRequireArrived(true);
+        testScenarios.add(new ConcreteTestScenario("From battery to loading 3", "Drive from battery to loading position and report arrival. (Version 3)", r_list(testRobot1)));
+        
         
         return testScenarios;
 	}

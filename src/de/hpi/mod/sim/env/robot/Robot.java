@@ -149,6 +149,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         		if(!isInTest) {
         			batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
         		} else {
+        			// If in test: Translate coordinates from queue to battery id
         			target = testPositionTargets.get(0);
         			if(Math.abs(target.getY()) == 1){
         				batteryID = 2;
