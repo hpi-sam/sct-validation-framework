@@ -22,6 +22,7 @@ public class RobotTimerService implements ITimer {
 		private ITimerCallback callback;
 		private int eventID;
 		private boolean repeat;
+		private boolean cancelled = false;
 		
 		// Timers in simulation time
 		private long totalSimulationTime;
@@ -79,7 +80,15 @@ public class RobotTimerService implements ITimer {
 		}
 
 
-		public void cancel() {}
+		public void cancel() {
+			this.cancelled = true; 
+		}
+
+
+		public boolean isCancelled() {
+			return this.cancelled; 
+		}
+    	
     	
   
     }
@@ -123,22 +132,26 @@ public class RobotTimerService implements ITimer {
 		
 		List<SimulationTimer> copyList = new ArrayList<SimulationTimer>(this.timerList);
 		for(SimulationTimer timer: copyList) {
-
-        	// Reduct timer
-			timer.reduceTime(simulationTimeSinceLastUpdate);
-    		System.out.println("TIME PASSED:    System="+ systemTimeSinceLastUpdate +"   /    Simulation="+ simulationTimeSinceLastUpdate +"   /    Simulation="+ timer.getRemainingTime());
-    		
-    		// Check if timer finished
-    		if(timer.timeElapsed()) {
-    			// If so, execute:
-    			timer.run();
+			if(!timer.isCancelled()){
+	        	// Reduct timer
+				timer.reduceTime(simulationTimeSinceLastUpdate);
+				
+	    		// Check if timer finished
+	    		if(timer.timeElapsed()) {
+	    			// If so, execute:
+	    			timer.run();
+	    			
+	    			if(timer.isPeriodic()) {
+	    				// When timer is periodic, restart:
+	    				timer.restart();
+	    			}else {
+	    				// Otherwise, cancel:
+	    				timer.cancel();
+	    			}
     			
-    			if(timer.isPeriodic()) {
-    				// When timer is periodic, restart:
-    				timer.restart();
-    			}
-    			
-    		}
+	    		}
+					
+			}
     		
     	}
 
