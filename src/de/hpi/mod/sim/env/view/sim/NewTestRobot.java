@@ -146,8 +146,7 @@ public class NewTestRobot extends NewRobot{
 
     @Override
     public void refreshRobot() {
-    	if(targets.isEmpty()) {
-    		targets.addAll(targetsCopy);
-    	}
+    	targets.clear();
+    	targets.addAll(targetsCopy);
     }
 }
