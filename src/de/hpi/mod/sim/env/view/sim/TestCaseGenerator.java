@@ -330,7 +330,7 @@ public class TestCaseGenerator {
         targetsRobotThree.add(new Position(-3+biasX*3,7+biasY*3));
         newRobots.add(new NewTestRobot(new Position(-3+biasX*3, 8+biasY*3), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
         newRobots.add(new NewTestRobot(new Position(-6+biasX*3, 7+biasY*3), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
-        testScenarios.add(new ConcreteTestScenario("Three Robots 1", "Two Robots must pass a croassroad without collision. (Version 1)", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Two Robots 1", "Two Robots must pass a croassroad without collision. (Version 1)", newRobots));
         
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
@@ -341,7 +341,7 @@ public class TestCaseGenerator {
         targetsRobotThree.add(new Position(-4+biasX*3,9+biasY*3));
         newRobots.add(new NewTestRobot(new Position(-5+biasX*3, 9+biasY*3), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotOne,0,1000));
         newRobots.add(new NewTestRobot(new Position(-4+biasX*3, 6+biasY*3), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotThree,0,1000));
-        testScenarios.add(new ConcreteTestScenario("Three Robots 2", "Two Robots must pass a croassroad without collision. (Version 2)", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Two Robots 2", "Two Robots must pass a croassroad without collision. (Version 2)", newRobots));
 
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
@@ -352,7 +352,7 @@ public class TestCaseGenerator {
         targetsRobotThree.add(new Position(-3+3*biasX,7+3*biasY));
         newRobots.add(new NewTestRobot(new Position(-4+3*biasX, 6+3*biasY), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0,1000));
         newRobots.add(new NewTestRobot(new Position(-6+3*biasX, 7+3*biasY), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
-        testScenarios.add(new ConcreteTestScenario("Three Robots 3", "Two Robots must pass a croassroad without collision. (Version 3)", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Two Robots 3", "Two Robots must pass a croassroad without collision. (Version 3)", newRobots));
         
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
@@ -363,7 +363,7 @@ public class TestCaseGenerator {
         targetsRobotThree.add(new Position(-3+3*biasX,7+3*biasY));
         newRobots.add(new NewTestRobot(new Position(-5+3*biasX, 9+3*biasY), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotOne,0,1000));
         newRobots.add(new NewTestRobot(new Position(-6+3*biasX, 7+3*biasY), RobotState.TO_UNLOADING, Orientation.EAST, targetsRobotThree,0,1000));
-        testScenarios.add(new ConcreteTestScenario("Three Robots 4", "Two Robots must pass a croassroad without collision. (Version 4)", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Two Robots 4", "Two Robots must pass a croassroad without collision. (Version 4)", newRobots));
         
         biasX = rand.nextInt(5);
         biasY = rand.nextInt(5);
@@ -374,7 +374,7 @@ public class TestCaseGenerator {
         targetsRobotTwo.add(new Position(-5+3*biasX,6+3*biasY));
         newRobots.add(new NewTestRobot(new Position(-3+3*biasX, 8+3*biasY), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
         newRobots.add(new NewTestRobot(new Position(-5+3*biasX, 9+3*biasY), RobotState.TO_UNLOADING, Orientation.SOUTH, targetsRobotTwo,0,1000));
-        testScenarios.add(new ConcreteTestScenario("Three Robots 5", "Two Robots must pass a croassroad without collision. (Version 5)", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Two Robots 5", "Two Robots must pass a croassroad without collision. (Version 5)", newRobots));
         
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
@@ -385,7 +385,7 @@ public class TestCaseGenerator {
         targetsRobotTwo.add(new Position(-4+3*biasX,9+3*biasY));
         newRobots.add(new NewTestRobot(new Position(-3+3*biasX, 8+3*biasY), RobotState.TO_UNLOADING, Orientation.WEST, targetsRobotOne,0,1000));
         newRobots.add(new NewTestRobot(new Position(-4+3*biasX, 6+3*biasY), RobotState.TO_UNLOADING, Orientation.NORTH, targetsRobotTwo,0,1000));
-        testScenarios.add(new ConcreteTestScenario("Three Robots 6", "Two Robots must pass a croassroad without collision. (Version 6)", newRobots));
+        testScenarios.add(new ConcreteTestScenario("Two Robots 6", "Two Robots must pass a croassroad without collision. (Version 6)", newRobots));
         
         return testScenarios;
 	}
