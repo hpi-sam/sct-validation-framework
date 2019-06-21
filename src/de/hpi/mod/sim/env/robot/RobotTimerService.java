@@ -1,12 +1,10 @@
 package de.hpi.mod.sim.env.robot;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import de.hpi.mod.sim.ITimer;
 import de.hpi.mod.sim.ITimerCallback;
-import de.hpi.mod.sim.TimerService;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
 public class RobotTimerService implements ITimer {
@@ -66,9 +64,9 @@ public class RobotTimerService implements ITimer {
     		this.callback.timeElapsed(this.eventID);;
     	}
     	
-    	public long getRemainingTime() {
-    		return this.simulationTimeRemaining;
-    	}
+    	// public long getRemainingTime() {
+    	// 	return this.simulationTimeRemaining;
+    	// }
     	
 		@Override
 		public boolean equals(Object obj) {

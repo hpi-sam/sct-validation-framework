@@ -43,6 +43,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private long delay = 0;
 
 	private boolean isInTest = false;
+	private boolean isAlone = false;
 
 	private boolean refreshing = false;
 
@@ -55,10 +56,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	private long initialNow;
 
 	private boolean fuzzyTestCompletion = false;
+	private boolean requireUnloadingForTestCompletion = false;
+	private boolean requireArrivedForTestCompletion = false;
 
-	private boolean hardArrivedConstraint = false;
-
-	private boolean gotArrived = true;
+	private boolean arrivedEventWasCalled = true;
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
@@ -83,7 +84,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
-                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean hasReservedBattery, boolean hardArrivedConstraint) {
+                 Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery, boolean hardArrivedConstraint) {
         this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
@@ -92,8 +93,9 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         this.initialNow = System.currentTimeMillis();
         this.state = initialState;
         this.fuzzyTestCompletion = fuzzyEnd;
+        this.requireUnloadingForTestCompletion = unloadingTest;
         this.hasReservedBattery = hasReservedBattery;
-        this.hardArrivedConstraint = hardArrivedConstraint;
+        this.requireArrivedForTestCompletion = hardArrivedConstraint;
     }
 
     public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, ILocation simulator,
@@ -139,7 +141,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     @Override
     public void arrived() {
     	if(isInTest) {
-    		gotArrived = true;
+    		arrivedEventWasCalled = true;
     	}
         robotHasDriveTarget = false;
         if (state == RobotState.TO_UNLOADING) {
@@ -166,6 +168,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         				batteryID = 0;
         			}
         			testPositionTargets.remove(0);
+            		arrivedEventWasCalled = false;
         		}
         		target = location.getBatteryPositionAtStation(stationID,
                        batteryID);
@@ -212,10 +215,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     	if(!isInTest) {
         	target = location.getLoadingPositionAtStation(stationID);
         } else {
-        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && (!hardArrivedConstraint || gotArrived)) {
+        	if((manager.currentPosition().equals(target) || manager.getOldPosition().equals(target)) && (!requireArrivedForTestCompletion || arrivedEventWasCalled)) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
-        		gotArrived = false;
+        		arrivedEventWasCalled = false;
         	}
         }
         state = RobotState.TO_LOADING;
@@ -223,29 +226,35 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     }
 
     private void handleFinishedLoading() {
-    	if(now == 0) {
-    		long minWaitTime = (long) (500 / (SimulatorConfig.getRobotSpeedFactor()+1));
-    		long maxWaitTime = 10 * minWaitTime;
-    		delay = ThreadLocalRandom.current().nextLong(minWaitTime, maxWaitTime);
+    	if(now == 0 && !isInTest) {
+    		long minWaitTime = (long) (SimulatorConfig.getMinWaitingTimeBeforeLoading() * SimulatorConfig.getRobotSpeedFactor());
+    		long maxWaitTime = (long) (SimulatorConfig.getMaxWaitingTimeBeforeLoading() * SimulatorConfig.getRobotSpeedFactor());
+    		if(isAlone) {
+    			delay = minWaitTime;
+    		}else {
+    			delay = ThreadLocalRandom.current().nextLong(minWaitTime, maxWaitTime);
+    		}
     		now = System.currentTimeMillis();
     	}
     	
-    	if(now < System.currentTimeMillis() - delay)
+    	if(now < System.currentTimeMillis() - delay || isInTest)
         {
     		packageID = scanner.getPackageID(stationID, this.pos());
-    		manager.setHasPackage(true);
+    		manager.setPackage(true);
     		if(!isInTest) {
     			startDrivingToUnload();
     			target = location.getUnloadingPositionFromID(packageID);
     		} else {
     			startDrivingToUnload();
-    			if((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && (!hardArrivedConstraint || gotArrived)) {
+    			if((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && (!requireArrivedForTestCompletion || arrivedEventWasCalled)) {
             		target = testPositionTargets.get(0);
             		testPositionTargets.remove(0);
-            		gotArrived = false;
+            		arrivedEventWasCalled = false;
             	}
     		}
-            dispatcher.reportLeaveStation(robotID, stationID);
+    		if (!isInTest) {
+    			dispatcher.reportLeaveStation(robotID, stationID);
+    		}
             state = RobotState.TO_UNLOADING;
             now = 0;
         }
@@ -257,13 +266,14 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	}
 
 	private void handleArriveAtUnloading() {
-    	if(manager.checkUnloadingPosition() && manager.hasPackage()) {
+    	// if(!manager.isInPositionToUnloadIntoShaft() && manager.hasPackage()) {
+        if(isInTest && !manager.isInPositionToUnloadIntoShaft()) {
     		invalidUnloadingPosition  = manager.currentPosition();
     	}
     }
 
 	private void handleFinishedUnloading() {
-		if(manager.checkUnloadingPosition()) {
+		if(!manager.isInPositionToUnloadIntoShaft()) {
     		invalidUnloadingPosition  = manager.currentPosition();
     	}
 		
@@ -273,11 +283,11 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         if(!isInTest) {
         	target = location.getArrivalPositionAtStation(stationID);
         } else {
-        	if(((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && !manager.hasPackage()) && (!hardArrivedConstraint || gotArrived)) {
+        	if(((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && !manager.hasPackage()) && (!requireArrivedForTestCompletion || arrivedEventWasCalled)) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
         		stationID = dispatcher.getStationIDFromPosition(target);
-        		gotArrived = false;
+        		arrivedEventWasCalled = false;
         	}
         }
         state = RobotState.TO_STATION;
@@ -371,8 +381,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     			grid.cellType(target) == CellType.BATTERY && manager.currentPosition().equals(target.getModified(1,0));
     }
     
-    public boolean hasReachedAllTargets() {
-    	return testPositionTargets.isEmpty() && this.isOnTarget() && (!hardArrivedConstraint || gotArrived);
+    public boolean hasPassedAllTestCriteria() {
+    	return testPositionTargets.isEmpty() && this.isOnTarget()  
+    			&& (!requireArrivedForTestCompletion || arrivedEventWasCalled) 
+    			&& (!requireUnloadingForTestCompletion || manager.hasUnloadedSomething());
     }
 
     @Override
@@ -472,7 +484,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         return packageID;
     }
 
-    public boolean isHasPackage() {
+    public boolean hasPackage() {
         return manager.hasPackage();
     }
 
@@ -515,4 +527,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	public void resetInvalidUnloadingPosition() {
 		invalidUnloadingPosition = null;
 	}
+
+	public void setIsAlone(boolean b) {
+		this.isAlone = b;
+	}	
 }

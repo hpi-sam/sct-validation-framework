@@ -1085,7 +1085,6 @@ public class ServerGridManagementTest {
 //        // From East
 //        // Drive North to targetY+1, so Robot is still on right side of street
 //        // Drive West, do U-Turn on Crossroad after target
-//        // TODO: No U-Turn
 //        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 1), p(3, 7)));
 //        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 2), p(3, 7)));
 //        assertEquals(Orientation.NORTH, grid.targetOrientation(p(8, 3), p(3, 7)));

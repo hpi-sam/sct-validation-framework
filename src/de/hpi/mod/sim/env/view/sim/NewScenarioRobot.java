@@ -9,6 +9,7 @@ public class NewScenarioRobot extends NewRobot{
 	private Position position;
 	private Orientation facing;
 	private int delay = 0;
+	private boolean isAlone = false;
 	
 	public NewScenarioRobot(Position position, Orientation facing) {
 		this.position = position;
@@ -23,10 +24,16 @@ public class NewScenarioRobot extends NewRobot{
 
 	@Override
 	public Robot register(SimulationWorld sim) {
-		return sim.addRobotInScenario(position, facing, delay);
+		Robot robot = sim.addRobotInScenario(position, facing, delay);
+		robot.setIsAlone(isAlone);
+		return robot;
 	}
 
 	@Override
 	public void refreshRobot() {
+	}
+
+	public void setIsAlone(boolean b) {
+		this.isAlone = b;
 	}	
 }

@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 public class DriveManagerTest {
 
@@ -92,12 +91,6 @@ public class DriveManagerTest {
             shouldFace = shouldFace.getTurnedRight();
         }
     }
-
-    /* @Test
-    public void testStartUnloading() {
-        // TODO change DriveManager so a Timer can be injected
-        fail("Not yet implemented");
-    } */
 
     private class DummyDriveHandler implements DriveListener {
 

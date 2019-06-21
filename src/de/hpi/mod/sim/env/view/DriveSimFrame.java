@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
-import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
@@ -115,6 +114,10 @@ public class DriveSimFrame extends JFrame {
 	}
 	
 	public void reportInvalidUnloading(Robot robot, String reason) {
+		displayMessage(reason, MENU_RED);
+	}
+	
+	public void reportDeadlock(String reason) {
 		displayMessage(reason, MENU_RED);
 	}
 	

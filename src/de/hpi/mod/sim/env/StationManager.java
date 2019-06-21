@@ -18,7 +18,6 @@ public class StationManager implements IRobotStationDispatcher {
     /**
      * The stations in the range.
      * If more stations are needed a new stations gets allocated.
-     * TODO Free unused stations back to default if not used
      */
     private List<Station> stations = new ArrayList<>();
 	private int usedStations;

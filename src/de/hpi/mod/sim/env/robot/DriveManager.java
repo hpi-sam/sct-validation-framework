@@ -43,6 +43,8 @@ public class DriveManager implements IRobotActors {
 	private boolean hasPackage = false;
 
 	private boolean isWaitingToMoveBackward;
+	
+	private boolean hasUnloadedSomething = false;
 
 
     public DriveManager(DriveListener listener, Position position, Orientation facing) {
@@ -57,6 +59,7 @@ public class DriveManager implements IRobotActors {
     }
 
     public void update(float delta) {
+    	decreasePerTick();
     	if(maxDelay > 0) {
     		if(delay + now <= System.currentTimeMillis()) {
     			if (isWaitingToMoveForward) {
@@ -293,6 +296,7 @@ public class DriveManager implements IRobotActors {
     		now = System.currentTimeMillis();
     		isWaitingToUnloading = true;
     	} else {
+    		hasUnloadedSomething = true;
     		performUnload();
     	}
     }
@@ -309,7 +313,7 @@ public class DriveManager implements IRobotActors {
     }
     
     private void decreasePerTick() {
-    	//TODO: Implement and use this
+    	
     }
 
     private boolean hasPower() {
@@ -391,34 +395,40 @@ public class DriveManager implements IRobotActors {
 		this.maxDelay = maxDelay;
 	}
 
-	public boolean checkUnloadingPosition() {
-		if(currentPosition.getY() <= 1 || (currentPosition.getY()%3 != 0 && currentPosition.getX()%3 != 0)) {
-			return true;
+	public boolean isInPositionToUnloadIntoShaft() {
+		if(currentPosition.getY() <= 1) {
+			return false; 
+		} else if(currentPosition.getY()%3 != 0 && currentPosition.getX()%3 != 0) {
+			return false; 
 		} else if((currentPosition.getX() % 3 == 2 || currentPosition.getX() % 3 == -1) && currentPosition.getY() % 3 == 0) {
-			if(targetFacing != Orientation.NORTH) {
+			if(targetFacing == Orientation.NORTH) {
 				return true;
 			}
 		} else if((currentPosition.getX() % 3 == 1 || currentPosition.getX() % 3 == -2) && currentPosition.getY() % 3 == 0) {
-			if(targetFacing != Orientation.SOUTH) {
+			if(targetFacing == Orientation.SOUTH) {
 				return true;
 			}
 		} else if(currentPosition.getX() % 3 == 0 && currentPosition.getY() % 3 == 1) {
-			if(targetFacing != Orientation.EAST) {
+			if(targetFacing == Orientation.EAST) {
 				return true;
 			}
 		} else if(currentPosition.getX() % 3 == 0 && currentPosition.getY() % 3 == 2) {
-			if(targetFacing != Orientation.WEST) {
+			if(targetFacing == Orientation.WEST) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public void setHasPackage(boolean b) {
+	public void setPackage(boolean b) {
 		hasPackage = b;
 	}
 
 	public boolean hasPackage() {
 		return hasPackage;
+	}
+	
+	public boolean hasUnloadedSomething() {
+		return hasUnloadedSomething;
 	}
 }

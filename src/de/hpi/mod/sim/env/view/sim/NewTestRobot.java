@@ -19,11 +19,20 @@ public class NewTestRobot extends NewRobot{
     private int initialDelay = 0;
 	private List<Position> targetsCopy = new ArrayList<Position>();
 	private boolean fuzzyEnd = false;
+	private boolean requireUnload = false;
 	private boolean hasReservedBattery = false;
 	private boolean hardArrivedConstraint = false;
 
     public void setRequireArrived(boolean hardArrivedConstraint) {
 		this.hardArrivedConstraint = hardArrivedConstraint;
+	}
+    
+    public void setFuzzyTargetCheck(boolean fuzzyEnd) {
+		this.fuzzyEnd = fuzzyEnd;
+	}
+    
+    public void setUnloadingRequired(boolean requireUnload) {
+		this.requireUnload = requireUnload;
 	}
 
     public void setBatteryReservation(boolean batteryReservation) {
@@ -141,7 +150,7 @@ public class NewTestRobot extends NewRobot{
 
 	@Override
     public Robot register(SimulationWorld simulationWorld) {
-        return simulationWorld.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd, hasReservedBattery, hardArrivedConstraint);
+        return simulationWorld.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd, requireUnload, hasReservedBattery, hardArrivedConstraint);
     }
 
     @Override

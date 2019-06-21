@@ -50,7 +50,7 @@ public class RobotRenderer {
 	            boolean leftClicked = robot.equals(world.getHighlightedRobot1());
 	            boolean rightClicked = robot.equals(world.getHighlightedRobot2());
 	
-	            drawRobot(graphic, drawPosition, drive.getAngle(), leftClicked, rightClicked, robot.isHasPackage(), robot.getBattery() < .1);
+	            drawRobot(graphic, drawPosition, drive.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets

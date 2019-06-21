@@ -12,7 +12,8 @@ public class SimulatorConfig {
 
     public static final int DEFAULT_CHARGING_STATIONS_IN_USE = 10;
     public static final int SPACE_BETWEEN_CHARGING_STATIONS = 3;
-    public static final int MAX_ROBOTS_PER_STATION = 3;
+	private static final float RECOMMENDED_ROBOTS_PER_STATION = 4;
+    public static final int MAX_ROBOTS_PER_STATION = 5;
     public static final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
     public static final String TEST_FILE_NAME = ".tests";
     public static final String STRING_PATH_TO_ROBOT_ICON = "res/robot.png";
@@ -36,6 +37,8 @@ public class SimulatorConfig {
 	public static final float MIN_BATTERY_RATIO = .5f;
 	public static final int DEFAULT_UNLOADING_RANGE = 50;
 	public static final int DEFAULT_STATION_UNBLOCKING_TIME = 10000; //in ms
+	private static final float MIN_WAITING_TIME_BEFORE_LOADING = 1000;
+	private static final float MAX_WAITING_TIME_BEFORE_LOADING = 10000;
 	
 	public static final int DEFAULT_WAITING_TIME_BEFORE_TEST = 1000; //in ms
 	
@@ -76,10 +79,11 @@ public class SimulatorConfig {
      */
 	public static final int DEFAULT_MAP_HEIGHT = 10;
 	public static final int NOT_USED_ROWS = 3;
-	public static final long MESSAGE_DISPLAY_TIME = 1000; //in ms
+	public static final long MESSAGE_DISPLAY_TIME = 3000; //in ms
 
     private static int defaultChargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
+	private static float recommendedRobotsPerStation = RECOMMENDED_ROBOTS_PER_STATION;
     private static int maxRobotsPerStation = MAX_ROBOTS_PER_STATION;
     private static int scenarioPassingTime = SCENARIO_PASSING_TIME;
     private static String testFileName = TEST_FILE_NAME;
@@ -103,6 +107,8 @@ public class SimulatorConfig {
    	private static float batteryChargingSpeed = BATTERY_LOADING_SPEED;
    	private static float minBatteryRatio = MIN_BATTERY_RATIO;
    	private static int defaultStationUnblockingTime = DEFAULT_STATION_UNBLOCKING_TIME;
+	private static float minWaitingTimeBeforeLoading = MIN_WAITING_TIME_BEFORE_LOADING;
+	private static float maxWaitingTimeBeforeLoading = MAX_WAITING_TIME_BEFORE_LOADING;
    	
    	private static int defaultWaitingTimeBeforeTest = DEFAULT_WAITING_TIME_BEFORE_TEST;
    	
@@ -177,6 +183,10 @@ public class SimulatorConfig {
     public static int getSpaceBetweenChargingStations() {
     	return spaceBetweenChargingStations;
     }
+
+	public static float getRecommendedRobotsPerStation() {
+		return recommendedRobotsPerStation;
+	}
     
     public static int getMaxRobotsPerStation() {
     	return maxRobotsPerStation;
@@ -344,5 +354,13 @@ public class SimulatorConfig {
 
 	public static long getMessageDisplayTime() {
 		return messageDisplayTime ;
+	}
+
+	public static float getMinWaitingTimeBeforeLoading() {
+		return minWaitingTimeBeforeLoading;
+	}
+
+	public static float getMaxWaitingTimeBeforeLoading() {
+		return maxWaitingTimeBeforeLoading;
 	}
 }

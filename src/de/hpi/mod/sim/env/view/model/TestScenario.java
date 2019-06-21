@@ -24,7 +24,7 @@ public abstract class TestScenario extends Scenario {
     }
 
     public boolean isPassed() {
-        return hasRun && robots.stream().allMatch(Robot::hasReachedAllTargets);
+        return hasRun && robots.stream().allMatch(Robot::hasPassedAllTestCriteria);
     }
     
     public void notifySuccessToUser(DriveSimFrame frame) {

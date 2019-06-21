@@ -12,7 +12,7 @@ import de.hpi.mod.sim.env.view.DriveSimFrame;
 public class DeadlockDetector {
 	
 	private long currentTime = System.currentTimeMillis();
-	private long defaultOffset = 7000;
+	private long defaultOffset = 12000;
 	private long offset = 7000;
 	private SimulationWorld simulationWorld;
 	private ScenarioManager scenarioManager;
@@ -70,7 +70,7 @@ public class DeadlockDetector {
 	private void reportDeadlock() {
 		deactivate();
 		String reason = "Deadlock detected!";
-		frame.displayMessage(reason, DriveSimFrame.MENU_RED);
+		frame.reportDeadlock(reason);
 		if(scenarioManager.isRunningTest()) {
 			scenarioManager.failCurrentTest(reason);
 		}
