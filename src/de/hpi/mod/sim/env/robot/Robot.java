@@ -227,8 +227,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 
     private void handleFinishedLoading() {
     	if(now == 0 && !isInTest) {
-    		long minWaitTime = (long) (SimulatorConfig.getMinWaitingTimeBeforeLoading() * SimulatorConfig.getRobotSpeedFactor());
-    		long maxWaitTime = (long) (SimulatorConfig.getMaxWaitingTimeBeforeLoading() * SimulatorConfig.getRobotSpeedFactor());
+    		long minWaitTime = (long) (SimulatorConfig.getMinWaitingTimeBeforeLoading() / SimulatorConfig.getRobotSpeedFactor());
+    		long maxWaitTime = (long) (SimulatorConfig.getMaxWaitingTimeBeforeLoading() / SimulatorConfig.getRobotSpeedFactor());
     		if(isAlone) {
     			delay = minWaitTime;
     		}else {
