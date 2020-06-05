@@ -12,12 +12,12 @@ public class Station {
 
     /**
      * How many robots want to drive or are in the queue.
-     * Must not be greater than {@link ServerGridManagement#QUEUE_SIZE}
+     * Must not be greater than {@link GridManagement#QUEUE_SIZE}
      */
     private int queueSize = 0;
 
     /**
-     * There are {@link ServerGridManagement#BATTERIES_PER_STATION} batteries in this station.
+     * There are {@link GridManagement#BATTERIES_PER_STATION} batteries in this station.
      */
     private Battery[] batteries;
 

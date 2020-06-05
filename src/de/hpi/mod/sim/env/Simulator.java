@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Simulator implements IRobotController, ILocation, IScanner {
 
     private List<Robot> robots = new CopyOnWriteArrayList<>();
-    private ServerGridManagement grid;
+    private GridManagement grid;
     private IRobotStationDispatcher stations;
     private int mapHeight = SimulatorConfig.getMapHeight();
     private int unloadingRange = SimulatorConfig.getUnloadingRange();
@@ -21,7 +21,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
 
     public Simulator() {
-        grid = new ServerGridManagement(this);
+        grid = new GridManagement(this);
         stations = new StationManager(SimulatorConfig.getChargingStationsInUse());
     }
 
@@ -112,7 +112,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         return false;
     }
 
-    public ServerGridManagement getGrid() {
+    public GridManagement getGrid() {
         return grid;
     }
 
@@ -207,7 +207,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
             robot.close();
     }
 
-	public ServerGridManagement getServerGridManagement() {
+	public GridManagement getServerGridManagement() {
 		return grid;
 	}
 

@@ -11,20 +11,20 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class ServerGridManagementTest {
+public class GridManagementTest {
 
-    private ServerGridManagement getGridWithRobotsAtPositions(Position[] pos) {
+    private GridManagement getGridWithRobotsAtPositions(Position[] pos) {
         IRobotController control = new DummyRobotController(pos);
-        return new ServerGridManagement(control);
+        return new GridManagement(control);
     }
 
-    private ServerGridManagement getGrid() {
-        return new ServerGridManagement(new DummyRobotController());
+    private GridManagement getGrid() {
+        return new GridManagement(new DummyRobotController());
     }
 
     @Test
     public void cellType() {
-        ServerGridManagement grid = getGrid();
+        GridManagement grid = getGrid();
         assertEquals(CellType.BLOCK, grid.cellType(new Position(0, 0)));
         assertEquals(CellType.BLOCK, grid.cellType(new Position(0, 3)));
         assertEquals(CellType.BLOCK, grid.cellType(new Position(-3, 3)));

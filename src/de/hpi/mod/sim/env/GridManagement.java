@@ -13,7 +13,7 @@ import java.util.List;
  * the coordinate system. All cells which have a Y value below or equal to 0 are
  * in a station.
  */
-public class ServerGridManagement implements ISensorDataProvider {
+public class GridManagement implements ISensorDataProvider {
 
 	/**
 	 * Because the Map doesn't have direct access to newRobots, it needs a
@@ -22,7 +22,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 	private IRobotController control;
 	private List<Position> invalidPositions = new ArrayList<Position>();
 
-	public ServerGridManagement(IRobotController control) {
+	public GridManagement(IRobotController control) {
 		this.control = control;
 	}
 
