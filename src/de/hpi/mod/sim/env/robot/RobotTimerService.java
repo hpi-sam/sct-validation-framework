@@ -7,6 +7,9 @@ import de.hpi.mod.sim.ITimer;
 import de.hpi.mod.sim.ITimerCallback;
 import de.hpi.mod.sim.env.SimulatorConfig;
 
+/**
+ * Can be used to (un)set timers considering the simulation time
+ */
 public class RobotTimerService implements ITimer {
 
 	// Timers in real-world system time
@@ -91,11 +94,12 @@ public class RobotTimerService implements ITimer {
   
     }
 
-    public RobotTimerService() {
-    	// Init system timers with current system time
-    	this.lastUpdateSystemTime = System.currentTimeMillis();
+	public RobotTimerService() {
+		// Init system timers with current system time
+		this.lastUpdateSystemTime = System.currentTimeMillis();
 	}
 	
+	@Override
 	public void setTimer(final ITimerCallback callback, final int eventID, long time, boolean isPeriodic) {
 		
 		timerList.add(new SimulationTimer(callback, eventID, time, isPeriodic));
