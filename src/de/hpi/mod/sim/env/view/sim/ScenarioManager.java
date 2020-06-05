@@ -4,7 +4,7 @@ import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITestListener;
-import de.hpi.mod.sim.env.view.model.NewRobot;
+import de.hpi.mod.sim.env.view.model.RobotDescription;
 import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -218,7 +218,7 @@ public class ScenarioManager {
         }
 
         @Override
-        public List<NewRobot> initializeScenario() {
+        public List<RobotDescription> initializeScenario() {
             return new ArrayList<>();
         }
     }
@@ -229,17 +229,17 @@ public class ScenarioManager {
     	}
     	
     	@Override
-    	public List<NewRobot> initializeScenario(){
+    	public List<RobotDescription> initializeScenario(){
     		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
-    		List<NewRobot> newRobots = new ArrayList<>();
+    		List<RobotDescription> newRobots = new ArrayList<>();
     		
     		do {
     			station_number = ThreadLocalRandom.current().nextInt(maxStations);
     		} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    		NewScenarioRobot singleRobot = new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    		ScenarioRobotDescription singleRobot = new ScenarioRobotDescription(new Position((SimulatorConfig.getFirstStationTop().getX()
             		+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
             		SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH);
     		singleRobot.setIsAlone(true);
@@ -254,18 +254,18 @@ public class ScenarioManager {
     	}
     	
     	@Override
-    	public List<NewRobot> initializeScenario(){
+    	public List<RobotDescription> initializeScenario(){
     		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
-    		List<NewRobot> newRobots = new ArrayList<>();
+    		List<RobotDescription> newRobots = new ArrayList<>();
     		
     		for(int i=0; i<SimulatorConfig.getChargingStationsInUse(); i++) {
     			do {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    			newRobots.add(new ScenarioRobotDescription(new Position((SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2), Orientation.NORTH));
     			robotsAtStations[station_number] ++;
@@ -280,11 +280,11 @@ public class ScenarioManager {
     	}
     	
     	@Override
-    	public List<NewRobot> initializeScenario(){
+    	public List<RobotDescription> initializeScenario(){
     		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
-    		List<NewRobot> newRobots = new ArrayList<>();
+    		List<RobotDescription> newRobots = new ArrayList<>();
     		
     		for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*Math.ceil
     				(((float)SimulatorConfig.getRecommendedRobotsPerStation())/2); i++) {
@@ -292,7 +292,7 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    			newRobots.add(new ScenarioRobotDescription(new Position((SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2), Orientation.NORTH));
     			robotsAtStations[station_number] ++;
@@ -307,18 +307,18 @@ public class ScenarioManager {
     	}
     	
     	@Override
-    	public List<NewRobot> initializeScenario(){
+    	public List<RobotDescription> initializeScenario(){
     		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
-    		List<NewRobot> newRobots = new ArrayList<>();
+    		List<RobotDescription> newRobots = new ArrayList<>();
     		
     		for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*SimulatorConfig.getRecommendedRobotsPerStation(); i++) {
     			do {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    			newRobots.add(new ScenarioRobotDescription(new Position((SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH));
     			robotsAtStations[station_number] ++;
@@ -333,11 +333,11 @@ public class ScenarioManager {
     	}
     	
     	@Override
-    	public List<NewRobot> initializeScenario(){
+    	public List<RobotDescription> initializeScenario(){
     		int maxStations = SimulatorConfig.getChargingStationsInUse();
     		int station_number;
     		int[] robotsAtStations = new int[maxStations];
-    		List<NewRobot> newRobots = new ArrayList<>();
+    		List<RobotDescription> newRobots = new ArrayList<>();
     		
     		for(int i=0; i<SimulatorConfig.getChargingStationsInUse()*SimulatorConfig.getRecommendedRobotsPerStation(); i++) {
     		//for(int i=0; i<3; i++) {
@@ -345,7 +345,7 @@ public class ScenarioManager {
     				station_number = ThreadLocalRandom.current().nextInt(maxStations);
     			} while(robotsAtStations[station_number] >= SimulatorConfig.getMaxRobotsPerStation());
     	
-    			newRobots.add(new NewScenarioRobot(new Position((SimulatorConfig.getFirstStationTop().getX()
+    			newRobots.add(new ScenarioRobotDescription(new Position((SimulatorConfig.getFirstStationTop().getX()
     					+ station_number * SimulatorConfig.getSpaceBetweenChargingStations())+2, 
     					SimulatorConfig.getFirstStationTop().getY() - robotsAtStations[station_number]+2), Orientation.NORTH, 1000));
     			robotsAtStations[station_number] ++;

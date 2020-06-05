@@ -2,7 +2,7 @@ package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
-import de.hpi.mod.sim.env.view.model.NewRobot;
+import de.hpi.mod.sim.env.view.model.RobotDescription;
 import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
@@ -50,7 +50,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
         Scenario resetSimulationScenario = new Scenario() {
             @Override
-            protected List<NewRobot> initializeScenario() {
+            protected List<RobotDescription> initializeScenario() {
                 return new ArrayList<>();
             }
         };

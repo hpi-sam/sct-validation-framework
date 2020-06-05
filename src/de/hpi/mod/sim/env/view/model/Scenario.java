@@ -31,10 +31,10 @@ public abstract class Scenario {
     	return description;
     }
 
-    protected abstract List<NewRobot> initializeScenario();
+    protected abstract List<RobotDescription> initializeScenario();
 
     public void loadScenario(SimulationWorld sim) {
-        List<NewRobot> newRobots = initializeScenario();
+        List<RobotDescription> newRobots = initializeScenario();
         newRobots.forEach(robot -> robot.register(sim));
     }
 

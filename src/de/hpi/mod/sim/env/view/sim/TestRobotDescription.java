@@ -8,9 +8,9 @@ import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.robot.Robot.RobotState;
-import de.hpi.mod.sim.env.view.model.NewRobot;
+import de.hpi.mod.sim.env.view.model.RobotDescription;
 
-public class NewTestRobot extends NewRobot{
+public class TestRobotDescription extends RobotDescription{
 	private Position position;
     private RobotState state;
     private List<Position> targets = new ArrayList<Position>();
@@ -43,7 +43,7 @@ public class NewTestRobot extends NewRobot{
 		this.initialDelay = initialDelay;
 	}
 
-	public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
+	public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets) {
         this.position = position;
         this.state = startingState;
         this.targets = targets;
@@ -53,7 +53,7 @@ public class NewTestRobot extends NewRobot{
         this.initialDelay = SimulatorConfig.getDefaultWaitingTimeBeforeTest();
     }
     
-    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay) {
+    public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay) {
         this.position = position;
         this.state = startingState;
         this.targets = targets;
@@ -63,7 +63,7 @@ public class NewTestRobot extends NewRobot{
         this.initialDelay = SimulatorConfig.getDefaultWaitingTimeBeforeTest();
     }
     
-    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay, int initialDelay) {
+    public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay, int initialDelay) {
         this.position = position;
         this.state = startingState;
         this.targets = targets;
@@ -73,7 +73,7 @@ public class NewTestRobot extends NewRobot{
         this.initialDelay = initialDelay;
     }
 
-    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy) {
+    public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy) {
     	this.position = position;
         this.state = startingState;
         this.targets = targets;
@@ -84,7 +84,7 @@ public class NewTestRobot extends NewRobot{
         this.fuzzyEnd  = fuzzy; 
 	}
     
-    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy, boolean initialBatteryStatus) {
+    public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy, boolean initialBatteryStatus) {
     	this.position = position;
         this.state = startingState;
         this.targets = targets;
@@ -96,7 +96,7 @@ public class NewTestRobot extends NewRobot{
         this.hasReservedBattery = initialBatteryStatus;
 	}
     
-    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy, boolean initialBatteryStatus, boolean hardArrivedConstraint) {
+    public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, boolean fuzzy, boolean initialBatteryStatus, boolean hardArrivedConstraint) {
 		this.position = position;
         this.state = startingState;
         this.targets = targets;
@@ -109,7 +109,7 @@ public class NewTestRobot extends NewRobot{
         this.hardArrivedConstraint  = hardArrivedConstraint;
 	}
     
-    public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
+    public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
 			int initialDelay, boolean fuzzy) {
 		this.position = position;
         this.state = startingState;
@@ -121,7 +121,7 @@ public class NewTestRobot extends NewRobot{
         this.fuzzyEnd  = fuzzy;
 	}
 
-	public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
+	public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
 			int initialDelay, boolean fuzzy, boolean initialBatteryStatus) {
 		this.position = position;
         this.state = startingState;
@@ -134,7 +134,7 @@ public class NewTestRobot extends NewRobot{
         this.hasReservedBattery  = initialBatteryStatus;
 	}
 	
-	public NewTestRobot(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
+	public TestRobotDescription(Position position, RobotState startingState, Orientation facing, List<Position> targets, int delay,
 			int initialDelay, boolean fuzzy, boolean initialBatteryStatus, boolean hardArrivedConstraint) {
 		this.position = position;
         this.state = startingState;
