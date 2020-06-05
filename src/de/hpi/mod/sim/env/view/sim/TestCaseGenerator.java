@@ -15,15 +15,15 @@ import de.hpi.mod.sim.env.view.model.TestScenario;
 public class TestCaseGenerator {
 	
 	private Random rand;
-	private Map<String, ArrayList<TestScenario>> testGroups;
+	private Map<String, List<TestScenario>> testGroups;
 
 
-	public TestCaseGenerator(Map<String, ArrayList<TestScenario>> testGroups) {
+	public TestCaseGenerator(Map<String, List<TestScenario>> testGroups) {
 		rand = new Random();
 		this.testGroups = testGroups;
 	}
 	
-	public Map<String, ArrayList<TestScenario>> getAllTestCases(){
+	public Map<String, List<TestScenario>> getAllTestCases(){
 		testGroups.put("I. Driving in Station", generateStationTests());
 		testGroups.put("II. Driving at Crossroads", generateSimpleCrossroadTests());
 		testGroups.put("III. Crossroad Conflicts", generateCrossroadConflicTests());
@@ -33,8 +33,8 @@ public class TestCaseGenerator {
 		return testGroups;
 	}
 	
-//	private ArrayList<TestScenario> generateDeadlockTests() {
-//		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+//	private List<TestScenario> generateDeadlockTests() {
+//		List<TestScenario> testScenarios = new ArrayList<>();
 //		List<NewRobot> newRobots = new ArrayList<>();
 //        List<Position> targetsRobotOne = new ArrayList<>();
 //        List<Position> targetsRobotTwo = new ArrayList<>();
@@ -54,10 +54,10 @@ public class TestCaseGenerator {
 //		return testScenarios;
 //	}
 
-	private ArrayList<TestScenario> generateUnloadingTests() {
+	private List<TestScenario> generateUnloadingTests() {
 		
 		// Start list of test scenarios
-		ArrayList<TestScenario> testScenarios  = new ArrayList<>();
+		List<TestScenario> testScenarios  = new ArrayList<>();
         NewTestRobot testRobot;
         
         
@@ -116,8 +116,8 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private ArrayList<TestScenario> generateCompleteDriveRoutineTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateCompleteDriveRoutineTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		List<NewRobot> newRobots;
         List<Position> targets;
 		
@@ -173,18 +173,18 @@ public class TestCaseGenerator {
         return new Position(x, y);
     }
     
-    private ArrayList<Position> p_list(Position... p){
+    private List<Position> p_list(Position... p){
     	return new ArrayList<Position>(Arrays.asList(p));
     }
     
-    private ArrayList<NewRobot> r_list(NewRobot... r){
+    private List<NewRobot> r_list(NewRobot... r){
     	return new ArrayList<NewRobot>(Arrays.asList(r));
     }
 	
-	private ArrayList<TestScenario> generateStationTests() {
+	private List<TestScenario> generateStationTests() {
 		
 		// Start list of test scenarios
-		ArrayList<TestScenario> testScenarios  = new ArrayList<>();
+		List<TestScenario> testScenarios  = new ArrayList<>();
         NewTestRobot testRobot1,testRobot2,testRobot3;
         
         // Drive single step
@@ -307,8 +307,8 @@ public class TestCaseGenerator {
         return testScenarios;
 	}
 
-	private ArrayList<TestScenario> generateCrossroadConflicTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateCrossroadConflicTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		testScenarios.addAll(generateTwoRobotsOnCrossroadTests());
 		testScenarios.addAll(generateThreeRobotsOnCrossroadTests());
 		testScenarios.addAll(generateFourRobotsOnCrossroadTest());
@@ -316,8 +316,8 @@ public class TestCaseGenerator {
 	}
 
 
-	private ArrayList<TestScenario> generateTwoRobotsOnCrossroadTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateTwoRobotsOnCrossroadTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		List<NewRobot> newRobots = new ArrayList<>();
         List<Position> targetsRobotOne, targetsRobotTwo, targetsRobotThree;
 
@@ -390,8 +390,8 @@ public class TestCaseGenerator {
         return testScenarios;
 	}
 
-	private ArrayList<TestScenario> generateThreeRobotsOnCrossroadTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateThreeRobotsOnCrossroadTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		int biasX = rand.nextInt(5);
 		int biasY = rand.nextInt(5);
 		List<NewRobot> newRobots = new ArrayList<>();
@@ -451,8 +451,8 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private ArrayList<TestScenario> generateFourRobotsOnCrossroadTest() {
-		 ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateFourRobotsOnCrossroadTest() {
+		 List<TestScenario> testScenarios = new ArrayList<>();
 		
 		 List<NewRobot> newRobots = new ArrayList<>();
          List<Position> targetsRobotOne = new ArrayList<>();
@@ -473,8 +473,8 @@ public class TestCaseGenerator {
          
 	}
 
-	private ArrayList<TestScenario>  generateSimpleCrossroadTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario>  generateSimpleCrossroadTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		testScenarios.addAll(generateEnteringCrossroadTests());
 		testScenarios.addAll(generatePassingCrossroadAheadTests());
 		testScenarios.addAll(generateTurningRightOnCrossroadTests());
@@ -482,8 +482,8 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private ArrayList<TestScenario> generatePassingCrossroadAheadTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generatePassingCrossroadAheadTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		NewTestRobot testRobot;
 		int biasX, biasY;
 		
@@ -514,8 +514,8 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private ArrayList<TestScenario> generateTurningLeftOnCrossroadTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateTurningLeftOnCrossroadTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		NewTestRobot testRobot;
 		int biasX, biasY;
 		
@@ -541,8 +541,8 @@ public class TestCaseGenerator {
         
 	}
 
-	private ArrayList<TestScenario> generateTurningRightOnCrossroadTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateTurningRightOnCrossroadTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		NewTestRobot testRobot;
 		int biasX, biasY;
 		
@@ -567,8 +567,8 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private ArrayList<TestScenario> generateEnteringCrossroadTests() {
-		ArrayList<TestScenario> testScenarios = new ArrayList<>();
+	private List<TestScenario> generateEnteringCrossroadTests() {
+		List<TestScenario> testScenarios = new ArrayList<>();
 		
 		int biasX = rand.nextInt(5);
 		int biasY = rand.nextInt(5);

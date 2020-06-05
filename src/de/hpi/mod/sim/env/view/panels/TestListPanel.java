@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -24,17 +25,17 @@ public class TestListPanel extends JPanel implements ITestListener {
     	this.scenarioManager = scenarioManager;
         setLayout(new GridBagLayout());
         
-        Map<String, ArrayList<TestScenario>> testGroups = scenarioManager.getTestGroups();
+        Map<String, List<TestScenario>> testGroups = scenarioManager.getTestGroups();
         Set<String> keys = testGroups.keySet();
         for(String key : keys) {
         	addTestGroup(key, testGroups.get(key));
         }   
     }
     
-    private void addTestGroup(String key, ArrayList<TestScenario> arrayList) {
+    private void addTestGroup(String key, List<TestScenario> list) {
 	    addGroupLabel(key);
 	    yCoordinate++;
-	    for (TestScenario test : arrayList) {
+	    for (TestScenario test : list) {
 	    	addTest(test);
 	    	yCoordinate++;
 	    }

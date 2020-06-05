@@ -4,6 +4,7 @@ import de.hpi.mod.sim.env.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -19,7 +20,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * controller to find out if a cells is blocked by a robot.
 	 */
 	private IRobotController control;
-	private ArrayList<Position> invalidPositions = new ArrayList<Position>();
+	private List<Position> invalidPositions = new ArrayList<Position>();
 
 	public ServerGridManagement(IRobotController control) {
 		this.control = control;
@@ -233,7 +234,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 		Position crossroad = (posType(position) == PositionType.CROSSROAD) ? getSouthwestCornerOfCrossroad(position): getSouthwestCornerOfUpcomingCrossroad(facing, position);
 
 		// Get all cells of croassroads and make sure that current position is ignored.
-		ArrayList<Position> crossroadCells = getCellsOfCrossroad(crossroad, new ArrayList<Position>(Arrays.asList(position)));
+		List<Position> crossroadCells = getCellsOfCrossroad(crossroad, new ArrayList<Position>(Arrays.asList(position)));
 		
 		// check if any of of the cells are blocked.
 		for (Position crossroadCell : crossroadCells) {
@@ -715,7 +716,7 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * @param any position on a crossroad
 	 * @return Cells in Crossroad
 	 */
-	ArrayList<Position> getCellsOfCrossroad(Position position) {
+	List<Position> getCellsOfCrossroad(Position position) {
 		return getCellsOfCrossroad(position, new ArrayList<Position>());
 	}
 
@@ -727,11 +728,11 @@ public class ServerGridManagement implements ISensorDataProvider {
 	 * @param ignorePositions	Positions to ignore in output
 	 * @return Cells in Crossroad
 	 */
-	ArrayList<Position> getCellsOfCrossroad(Position position, ArrayList<Position> ignorePositions) {
+	List<Position> getCellsOfCrossroad(Position position, ArrayList<Position> ignorePositions) {
 		// get the reference position of the corssroad (i.e. the southwest corner).
 		Position crossroad = getSouthwestCornerOfCrossroad(position);
 		// Get all four positions that should belong to a croassroad
-		ArrayList<Position> cells = new ArrayList<Position>(
+		List<Position> cells = new ArrayList<Position>(
 				Arrays.asList(crossroad, 
 						new Position(crossroad.getX() + 1, crossroad.getY()),
 						new Position(crossroad.getX() + 1, crossroad.getY() + 1),

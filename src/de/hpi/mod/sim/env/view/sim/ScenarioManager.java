@@ -23,7 +23,7 @@ public class ScenarioManager {
     private List<Scenario> scenarios = new ArrayList<>();
     private Scenario clear = new EmptyScenario();
     private Scenario currentScenario;
-    private Map<String,ArrayList<TestScenario>> testGroups = new LinkedHashMap<>();
+    private Map<String,List<TestScenario>> testGroups = new LinkedHashMap<>();
     private SimulationWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
     
@@ -367,7 +367,7 @@ public class ScenarioManager {
 		this.collisionDetector = collisionDetector;
 	}
 
-	public Map<String,ArrayList<TestScenario>> getTestGroups() {
+	public Map<String,List<TestScenario>> getTestGroups() {
 		return testGroups;
 	}
 
