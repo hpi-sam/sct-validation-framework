@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.sim;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,17 +22,19 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     private RobotRenderer robotRenderer;
     private ExplosionRenderer explosionRenderer;
 
-    private SimulationWorld world;
+    private SimulationWorld simulationWorld;
+    private MetaWorld world;
     
     private int currentHeight;
     private int currentWidth;
 
 
-    public SimulatorView() {
-        world = new SimulationWorld(this);
-        gridRenderer = new GridRenderer(world, world.getSimulator().getGrid());
-        robotRenderer = new RobotRenderer(world);
-        explosionRenderer = new ExplosionRenderer(world);
+    public SimulatorView(MetaWorld world) {
+        this.world = world;
+        simulationWorld = new SimulationWorld(this);
+        gridRenderer = new GridRenderer(simulationWorld, world.getSimulator().getGrid());
+        robotRenderer = new RobotRenderer(world, simulationWorld);
+        explosionRenderer = new ExplosionRenderer(simulationWorld);
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -39,8 +42,8 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         setFocusable(true);
     }
 
-    public SimulationWorld getWorld() {
-        return world;
+    public SimulationWorld getSimulationWorld() {
+        return simulationWorld;
     }
 
     @Override
@@ -75,7 +78,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
 	@Override
     public void mouseClicked(MouseEvent e) {
-        Position pos = world.toGridPosition(e.getX(), e.getY());
+        Position pos = simulationWorld.toGridPosition(e.getX(), e.getY());
         for (Robot r : world.getRobots()) {
             if (r.getDriveManager().currentPosition().equals(pos) || r.getDriveManager().getOldPosition().equals(pos)) {
             	if(e.getButton() == MouseEvent.BUTTON1) {
@@ -105,7 +108,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseExited(MouseEvent e) {
-        world.setMousePointing(false);
+        simulationWorld.setMousePointing(false);
     }
 
     @Override
@@ -113,7 +116,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        world.setMousePointer(world.toGridPosition(e.getX(), e.getY()));
+        simulationWorld.setMousePointer(simulationWorld.toGridPosition(e.getX(), e.getY()));
     }
 
     private void refreshSimulationSize() {

@@ -3,6 +3,7 @@ package de.hpi.mod.sim.env.view.sim;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.robot.DriveManager;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,12 +19,14 @@ import java.io.IOException;
  */
 public class RobotRenderer {
 
-    private SimulationWorld world;
+    private MetaWorld world;
+    private SimulationWorld simulationWorld;
     private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
 
 
-    public RobotRenderer(SimulationWorld world) {
+    public RobotRenderer(MetaWorld world, SimulationWorld simulationWorld) {
         this.world = world;
+        this.simulationWorld = simulationWorld;
 
         loadImages();
     }
@@ -44,20 +47,20 @@ public class RobotRenderer {
         // Draw Robots
         for (Robot robot : world.getRobots()) {
 	            DriveManager drive = robot.getDriveManager();
-	            Point2D drawPosition = world.toDrawPosition(drive.getX(), drive.getY());
+	            Point2D drawPosition = simulationWorld.toDrawPosition(drive.getX(), drive.getY());
 	
-	            boolean leftClicked = robot.equals(world.getHighlightedRobot1());
-	            boolean rightClicked = robot.equals(world.getHighlightedRobot2());
+	            boolean leftClicked = robot.equals(simulationWorld.getHighlightedRobot1());
+	            boolean rightClicked = robot.equals(simulationWorld.getHighlightedRobot2());
 	
 	            drawRobot(graphic, drawPosition, drive.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets
         for (Robot r : world.getRobots()) {
-            if (r.equals(world.getHighlightedRobot1()) || r.equals(world.getHighlightedRobot2())) {
+            if (r.equals(simulationWorld.getHighlightedRobot1()) || r.equals(simulationWorld.getHighlightedRobot2())) {
 	                DriveManager drive = r.getDriveManager();
-	                Point2D drawPos = world.toDrawPosition(drive.getX(), drive.getY());
-	                Point2D targetPos = world.toDrawPosition(r.getTarget());
+	                Point2D drawPos = simulationWorld.toDrawPosition(drive.getX(), drive.getY());
+	                Point2D targetPos = simulationWorld.toDrawPosition(r.getTarget());
 	
 	                drawTarget(graphic, drawPos, targetPos);
             }
@@ -65,7 +68,7 @@ public class RobotRenderer {
     }
 
     private void drawRobot(Graphics graphic, Point2D drawPosition, float angle, boolean leftClicked, boolean rightClicked, boolean hasPackage, boolean batteryEmpty) {
-        float blockSize = world.getBlockSize();
+        float blockSize = simulationWorld.getBlockSize();
         int translateX = (int) drawPosition.getX();
         int translateY = (int) drawPosition.getY();
 
@@ -93,7 +96,7 @@ public class RobotRenderer {
         Graphics2D Graphic2D = (Graphics2D) graphic;
         graphic.setColor(Color.RED);
 
-        int offset = (int) world.getBlockSize() / 2;
+        int offset = (int) simulationWorld.getBlockSize() / 2;
         Graphic2D.drawLine(
                 (int) drawPosition.getX() + offset,
                 (int) drawPosition.getY() + offset,

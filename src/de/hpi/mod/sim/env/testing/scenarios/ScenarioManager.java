@@ -6,15 +6,11 @@ import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.testing.ITestListener;
 import de.hpi.mod.sim.env.testing.RobotDescription;
 import de.hpi.mod.sim.env.testing.Scenario;
-import de.hpi.mod.sim.env.testing.detectors.CollisionDetector;
-import de.hpi.mod.sim.env.testing.detectors.DeadlockDetector;
-import de.hpi.mod.sim.env.testing.detectors.InvalidPositionDetector;
-import de.hpi.mod.sim.env.testing.detectors.InvalidTurningDetector;
-import de.hpi.mod.sim.env.testing.detectors.InvalidUnloadingDetector;
+import de.hpi.mod.sim.env.testing.detectors.*;
 import de.hpi.mod.sim.env.testing.tests.TestCaseGenerator;
 import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,7 +26,7 @@ public class ScenarioManager {
     private Scenario clear = new EmptyScenario();
     private Scenario currentScenario;
     private Map<String,List<TestScenario>> testGroups = new LinkedHashMap<>();
-    private SimulationWorld world;
+    private MetaWorld world;
     private List<ITestListener> listeners = new ArrayList<>();
     
     private Queue<TestScenario> testsToRun = new LinkedList<>();
@@ -52,7 +48,7 @@ public class ScenarioManager {
 	private InvalidTurningDetector invalidTurningDetector;
 
 
-    public ScenarioManager(SimulationWorld world, CollisionDetector collisionDetector, DriveSimFrame frame) {
+    public ScenarioManager(MetaWorld world, CollisionDetector collisionDetector, DriveSimFrame frame) {
         this.world = world;
         this.collisionDetector = collisionDetector;
         this.frame = frame;
@@ -85,9 +81,7 @@ public class ScenarioManager {
     private void runScenario(Scenario scenario, boolean isTest) {
     	frame.allowRunning();
     	frame.setResizable(scenario.isResizable());
-    	world.resetZoom();
-		world.resetOffset();
-		world.resetHighlightedRobots();
+    	world.reset();
         world.playScenario(scenario);
         world.releaseAllLocks();
         deadlockDetector.reactivate();
@@ -200,7 +194,7 @@ public class ScenarioManager {
     	}
     }
     
-    public SimulationWorld getWorld() {
+    public MetaWorld getWorld() {
     	return world;
     }
 

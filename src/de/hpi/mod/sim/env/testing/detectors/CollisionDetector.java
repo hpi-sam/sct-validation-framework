@@ -5,15 +5,15 @@ import java.util.List;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 public class CollisionDetector {
-	SimulationWorld world;
+	MetaWorld world;
 	DriveSimFrame frame;
 	ScenarioManager scenarioManager;
 	boolean collisionReported = false;
 	
-	public CollisionDetector(ScenarioManager scenarioManager, SimulationWorld world, DriveSimFrame frame) {
+	public CollisionDetector(ScenarioManager scenarioManager, MetaWorld world, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
 		this.world = world;
 		this.frame = frame;

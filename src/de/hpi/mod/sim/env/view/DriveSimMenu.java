@@ -5,6 +5,7 @@ import de.hpi.mod.sim.env.testing.RobotDescription;
 import de.hpi.mod.sim.env.testing.Scenario;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
 	private static final long serialVersionUID = -1260633775659938837L;
 	private Icon playIcon, pauseIcon;
-    private SimulationWorld world;
+    private MetaWorld world;
 
     private JMenuItem playItem, zoomInItem, zoomOutItem, zoomResetItem, moveLeftItem,
             moveRightItem, moveUpItem, moveDownItem, moveResetItem, resetSimItem, keyItem;
@@ -22,7 +23,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
     private KeyManager keyManager;
 
 
-    public DriveSimMenu(SimulationWorld world) {
+    public DriveSimMenu(MetaWorld world, SimulationWorld simulationWorld) {
         this.world = world;
 
         loadIcons();
@@ -55,14 +56,14 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
             }
         };
 
-        zoomInItem.addActionListener(e -> world.zoomIn(1));
-        zoomOutItem.addActionListener(e -> world.zoomOut(1));
-        zoomResetItem.addActionListener(e -> world.resetZoom());
-        moveLeftItem.addActionListener(e -> world.moveHorizontal(-1));
-        moveRightItem.addActionListener(e -> world.moveHorizontal(1));
-        moveUpItem.addActionListener(e -> world.moveVertical(1));
-        moveDownItem.addActionListener(e -> world.moveVertical(-1));
-        moveResetItem.addActionListener(e -> world.resetOffset());
+        zoomInItem.addActionListener(e -> simulationWorld.zoomIn(1));
+        zoomOutItem.addActionListener(e -> simulationWorld.zoomOut(1));
+        zoomResetItem.addActionListener(e -> simulationWorld.resetZoom());
+        moveLeftItem.addActionListener(e -> simulationWorld.moveHorizontal(-1));
+        moveRightItem.addActionListener(e -> simulationWorld.moveHorizontal(1));
+        moveUpItem.addActionListener(e -> simulationWorld.moveVertical(1));
+        moveDownItem.addActionListener(e -> simulationWorld.moveVertical(-1));
+        moveResetItem.addActionListener(e -> simulationWorld.resetOffset());
         playItem.addActionListener(e -> world.toggleRunning());
         resetSimItem.addActionListener(e -> world.playScenario(resetSimulationScenario));
         keyItem.addActionListener(e -> openKeyDialog());

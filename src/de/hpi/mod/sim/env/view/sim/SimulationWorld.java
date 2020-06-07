@@ -1,18 +1,12 @@
 package de.hpi.mod.sim.env.view.sim;
 
-import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.simulation.Simulator;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
-import de.hpi.mod.sim.env.simulation.robot.Robot.RobotState;
-import de.hpi.mod.sim.env.testing.Scenario;
 import de.hpi.mod.sim.env.view.model.IHighlightedRobotListener;
-import de.hpi.mod.sim.env.view.model.ITimeListener;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 /**
@@ -35,17 +29,7 @@ public class SimulationWorld {
 	 */
 	private float offsetX = SimulatorConfig.getDefaultOffsetX(), offsetY = SimulatorConfig.getDefaultOffsetY();
 
-	/**
-	 * Whether the simulation is running or not
-	 */
-	private boolean running = false;
-
-	/**
-	 * If set to true, the simulation will be considered as not running, even if it
-	 * can Run
-	 */
-	private boolean runForbidden = false;
-
+	
 	/**
 	 * The Position of the mouse in blocks
 	 */
@@ -63,8 +47,6 @@ public class SimulationWorld {
 	private Robot highlightedRobot1 = null;
 	private Robot highlightedRobot2 = null;
 
-	private Simulator simulator;
-
 	private SimulatorView view;
 
 	/**
@@ -74,57 +56,10 @@ public class SimulationWorld {
 	private List<IHighlightedRobotListener> highlightedRobotListeners = new ArrayList<>();
 	private List<IHighlightedRobotListener> highlightedRobotListeners2 = new ArrayList<>();
 
-	/**
-	 * List of {@link ITimeListener}s. Gets called if the time flow changes.
-	 */
-	private List<ITimeListener> timeListeners = new ArrayList<>();
 
-	/**
-	 * Used for locking while the List of Robots gets traversed
-	 */
-	private boolean isRefreshing = false, isUpdating = false;
 
 	public SimulationWorld(SimulatorView view) {
 		this.view = view;
-		simulator = new Simulator();
-	}
-
-	/**
-	 * Refreshes the Simulation and sends Sensor-Refreshes to all Robots. Locks the
-	 * List of robots
-	 */
-	public synchronized void refresh() {
-		if (running && !runForbidden) {
-			isRefreshing = true;
-			simulator.refresh();
-			isRefreshing = false;
-			notifyAll();
-		}
-	}
-
-	/**
-	 * Updates the Robots each frame. Locks the List of Robots
-	 * 
-	 * @param delta The time since last frame in milliseconds
-	 */
-	public synchronized void update(float delta) {
-		if (running && !runForbidden) {
-			try {
-				isUpdating = true;
-				for (Robot robot : simulator.getRobots()) {
-					if(robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
-						robot.getDriveManager().update(delta);
-					} else {
-						robot.getDriveManager().update(delta, robot.getRobotSpecificDelay());
-					}
-					
-				}
-				isUpdating = false;
-				notifyAll();
-			} catch (ConcurrentModificationException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	public void addHighlightedRobotListener(IHighlightedRobotListener highlightedRobotListener) {
@@ -135,28 +70,10 @@ public class SimulationWorld {
 		highlightedRobotListeners2.add(highlightedRobotListener2);
 	}
 
-	public void addTimeListener(ITimeListener timeListener) {
-		timeListeners.add(timeListener);
-	}
-
-	public Simulator getSimulator() {
-		return simulator;
-	}
-
 	public SimulatorView getView() {
 		return view;
 	}
 
-	/**
-	 * Returns the Robots of the Simulation. Be careful when using this, since other
-	 * threads are modifying the List, which can lead to
-	 * {@link ConcurrentModificationException}
-	 * 
-	 * @return List of Robots in Simulation
-	 */
-	public List<Robot> getRobots() {
-		return simulator.getRobots();
-	}
 
 	public void zoomIn(float zoom) {
 		if (blockSize < SimulatorConfig.getMaxBlockSize())
@@ -199,48 +116,6 @@ public class SimulationWorld {
 		return offsetY;
 	}
 
-	public synchronized Robot addRobot() {
-		return addRobotRunner(() -> simulator.addRobot());
-	}
-
-	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets, int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery, boolean hardArrivedConstraint) {
-		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets, delay, initialDelay, fuzzyEnd, unloadingTest, hasReservedBattery, hardArrivedConstraint));
-	}
-
-	public Robot addRobotInScenario(Position pos, Orientation facing, int delay) {
-		return addRobotRunner(() -> simulator.addRobotInScenario(pos, facing, delay));
-	}
-
-	private Robot addRobotRunner(AddRobotRunner runner) {
-		while (isRefreshing || isUpdating) {
-			// Do nothing while refreshing or updating
-		}
-
-		Robot r = runner.run();
-		if (highlightedRobot1 == null)
-			setHighlightedRobot1(r);
-		else
-			setHighlightedRobot2(r);
-		return r;
-	}
-
-	/**
-	 * Clears all Robots, stops the simulation, loads the scenario and plays it
-	 * 
-	 * @param scenario The Scenario to play
-	 */
-	public void playScenario(Scenario scenario) {
-		while (isRefreshing || isUpdating) {
-			// Do nothing while refreshing or updating
-		}
-
-		if (isRunning())
-			toggleRunning();
-		simulator.getRobots().clear();
-
-		scenario.loadScenario(this);
-	}
-
 	public void setMousePointer(Position mousePointer) {
 		this.mousePointer = mousePointer;
 		isMousePointing = true;
@@ -274,18 +149,6 @@ public class SimulationWorld {
 
 	public Robot getHighlightedRobot2() {
 		return highlightedRobot2;
-	}
-
-	public void toggleRunning() {
-		running = !running;
-		refreshTimeListeners();
-	}
-
-	public boolean isRunning() {
-		if (runForbidden) {
-			return false;
-		}
-		return running;
 	}
 
 	/**
@@ -327,20 +190,8 @@ public class SimulationWorld {
 		return position.is(highlightedRobot2.pos()) || position.is(highlightedRobot2.oldPos());
 	}
 
-	public void dispose() {
-		simulator.close();
-	}
-
 	private void refreshHighlightedRobotListeners() {
 		highlightedRobotListeners.forEach(IHighlightedRobotListener::onHighlightedRobotChange);
-	}
-
-	private void refreshTimeListeners() {
-		timeListeners.forEach(ITimeListener::refresh);
-	}
-
-	private interface AddRobotRunner {
-		Robot run();
 	}
 
 	public void resetHighlightedRobots() {
@@ -348,15 +199,5 @@ public class SimulationWorld {
 		highlightedRobot2 = null;
 	}
 
-	public void setRunForbidden(boolean isForbidden) {
-		runForbidden = isForbidden;
-	}
 
-	public void releaseAllLocks() {
-		simulator.releaseAllLocks();
-	}
-
-	public void updateSimulator(int chargingStationsInUse) {
-		simulator.createNewStationManager(chargingStationsInUse);
-	}
 }

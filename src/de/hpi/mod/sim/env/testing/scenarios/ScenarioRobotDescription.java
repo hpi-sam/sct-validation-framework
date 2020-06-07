@@ -4,7 +4,7 @@ import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.testing.RobotDescription;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 public class ScenarioRobotDescription extends RobotDescription{
 	private Position position;
@@ -24,8 +24,8 @@ public class ScenarioRobotDescription extends RobotDescription{
 	}
 
 	@Override
-	public Robot register(SimulationWorld sim) {
-		Robot robot = sim.addRobotInScenario(position, facing, delay);
+	public Robot register(MetaWorld world) {
+		Robot robot = world.addRobotInScenario(position, facing, delay);
 		robot.setIsAlone(isAlone);
 		return robot;
 	}

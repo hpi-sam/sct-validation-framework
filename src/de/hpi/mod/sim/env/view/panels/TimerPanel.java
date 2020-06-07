@@ -1,4 +1,5 @@
 package de.hpi.mod.sim.env.view.panels;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -11,17 +12,17 @@ import javax.swing.Timer;
 
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld; 
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 public class TimerPanel extends JPanel {
 	
 	private static final long serialVersionUID = 8453578481264370011L;
 	private Timer timer;
-	private SimulationWorld world;
+	private MetaWorld world;
 	private float time;
 	private JTextField valueField;
 	
-	public TimerPanel(SimulationWorld world){
+	public TimerPanel(MetaWorld world){
 		this.world = world;
 		
 		setLayout(new GridBagLayout());

@@ -4,7 +4,7 @@ import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 
 	private static final long serialVersionUID = 4048135614810423369L;
 	private int currentLevel = SimulatorConfig.getDefaultRobotSpeedLevel();
-	private SimulationWorld world;
+	private MetaWorld world;
 	private ScenarioManager scenarioManager;
 	private JTextField valueField;
 	private JButton playButton;
@@ -26,7 +26,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	private ImageIcon stopIcon;
 	private ImageIcon resetIcon;
 	
-    public SimulationPanel(SimulationWorld world, ScenarioManager scenarioManager) {
+    public SimulationPanel(MetaWorld world, ScenarioManager scenarioManager) {
     	this.world = world;
     	this.scenarioManager = scenarioManager;
     	

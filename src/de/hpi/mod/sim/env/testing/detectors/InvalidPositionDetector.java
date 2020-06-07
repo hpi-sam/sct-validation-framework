@@ -6,15 +6,15 @@ import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 public class InvalidPositionDetector {
-	SimulationWorld world;
+	MetaWorld world;
 	DriveSimFrame frame;
 	ScenarioManager scenarioManager;
 	boolean invalidPositionReported = false;
 	
-	public InvalidPositionDetector(ScenarioManager scenarioManager, SimulationWorld world, DriveSimFrame frame) {
+	public InvalidPositionDetector(ScenarioManager scenarioManager, MetaWorld world, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
 		this.world = world;
 		this.frame = frame;

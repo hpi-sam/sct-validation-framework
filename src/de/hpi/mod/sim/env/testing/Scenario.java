@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.env.testing;
 
 import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 import java.util.List;
 
@@ -33,9 +33,9 @@ public abstract class Scenario {
 
     protected abstract List<RobotDescription> initializeScenario();
 
-    public void loadScenario(SimulationWorld sim) {
+    public void loadScenario(MetaWorld world) {
         List<RobotDescription> newRobots = initializeScenario();
-        newRobots.forEach(robot -> robot.register(sim));
+        newRobots.forEach(robot -> robot.register(world));
     }
 
 	public boolean isResizable() {

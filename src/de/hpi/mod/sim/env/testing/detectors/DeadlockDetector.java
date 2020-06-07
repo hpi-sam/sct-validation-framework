@@ -9,28 +9,28 @@ import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 public class DeadlockDetector {
 	
 	private long currentTime = System.currentTimeMillis();
 	private long defaultOffset = 12000;
 	private long offset = 7000;
-	private SimulationWorld simulationWorld;
+	private MetaWorld world;
 	private ScenarioManager scenarioManager;
 	private DriveSimFrame frame;
 	private Map<Integer, Position> robotPositions = new HashMap<>();
 	private boolean deactivated = true;
 
-	public DeadlockDetector(SimulationWorld simulationWorld, ScenarioManager scenarioManager, DriveSimFrame frame) {
+	public DeadlockDetector(MetaWorld world, ScenarioManager scenarioManager, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
-		this.simulationWorld = simulationWorld;
+		this.world = world;
 		this.frame = frame;
 		getRobotPositions();
 	}
 	
 	public void update(){
-		if(!simulationWorld.isRunning() || deactivated) {
+		if(!world.isRunning() || deactivated) {
 			return;
 		}
 		
@@ -51,7 +51,7 @@ public class DeadlockDetector {
 	}
 
 	private void checkForDeadlock() {
-		List<Robot> robotList = simulationWorld.getRobots();
+		List<Robot> robotList = world.getRobots();
 		
 		if(robotList.isEmpty()) {
 			return;
@@ -83,7 +83,7 @@ public class DeadlockDetector {
 	}
 
 	private void getRobotPositions() {
-		List<Robot> robotList = simulationWorld.getRobots();
+		List<Robot> robotList = world.getRobots();
 		for(Robot robot : robotList){
 			robotPositions.put(robot.getID(), robot.pos());
 		}

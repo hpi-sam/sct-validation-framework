@@ -8,6 +8,7 @@ import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.view.sim.SimulatorView;
+import de.hpi.mod.sim.env.world.MetaWorld;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,7 +25,8 @@ import java.io.IOException;
 public class DriveSimFrame extends JFrame {
 
 	private static final long serialVersionUID = 4683030810403226266L;
-	private SimulationWorld world;
+	private MetaWorld world;
+	private SimulationWorld simulationWorld;
     private SimulatorView sim;
     private DeadlockDetector deadlockDetector;
     private CollisionDetector collisionDetector;
@@ -169,9 +171,11 @@ public class DriveSimFrame extends JFrame {
 		}
     }
     
-    private void initializeSimulationItems() {
-		sim = new SimulatorView();
-        world = sim.getWorld();
+	private void initializeSimulationItems() {
+		world = new MetaWorld(); //TODO instantiate specified world 
+		sim = new SimulatorView(world);
+		simulationWorld = sim.getSimulationWorld(); //TODO rethink structure of simulationWorld/simulationView/MetaWorld
+		world.initialize(simulationWorld);
         scenarioManager = new ScenarioManager(world, collisionDetector, this);
         deadlockDetector = new DeadlockDetector(world, scenarioManager, this);
         collisionDetector = new CollisionDetector(scenarioManager, world, this);
@@ -186,20 +190,20 @@ public class DriveSimFrame extends JFrame {
 	}
     
     private void initializePanels() {
-		robotInfoPanel1 = new RobotInfoPanel(world, false);
-        robotInfoPanel2 = new RobotInfoPanel(world, true);
+		robotInfoPanel1 = new RobotInfoPanel(simulationWorld, false);
+        robotInfoPanel2 = new RobotInfoPanel(simulationWorld, true);
         simulationPanel = new SimulationPanel(world, scenarioManager);
         testListPanel = new TestListPanel(scenarioManager);
         testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         testOverviewPanel = new TestOverviewPanel(scenarioManager, this);
         timerPanel = new TimerPanel(world);
         scenarioPanel = new ScenarioPanel(scenarioManager);
-        setJMenuBar(new DriveSimMenu(world));
+        setJMenuBar(new DriveSimMenu(world, simulationWorld));
 	}
     
     private void addListeners() {
-		world.addHighlightedRobotListener(robotInfoPanel1);
-        world.addHighlightedRobotListener2(robotInfoPanel2);
+		simulationWorld.addHighlightedRobotListener(robotInfoPanel1);
+        simulationWorld.addHighlightedRobotListener2(robotInfoPanel2);
         world.addTimeListener(simulationPanel);
         scenarioManager.addTestListener(testListPanel);
         scenarioManager.addTestListener(testOverviewPanel);
@@ -420,7 +424,7 @@ public class DriveSimFrame extends JFrame {
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
         
-        sim.getWorld().refresh();
+        world.refresh();
         robotInfoPanel1.onHighlightedRobotChange();
         robotInfoPanel2.onHighlightedRobotChange();
         scenarioManager.refresh();
@@ -429,13 +433,13 @@ public class DriveSimFrame extends JFrame {
         invalidPositionDetector.update();
         invalidUnloadingDetector.update();
         invalidTurningDetector.update();
-        sim.getWorld().update(delta);
+        world.update(delta);
 
         this.repaint();
     }
 
     private void close() {
-        sim.getWorld().dispose();
+       	world.dispose();
         setVisible(false);
         dispose();
         System.exit(0);
