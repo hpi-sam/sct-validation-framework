@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.env;
+package de.hpi.mod.sim.env.simulation.station;
 
 import de.hpi.mod.sim.env.model.IRobotStationDispatcher;
 import de.hpi.mod.sim.env.model.Position;
@@ -27,7 +27,7 @@ public class StationManager implements IRobotStationDispatcher {
      * Allocate the given amount of stations
      * @param defaultAmountOfStations How many stations to allocate
      */
-    StationManager(int defaultAmountOfStations) {
+    public StationManager(int defaultAmountOfStations) {
     	this.usedStations = defaultAmountOfStations;
         for (int i = 0; i < defaultAmountOfStations; i++)
             stations.add(new Station(i));

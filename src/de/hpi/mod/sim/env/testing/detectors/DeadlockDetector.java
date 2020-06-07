@@ -1,13 +1,15 @@
-package de.hpi.mod.sim.env.view.sim;
+package de.hpi.mod.sim.env.testing.detectors;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
+import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 public class DeadlockDetector {
 	

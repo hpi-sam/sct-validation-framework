@@ -10,11 +10,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.testing.ITestListener;
+import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
+import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.model.ITestListener;
-import de.hpi.mod.sim.env.view.model.TestScenario;
-import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 public class TestOverviewPanel extends JPanel implements ITestListener {
 

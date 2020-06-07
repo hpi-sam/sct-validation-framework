@@ -1,17 +1,16 @@
 package de.hpi.mod.sim.env.view.panels;
 
+import de.hpi.mod.sim.env.testing.ITestListener;
+import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
+import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.model.ITestListener;
-import de.hpi.mod.sim.env.view.model.TestScenario;
-import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 
 import javax.swing.*;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 public class TestListPanel extends JPanel implements ITestListener {

@@ -1,8 +1,5 @@
 package de.hpi.mod.sim.env.model;
 
-import de.hpi.mod.sim.env.robot.DriveSystemWrapper;
-import de.hpi.mod.sim.env.robot.Robot;
-
 /**
  * Represents the Default interface in the Statechart.
  * It is used for communication between the Environment ({@link Robot})

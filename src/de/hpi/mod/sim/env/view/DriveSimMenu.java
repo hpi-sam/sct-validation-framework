@@ -1,9 +1,9 @@
 package de.hpi.mod.sim.env.view;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.testing.RobotDescription;
+import de.hpi.mod.sim.env.testing.Scenario;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
-import de.hpi.mod.sim.env.view.model.RobotDescription;
-import de.hpi.mod.sim.env.view.model.Scenario;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import javax.swing.*;

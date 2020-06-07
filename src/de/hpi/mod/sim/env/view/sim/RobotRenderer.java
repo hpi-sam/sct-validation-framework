@@ -1,9 +1,8 @@
 package de.hpi.mod.sim.env.view.sim;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
-import de.hpi.mod.sim.env.robot.DriveManager;
-import de.hpi.mod.sim.env.robot.Robot;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.robot.DriveManager;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

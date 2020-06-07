@@ -1,15 +1,11 @@
 package de.hpi.mod.sim.env.view;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
-import de.hpi.mod.sim.env.robot.Robot;
-import de.hpi.mod.sim.env.view.model.TestScenario;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
+import de.hpi.mod.sim.env.testing.detectors.*;
+import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
+import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
-import de.hpi.mod.sim.env.view.sim.CollisionDetector;
-import de.hpi.mod.sim.env.view.sim.DeadlockDetector;
-import de.hpi.mod.sim.env.view.sim.InvalidPositionDetector;
-import de.hpi.mod.sim.env.view.sim.InvalidTurningDetector;
-import de.hpi.mod.sim.env.view.sim.InvalidUnloadingDetector;
-import de.hpi.mod.sim.env.view.sim.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 import de.hpi.mod.sim.env.view.sim.SimulatorView;
 

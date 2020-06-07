@@ -1,14 +1,20 @@
-package de.hpi.mod.sim.env.view.sim;
+package de.hpi.mod.sim.env.testing.scenarios;
 
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.testing.ITestListener;
+import de.hpi.mod.sim.env.testing.RobotDescription;
+import de.hpi.mod.sim.env.testing.Scenario;
+import de.hpi.mod.sim.env.testing.detectors.CollisionDetector;
+import de.hpi.mod.sim.env.testing.detectors.DeadlockDetector;
+import de.hpi.mod.sim.env.testing.detectors.InvalidPositionDetector;
+import de.hpi.mod.sim.env.testing.detectors.InvalidTurningDetector;
+import de.hpi.mod.sim.env.testing.detectors.InvalidUnloadingDetector;
+import de.hpi.mod.sim.env.testing.tests.TestCaseGenerator;
+import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.view.model.ITestListener;
-import de.hpi.mod.sim.env.view.model.RobotDescription;
-import de.hpi.mod.sim.env.view.model.Scenario;
-import de.hpi.mod.sim.env.view.model.TestScenario;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
-import de.hpi.mod.sim.env.SimulatorConfig;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

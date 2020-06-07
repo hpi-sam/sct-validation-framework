@@ -1,7 +1,5 @@
 package de.hpi.mod.sim.env.model;
 
-import de.hpi.mod.sim.env.robot.DriveSystemWrapper;
-
 /**
  * Represents the Data interface in the Statechard.
  * It is used for communication between the Environment

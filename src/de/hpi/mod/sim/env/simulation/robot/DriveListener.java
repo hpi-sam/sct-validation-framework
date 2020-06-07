@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.env.robot;
+package de.hpi.mod.sim.env.simulation.robot;
 
 public interface DriveListener {
     void actionCompleted();

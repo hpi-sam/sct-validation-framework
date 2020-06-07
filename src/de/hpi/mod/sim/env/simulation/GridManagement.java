@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.env;
+package de.hpi.mod.sim.env.simulation;
 
 import de.hpi.mod.sim.env.model.*;
 
@@ -627,7 +627,7 @@ public class GridManagement implements ISensorDataProvider {
 	 *                crossroad are considered, if false all incoming ones.
 	 * @return The waypoint
 	 */
-	Position getWaypointOfCrossroad(Position cross, Orientation side, boolean onCross) {
+	public Position getWaypointOfCrossroad(Position cross, Orientation side, boolean onCross) {
 		switch (side) {
 		case NORTH:
 			return new Position(onCross ? cross.getX() + 1 : cross.getX(), cross.getY() + 2);
@@ -651,7 +651,7 @@ public class GridManagement implements ISensorDataProvider {
 	 * @param position The position of the waypoint
 	 * @return left bottom cell of the crossroad
 	 */
-	Position getSouthwestCornerOfUpcomingCrossroad(Orientation facing, Position position) {
+	public Position getSouthwestCornerOfUpcomingCrossroad(Orientation facing, Position position) {
 		Position next = Position.nextPositionInOrientation(facing, position);
 		return getSouthwestCornerOfCrossroad(next);
 	}
@@ -665,7 +665,7 @@ public class GridManagement implements ISensorDataProvider {
 	 * @param position A Position on a Crossroad
 	 * @return The (relative) lower left cell of the Crossroad
 	 */
-	Position getLowerLeftCornerOfCrossroad(Orientation facing, Position position) {
+	public Position getLowerLeftCornerOfCrossroad(Orientation facing, Position position) {
 		Position crossroad_absolute = getSouthwestCornerOfCrossroad(position);
 		if(facing == Orientation.NORTH) {
 			return new Position(crossroad_absolute.getX(), crossroad_absolute.getY());
@@ -686,7 +686,7 @@ public class GridManagement implements ISensorDataProvider {
 	 * @param position A Position on a Crossroad
 	 * @return The left bottom cell of the Crossroad
 	 */
-	Position getSouthwestCornerOfCrossroad(Position position) {
+	public Position getSouthwestCornerOfCrossroad(Position position) {
 		int x = position.getX() - (Math.floorMod(position.getX(), 3) - 1);
 		int y = (position.getY() / 3) * 3 + 1;
 		return new Position(x, y);
@@ -700,7 +700,7 @@ public class GridManagement implements ISensorDataProvider {
 	 * @param position A Position on a Crossroad
 	 * @return The left bottom cell of the Crossroad
 	 */
-	Position getSouthwestCornerOfWaypoint(Position position) {
+	public Position getSouthwestCornerOfWaypoint(Position position) {
 		int x = position.getX(), y= position.getY();
 		if(Math.floorMod(x, 3) == 2 && y % 3 == 0) {
 			x = x - 1;

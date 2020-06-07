@@ -1,9 +1,11 @@
-package de.hpi.mod.sim.env.view.sim;
+package de.hpi.mod.sim.env.testing.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
+import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 public class CollisionDetector {
 	SimulationWorld world;

@@ -1,9 +1,10 @@
-package de.hpi.mod.sim.env.robot;
+package de.hpi.mod.sim.env.simulation.robot;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.IRobotActors;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 /**

@@ -1,9 +1,10 @@
-package de.hpi.mod.sim.env.view.sim;
+package de.hpi.mod.sim.env.testing.scenarios;
 
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.robot.Robot;
-import de.hpi.mod.sim.env.view.model.RobotDescription;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
+import de.hpi.mod.sim.env.testing.RobotDescription;
+import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 public class ScenarioRobotDescription extends RobotDescription{
 	private Position position;

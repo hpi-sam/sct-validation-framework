@@ -1,11 +1,11 @@
-package de.hpi.mod.sim.env.robot;
+package de.hpi.mod.sim.env.simulation.robot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.mod.sim.ITimer;
 import de.hpi.mod.sim.ITimerCallback;
-import de.hpi.mod.sim.env.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 
 /**
  * Can be used to (un)set timers considering the simulation time

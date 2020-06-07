@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.env;
+package de.hpi.mod.sim.env.simulation;
 
 import java.util.HashMap;
 import java.util.Map;

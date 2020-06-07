@@ -1,7 +1,10 @@
-package de.hpi.mod.sim.env;
+package de.hpi.mod.sim.env.simulation.station;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import de.hpi.mod.sim.env.simulation.GridManagement;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 
 /**
  * Manages the Queue, Drive-Lock and Batteries of a station

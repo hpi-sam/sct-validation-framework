@@ -1,8 +1,11 @@
 package de.hpi.mod.sim.env.robot;
 
-import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.robot.DriveListener;
+import de.hpi.mod.sim.env.simulation.robot.DriveManager;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

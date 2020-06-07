@@ -1,6 +1,6 @@
-package de.hpi.mod.sim.env.view.model;
+package de.hpi.mod.sim.env.testing;
 
-import de.hpi.mod.sim.env.view.sim.ScenarioManager;
+import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
 import java.util.List;

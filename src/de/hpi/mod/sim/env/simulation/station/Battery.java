@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.env;
+package de.hpi.mod.sim.env.simulation.station;
 
 /**
  * A charging position in a station.

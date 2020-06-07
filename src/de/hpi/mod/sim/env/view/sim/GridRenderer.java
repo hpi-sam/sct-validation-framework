@@ -1,10 +1,9 @@
 package de.hpi.mod.sim.env.view.sim;
 
-import de.hpi.mod.sim.env.GridManagement;
-import de.hpi.mod.sim.env.SimulatorConfig;
 import de.hpi.mod.sim.env.model.CellType;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.view.sim.SimulationWorld;
+import de.hpi.mod.sim.env.simulation.GridManagement;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
