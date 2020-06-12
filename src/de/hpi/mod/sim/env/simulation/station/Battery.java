@@ -4,7 +4,7 @@ package de.hpi.mod.sim.env.simulation.station;
  * A charging position in a station.
  * Saves if it is blocked or reserved by a robot.
  */
-class Battery {
+public class Battery {
 
     private int batteryID;
 
@@ -20,31 +20,31 @@ class Battery {
     private int reservedForRobot;
 
 
-    Battery(int batteryID) {
+    public Battery(int batteryID) {
         this.batteryID = batteryID;
     }
 
-    int getBatteryID() {
+    public int getBatteryID() {
         return batteryID;
     }
 
-    boolean isFree() {
+    public boolean isFree() {
         return !blocked;
     }
     
-    boolean isBlocked() {
+    public boolean isBlocked() {
         return blocked;
     }
     
-    boolean robotPresent() {
+    public boolean robotPresent() {
     	return robotPresent;
     }
 
-    void setBlocked(boolean blocked) {
+    public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
 
-    int getReservedForRobot() {
+    public int getReservedForRobot() {
         return reservedForRobot;
     }
 
@@ -52,16 +52,16 @@ class Battery {
      * Sets the robot and sets {@link #blocked} to true.
      * @param reservedForRobot The ID of the robot
      */
-    void setReservedForRobot(int reservedForRobot) {
+    public void setReservedForRobot(int reservedForRobot) {
         setBlocked(true);
         this.reservedForRobot = reservedForRobot;
     }
 
-	void setRobotPresent() {
+	public void setRobotPresent() {
 		robotPresent = true;
 	}
 
-	void setRobotNotPresent() {
+	public void setRobotNotPresent() {
 		robotPresent = false;
 	}
 }

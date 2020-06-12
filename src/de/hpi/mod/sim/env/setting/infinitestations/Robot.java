@@ -1,7 +1,10 @@
-package de.hpi.mod.sim.env.simulation.robot;
+package de.hpi.mod.sim.env.setting.infinitestations;
 
 import de.hpi.mod.sim.env.model.*;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.robot.DriveListener;
+import de.hpi.mod.sim.env.simulation.robot.DriveManager;
+import de.hpi.mod.sim.env.simulation.robot.DriveSystemWrapper;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * It relays sensor-information from a {@link ISensorDataProvider} to the Drive-System.
  * It uses a {@link IRobotStationDispatcher} to drive in a station and {@link ILocation} to get new Targets.
  */
-public class Robot implements IProcessor, ISensor, DriveListener {
+public class Robot implements IProcessor, ISensor, DriveListener {  //TODO draw as much as possible into core
 
     /**
      * Used so each Robot has an unique id
@@ -25,7 +28,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
     private IDriveSystem drive;
     private ISensorDataProvider grid;
     private IRobotStationDispatcher dispatcher;
-    private ILocation location;
+    private IComplexLocation location;
     private IScanner scanner;
 
     private Position target = null;
@@ -63,7 +66,7 @@ public class Robot implements IProcessor, ISensor, DriveListener {
 	private boolean arrivedEventWasCalled = true;
 
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
-                 IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
+                 IRobotStationDispatcher dispatcher, IComplexLocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing) {
         this.robotID = robotID;
         this.stationID = stationID;
@@ -84,7 +87,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
      * @param state 
      */
     public Robot(int robotID, int stationID, ISensorDataProvider grid,
-                 IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
+                 IRobotStationDispatcher dispatcher, 
+            IComplexLocation location, IScanner scanner,
                  Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery, boolean hardArrivedConstraint) {
         this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
@@ -99,7 +103,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {
         this.requireArrivedForTestCompletion = hardArrivedConstraint;
     }
 
-    public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, ILocation simulator,
+    public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, 
+            IComplexLocation simulator,
 			IScanner simulator2, Position position, Orientation facing, int delay) {
 		this(robotID2, i, grid2, stations, simulator, simulator2, position, facing);
 		manager.setMaxDelay(delay);

@@ -1,80 +1,75 @@
-package de.hpi.mod.sim.env.testing.detectors;
+package de.hpi.mod.sim.env.setting.infinitestations.detectors;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.setting.Setting;
+import de.hpi.mod.sim.env.setting.infinitestations.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
-import de.hpi.mod.sim.env.simulation.robot.Robot;
-import de.hpi.mod.sim.env.testing.scenarios.ScenarioManager;
-import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.world.MetaWorld;
+import de.hpi.mod.sim.env.testing.Detector;
 
-public class DeadlockDetector {
-	
+public class DeadlockDetector extends Detector {
+
+	public DeadlockDetector(Setting setting) {
+		super(setting);
+		getRobotPositions();
+	}
+
 	private long currentTime = System.currentTimeMillis();
 	private long defaultOffset = 12000;
 	private long offset = 7000;
-	private MetaWorld world;
-	private ScenarioManager scenarioManager;
-	private DriveSimFrame frame;
 	private Map<Integer, Position> robotPositions = new HashMap<>();
 	private boolean deactivated = true;
 
-	public DeadlockDetector(MetaWorld world, ScenarioManager scenarioManager, DriveSimFrame frame) {
-		this.scenarioManager = scenarioManager;
-		this.world = world;
-		this.frame = frame;
-		getRobotPositions();
-	}
-	
-	public void update(){
-		if(!world.isRunning() || deactivated) {
+	@Override
+	public void update(List<Robot> robots) {
+		if (!setting.getWorld().isRunning() || deactivated) {
 			return;
 		}
-		
+
 		offset = (long) Math.max(defaultOffset, defaultOffset / SimulatorConfig.getRobotSpeedFactor());
-		if(currentTime + offset <= System.currentTimeMillis()) {
+		if (currentTime + offset <= System.currentTimeMillis()) {
 			checkForDeadlock();
 			getRobotPositions();
 			getCurrentTime();
 		}
 	}
-	
+
 	public void deactivate() {
 		deactivated = true;
 	}
-	
+
 	public void reactivate() {
 		deactivated = false;
 	}
 
 	private void checkForDeadlock() {
-		List<Robot> robotList = world.getRobots();
-		
-		if(robotList.isEmpty()) {
+		List<Robot> robotList = setting.getRobots();
+
+		if (robotList.isEmpty()) {
 			return;
 		}
-		
-		for(Robot robot : robotList) {
+
+		for (Robot robot : robotList) {
 			Position oldPosition = robotPositions.get(robot.getID());
 			if (oldPosition == null) {
 				return;
 			}
-			if(!(oldPosition.is(robot.pos()))) {
+			if (!(oldPosition.is(robot.pos()))) {
 				return;
 			}
-		}	
+		}
 		reportDeadlock();
 	}
 
 	private void reportDeadlock() {
 		deactivate();
 		String reason = "Deadlock detected!";
-		frame.reportDeadlock(reason);
-		if(scenarioManager.isRunningTest()) {
-			scenarioManager.failCurrentTest(reason);
+		setting.getFrame().reportDeadlock(reason);
+		if (setting.getScenarioManager().isRunningTest()) {
+			setting.getScenarioManager().failCurrentTest(reason);
 		}
 	}
 
@@ -83,9 +78,14 @@ public class DeadlockDetector {
 	}
 
 	private void getRobotPositions() {
-		List<Robot> robotList = world.getRobots();
-		for(Robot robot : robotList){
+		List<Robot> robotList = setting.getRobots();  
+		for (Robot robot : robotList) {
 			robotPositions.put(robot.getID(), robot.pos());
 		}
+	}
+
+	@Override
+	public void reset() {
+		reactivate();
 	}
 }

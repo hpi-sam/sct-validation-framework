@@ -1,8 +1,8 @@
 package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.model.CellType;
+import de.hpi.mod.sim.env.model.IGrid;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.simulation.GridManagement;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 
 import java.awt.*;
@@ -18,13 +18,13 @@ import javax.imageio.ImageIO;
  */
 public class GridRenderer {
 
-    private GridManagement grid;
+    private IGrid grid;
     private SimulationWorld world;
     
     private BufferedImage leftClickedRobotBlocking, rightClickedRobotBlocking;
 
 
-    public GridRenderer(SimulationWorld world, GridManagement grid) {
+    public GridRenderer(SimulationWorld world, IGrid grid) {
         this.world = world;
         this.grid = grid;
         

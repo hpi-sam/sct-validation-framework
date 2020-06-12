@@ -1,28 +1,27 @@
-package de.hpi.mod.sim.env.simulation;
+package de.hpi.mod.sim.env.setting.infinitestations;
 
 import de.hpi.mod.sim.env.model.*;
-import de.hpi.mod.sim.env.simulation.robot.Robot;
-import de.hpi.mod.sim.env.simulation.robot.Robot.RobotState;
-import de.hpi.mod.sim.env.simulation.station.StationManager;
+import de.hpi.mod.sim.env.setting.infinitestations.Robot.RobotState;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class Simulator implements IRobotController, ILocation, IScanner {
+public class RobotDispatcher implements IRobotController, IComplexLocation, IScanner { //TODO draw as much as possible into core
 
     private List<Robot> robots = new CopyOnWriteArrayList<>();
-    private GridManagement grid;
+    private GridManagement gridData;
     private IRobotStationDispatcher stations;
     private int mapHeight = SimulatorConfig.getMapHeight();
     private int unloadingRange = SimulatorConfig.getUnloadingRange();
     private int[] heights = new int[mapHeight];
 
 
-    public Simulator() {
-        grid = new GridManagement(this);
-        stations = new StationManager(SimulatorConfig.getChargingStationsInUse());
+    public RobotDispatcher(GridManagement grid, IRobotStationDispatcher stations) {
+        this.gridData = grid;
+        this.stations = stations;
     }
 
     /**
@@ -39,7 +38,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         Robot robot = new Robot(
                 robotID,
                 stationID,
-                grid, stations, this, this,
+                gridData, stations, this, this,
                 getBatteryPositionAtStation(stationID, batteryID),
                 Orientation.EAST);
         robots.add(robot);
@@ -66,7 +65,7 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         Robot robot = new Robot(
                 robotID,
                 0,
-                grid, stations, this, this,
+                gridData, stations, this, this,
                 position, state, facing, targets, delay, initialDelay, fuzzyEnd, unloadingTest, hasReservedBattery, hardArrivedConstraint);
         robots.add(robot);
         return robot;
@@ -74,13 +73,13 @@ public class Simulator implements IRobotController, ILocation, IScanner {
     
     public Robot addRobotInScenario(Position position, Orientation facing, int delay) {
 
-		if (grid.posType(position) == PositionType.STATION || grid.posType(position) == PositionType.WAYPOINT) {
+		if (gridData.posType(position) == PositionType.STATION || gridData.posType(position) == PositionType.WAYPOINT) {
 	        int robotID = Robot.incrementID();
 	        int stationID = stations.getStationIDFromPosition(position);
 	        Robot robot = new Robot(
 	                robotID,
 	                stationID,
-	                grid, stations, this, this,
+	                gridData, stations, this, this,
 	                position, facing, delay);
 	        robots.add(robot);
 	        return robot;
@@ -112,10 +111,13 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         return false;
     }
 
-    public GridManagement getGrid() {
-        return grid;
-    }
-
+    /**
+     * Returns the Robots of the Simulation. Be careful when using this, since other
+     * threads are modifying the List, which can lead to
+     * {@link ConcurrentModificationException}
+     * 
+     * @return List of Robots in Simulation
+     */
     public List<Robot> getRobots() {
         return robots;
     }
@@ -130,27 +132,27 @@ public class Simulator implements IRobotController, ILocation, IScanner {
 
     @Override
     public Position getArrivalPositionAtStation(int stationID) {
-        return grid.getArrivalPositionAtStation(stationID);
+        return gridData.getArrivalPositionAtStation(stationID);
     }
 
     @Override
     public Position getBatteryPositionAtStation(int stationID, int chargerID) {
-        return grid.getChargerPositionAtStation(stationID, chargerID);
+        return gridData.getChargerPositionAtStation(stationID, chargerID);
     }
 
     @Override
     public Position getLoadingPositionAtStation(int stationID) {
-        return grid.getLoadingPositionAtStation(stationID);
+        return gridData.getLoadingPositionAtStation(stationID);
     }
 
     @Override
     public Position getQueuePositionAtStation(int stationID) {
-        return grid.getQueuePositionAtStation(stationID);
+        return gridData.getQueuePositionAtStation(stationID);
     }
 
     @Override
     public Position getUnloadingPositionFromID(int unloadingID) {
-        return grid.getUnloadingPositionFromID(unloadingID);
+        return gridData.getUnloadingPositionFromID(unloadingID);
     }
 
     private int getRandomUnloadingID(Position robotPosition) {
@@ -206,10 +208,6 @@ public class Simulator implements IRobotController, ILocation, IScanner {
         for (Robot robot : robots)
             robot.close();
     }
-
-	public GridManagement getServerGridManagement() {
-		return grid;
-	}
 
 	public void releaseAllLocks() {
 		stations.releaseAllLocks();

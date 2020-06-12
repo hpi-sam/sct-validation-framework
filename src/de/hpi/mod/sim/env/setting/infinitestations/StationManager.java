@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.env.simulation.station;
+package de.hpi.mod.sim.env.setting.infinitestations;
 
 import de.hpi.mod.sim.env.model.IRobotStationDispatcher;
 import de.hpi.mod.sim.env.model.Position;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Manages stations and acts as dispatcher in the robot-reservation-protocol
  *
  */
-public class StationManager implements IRobotStationDispatcher {
+public class StationManager implements IRobotStationDispatcher { 
 
     /**
      * The stations in the range.

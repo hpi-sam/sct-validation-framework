@@ -1,11 +1,11 @@
 package de.hpi.mod.sim.env.view;
 
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.World;
 import de.hpi.mod.sim.env.testing.RobotDescription;
 import de.hpi.mod.sim.env.testing.Scenario;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
-import de.hpi.mod.sim.env.world.MetaWorld;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
 	private static final long serialVersionUID = -1260633775659938837L;
 	private Icon playIcon, pauseIcon;
-    private MetaWorld world;
+    private World world;
 
     private JMenuItem playItem, zoomInItem, zoomOutItem, zoomResetItem, moveLeftItem,
             moveRightItem, moveUpItem, moveDownItem, moveResetItem, resetSimItem, keyItem;
@@ -23,7 +23,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
     private KeyManager keyManager;
 
 
-    public DriveSimMenu(MetaWorld world, SimulationWorld simulationWorld) {
+    public DriveSimMenu(World world, SimulationWorld simulationWorld) {
         this.world = world;
 
         loadIcons();

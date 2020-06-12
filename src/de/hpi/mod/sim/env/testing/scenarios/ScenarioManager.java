@@ -2,15 +2,17 @@ package de.hpi.mod.sim.env.testing.scenarios;
 
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
+import de.hpi.mod.sim.env.setting.Setting;
+import de.hpi.mod.sim.env.setting.infinitestations.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.World;
+import de.hpi.mod.sim.env.testing.Detector;
 import de.hpi.mod.sim.env.testing.ITestListener;
 import de.hpi.mod.sim.env.testing.RobotDescription;
 import de.hpi.mod.sim.env.testing.Scenario;
-import de.hpi.mod.sim.env.testing.detectors.*;
 import de.hpi.mod.sim.env.testing.tests.TestCaseGenerator;
 import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
-import de.hpi.mod.sim.env.world.MetaWorld;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,11 +24,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ScenarioManager {
 
+	private Setting setting;
     private List<Scenario> scenarios = new ArrayList<>();
     private Scenario clear = new EmptyScenario();
     private Scenario currentScenario;
     private Map<String,List<TestScenario>> testGroups = new LinkedHashMap<>();
-    private MetaWorld world;
+    private World world;
     private List<ITestListener> listeners = new ArrayList<>();
     
     private Queue<TestScenario> testsToRun = new LinkedList<>();
@@ -38,20 +41,16 @@ public class ScenarioManager {
 	private String failReason = "";
 	
 	private TestScenario activeTest = null;
-    CollisionDetector collisionDetector;
-    InvalidPositionDetector invalidPositionDetector;
-    DeadlockDetector deadlockDetector;
+	
     DriveSimFrame frame;
 	private List<TestScenario> tests = new ArrayList<>();
-	private InvalidUnloadingDetector invalidUnloadingDetector;
 	private TestCaseGenerator testCaseGenerator;
-	private InvalidTurningDetector invalidTurningDetector;
 
 
-    public ScenarioManager(MetaWorld world, CollisionDetector collisionDetector, DriveSimFrame frame) {
-        this.world = world;
-        this.collisionDetector = collisionDetector;
-        this.frame = frame;
+    public ScenarioManager(Setting setting) {
+        this.world = setting.getWorld();
+        this.setting = setting;
+        this.frame = setting.getFrame();
         this.testCaseGenerator = new TestCaseGenerator(testGroups);
         initializeScenarioList();
         initializeTestGroupsMap();
@@ -78,17 +77,24 @@ public class ScenarioManager {
 		testGroups = testCaseGenerator.getAllTestCases();
 	}
 
+	private void resetDetectors() {
+		for (Detector detector : setting.getDetectors())
+			detector.reset();
+	}
+
+	private void updateDetectors() {
+		List<Robot> robots = setting.getRobots();
+		for (Detector detector : setting.getDetectors())
+			detector.update(robots);
+	}
+
     private void runScenario(Scenario scenario, boolean isTest) {
     	frame.allowRunning();
     	frame.setResizable(scenario.isResizable());
     	world.reset();
         world.playScenario(scenario);
-        world.releaseAllLocks();
-        deadlockDetector.reactivate();
-        collisionDetector.reset();
-        invalidPositionDetector.reset();
-        invalidUnloadingDetector.reset();
-        invalidTurningDetector.reset();
+		world.releaseAllLocks();
+		resetDetectors();
         if(!world.isRunning()) 
         	world.toggleRunning();
         
@@ -168,33 +174,34 @@ public class ScenarioManager {
 	}
 
     public void refresh() {
-    	if (isRunningTest) {
-    		if(currentTestFailed) {
-    			deadlockDetector.deactivate();
-    			for (ITestListener listener : listeners) {
-                    listener.failTest(activeTest);
-                }
-    			activeTest.notifyFailToUser(frame, failReason);
-    			currentTestFailed = false;
-    			isRunningTest = false;
-    			activeTest = null;
-    			if (runningAllTests)
-    				runNextTest();
-    		} else if (activeTest.isPassed()) {
-    			deadlockDetector.deactivate();
-    			for (ITestListener listener : listeners) {
-                    listener.onTestCompleted(activeTest);
-                }
-    			activeTest.notifySuccessToUser(frame);
-    			isRunningTest = false;
-    			activeTest = null;
-    			if (runningAllTests)
-    				runNextTest();
-    		}
-    	}
+		if (isRunningTest) {
+			if (currentTestFailed) {
+				resetDetectors(); //TODO: originally just deadlockDetector.deactivate(); Does it work?
+				for (ITestListener listener : listeners) {
+					listener.failTest(activeTest);
+				}
+				activeTest.notifyFailToUser(frame, failReason);
+				currentTestFailed = false;
+				isRunningTest = false;
+				activeTest = null;
+				if (runningAllTests)
+					runNextTest();
+			} else if (activeTest.isPassed()) {
+				resetDetectors(); // TODO: originally just deadlockDetector.deactivate(); Does it work?
+				for (ITestListener listener : listeners) {
+					listener.onTestCompleted(activeTest);
+				}
+				activeTest.notifySuccessToUser(frame);
+				isRunningTest = false;
+				activeTest = null;
+				if (runningAllTests)
+					runNextTest();
+			}
+		}
+		updateDetectors();
     }
     
-    public MetaWorld getWorld() {
+    public World getWorld() {
     	return world;
     }
 
@@ -206,10 +213,6 @@ public class ScenarioManager {
         return tests;
     }
     
-    public void setDeadlockDetector(DeadlockDetector deadlockDetector){
-    	this.deadlockDetector = deadlockDetector;
-    }
-
     private class EmptyScenario extends Scenario {
 
         public EmptyScenario() {
@@ -363,25 +366,8 @@ public class ScenarioManager {
 		return isRunningTest;
 	}
 
-	public void setCollisionDetector(CollisionDetector collisionDetector) {
-		this.collisionDetector = collisionDetector;
-	}
 
 	public Map<String,List<TestScenario>> getTestGroups() {
 		return testGroups;
-	}
-
-	public void setInvalidPositionDetector(InvalidPositionDetector invalidPositionDetector) {
-		this.invalidPositionDetector = invalidPositionDetector;
-	}
-
-	public void setInvalidUnloadingDetector(InvalidUnloadingDetector invalidUnloadingDetector) {
-		this.invalidUnloadingDetector = invalidUnloadingDetector;
-		
-	}
-
-	public void setInvalidTurningDetector(InvalidTurningDetector invalidTurningDetector) {
-		this.invalidTurningDetector = invalidTurningDetector;
-		
 	}
 }

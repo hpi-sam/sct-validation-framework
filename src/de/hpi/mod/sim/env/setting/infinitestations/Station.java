@@ -1,17 +1,15 @@
-package de.hpi.mod.sim.env.simulation.station;
+package de.hpi.mod.sim.env.setting.infinitestations;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.hpi.mod.sim.env.simulation.GridManagement;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
+import de.hpi.mod.sim.env.simulation.station.AbstractStation;
+import de.hpi.mod.sim.env.simulation.station.Battery;
 
 /**
  * Manages the Queue, Drive-Lock and Batteries of a station
  */
-public class Station {
-
-    private int stationID;
+public class Station extends AbstractStation { 
 
     /**
      * How many robots want to drive or are in the queue.
@@ -26,11 +24,9 @@ public class Station {
 
 	private boolean blockedQueue = false;
 
-	private CopyOnWriteArrayList<Integer> requestedLocks = new CopyOnWriteArrayList<Integer>();
-
 
     public Station(int stationID) {
-        this.stationID = stationID;
+        super(stationID);
         initializeBatteries();
     }
 
@@ -42,10 +38,6 @@ public class Station {
         for (int i = 0; i < batteries.length; i++) {
             batteries[i] = new Battery(i);
         }
-    }
-
-    int getStationID() {
-        return stationID;
     }
 
     void increaseQueue() {
@@ -115,16 +107,6 @@ public class Station {
         return batteries[freeID];
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-
-        Station station = (Station) object;
-
-        return stationID == station.stationID;
-    }
-
 	public boolean blocked() {
 		return blockedQueue;
 	}
@@ -141,31 +123,25 @@ public class Station {
 		batteries[chargerID].setRobotPresent();
 	}
 
-	void robotNotPresent(int batteryID) {
-		batteries[batteryID].setRobotNotPresent();
-	}
+    void robotNotPresent(int batteryID) {
+        batteries[batteryID].setRobotNotPresent();
+    }
 
-	public void releaseLocks() {
-		blockedQueue = false;
-		requestedLocks.clear();
-		for(int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
-			batteries[i].setRobotNotPresent();
-		}
-	}
+    @Override
+    public void clear() {
+        blockedQueue = false;
+        for (int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+            batteries[i].setRobotNotPresent();
+        }
+    }
 
-	public void registerRequestLock(int robotID) {
-		if(!requestedLocks .contains(robotID)) {
-			requestedLocks.add(0, robotID);
-		}
-	}
+    @Override
+    public boolean lockAllowed() {
+        return !blockedQueue;
+    }
 
-	public boolean requestLock(int robotID) {
-		if(requestedLocks.get(0) == robotID && !blockedQueue) {
-			requestedLocks.remove(0);
-			blockQueue();
-			return true;
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public void onLock() {
+        blockQueue();
+    }
 }

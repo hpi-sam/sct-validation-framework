@@ -1,6 +1,7 @@
-package de.hpi.mod.sim.env.simulation;
+package de.hpi.mod.sim.env.setting.infinitestations;
 
 import de.hpi.mod.sim.env.model.*;
+import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,15 +127,7 @@ public class GridManagement implements ISensorDataProvider {
 		invalidPositions.add(pos);	
 	}
 
-	/**
-	 * The type of cell the Robot stands on
-	 * 
-	 * @param position The position of the Robot
-	 */
-	@Override
-	public PositionType posType(Position position) {
-		return cellType(position).toPositionType();
-	}
+	
 
 	/**
 	 * Checks all four neighbors of the cell and returns if they are blocked,

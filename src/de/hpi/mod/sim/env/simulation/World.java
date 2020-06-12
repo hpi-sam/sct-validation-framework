@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.env.world;
+package de.hpi.mod.sim.env.simulation;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -6,17 +6,17 @@ import java.util.List;
 
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.simulation.Simulator;
-import de.hpi.mod.sim.env.simulation.robot.Robot;
-import de.hpi.mod.sim.env.simulation.robot.Robot.RobotState;
+import de.hpi.mod.sim.env.setting.Setting;
+import de.hpi.mod.sim.env.setting.infinitestations.Robot;
+import de.hpi.mod.sim.env.setting.infinitestations.Robot.RobotState;
 import de.hpi.mod.sim.env.testing.Scenario;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
-public class MetaWorld { // TODO make abstract
+public class World { 
 	private SimulationWorld simulationWorld;
 
-	private Simulator simulator;
+	private Setting setting;
 
 	/**
 	 * Whether the simulation is running or not
@@ -39,22 +39,19 @@ public class MetaWorld { // TODO make abstract
 	 */
 	private List<ITimeListener> timeListeners = new ArrayList<>();
 
-	public MetaWorld() {
-		simulator = new Simulator();
+	public World(Setting setting) {
+		this.setting = setting;
 	}
 
 	public void initialize(SimulationWorld simulationWorld) {
 		this.simulationWorld = simulationWorld;
-		registerDetectors();
 	}
 
-	 void registerDetectors() {} //TODO make abstract
-
-		public void reset() {
-			simulationWorld.resetZoom();
-			simulationWorld.resetOffset();
-			simulationWorld.resetHighlightedRobots();
-		}
+	public void reset() {
+		simulationWorld.resetZoom();
+		simulationWorld.resetOffset();
+		simulationWorld.resetHighlightedRobots();
+	}
 
 
 	public void addTimeListener(ITimeListener timeListener) {
@@ -63,6 +60,10 @@ public class MetaWorld { // TODO make abstract
 
 	private void refreshTimeListeners() {
 		timeListeners.forEach(ITimeListener::refresh);
+	}
+
+	public List<Robot> getRobots() {
+		return setting.getRobots();
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class MetaWorld { // TODO make abstract
 
 		if (isRunning())
 			toggleRunning();
-		simulator.getRobots().clear();
+		getRobots().clear();
 
 		scenario.loadScenario(this);
 	}
@@ -89,7 +90,7 @@ public class MetaWorld { // TODO make abstract
 	public synchronized void refresh() {
 		if (running && !runForbidden) {
 			isRefreshing = true;
-			simulator.refresh();
+			setting.getRoboterDispatcher().refresh();
 			isRefreshing = false;
 			notifyAll();
 		}
@@ -104,14 +105,7 @@ public class MetaWorld { // TODO make abstract
 		if (running && !runForbidden) {
 			try {
 				isUpdating = true;
-				for (Robot robot : simulator.getRobots()) {
-					if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
-						robot.getDriveManager().update(delta);
-					} else {
-						robot.getDriveManager().update(delta, robot.getRobotSpecificDelay());
-					}
-
-				}
+				setting.updateRobots(delta);
 				isUpdating = false;
 				notifyAll();
 			} catch (ConcurrentModificationException e) {
@@ -120,38 +114,25 @@ public class MetaWorld { // TODO make abstract
 		}
 	}
 
-	public Simulator getSimulator() {
-		return simulator;
-	}
-
 	public SimulationWorld getSimulationWorld() {
 		return simulationWorld;
 	}
 
-	/**
-	 * Returns the Robots of the Simulation. Be careful when using this, since other
-	 * threads are modifying the List, which can lead to
-	 * {@link ConcurrentModificationException}
-	 * 
-	 * @return List of Robots in Simulation
-	 */
-	public List<Robot> getRobots() {
-		return simulator.getRobots();
+	
+	public synchronized Robot addRobot() {		
+		return addRobotRunner(() -> setting.getRoboterDispatcher().addRobot());
 	}
 
-	public synchronized Robot addRobot() {
-		return addRobotRunner(() -> simulator.addRobot());
-	}
-
-	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets,
+	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets,	
 			int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery,
 			boolean hardArrivedConstraint) {
-		return addRobotRunner(() -> simulator.addRobotAtPosition(pos, initialState, facing, targets, delay,
+				
+		return addRobotRunner(() -> setting.getRoboterDispatcher().addRobotAtPosition(pos, initialState, facing, targets, delay,
 				initialDelay, fuzzyEnd, unloadingTest, hasReservedBattery, hardArrivedConstraint));
 	}
 
 	public Robot addRobotInScenario(Position pos, Orientation facing, int delay) {
-		return addRobotRunner(() -> simulator.addRobotInScenario(pos, facing, delay));
+		return addRobotRunner(() -> setting.getRoboterDispatcher().addRobotInScenario(pos, facing, delay));
 	}
 
 	private Robot addRobotRunner(AddRobotRunner runner) { // TODO: What is this doing? At least partially relocate to
@@ -181,11 +162,11 @@ public class MetaWorld { // TODO make abstract
 	}
 
 	public void dispose() {
-		simulator.close();
+		setting.getRoboterDispatcher().close();
 	}
 
 	private interface AddRobotRunner {
-		Robot run();
+		Robot run(); 
 	}
 
 	public void setRunForbidden(boolean isForbidden) {
@@ -193,17 +174,19 @@ public class MetaWorld { // TODO make abstract
 	}
 
 	public void releaseAllLocks() {
-		simulator.releaseAllLocks();
+		setting.getRoboterDispatcher().releaseAllLocks();
 	}
 
 	public void updateSimulator(int chargingStationsInUse) {
-		simulator.createNewStationManager(chargingStationsInUse);
+		setting.getRoboterDispatcher().createNewStationManager(chargingStationsInUse);
 	}
 
+	// TODO generalize
 	public void setHighlightedRobot2(Robot r) {
 		simulationWorld.setHighlightedRobot2(r);
 	}
 
+	// TODO generalize
 	public void setHighlightedRobot1(Robot r) {
 		simulationWorld.setHighlightedRobot2(r);
 	}
