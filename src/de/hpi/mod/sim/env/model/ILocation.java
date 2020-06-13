@@ -7,4 +7,12 @@ package de.hpi.mod.sim.env.model;
  */
 public interface ILocation {
     Position getArrivalPositionAtStation(int stationID);
+    
+    Position getBatteryPositionAtStation(int stationID, int batteryID);
+
+    Position getLoadingPositionAtStation(int stationID);
+
+    Position getQueuePositionAtStation(int stationID);
+
+    Position getUnloadingPositionFromID(int packageID);
 }

@@ -1,8 +1,7 @@
 package de.hpi.mod.sim.env.setting.infinitestations;
 
 import de.hpi.mod.sim.env.model.*;
-import de.hpi.mod.sim.env.robot.Robot;
-import de.hpi.mod.sim.env.robot.Robot.RobotState;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 
 import java.util.*;
@@ -10,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class RobotDispatcher implements IRobotController, IComplexLocation, IScanner { //TODO draw as much as possible into core
+public class RobotDispatcher implements IRobotController, ILocation, IScanner, IRobotDispatch { 
 
     private List<Robot> robots = new CopyOnWriteArrayList<>();
     private GridManagement gridData;
@@ -29,6 +28,7 @@ public class RobotDispatcher implements IRobotController, IComplexLocation, ISca
      * Creates a new Robot and adds it to a battery
      * @return The added Robot
      */
+    @Override
     public Robot addRobot() {
         // Get next unused ID
         int robotID = Robot.incrementID();
@@ -60,18 +60,19 @@ public class RobotDispatcher implements IRobotController, IComplexLocation, ISca
      * @param target The target of the Robot to drive to
      * @return The added Robot or NULL if the Position is not a Waypoint
      */
-    public Robot addRobotAtPosition(Position position, RobotState state, Orientation facing, List<Position> targets, int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery, boolean hardArrivedConstraint) {
-    	
+    @Override
+    public Robot addRobotAtPosition(Position position, Robot.RobotState state, Orientation facing, List<Position> targets,
+            int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery,
+            boolean hardArrivedConstraint) {
+
         int robotID = Robot.incrementID();
-        Robot robot = new Robot(
-                robotID,
-                0,
-                gridData, stations, this, this,
-                position, state, facing, targets, delay, initialDelay, fuzzyEnd, unloadingTest, hasReservedBattery, hardArrivedConstraint);
+        Robot robot = new Robot(robotID, 0, gridData, stations, this, this, position, state, facing, targets, delay,
+                initialDelay, fuzzyEnd, unloadingTest, hasReservedBattery, hardArrivedConstraint);
         robots.add(robot);
         return robot;
     }
     
+    @Override
     public Robot addRobotInScenario(Position position, Orientation facing, int delay) {
 
 		if (gridData.posType(position) == PositionType.STATION || gridData.posType(position) == PositionType.WAYPOINT) {
@@ -92,6 +93,7 @@ public class RobotDispatcher implements IRobotController, IComplexLocation, ISca
     /**
      * Refreshes the Robots.
      */
+    @Override
     public void refresh() {
         for (Robot robot : robots) {
         	robot.refresh();
@@ -205,15 +207,18 @@ public class RobotDispatcher implements IRobotController, IComplexLocation, ISca
         return getRandomUnloadingID(robotPosition);
     }
 
+    @Override
     public void close() {
         for (Robot robot : robots)
             robot.close();
     }
 
-	public void releaseAllLocks() {
-		stations.releaseAllLocks();
-	}
+    @Override
+    public void releaseAllLocks() {
+        stations.releaseAllLocks();
+    }
 
+    @Override
 	public void createNewStationManager(int chargingStationsInUse) {
 		if(chargingStationsInUse != stations.getUsedStations()) {
 			stations = new StationManager(chargingStationsInUse);

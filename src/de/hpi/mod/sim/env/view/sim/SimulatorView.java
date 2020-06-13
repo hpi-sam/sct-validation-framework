@@ -2,7 +2,7 @@ package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.model.IGrid;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.Simulation;
 

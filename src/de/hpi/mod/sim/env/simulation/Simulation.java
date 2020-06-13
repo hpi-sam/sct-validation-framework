@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.hpi.mod.sim.env.Setting;
-import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.testing.Scenario;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
@@ -88,7 +88,7 @@ public class Simulation {
 	public synchronized void refresh() {
 		if (running && !runForbidden) {
 			isRefreshing = true;
-			setting.getRoboterDispatcher().refresh();
+			setting.getRoboterDispatch().refresh();
 			isRefreshing = false;
 			notifyAll();
 		}
@@ -142,19 +142,15 @@ public class Simulation {
 	}
 
 	public void dispose() {
-		setting.getRoboterDispatcher().close();
+		setting.getRoboterDispatch().close();
 	}
 
 	public void setRunForbidden(boolean isForbidden) {
 		runForbidden = isForbidden;
 	}
 
-	public void releaseAllLocks() {
-		setting.getRoboterDispatcher().releaseAllLocks();
-	}
-
 	public void updateSimulator(int chargingStationsInUse) {
-		setting.getRoboterDispatcher().createNewStationManager(chargingStationsInUse);
+		setting.getRoboterDispatch().createNewStationManager(chargingStationsInUse);
 	}
 
 	// TODO generalize.

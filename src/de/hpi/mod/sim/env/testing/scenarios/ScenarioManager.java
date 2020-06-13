@@ -3,7 +3,7 @@ package de.hpi.mod.sim.env.testing.scenarios;
 import de.hpi.mod.sim.env.Setting;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.Simulation;
 import de.hpi.mod.sim.env.testing.Detector;
@@ -77,10 +77,6 @@ public class ScenarioManager {
 		testGroups = testCaseGenerator.getAllTestCases();
 	}
 
-	private void resetDetectors() {
-		for (Detector detector : setting.getDetectors())
-			detector.reset();
-	}
 
 	private void updateDetectors() {
 		List<Robot> robots = setting.getRobots();
@@ -89,16 +85,7 @@ public class ScenarioManager {
 	}
 
     private void runScenario(Scenario scenario, boolean isTest) {
-    	frame.allowRunning();
-    	frame.setResizable(scenario.isResizable());
-    	world.reset();
-        world.playScenario(scenario);
-		world.releaseAllLocks();
-		resetDetectors();
-        if(!world.isRunning()) 
-        	world.toggleRunning();
-        
-        frame.resetSimulationView();
+    	setting.runScenario(scenario);
         
         if (isTest) {
         	activeTest = (TestScenario) scenario;
@@ -176,7 +163,7 @@ public class ScenarioManager {
     public void refresh() {
 		if (isRunningTest) {
 			if (currentTestFailed) {
-				resetDetectors(); //TODO: originally just deadlockDetector.deactivate(); Does it work?
+				setting.resetDetectors(); //TODO: originally just deadlockDetector.deactivate(); Does it work?
 				for (ITestListener listener : listeners) {
 					listener.failTest(activeTest);
 				}
@@ -187,7 +174,7 @@ public class ScenarioManager {
 				if (runningAllTests)
 					runNextTest();
 			} else if (activeTest.isPassed()) {
-				resetDetectors(); // TODO: originally just deadlockDetector.deactivate(); Does it work?
+				setting.resetDetectors(); // TODO: originally just deadlockDetector.deactivate(); Does it work?
 				for (ITestListener listener : listeners) {
 					listener.onTestCompleted(activeTest);
 				}
