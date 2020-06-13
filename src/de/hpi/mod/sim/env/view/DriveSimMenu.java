@@ -15,7 +15,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
 	private static final long serialVersionUID = -1260633775659938837L;
 	private Icon playIcon, pauseIcon;
-    private Simulation world;
+    private Simulation simulation;
 
     private JMenuItem playItem, zoomInItem, zoomOutItem, zoomResetItem, moveLeftItem,
             moveRightItem, moveUpItem, moveDownItem, moveResetItem, resetSimItem, keyItem;
@@ -23,8 +23,8 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
     private KeyManager keyManager;
 
 
-    public DriveSimMenu(Simulation world, SimulationWorld simulationWorld) {
-        this.world = world;
+    public DriveSimMenu(Simulation simulation, SimulationWorld simulationWorld) {
+        this.simulation = simulation;
 
         loadIcons();
         keyManager = new KeyManager();
@@ -64,8 +64,8 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         moveUpItem.addActionListener(e -> simulationWorld.moveVertical(1));
         moveDownItem.addActionListener(e -> simulationWorld.moveVertical(-1));
         moveResetItem.addActionListener(e -> simulationWorld.resetOffset());
-        playItem.addActionListener(e -> world.toggleRunning());
-        resetSimItem.addActionListener(e -> world.playScenario(resetSimulationScenario));
+        playItem.addActionListener(e -> simulation.toggleRunning());
+        resetSimItem.addActionListener(e -> simulation.playScenario(resetSimulationScenario));
         keyItem.addActionListener(e -> openKeyDialog());
 
         moveMenu.add(moveLeftItem);
@@ -91,7 +91,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
         add(playMenu);
         add(optionsMenu);
 
-        world.addTimeListener(this);
+        simulation.addTimeListener(this);
     }
 
     private void loadIcons() {
@@ -119,7 +119,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
     @Override
     public void refresh() {
-        if (world.isRunning()) playItem.setIcon(pauseIcon);
+        if (simulation.isRunning()) playItem.setIcon(pauseIcon);
         else playItem.setIcon(playIcon);
     }
 }

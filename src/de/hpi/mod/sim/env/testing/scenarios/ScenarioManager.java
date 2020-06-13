@@ -5,7 +5,6 @@ import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
 import de.hpi.mod.sim.env.simulation.robot.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
-import de.hpi.mod.sim.env.simulation.Simulation;
 import de.hpi.mod.sim.env.testing.Detector;
 import de.hpi.mod.sim.env.testing.ITestListener;
 import de.hpi.mod.sim.env.testing.RobotDescription;
@@ -29,7 +28,6 @@ public class ScenarioManager {
     private Scenario clear = new EmptyScenario();
     private Scenario currentScenario;
     private Map<String,List<TestScenario>> testGroups = new LinkedHashMap<>();
-    private Simulation world;
     private List<ITestListener> listeners = new ArrayList<>();
     
     private Queue<TestScenario> testsToRun = new LinkedList<>();
@@ -48,7 +46,6 @@ public class ScenarioManager {
 
 
     public ScenarioManager(Setting setting) {
-        this.world = setting.getSimulation();
         this.setting = setting;
         this.frame = setting.getFrame();
         this.testCaseGenerator = new TestCaseGenerator(testGroups);
@@ -188,10 +185,6 @@ public class ScenarioManager {
 		updateDetectors();
     }
     
-    public Simulation getWorld() {
-    	return world;
-    }
-
     public List<Scenario> getScenarios() {
         return scenarios;
     }

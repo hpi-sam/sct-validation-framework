@@ -18,12 +18,12 @@ public class TimerPanel extends JPanel {
 	
 	private static final long serialVersionUID = 8453578481264370011L;
 	private Timer timer;
-	private Simulation world;
+	private Simulation simulation;
 	private float time;
 	private JTextField valueField;
 	
-	public TimerPanel(Simulation world){
-		this.world = world;
+	public TimerPanel(Simulation simulation){
+		this.simulation = simulation;
 		
 		setLayout(new GridBagLayout());
 		
@@ -65,7 +65,7 @@ public class TimerPanel extends JPanel {
 	private void initializeTimer() {
 		timer = new Timer(1000,new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(world.isRunning()) {
+				if(simulation.isRunning()) {
 			        time += 1 * SimulatorConfig.getRobotSpeedFactor();
 			        displayNewTime();
 				}

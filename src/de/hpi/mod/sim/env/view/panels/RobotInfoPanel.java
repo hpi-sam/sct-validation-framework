@@ -26,7 +26,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
     private List<InfoRefresher> refresher = new ArrayList<>();
 
     /**
-     * @param world We need to ask the world for the reference to the highlighted Robot constantly to be able to react on changes.
+     * @param world We need to ask the simulation for the reference to the highlighted Robot constantly to be able to react on changes.
      * @param isLRightClickedRobot If we monitor the right clicked Robot world.highlightedRobot2 is the one to be observed otherwise world.highlightedRobot
      */
     public RobotInfoPanel(SimulationWorld world, boolean isRightClickedRobot) {

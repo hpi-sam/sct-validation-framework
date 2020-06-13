@@ -24,17 +24,17 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     private ExplosionRenderer explosionRenderer;
 
     private SimulationWorld simulationWorld;
-    private Simulation world;
+    private Simulation simulation;
     
     private int currentHeight;
     private int currentWidth;
 
 
-    public SimulatorView(Simulation world, IGrid grid) {
-        this.world = world;
+    public SimulatorView(Simulation simulation, IGrid grid) {
+        this.simulation = simulation;
         simulationWorld = new SimulationWorld(this);
         gridRenderer = new GridRenderer(simulationWorld, grid);
-        robotRenderer = new RobotRenderer(world, simulationWorld);
+        robotRenderer = new RobotRenderer(simulation, simulationWorld);
         explosionRenderer = new ExplosionRenderer(simulationWorld);
 
         addMouseListener(this);
@@ -73,21 +73,21 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     	SimulatorConfig.setChargingStationsInUse(chargingStations);
     	int unloadingRange = (widthBlocks/3)*((heightBlocks-SimulatorConfig.getQueueSize())/3);
     	SimulatorConfig.setUnloadingRange(unloadingRange);
-    	world.updateSimulator(SimulatorConfig.getChargingStationsInUse());
+    	simulation.updateSimulator(SimulatorConfig.getChargingStationsInUse());
     	
 	}
 
 	@Override
     public void mouseClicked(MouseEvent e) {
         Position pos = simulationWorld.toGridPosition(e.getX(), e.getY());
-        for (Robot r : world.getRobots()) {
+        for (Robot r : simulation.getRobots()) {
             if (r.getDriveManager().currentPosition().equals(pos) || r.getDriveManager().getOldPosition().equals(pos)) {
             	if(e.getButton() == MouseEvent.BUTTON1) {
-            		world.setHighlightedRobot1(r);
+            		simulation.setHighlightedRobot1(r);
             	} else if (e.getButton() == MouseEvent.BUTTON3) {
-            		world.setHighlightedRobot2(r);
+            		simulation.setHighlightedRobot2(r);
             	} else {
-            		world.setHighlightedRobot1(r);
+            		simulation.setHighlightedRobot1(r);
             	}
                 break;
             }

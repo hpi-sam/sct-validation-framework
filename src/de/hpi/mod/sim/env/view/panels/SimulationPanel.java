@@ -13,7 +13,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 
 	private static final long serialVersionUID = 4048135614810423369L;
 	private int currentLevel = SimulatorConfig.getDefaultRobotSpeedLevel();
-	private Simulation world;
+	private Simulation simulation;
 	private ScenarioManager scenarioManager;
 	private JTextField valueField;
 	private JButton playButton;
@@ -26,8 +26,8 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	private ImageIcon stopIcon;
 	private ImageIcon resetIcon;
 	
-    public SimulationPanel(Simulation world, ScenarioManager scenarioManager) {
-    	this.world = world;
+    public SimulationPanel(Simulation simulation, ScenarioManager scenarioManager) {
+    	this.simulation = simulation;
     	this.scenarioManager = scenarioManager;
     	
     	// --------------------------------------------------------
@@ -104,7 +104,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 
         JButton playButton = new JButton();
         playButton.addActionListener(e -> {
-        	world.toggleRunning();
+        	simulation.toggleRunning();
         });
         return playButton;
 	}
@@ -162,7 +162,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 
 	@Override
     public void refresh() {
-        if (world.isRunning()) {
+        if (simulation.isRunning()) {
         	playButton.setIcon(pauseIcon);
         } else {
         	playButton.setIcon(playIcon);

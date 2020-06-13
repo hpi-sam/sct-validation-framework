@@ -19,13 +19,13 @@ import java.io.IOException;
  */
 public class RobotRenderer {
 
-    private Simulation world;
+    private Simulation simulation;
     private SimulationWorld simulationWorld;
     private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
 
 
-    public RobotRenderer(Simulation world, SimulationWorld simulationWorld) {
-        this.world = world;
+    public RobotRenderer(Simulation simulation, SimulationWorld simulationWorld) {
+        this.simulation = simulation;
         this.simulationWorld = simulationWorld;
 
         loadImages();
@@ -45,7 +45,7 @@ public class RobotRenderer {
 
     void render(Graphics graphic) {
         // Draw Robots
-        for (Robot robot : world.getRobots()) {
+        for (Robot robot : simulation.getRobots()) {
 	            DriveManager drive = robot.getDriveManager();
 	            Point2D drawPosition = simulationWorld.toDrawPosition(drive.getX(), drive.getY());
 	
@@ -56,7 +56,7 @@ public class RobotRenderer {
         }
 
         // Render additional Info like Targets
-        for (Robot r : world.getRobots()) {
+        for (Robot r : simulation.getRobots()) {
             if (r.equals(simulationWorld.getHighlightedRobot1()) || r.equals(simulationWorld.getHighlightedRobot2())) {
 	                DriveManager drive = r.getDriveManager();
 	                Point2D drawPos = simulationWorld.toDrawPosition(drive.getX(), drive.getY());
