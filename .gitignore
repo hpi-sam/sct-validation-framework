@@ -1,7 +1,7 @@
 # IDEA
 .idea/
 *.iml
-Tests
+/Tests
 *.DS_Store
 .tests
 .classpath
