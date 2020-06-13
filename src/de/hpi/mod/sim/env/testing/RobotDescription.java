@@ -1,9 +1,9 @@
 package de.hpi.mod.sim.env.testing;
 
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
-import de.hpi.mod.sim.env.simulation.World;
+import de.hpi.mod.sim.env.Setting;
+import de.hpi.mod.sim.env.robot.Robot;
 
 public abstract class RobotDescription {
-    public abstract Robot register(World sim);
+    public abstract Robot register(Setting setting);
     public abstract void refreshRobot();
 }

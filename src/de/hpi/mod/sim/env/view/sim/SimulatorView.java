@@ -2,9 +2,9 @@ package de.hpi.mod.sim.env.view.sim;
 
 import de.hpi.mod.sim.env.model.IGrid;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
-import de.hpi.mod.sim.env.simulation.World;
+import de.hpi.mod.sim.env.simulation.Simulation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,13 +24,13 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     private ExplosionRenderer explosionRenderer;
 
     private SimulationWorld simulationWorld;
-    private World world;
+    private Simulation world;
     
     private int currentHeight;
     private int currentWidth;
 
 
-    public SimulatorView(World world, IGrid grid) {
+    public SimulatorView(Simulation world, IGrid grid) {
         this.world = world;
         simulationWorld = new SimulationWorld(this);
         gridRenderer = new GridRenderer(simulationWorld, grid);

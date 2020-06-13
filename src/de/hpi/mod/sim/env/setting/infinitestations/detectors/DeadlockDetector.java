@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hpi.mod.sim.env.Setting;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.setting.Setting;
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.testing.Detector;
 
@@ -25,7 +25,7 @@ public class DeadlockDetector extends Detector {
 
 	@Override
 	public void update(List<Robot> robots) {
-		if (!setting.getWorld().isRunning() || deactivated) {
+		if (!setting.getSimulation().isRunning() || deactivated) {
 			return;
 		}
 

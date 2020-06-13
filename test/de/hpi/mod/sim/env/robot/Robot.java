@@ -1,6 +1,7 @@
-package de.hpi.mod.sim.env.setting.infinitestations;
+package de.hpi.mod.sim.env.robot;
 
 import de.hpi.mod.sim.env.model.*;
+import de.hpi.mod.sim.env.setting.infinitestations.IComplexLocation;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.robot.DriveListener;
 import de.hpi.mod.sim.env.simulation.robot.DriveManager;

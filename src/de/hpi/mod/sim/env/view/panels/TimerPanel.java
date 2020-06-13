@@ -11,18 +11,18 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
-import de.hpi.mod.sim.env.simulation.World;
+import de.hpi.mod.sim.env.simulation.Simulation;
 import de.hpi.mod.sim.env.view.DriveSimFrame;
 
 public class TimerPanel extends JPanel {
 	
 	private static final long serialVersionUID = 8453578481264370011L;
 	private Timer timer;
-	private World world;
+	private Simulation world;
 	private float time;
 	private JTextField valueField;
 	
-	public TimerPanel(World world){
+	public TimerPanel(Simulation world){
 		this.world = world;
 		
 		setLayout(new GridBagLayout());

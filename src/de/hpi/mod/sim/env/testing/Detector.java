@@ -2,8 +2,8 @@ package de.hpi.mod.sim.env.testing;
 
 import java.util.List;
 
-import de.hpi.mod.sim.env.setting.Setting;
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
+import de.hpi.mod.sim.env.Setting;
+import de.hpi.mod.sim.env.robot.Robot;
 
 public abstract class Detector {
 
@@ -15,12 +15,12 @@ public abstract class Detector {
 
     public void report(String reason, Robot involved1, Robot involved2) {
         if (involved1 != null)
-            setting.getWorld().setHighlightedRobot1(involved1);
+            setting.getSimulation().setHighlightedRobot1(involved1);
         if (involved2 != null)
-            setting.getWorld().setHighlightedRobot2(involved2);
+            setting.getSimulation().setHighlightedRobot2(involved2);
 
-        if (setting.getWorld().isRunning())
-            setting.getWorld().toggleRunning();
+        if (setting.getSimulation().isRunning())
+            setting.getSimulation().toggleRunning();
         if (setting.getScenarioManager().isRunningTest()) {
             setting.getScenarioManager().failCurrentTest(reason);
         }

@@ -3,17 +3,15 @@ package de.hpi.mod.sim.env.simulation;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.function.Supplier;
 
-import de.hpi.mod.sim.env.model.Orientation;
-import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.setting.Setting;
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
-import de.hpi.mod.sim.env.setting.infinitestations.Robot.RobotState;
+import de.hpi.mod.sim.env.Setting;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.testing.Scenario;
 import de.hpi.mod.sim.env.view.model.ITimeListener;
 import de.hpi.mod.sim.env.view.sim.SimulationWorld;
 
-public class World { 
+public class Simulation { 
 	private SimulationWorld simulationWorld;
 
 	private Setting setting;
@@ -39,7 +37,7 @@ public class World {
 	 */
 	private List<ITimeListener> timeListeners = new ArrayList<>();
 
-	public World(Setting setting) {
+	public Simulation(Setting setting) {
 		this.setting = setting;
 	}
 
@@ -80,7 +78,7 @@ public class World {
 			toggleRunning();
 		getRobots().clear();
 
-		scenario.loadScenario(this);
+		scenario.loadScenario(setting);
 	}
 
 	/**
@@ -118,30 +116,12 @@ public class World {
 		return simulationWorld;
 	}
 
-	
-	public synchronized Robot addRobot() {		
-		return addRobotRunner(() -> setting.getRoboterDispatcher().addRobot());
-	}
-
-	public Robot addRobotAtPosition(Position pos, RobotState initialState, Orientation facing, List<Position> targets,	
-			int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery,
-			boolean hardArrivedConstraint) {
-				
-		return addRobotRunner(() -> setting.getRoboterDispatcher().addRobotAtPosition(pos, initialState, facing, targets, delay,
-				initialDelay, fuzzyEnd, unloadingTest, hasReservedBattery, hardArrivedConstraint));
-	}
-
-	public Robot addRobotInScenario(Position pos, Orientation facing, int delay) {
-		return addRobotRunner(() -> setting.getRoboterDispatcher().addRobotInScenario(pos, facing, delay));
-	}
-
-	private Robot addRobotRunner(AddRobotRunner runner) { // TODO: What is this doing? At least partially relocate to
-															// SimulationWorld, I guess
+	public Robot addRobotRunner(Supplier<Robot> robotGetter) { 
 		while (isRefreshing || isUpdating) {
 			// Do nothing while refreshing or updating
 		}
 
-		Robot r = runner.run();
+		Robot r = robotGetter.get();
 		if (simulationWorld.getHighlightedRobot1() == null)
 			setHighlightedRobot1(r);
 		else
@@ -165,10 +145,6 @@ public class World {
 		setting.getRoboterDispatcher().close();
 	}
 
-	private interface AddRobotRunner {
-		Robot run(); 
-	}
-
 	public void setRunForbidden(boolean isForbidden) {
 		runForbidden = isForbidden;
 	}
@@ -181,13 +157,13 @@ public class World {
 		setting.getRoboterDispatcher().createNewStationManager(chargingStationsInUse);
 	}
 
-	// TODO generalize
+	// TODO generalize.
 	public void setHighlightedRobot2(Robot r) {
 		simulationWorld.setHighlightedRobot2(r);
 	}
 
 	// TODO generalize
 	public void setHighlightedRobot1(Robot r) {
-		simulationWorld.setHighlightedRobot2(r);
+		simulationWorld.setHighlightedRobot1(r);
 	}
 }

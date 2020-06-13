@@ -9,7 +9,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.simulation.robot.DriveManager;
 

@@ -3,10 +3,11 @@ package de.hpi.mod.sim.env.setting.infinitestations;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hpi.mod.sim.env.Setting;
 import de.hpi.mod.sim.env.model.IGrid;
 import de.hpi.mod.sim.env.model.IRobotController;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.setting.Setting;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.setting.infinitestations.detectors.CollisionDetector;
 import de.hpi.mod.sim.env.setting.infinitestations.detectors.DeadlockDetector;
 import de.hpi.mod.sim.env.setting.infinitestations.detectors.InvalidPositionDetector;

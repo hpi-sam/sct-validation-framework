@@ -1,9 +1,9 @@
 package de.hpi.mod.sim.env.testing.scenarios;
 
+import de.hpi.mod.sim.env.Setting;
 import de.hpi.mod.sim.env.model.Orientation;
 import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
-import de.hpi.mod.sim.env.simulation.World;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.testing.RobotDescription;
 
 public class ScenarioRobotDescription extends RobotDescription{
@@ -24,8 +24,8 @@ public class ScenarioRobotDescription extends RobotDescription{
 	}
 
 	@Override
-	public Robot register(World world) {
-		Robot robot = world.addRobotInScenario(position, facing, delay);
+	public Robot register(Setting setting) {
+		Robot robot = setting.addRobotInScenario(position, facing, delay);
 		robot.setIsAlone(isAlone);
 		return robot;
 	}

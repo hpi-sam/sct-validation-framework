@@ -1,8 +1,8 @@
 package de.hpi.mod.sim.env.view.sim;
 
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
-import de.hpi.mod.sim.env.simulation.World;
+import de.hpi.mod.sim.env.robot.Robot;
+import de.hpi.mod.sim.env.simulation.Simulation;
 import de.hpi.mod.sim.env.simulation.robot.DriveManager;
 
 import javax.imageio.ImageIO;
@@ -19,12 +19,12 @@ import java.io.IOException;
  */
 public class RobotRenderer {
 
-    private World world;
+    private Simulation world;
     private SimulationWorld simulationWorld;
     private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
 
 
-    public RobotRenderer(World world, SimulationWorld simulationWorld) {
+    public RobotRenderer(Simulation world, SimulationWorld simulationWorld) {
         this.world = world;
         this.simulationWorld = simulationWorld;
 

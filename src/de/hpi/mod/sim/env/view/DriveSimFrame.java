@@ -1,8 +1,8 @@
 package de.hpi.mod.sim.env.view;
 
-import de.hpi.mod.sim.env.setting.Setting;
+import de.hpi.mod.sim.env.Setting;
+import de.hpi.mod.sim.env.robot.Robot;
 import de.hpi.mod.sim.env.setting.infinitestations.InfiniteStationsSetting;
-import de.hpi.mod.sim.env.setting.infinitestations.Robot;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
 import de.hpi.mod.sim.env.testing.tests.TestScenario;
 import de.hpi.mod.sim.env.view.panels.*;
@@ -112,11 +112,11 @@ public class DriveSimFrame extends JFrame {
 	}
 
 	public void forbidFurtherRunning() {
-		setting.getWorld().setRunForbidden(true);
+		setting.getSimulation().setRunForbidden(true);
 	}
 
 	public void allowRunning() {
-		setting.getWorld().setRunForbidden(false);
+		setting.getSimulation().setRunForbidden(false);
 	}
 
 	public void clearSelections() {
@@ -165,27 +165,27 @@ public class DriveSimFrame extends JFrame {
 
 	private void initializeSimulationItems() {
 		setting = new InfiniteStationsSetting(this); // TODO instantiate specified setting
-		sim = new SimulatorView(setting.getWorld(), setting.getGrid());
+		sim = new SimulatorView(setting.getSimulation(), setting.getGrid());
 		simulationWorld = sim.getSimulationWorld(); //TODO rethink structure of simulationWorld/simulationView/MetaWorld
-		setting.getWorld().initialize(simulationWorld);
+		setting.getSimulation().initialize(simulationWorld);
 	}
     
     private void initializePanels() {
 		robotInfoPanel1 = new RobotInfoPanel(simulationWorld, false);
         robotInfoPanel2 = new RobotInfoPanel(simulationWorld, true);
-        simulationPanel = new SimulationPanel(setting.getWorld(), setting.getScenarioManager());
+        simulationPanel = new SimulationPanel(setting.getSimulation(), setting.getScenarioManager());
         testListPanel = new TestListPanel(setting.getScenarioManager());
         testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         testOverviewPanel = new TestOverviewPanel(setting.getScenarioManager(), this);
-        timerPanel = new TimerPanel(setting.getWorld());
+        timerPanel = new TimerPanel(setting.getSimulation());
         scenarioPanel = new ScenarioPanel(setting.getScenarioManager());
-        setJMenuBar(new DriveSimMenu(setting.getWorld(), simulationWorld));
+        setJMenuBar(new DriveSimMenu(setting.getSimulation(), simulationWorld));
 	}
     
     private void addListeners() {
 		simulationWorld.addHighlightedRobotListener(robotInfoPanel1);
         simulationWorld.addHighlightedRobotListener2(robotInfoPanel2);
-        setting.getWorld().addTimeListener(simulationPanel);
+        setting.getSimulation().addTimeListener(simulationPanel);
         setting.getScenarioManager().addTestListener(testListPanel);
         setting.getScenarioManager().addTestListener(testOverviewPanel);
 	}
@@ -405,17 +405,17 @@ public class DriveSimFrame extends JFrame {
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
         
-        setting.getWorld().refresh();
+        setting.getSimulation().refresh();
         robotInfoPanel1.onHighlightedRobotChange();
         robotInfoPanel2.onHighlightedRobotChange();
         setting.getScenarioManager().refresh();
-        setting.getWorld().update(delta);
+        setting.getSimulation().update(delta);
 
         this.repaint();
     }
 
     private void close() {
-       	setting.getWorld().dispose();
+       	setting.getSimulation().dispose();
         setVisible(false);
         dispose();
         System.exit(0);
