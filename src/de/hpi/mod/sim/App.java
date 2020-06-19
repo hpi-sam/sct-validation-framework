@@ -1,14 +1,10 @@
 package de.hpi.mod.sim;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
 import javax.swing.JOptionPane;
 
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
-import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteStationsSetting;
 
 /**
  * 
@@ -21,7 +17,7 @@ import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteStationsSetting;
 public class App {
 
     private static final String[] POSSIBLE_SETTINGS = {
-            "de.hpi.mod.sim.setting.infinitewarehouses.InfiniteStationsSetting",
+            "de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting"
      };
 
      private static Setting selectSetting() {

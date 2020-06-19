@@ -14,7 +14,7 @@ import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.setting.detectors.*;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
 
-public class InfiniteStationsSetting extends Setting implements IRobotController {
+public class InfiniteWarehousesSetting extends Setting implements IRobotController {
 
     private GridManagement grid;
 
