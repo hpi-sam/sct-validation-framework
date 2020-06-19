@@ -1,8 +1,7 @@
 # IDEA
 .idea/
-*.iml
-Tests
+*.
 *.DS_Store
-.tests
+/.testresults
 .classpath
 .project

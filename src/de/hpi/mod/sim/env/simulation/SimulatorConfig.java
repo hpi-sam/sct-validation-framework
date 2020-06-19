@@ -15,7 +15,7 @@ public class SimulatorConfig {
 	private static final float RECOMMENDED_ROBOTS_PER_STATION = 4;
     public static final int MAX_ROBOTS_PER_STATION = 5;
     public static final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
-    public static final String TEST_FILE_NAME = ".tests";
+    public static final String TEST_FILE_NAME = ".testresults";
     public static final String STRING_PATH_TO_ROBOT_ICON = "res/robot.png";
     public static final String STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON = "res/robot-left-clicked.png";
     public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON = "res/robot-right-clicked.png";
