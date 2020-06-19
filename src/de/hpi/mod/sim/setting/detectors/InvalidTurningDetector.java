@@ -4,8 +4,8 @@ import java.util.List;
 
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.CellType;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 public class InvalidTurningDetector extends Detector {
 	public InvalidTurningDetector(Setting setting) {

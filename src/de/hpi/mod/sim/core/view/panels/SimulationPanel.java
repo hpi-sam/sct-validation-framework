@@ -13,7 +13,7 @@ import java.awt.*;
 public class SimulationPanel extends JPanel implements ITimeListener{
 
 	private static final long serialVersionUID = 4048135614810423369L;
-	private int currentLevel = SimulatorConfig.getDefaultRobotSpeedLevel();
+	private int currentLevel = SimulatorConfig.getDefaultEntitySpeedLevel();
 	private Simulation simulation;
 	private ScenarioManager scenarioManager;
 	private JTextField valueField;
@@ -58,7 +58,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	private JTextField newValueField() {
 		JTextField valueField = new JTextField();
         valueField.setEditable(false);
-        valueField.setText(Integer.toString(SimulatorConfig.getDefaultRobotSpeedLevel()));
+        valueField.setText(Integer.toString(SimulatorConfig.getDefaultEntitySpeedLevel()));
         valueField.setHorizontalAlignment(JTextField.CENTER);
         return valueField;
 	}
@@ -75,9 +75,9 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	}
 	
 	private JSlider newSpeedSlider() {
-		JSlider valueSlider = new JSlider(SimulatorConfig.ROBOT_MIN_SPEED_LEVEL, SimulatorConfig.ROBOT_MAX_SPEED_LEVEL, SimulatorConfig.ROBOT_DEFAULT_SPEED_LEVEL);
-        setter = SimulatorConfig::setRobotSpeedLevel;
-        setter.setValue(SimulatorConfig.getDefaultRobotSpeedLevel());
+		JSlider valueSlider = new JSlider(SimulatorConfig.ENTITY_MIN_SPEED_LEVEL, SimulatorConfig.ENTITY_MAX_SPEED_LEVEL, SimulatorConfig.ENTITY_DEFAULT_SPEED_LEVEL);
+        setter = SimulatorConfig::setEntitySpeedLevel;
+        setter.setValue(SimulatorConfig.getDefaultEntitySpeedLevel());
         valueSlider.setToolTipText("Adjust Robot Speed");
         valueSlider.setEnabled(true); //in the begin the speed slider should be changeable, even if not afterwards while paused simulation
         valueSlider.setMajorTickSpacing(5);

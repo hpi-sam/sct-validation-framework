@@ -12,7 +12,6 @@ import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.Orientation;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.Detector;
 import de.hpi.mod.sim.core.testing.ITestListener;
 import de.hpi.mod.sim.core.testing.RobotDescription;
@@ -20,6 +19,7 @@ import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.testing.tests.TestCaseGenerator;
 import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 public class ScenarioManager {
 

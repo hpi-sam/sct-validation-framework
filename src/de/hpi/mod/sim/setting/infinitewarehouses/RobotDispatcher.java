@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.model.*;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 
 public class RobotDispatcher implements IRobotController, ILocation, IScanner, IRobotDispatch { 

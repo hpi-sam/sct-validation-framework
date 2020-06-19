@@ -3,9 +3,9 @@ package de.hpi.mod.sim.core.view.panels;
 import javax.swing.*;
 
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
-import de.hpi.mod.sim.core.view.model.IHighlightedRobotListener;
+import de.hpi.mod.sim.core.view.model.IHighlightedEntityListener;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Shows informations about the currently highlighted robot
  */
-public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener {
+public class RobotInfoPanel extends JPanel implements IHighlightedEntityListener {
 
 	private static final long serialVersionUID = -42067353669036945L;
 	private SimulationWorld world;
@@ -76,7 +76,7 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
      * Gets called if a value got changed and labels need to be updated
      */
     @Override
-    public void onHighlightedRobotChange() {
+    public void onHighlightedEntityChange() {
         for (InfoRefresher infoRefresher : refresher)
             infoRefresher.refresh();
         repaint();
@@ -126,9 +126,9 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
         	Robot robot;
         	
         	if(isRightClickedRobot) {
-        		robot = world.getHighlightedRobot2();
+        		robot = world.getHighlightedEntity2();
         	} else {
-        		robot = world.getHighlightedRobot1();
+        		robot = world.getHighlightedEntity1();
         	}
             if (robot == null)
                 label.setText(template + ": -");
@@ -151,9 +151,9 @@ public class RobotInfoPanel extends JPanel implements IHighlightedRobotListener 
 			Robot robot;
         	
         	if(isRightClickedRobot) {
-        		robot = world.getHighlightedRobot2();
+        		robot = world.getHighlightedEntity2();
         	} else {
-        		robot = world.getHighlightedRobot1();
+        		robot = world.getHighlightedEntity1();
         	}
         	
         	if(robot != null) {

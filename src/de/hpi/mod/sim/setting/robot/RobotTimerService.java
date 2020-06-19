@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.simulation.robot;
+package de.hpi.mod.sim.setting.robot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +130,7 @@ public class RobotTimerService implements ITimer {
 		this.lastUpdateSystemTime = now;
 		
 		// Calculate simulation time...
-		long simulationTimeSinceLastUpdate =  (long) Math.floor(systemTimeSinceLastUpdate * SimulatorConfig.getRobotSpeedFactor());
+		long simulationTimeSinceLastUpdate =  (long) Math.floor(systemTimeSinceLastUpdate * SimulatorConfig.getEntitySpeedFactor());
 		
 		List<SimulationTimer> copyList = new ArrayList<SimulationTimer>(this.timerList);
 		for(SimulationTimer timer: copyList) {

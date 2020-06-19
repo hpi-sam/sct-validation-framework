@@ -7,8 +7,8 @@ import java.util.Map;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 public class DeadlockDetector extends Detector {
 
@@ -29,7 +29,7 @@ public class DeadlockDetector extends Detector {
 			return;
 		}
 
-		offset = (long) Math.max(defaultOffset, defaultOffset / SimulatorConfig.getRobotSpeedFactor());
+		offset = (long) Math.max(defaultOffset, defaultOffset / SimulatorConfig.getEntitySpeedFactor());
 		if (currentTime + offset <= System.currentTimeMillis()) {
 			checkForDeadlock();
 			getRobotPositions();

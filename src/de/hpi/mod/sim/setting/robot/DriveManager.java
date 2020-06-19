@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.simulation.robot;
+package de.hpi.mod.sim.setting.robot;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -116,7 +116,7 @@ public class DriveManager implements IRobotActors {
 	}
 
 	private void calculateUnload() {
-		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(SimulatorConfig.getRobotSpeedLevel()+1))) {
+		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(SimulatorConfig.getEntitySpeedLevel()+1))) {
 			isUnloading = false;
 			hasPackage = false;
 		    listener.actionCompleted();
@@ -157,7 +157,7 @@ public class DriveManager implements IRobotActors {
 		int deltaY = currentPosition.getY() - oldPosition.getY();
 
 		if (deltaY != 0) {
-		    y += Math.copySign(SimulatorConfig.getRobotSpeed() * delta, deltaY);
+		    y += Math.copySign(SimulatorConfig.getEntitySpeed() * delta, deltaY);
 
 		    // If y moved over target
 		    if (deltaY > 0 && y >= currentPosition.getY() ||
@@ -166,7 +166,7 @@ public class DriveManager implements IRobotActors {
 		        finishMovement();
 		    }
 		} else if (deltaX != 0) {
-		    x += Math.copySign(SimulatorConfig.getRobotSpeed() * delta, deltaX);
+		    x += Math.copySign(SimulatorConfig.getEntitySpeed() * delta, deltaX);
 
 		    // If x moved over target
 		    if (deltaX > 0 && x >= currentPosition.getX() ||
@@ -224,7 +224,7 @@ public class DriveManager implements IRobotActors {
 
 	private long getCustomRandomisedDelay(int upperBound) {
 		//We add 100 in order to guarantee that in all random functions lowerBound < upperBound
-		upperBound = (upperBound/Math.max(1, SimulatorConfig.getRobotSpeedLevel())) + 100;
+		upperBound = (upperBound/Math.max(1, SimulatorConfig.getEntitySpeedLevel())) + 100;
 		int percentage = ThreadLocalRandom.current().nextInt(100);
 		if(percentage < 50) {
 			return ThreadLocalRandom.current().nextLong(upperBound/10);
@@ -381,7 +381,7 @@ public class DriveManager implements IRobotActors {
     }
 
     public float getRotationSpeed() {
-        return SimulatorConfig.getDefaultRotationSpeed() * SimulatorConfig.getRobotSpeedFactor();
+        return SimulatorConfig.getDefaultRotationSpeed() * SimulatorConfig.getEntitySpeedFactor();
     }
 
     public long getUnloadingTime() {

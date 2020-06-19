@@ -2,7 +2,7 @@ package de.hpi.mod.sim.core.model;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.simulation.robot.Robot;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 
 public interface IRobotDispatch {

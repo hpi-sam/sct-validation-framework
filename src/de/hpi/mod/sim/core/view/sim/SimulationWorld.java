@@ -4,10 +4,11 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
-import de.hpi.mod.sim.core.view.model.IHighlightedRobotListener;
+import de.hpi.mod.sim.core.view.model.IHighlightedEntityListener;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 /**
  * Stores the values needed to display the Simulation and gives access to the
@@ -42,19 +43,19 @@ public class SimulationWorld {
 	private boolean isMousePointing;
 
 	/**
-	 * The highlighted Robot. Null if none
+	 * The highlighted Entity. Null if none
 	 */
-	private Robot highlightedRobot1 = null;
-	private Robot highlightedRobot2 = null;
+	private Entity highlightedEntity1 = null;
+	private Entity highlightedEntity2 = null;
 
 	private SimulatorView view;
 
 	/**
-	 * List of {@link IHighlightedRobotListener}s. Gets called if the highlighted
-	 * Robot changes
+	 * List of {@link IHighlightedEntityListener}s. Gets called if the highlighted
+	 * Entity changes
 	 */
-	private List<IHighlightedRobotListener> highlightedRobotListeners = new ArrayList<>();
-	private List<IHighlightedRobotListener> highlightedRobotListeners2 = new ArrayList<>();
+	private List<IHighlightedEntityListener> highlightedEntityListeners = new ArrayList<>();
+	private List<IHighlightedEntityListener> highlightedEntityListeners2 = new ArrayList<>();
 
 
 
@@ -62,12 +63,12 @@ public class SimulationWorld {
 		this.view = view;
 	}
 
-	public void addHighlightedRobotListener(IHighlightedRobotListener highlightedRobotListener) {
-		highlightedRobotListeners.add(highlightedRobotListener);
+	public void addHighlightedRobotListener(IHighlightedEntityListener highlightedEntityListener) {
+		highlightedEntityListeners.add(highlightedEntityListener);
 	}
 
-	public void addHighlightedRobotListener2(IHighlightedRobotListener highlightedRobotListener2) {
-		highlightedRobotListeners2.add(highlightedRobotListener2);
+	public void addHighlightedRobotListener2(IHighlightedEntityListener highlightedEntityListener2) {
+		highlightedEntityListeners2.add(highlightedEntityListener2);
 	}
 
 	public SimulatorView getView() {
@@ -133,22 +134,22 @@ public class SimulationWorld {
 		return isMousePointing;
 	}
 
-	public void setHighlightedRobot1(Robot r) {
-		highlightedRobot1 = r;
-		refreshHighlightedRobotListeners();
+	public void setHighlightedEntity1(Entity e) {
+		highlightedEntity1 = e;
+		refreshHighlightedEntityListeners();
 	}
 
-	public void setHighlightedRobot2(Robot r) {
-		highlightedRobot2 = r;
-		refreshHighlightedRobotListeners();
+	public void setHighlightedEntity2(Entity e) {
+		highlightedEntity2 = e;
+		refreshHighlightedEntityListeners();
 	}
 
-	public Robot getHighlightedRobot1() {
-		return highlightedRobot1;
+	public Entity getHighlightedEntity1() {
+		return highlightedEntity1;
 	}
 
-	public Robot getHighlightedRobot2() {
-		return highlightedRobot2;
+	public Entity getHighlightedEntity2() {
+		return highlightedEntity2;
 	}
 
 	/**
@@ -178,25 +179,29 @@ public class SimulationWorld {
 		return new Point2D.Float(drawX, drawY);
 	}
 
-	public boolean isBlockedByHighlightedRobot1(Position position) {
-		if (highlightedRobot1 == null)
+	public boolean isBlockedByHighlightedEntity1(Position position) {
+
+		//TODO move somewhere specific
+		if (highlightedEntity1 == null || ! (highlightedEntity1 instanceof Robot))
 			return false;
-		return position.is(highlightedRobot1.pos()) || position.is(highlightedRobot1.oldPos());
+		Robot r = (Robot) highlightedEntity1;
+		return position.is(r.pos()) || position.is(r.oldPos());
 	}
 
 	public boolean isBlockedByHighlightedRobot2(Position position) {
-		if (highlightedRobot2 == null)
+		if (highlightedEntity2 == null || !(highlightedEntity2 instanceof Robot))
 			return false;
-		return position.is(highlightedRobot2.pos()) || position.is(highlightedRobot2.oldPos());
+		Robot r = (Robot) highlightedEntity1;
+		return position.is(r.pos()) || position.is(r.oldPos());
 	}
 
-	private void refreshHighlightedRobotListeners() {
-		highlightedRobotListeners.forEach(IHighlightedRobotListener::onHighlightedRobotChange);
+	private void refreshHighlightedEntityListeners() {
+		highlightedEntityListeners.forEach(IHighlightedEntityListener::onHighlightedEntityChange);
 	}
 
-	public void resetHighlightedRobots() {
-		highlightedRobot1 = null;
-		highlightedRobot2 = null;
+	public void resetHighlightedEntities() {
+		highlightedEntity1 = null;
+		highlightedEntity2 = null;
 	}
 
 

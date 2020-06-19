@@ -77,7 +77,7 @@ public class GridRenderer {
                 boolean isUnusedStationBlock = (cellType == CellType.BATTERY || cellType == CellType.STATION || cellType == CellType.LOADING || cellType == CellType.QUEUE) 
                 		&& (current.getX() >= stationCount * 3 / 2 - stationCount % 2 || current.getX() < -stationCount * 3 / 2 + stationCount % 2);
                 
-                boolean blockedBy1 = world.isBlockedByHighlightedRobot1(current);
+                boolean blockedBy1 = world.isBlockedByHighlightedEntity1(current);
                 boolean blockedBy2 = world.isBlockedByHighlightedRobot2(current);
 
                 // Draw the block

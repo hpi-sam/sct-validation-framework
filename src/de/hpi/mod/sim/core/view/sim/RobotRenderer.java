@@ -4,8 +4,8 @@ import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.DriveManager;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
+import de.hpi.mod.sim.setting.robot.DriveManager;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -50,15 +50,15 @@ public class RobotRenderer {
 	            DriveManager drive = robot.getDriveManager();
 	            Point2D drawPosition = simulationWorld.toDrawPosition(drive.getX(), drive.getY());
 	
-	            boolean leftClicked = robot.equals(simulationWorld.getHighlightedRobot1());
-	            boolean rightClicked = robot.equals(simulationWorld.getHighlightedRobot2());
+	            boolean leftClicked = robot.equals(simulationWorld.getHighlightedEntity1());
+	            boolean rightClicked = robot.equals(simulationWorld.getHighlightedEntity2());
 	
 	            drawRobot(graphic, drawPosition, drive.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets
         for (Robot r : simulation.getRobots()) {
-            if (r.equals(simulationWorld.getHighlightedRobot1()) || r.equals(simulationWorld.getHighlightedRobot2())) {
+            if (r.equals(simulationWorld.getHighlightedEntity1()) || r.equals(simulationWorld.getHighlightedEntity2())) {
 	                DriveManager drive = r.getDriveManager();
 	                Point2D drawPos = simulationWorld.toDrawPosition(drive.getX(), drive.getY());
 	                Point2D targetPos = simulationWorld.toDrawPosition(r.getTarget());

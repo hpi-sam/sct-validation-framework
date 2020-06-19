@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.simulation.robot;
+package de.hpi.mod.sim.setting.robot;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,7 +14,7 @@ import de.hpi.mod.sim.core.simulation.SimulatorConfig;
  * It relays sensor-information from a {@link ISensorDataProvider} to the Drive-System.
  * It uses a {@link IRobotStationDispatcher} to drive in a station and {@link ILocation} to get new Targets.
  */
-public class Robot implements IProcessor, ISensor, DriveListener {  //TODO draw as much as possible into core
+public class Robot implements IProcessor, ISensor, DriveListener, Entity {  //TODO draw as much as possible into core
 
     /**
      * Used so each Robot has an unique id
@@ -230,8 +230,8 @@ public class Robot implements IProcessor, ISensor, DriveListener {  //TODO draw 
 
     private void handleFinishedLoading() {
     	if(now == 0 && !isInTest) {
-    		long minWaitTime = (long) (SimulatorConfig.getMinWaitingTimeBeforeLoading() / SimulatorConfig.getRobotSpeedFactor());
-    		long maxWaitTime = (long) (SimulatorConfig.getMaxWaitingTimeBeforeLoading() / SimulatorConfig.getRobotSpeedFactor());
+    		long minWaitTime = (long) (SimulatorConfig.getMinWaitingTimeBeforeLoading() / SimulatorConfig.getEntitySpeedFactor());
+    		long maxWaitTime = (long) (SimulatorConfig.getMaxWaitingTimeBeforeLoading() / SimulatorConfig.getEntitySpeedFactor());
     		if(isAlone) {
     			delay = minWaitTime;
     		}else {
@@ -533,5 +533,10 @@ public class Robot implements IProcessor, ISensor, DriveListener {  //TODO draw 
 
 	public void setIsAlone(boolean b) {
 		this.isAlone = b;
-	}	
+	}
+
+    @Override
+    public boolean isHighlightable() {
+        return true;
+    }
 }

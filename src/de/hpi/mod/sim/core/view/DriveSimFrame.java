@@ -6,11 +6,11 @@ import javax.swing.border.EtchedBorder;
 
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.panels.*;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 import de.hpi.mod.sim.core.view.sim.SimulatorView;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -60,7 +60,7 @@ public class DriveSimFrame extends JFrame {
 		setDesignOfMainWindow();
 
 		lastFrame = System.currentTimeMillis();
-		while (running)
+		while (running)			//TODO move this loop to ... Simulation, I guess
 			update();
 		close();
 	}
@@ -398,16 +398,16 @@ public class DriveSimFrame extends JFrame {
         lastFrame = System.currentTimeMillis();
         
         setting.getSimulation().refresh();
-        robotInfoPanel1.onHighlightedRobotChange();
-        robotInfoPanel2.onHighlightedRobotChange();
+        robotInfoPanel1.onHighlightedEntityChange();
+        robotInfoPanel2.onHighlightedEntityChange();
         setting.getScenarioManager().refresh();
         setting.getSimulation().update(delta);
 
         this.repaint();
     }
 
-    private void close() {
-       	setting.getSimulation().dispose();
+	private void close() {
+		setting.getRoboterDispatch().close();
         setVisible(false);
         dispose();
         System.exit(0);

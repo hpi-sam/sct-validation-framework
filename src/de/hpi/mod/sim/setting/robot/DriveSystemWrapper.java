@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.simulation.robot;
+package de.hpi.mod.sim.setting.robot;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

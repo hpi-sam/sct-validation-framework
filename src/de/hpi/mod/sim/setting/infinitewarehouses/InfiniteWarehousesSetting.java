@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.IGrid;
 import de.hpi.mod.sim.core.model.IRobotController;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.Detector;
 import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.setting.detectors.*;
+import de.hpi.mod.sim.setting.robot.Robot;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
 
 public class InfiniteWarehousesSetting extends Setting implements IRobotController {
@@ -54,7 +55,7 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
     }
 
     @Override
-    public void updateRobots(float delta) {
+    public void updateEntities(float delta) {
         for (Robot robot : getRobots()) {
             if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
                 robot.getDriveManager().update(delta);
@@ -76,12 +77,17 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
     }
 
     @Override
-    public List<Robot> getRobots() {
+    public List<? extends Entity> getEntities() {
         return getRoboterDispatch().getRobots();
     }
     
     @Override
     public RobotDispatcher getRoboterDispatch() {
         return robotDispatcher;
+    }
+
+    @Override
+    public void onSimulationPropertyRefresh() {
+        getRoboterDispatch().createNewStationManager(SimulatorConfig.getChargingStationsInUse());
     }
 }

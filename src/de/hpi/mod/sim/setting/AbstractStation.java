@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.simulation.station;
+package de.hpi.mod.sim.setting;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

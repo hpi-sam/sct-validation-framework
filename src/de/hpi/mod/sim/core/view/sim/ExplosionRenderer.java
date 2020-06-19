@@ -10,8 +10,8 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.DriveManager;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
+import de.hpi.mod.sim.setting.robot.DriveManager;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 public class ExplosionRenderer {
 	private SimulationWorld world;

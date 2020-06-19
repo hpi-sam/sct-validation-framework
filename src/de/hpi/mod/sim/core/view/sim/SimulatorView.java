@@ -6,7 +6,7 @@ import de.hpi.mod.sim.core.model.IGrid;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -74,7 +74,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     	SimulatorConfig.setChargingStationsInUse(chargingStations);
     	int unloadingRange = (widthBlocks/3)*((heightBlocks-SimulatorConfig.getQueueSize())/3);
     	SimulatorConfig.setUnloadingRange(unloadingRange);
-    	simulation.updateSimulator(SimulatorConfig.getChargingStationsInUse());
+    	simulation.onSimulationPropertyRefresh();
     	
 	}
 
@@ -84,11 +84,11 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         for (Robot r : simulation.getRobots()) {
             if (r.getDriveManager().currentPosition().equals(pos) || r.getDriveManager().getOldPosition().equals(pos)) {
             	if(e.getButton() == MouseEvent.BUTTON1) {
-            		simulation.setHighlightedRobot1(r);
+            		simulation.setHighlightedEntity1(r);
             	} else if (e.getButton() == MouseEvent.BUTTON3) {
-            		simulation.setHighlightedRobot2(r);
+            		simulation.setHighlightedEntity2(r);
             	} else {
-            		simulation.setHighlightedRobot1(r);
+            		simulation.setHighlightedEntity1(r);
             	}
                 break;
             }

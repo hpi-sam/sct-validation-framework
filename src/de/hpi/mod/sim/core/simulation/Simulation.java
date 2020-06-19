@@ -5,8 +5,8 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
@@ -48,7 +48,7 @@ public class Simulation {
 	public void reset() {
 		simulationWorld.resetZoom();
 		simulationWorld.resetOffset();
-		simulationWorld.resetHighlightedRobots();
+		simulationWorld.resetHighlightedEntities();
 	}
 
 
@@ -60,12 +60,8 @@ public class Simulation {
 		timeListeners.forEach(ITimeListener::refresh);
 	}
 
-	public List<Robot> getRobots() {
-		return setting.getRobots();
-	}
-
 	/**
-	 * Clears all Robots, stops the simulation, loads the scenario and plays it
+	 * Clears all Entities, stops the simulation, loads the scenario and plays it
 	 * 
 	 * @param scenario The Scenario to play
 	 */
@@ -76,7 +72,7 @@ public class Simulation {
 
 		if (isRunning())
 			toggleRunning();
-		getRobots().clear();
+		setting.clearEntities();
 
 		scenario.loadScenario(setting);
 	}
@@ -88,14 +84,14 @@ public class Simulation {
 	public synchronized void refresh() {
 		if (running && !runForbidden) {
 			isRefreshing = true;
-			setting.getRoboterDispatch().refresh();
+			setting.refreshEntities();
 			isRefreshing = false;
 			notifyAll();
 		}
 	}
 
 	/**
-	 * Updates the Robots each frame. Locks the List of Robots
+	 * Updates the Entities each frame. Locks the List of Entities
 	 * 
 	 * @param delta The time since last frame in milliseconds
 	 */
@@ -103,7 +99,7 @@ public class Simulation {
 		if (running && !runForbidden) {
 			try {
 				isUpdating = true;
-				setting.updateRobots(delta);
+				setting.updateEntities(delta);
 				isUpdating = false;
 				notifyAll();
 			} catch (ConcurrentModificationException e) {
@@ -116,17 +112,19 @@ public class Simulation {
 		return simulationWorld;
 	}
 
-	public Robot addRobotRunner(Supplier<Robot> robotGetter) { 
+	public Entity addEntityRunner(Supplier<Entity> entityGetter) { 
 		while (isRefreshing || isUpdating) {
 			// Do nothing while refreshing or updating
 		}
 
-		Robot r = robotGetter.get();
-		if (simulationWorld.getHighlightedRobot1() == null)
-			setHighlightedRobot1(r);
-		else
-			setHighlightedRobot2(r);
-		return r;
+		Entity e = entityGetter.get();
+		if (e.isHighlightable()) {
+			if (simulationWorld.getHighlightedEntity1() == null)
+				setHighlightedEntity1(e);
+			else
+				setHighlightedEntity2(e);
+		}
+		return e;
 	}
 
 	public void toggleRunning() {
@@ -141,25 +139,21 @@ public class Simulation {
 		return running;
 	}
 
-	public void dispose() {
-		setting.getRoboterDispatch().close();
-	}
-
 	public void setRunForbidden(boolean isForbidden) {
 		runForbidden = isForbidden;
 	}
 
-	public void updateSimulator(int chargingStationsInUse) {
-		setting.getRoboterDispatch().createNewStationManager(chargingStationsInUse);
+	public void onSimulationPropertyRefresh(int chargingStationsInUse) {
+		setting.onSimulationPropertyRefresh(); 
 	}
 
-	// TODO generalize.
-	public void setHighlightedRobot2(Robot r) {
-		simulationWorld.setHighlightedRobot2(r);
+	// TODO move.
+	public void setHighlightedEntity2(Entity e) {
+		simulationWorld.setHighlightedEntity2(e);
 	}
 
-	// TODO generalize
-	public void setHighlightedRobot1(Robot r) {
-		simulationWorld.setHighlightedRobot1(r);
+	// TODO move
+	public void setHighlightedEntity1(Entity e) {
+		simulationWorld.setHighlightedEntity1(e);
 	}
 }

@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.RobotDescription;
 import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 public abstract class TestScenario extends Scenario {
 

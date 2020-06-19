@@ -5,8 +5,8 @@ import org.junit.Test;
 import de.hpi.mod.sim.core.model.Orientation;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.robot.DriveListener;
-import de.hpi.mod.sim.core.simulation.robot.DriveManager;
+import de.hpi.mod.sim.setting.robot.DriveListener;
+import de.hpi.mod.sim.setting.robot.DriveManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,7 +34,7 @@ public class DriveManagerTest {
         DummyDriveHandler handler = new DummyDriveHandler();
         DriveManager drive = new DriveManager(
                 handler, initPosition, initFacing);
-        SimulatorConfig.setRobotSpeedLevel(2);  // Move 1 cell per second
+        SimulatorConfig.setEntitySpeedLevel(2);  // Move 1 cell per second
 
         for (int i = 0; i < 10; i++) {
             drive.driveForward();

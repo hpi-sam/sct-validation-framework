@@ -3,7 +3,7 @@ package de.hpi.mod.sim.core.testing;
 import java.util.List;
 
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 public abstract class Detector {
 
@@ -15,9 +15,9 @@ public abstract class Detector {
 
     public void report(String reason, Robot involved1, Robot involved2) {
         if (involved1 != null)
-            setting.getSimulation().setHighlightedRobot1(involved1);
+            setting.getSimulation().setHighlightedEntity1(involved1);
         if (involved2 != null)
-            setting.getSimulation().setHighlightedRobot2(involved2);
+            setting.getSimulation().setHighlightedEntity2(involved2);
 
         if (setting.getSimulation().isRunning())
             setting.getSimulation().toggleRunning();

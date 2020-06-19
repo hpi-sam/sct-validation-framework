@@ -4,8 +4,8 @@ import java.util.List;
 
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 public class InvalidPositionDetector extends Detector {
 	public InvalidPositionDetector(Setting setting) {

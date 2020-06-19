@@ -3,8 +3,8 @@ package de.hpi.mod.sim.setting.infinitewarehouses;
 import java.util.*;
 
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.simulation.station.AbstractStation;
-import de.hpi.mod.sim.core.simulation.station.Battery;
+import de.hpi.mod.sim.setting.AbstractStation;
+import de.hpi.mod.sim.setting.Battery;
 
 /**
  * Manages the Queue, Drive-Lock and Batteries of a station
