@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.detectors;
 
 import java.util.HashMap;
 import java.util.List;
