@@ -1,6 +1,6 @@
 package de.hpi.mod.sim.env;
 
-import de.hpi.mod.sim.env.model.*;
+import de.hpi.mod.sim.core.model.*;
 
 public class DummyRobot implements ISensor, IRobotActors, IProcessor {
 

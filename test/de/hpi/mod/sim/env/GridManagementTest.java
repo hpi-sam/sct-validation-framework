@@ -1,13 +1,9 @@
 package de.hpi.mod.sim.env;
 
-import de.hpi.mod.sim.env.model.CellType;
-import de.hpi.mod.sim.env.model.Direction;
-import de.hpi.mod.sim.env.model.IRobotController;
-import de.hpi.mod.sim.env.model.Orientation;
-import de.hpi.mod.sim.env.model.Position;
-import de.hpi.mod.sim.env.setting.infinitestations.GridManagement;
-
 import org.junit.Test;
+
+import de.hpi.mod.sim.core.model.*;
+import de.hpi.mod.sim.setting.infinitewarehouses.GridManagement;
 
 import java.util.Arrays;
 

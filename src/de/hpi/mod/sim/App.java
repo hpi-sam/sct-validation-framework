@@ -1,6 +1,6 @@
 package de.hpi.mod.sim;
 
-import de.hpi.mod.sim.env.view.DriveSimFrame;
+import de.hpi.mod.sim.core.view.DriveSimFrame;
 
 /**
  * 

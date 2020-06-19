@@ -1,10 +1,10 @@
 package de.hpi.mod.sim.env;
 
-import de.hpi.mod.sim.env.model.IRobotStationDispatcher;
-import de.hpi.mod.sim.env.setting.infinitestations.StationManager;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import de.hpi.mod.sim.core.model.IRobotStationDispatcher;
+import de.hpi.mod.sim.setting.infinitewarehouses.StationManager;
 
 import static org.junit.Assert.*;
 

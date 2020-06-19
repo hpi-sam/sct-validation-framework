@@ -2,8 +2,6 @@ package de.hpi.mod.sim.env;
 
 import org.junit.Before;
 
-import de.hpi.mod.sim.env.simulation.robot.DriveSystemWrapper;
-
 /**
  * Test for {@link DriveSystemWrapper}.
  *
