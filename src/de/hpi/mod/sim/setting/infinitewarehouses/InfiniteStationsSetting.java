@@ -11,8 +11,8 @@ import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.core.simulation.robot.Robot;
 import de.hpi.mod.sim.core.testing.Detector;
 import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
-import de.hpi.mod.sim.core.view.DriveSimFrame;
 import de.hpi.mod.sim.setting.detectors.*;
+import de.hpi.mod.sim.core.view.DriveSimFrame;
 
 public class InfiniteStationsSetting extends Setting implements IRobotController {
 
@@ -24,8 +24,9 @@ public class InfiniteStationsSetting extends Setting implements IRobotController
 
     private ScenarioManager scenarioManager;
 
-    public InfiniteStationsSetting(DriveSimFrame frame) {
-        super(frame);
+    @Override
+    public void initialize(DriveSimFrame frame) {
+        super.initialize(frame);
         grid = new GridManagement(this);
         robotDispatcher = new RobotDispatcher(grid, new StationManager(SimulatorConfig.getChargingStationsInUse()));
         scenarioManager = new ScenarioManager(this);

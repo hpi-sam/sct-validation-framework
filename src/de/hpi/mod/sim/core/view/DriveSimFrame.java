@@ -11,7 +11,6 @@ import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.panels.*;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 import de.hpi.mod.sim.core.view.sim.SimulatorView;
-import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteStationsSetting;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -26,7 +25,6 @@ public class DriveSimFrame extends JFrame {
 
 	private static final long serialVersionUID = 4683030810403226266L;
 	private Setting setting;
-	private SimulationWorld simulationWorld;
 	private SimulatorView sim;
 	private RobotInfoPanel robotInfoPanel1;
 	private RobotInfoPanel robotInfoPanel2;
@@ -44,15 +42,20 @@ public class DriveSimFrame extends JFrame {
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
 	public static Color MENU_RED = new Color(0xffe1d0);
 
-	public DriveSimFrame() {
+	public DriveSimFrame(Setting setting) {
 		super("Drive System Simulator");
+		this.setting = setting;
+		setting.initialize(this);
+		sim = new SimulatorView(setting.getSimulation(), setting.getGrid());
+		SimulationWorld simWorld = sim.getSimulationWorld(); // TODO rethink structure of
+													// simulationWorld/simulationView/MetaWorld
+		setting.getSimulation().initialize(simWorld);
 		setLayout(new GridBagLayout());
 
 		createFileIfNotExist(SimulatorConfig.getTestFileName());
-		initializeSimulationItems();
-		initializePanels();
+		initializePanels(simWorld);
 		loadTestFileContent(SimulatorConfig.getTestFileName());
-		addListeners();
+		addListeners(simWorld);
 		setDesignOfSubpanels();
 		setDesignOfMainWindow();
 
@@ -60,11 +63,6 @@ public class DriveSimFrame extends JFrame {
 		while (running)
 			update();
 		close();
-	}
-
-	public static void make_window() {
-		setSystemLookAndFeel();
-		new DriveSimFrame();
 	}
 
 	public void displayMessage(String message) {
@@ -153,7 +151,7 @@ public class DriveSimFrame extends JFrame {
 		return timerPanel;
 	}
 
-	private static void setSystemLookAndFeel() {
+	public static void setSystemLookAndFeel() {
     	try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 			UIManager.put("Button.background", Color.white);
@@ -163,15 +161,8 @@ public class DriveSimFrame extends JFrame {
 			System.out.println("The look and feel could not be loaded. The Application will work fine but look different.");
 		}
     }
-
-	private void initializeSimulationItems() {
-		setting = new InfiniteStationsSetting(this); // TODO instantiate specified setting
-		sim = new SimulatorView(setting.getSimulation(), setting.getGrid());
-		simulationWorld = sim.getSimulationWorld(); //TODO rethink structure of simulationWorld/simulationView/MetaWorld
-		setting.getSimulation().initialize(simulationWorld);
-	}
     
-    private void initializePanels() {
+    private void initializePanels(SimulationWorld simulationWorld) {
 		robotInfoPanel1 = new RobotInfoPanel(simulationWorld, false);
         robotInfoPanel2 = new RobotInfoPanel(simulationWorld, true);
         simulationPanel = new SimulationPanel(setting.getSimulation(), setting.getScenarioManager());
@@ -183,7 +174,7 @@ public class DriveSimFrame extends JFrame {
         setJMenuBar(new DriveSimMenu(setting.getSimulation(), simulationWorld));
 	}
     
-    private void addListeners() {
+    private void addListeners(SimulationWorld simulationWorld) {
 		simulationWorld.addHighlightedRobotListener(robotInfoPanel1);
         simulationWorld.addHighlightedRobotListener2(robotInfoPanel2);
         setting.getSimulation().addTimeListener(simulationPanel);

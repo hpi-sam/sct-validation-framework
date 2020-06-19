@@ -21,17 +21,17 @@ public abstract class Setting {
 
     public abstract ScenarioManager getScenarioManager();
 
-    protected Setting(DriveSimFrame frame) {
-        this.frame = frame;
-        simulation = new Simulation(this);
-    }
-
     public Simulation getSimulation() {
         return simulation;
     }
     
     public DriveSimFrame getFrame() {
         return frame;
+    }
+
+    public void initialize(DriveSimFrame frame) {
+        this.frame = frame;
+        simulation = new Simulation(this);
     }
 
     public abstract void updateRobots(float delta);
