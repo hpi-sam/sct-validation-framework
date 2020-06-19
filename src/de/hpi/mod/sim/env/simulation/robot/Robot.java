@@ -2,7 +2,6 @@ package de.hpi.mod.sim.env.simulation.robot;
 
 import de.hpi.mod.sim.env.model.*;
 import de.hpi.mod.sim.env.simulation.SimulatorConfig;
-import de.hpi.mod.sim.env.simulation.robot.DriveListener;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
