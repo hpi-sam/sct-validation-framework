@@ -5,7 +5,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.model.*;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.setting.robot.Robot;
 
 
@@ -14,8 +13,8 @@ public class RobotDispatcher implements IRobotController, ILocation, IScanner, I
     private List<Robot> robots = new CopyOnWriteArrayList<>();
     private GridManagement gridData;
     private IRobotStationDispatcher stations;
-    private int mapHeight = SimulatorConfig.getMapHeight();
-    private int unloadingRange = SimulatorConfig.getUnloadingRange();
+    private int mapHeight = InfiniteWarehouseSimConfig.getMapHeight();
+    private int unloadingRange = InfiniteWarehouseSimConfig.getUnloadingRange();
     private int[] heights = new int[mapHeight];
 
 

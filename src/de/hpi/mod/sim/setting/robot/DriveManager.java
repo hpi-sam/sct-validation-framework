@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import de.hpi.mod.sim.core.model.IRobotActors;
 import de.hpi.mod.sim.core.model.Orientation;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 
 /**
  * Calculates the real x and y position, angle and battery
@@ -31,9 +31,9 @@ public class DriveManager implements IRobotActors {
     private Position oldPosition;
     private Orientation oldFacing;
 
-    private long unloadingTime = SimulatorConfig.getDefaultUnloadingTime();
+    private long unloadingTime = InfiniteWarehouseSimConfig.getDefaultUnloadingTime();
     
-    private float battery = ThreadLocalRandom.current().nextInt((int) (SimulatorConfig.getMinBatteryRatio()*SimulatorConfig.getBatteryFull()), (int) SimulatorConfig.getBatteryFull()+1);
+    private float battery = ThreadLocalRandom.current().nextInt((int) (InfiniteWarehouseSimConfig.getMinBatteryRatio()* InfiniteWarehouseSimConfig.getBatteryFull()), (int) InfiniteWarehouseSimConfig.getBatteryFull()+1);
     
     private int maxDelay = 0;
 	private boolean isWaitingToMoveForward = false;
@@ -112,11 +112,11 @@ public class DriveManager implements IRobotActors {
     }
 
 	private void loadBattery(float delta) {
-		battery = Math.min(battery + delta * SimulatorConfig.getBatteryChargingSpeed(), 100);
+		battery = Math.min(battery + delta * InfiniteWarehouseSimConfig.getBatteryChargingSpeed(), 100);
 	}
 
 	private void calculateUnload() {
-		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(SimulatorConfig.getEntitySpeedLevel()+1))) {
+		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(InfiniteWarehouseSimConfig.getEntitySpeedLevel()+1))) {
 			isUnloading = false;
 			hasPackage = false;
 		    listener.actionCompleted();
@@ -157,7 +157,7 @@ public class DriveManager implements IRobotActors {
 		int deltaY = currentPosition.getY() - oldPosition.getY();
 
 		if (deltaY != 0) {
-		    y += Math.copySign(SimulatorConfig.getEntitySpeed() * delta, deltaY);
+		    y += Math.copySign(InfiniteWarehouseSimConfig.getEntitySpeed() * delta, deltaY);
 
 		    // If y moved over target
 		    if (deltaY > 0 && y >= currentPosition.getY() ||
@@ -166,7 +166,7 @@ public class DriveManager implements IRobotActors {
 		        finishMovement();
 		    }
 		} else if (deltaX != 0) {
-		    x += Math.copySign(SimulatorConfig.getEntitySpeed() * delta, deltaX);
+		    x += Math.copySign(InfiniteWarehouseSimConfig.getEntitySpeed() * delta, deltaX);
 
 		    // If x moved over target
 		    if (deltaX > 0 && x >= currentPosition.getX() ||
@@ -224,7 +224,7 @@ public class DriveManager implements IRobotActors {
 
 	private long getCustomRandomisedDelay(int upperBound) {
 		//We add 100 in order to guarantee that in all random functions lowerBound < upperBound
-		upperBound = (upperBound/Math.max(1, SimulatorConfig.getEntitySpeedLevel())) + 100;
+		upperBound = (upperBound/Math.max(1, InfiniteWarehouseSimConfig.getEntitySpeedLevel())) + 100;
 		int percentage = ThreadLocalRandom.current().nextInt(100);
 		if(percentage < 50) {
 			return ThreadLocalRandom.current().nextLong(upperBound/10);
@@ -308,7 +308,7 @@ public class DriveManager implements IRobotActors {
 	}
 
     private void decreaseBattery() {
-        battery -= SimulatorConfig.getBatteryLoss();
+        battery -= InfiniteWarehouseSimConfig.getBatteryLoss();
         if (battery < 0)
             battery = 0;
     }
@@ -321,9 +321,9 @@ public class DriveManager implements IRobotActors {
         return battery > 0;
     }
 
-    public boolean isBatteryLow() { return battery < SimulatorConfig.getBatteryLow(); }
+    public boolean isBatteryLow() { return battery < InfiniteWarehouseSimConfig.getBatteryLow(); }
 
-    public boolean isBatteryFull() { return battery >= SimulatorConfig.getBatteryFull(); }
+    public boolean isBatteryFull() { return battery >= InfiniteWarehouseSimConfig.getBatteryFull(); }
 
     public float getBattery() {
         return battery;
@@ -381,7 +381,7 @@ public class DriveManager implements IRobotActors {
     }
 
     public float getRotationSpeed() {
-        return SimulatorConfig.getDefaultRotationSpeed() * SimulatorConfig.getEntitySpeedFactor();
+        return InfiniteWarehouseSimConfig.getDefaultRotationSpeed() * InfiniteWarehouseSimConfig.getEntitySpeedFactor();
     }
 
     public long getUnloadingTime() {

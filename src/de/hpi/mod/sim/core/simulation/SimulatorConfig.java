@@ -2,48 +2,46 @@ package de.hpi.mod.sim.core.simulation;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import de.hpi.mod.sim.core.model.Position;
 /**
  * Contains all "magic-numbers" set in the Simulation.
  * Can be set by the view.
  */
 public class SimulatorConfig {
 
-    public static final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
-    public static final String TEST_FILE_NAME = ".testresults";
-    public static final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
-    public static final String STRING_PATH_TO_PAUSE_ICON = "res/pause.png";
-    public static final String STRING_PATH_TO_STOP_ICON = "res/stop.png";
-    public static final String STRING_PATH_TO_RESET_ICON = "res/reset.png";
+    public static  final int SCENARIO_PASSING_TIME = 60; //Not in use at the moment
+    public static  final String TEST_FILE_NAME = ".testresults";
+    public static  final String STRING_PATH_TO_PLAY_ICON = "res/play.png";
+    public static  final String STRING_PATH_TO_PAUSE_ICON = "res/pause.png";
+    public static  final String STRING_PATH_TO_STOP_ICON = "res/stop.png";
+    public static  final String STRING_PATH_TO_RESET_ICON = "res/reset.png";
    
-	public static final int DEFAULT_WAITING_TIME_BEFORE_TEST = 1000; //in ms
+	public static  final int DEFAULT_WAITING_TIME_BEFORE_TEST = 1000; //in ms
 	
-	public static final float DEFAULT_BLOCK_SIZE = 20;
-	public static final float DEFAULT_OFFSET_X = 0;
-	public static final float DEFAULT_OFFSET_Y = 0;
-	public static final float DEFAULT_REFRESH_INTERVAL = 25;
-	public static final float MIN_BLOCK_SIZE = 5;
-	public static final float MAX_BLOCK_SIZE = 30;
+	public static  final float DEFAULT_BLOCK_SIZE = 20;
+	public static  final float DEFAULT_OFFSET_X = 0;
+	public static  final float DEFAULT_OFFSET_Y = 0;
+	public static  final float DEFAULT_REFRESH_INTERVAL = 25;
+	public static  final float MIN_BLOCK_SIZE = 5;
+	public static  final float MAX_BLOCK_SIZE = 30;
 	
-	public static final float ENTITY_LEVEL_0_SPEED = 0.00025f;
-	public static final float ENTITY_LEVEL_1_SPEED = 0.0005f;
-	public static final float ENTITY_LEVEL_2_SPEED = 0.001f;
-	public static final float ENTITY_LEVEL_3_SPEED = 0.002f;
-	public static final float ENTITY_LEVEL_4_SPEED = 0.003f;
-	public static final float ENTITY_LEVEL_5_SPEED = 0.004f;
-	public static final float ENTITY_LEVEL_6_SPEED = 0.005f;
-	public static final float ENTITY_LEVEL_7_SPEED = 0.006f;
-	public static final float ENTITY_LEVEL_8_SPEED = 0.008f;
-	public static final float ENTITY_LEVEL_9_SPEED = 0.01f;
-	public static final float ENTITY_LEVEL_10_SPEED = 0.012f;
-	public static final int ENTITY_MIN_SPEED_LEVEL = 0;
-	public static final int ENTITY_DEFAULT_SPEED_LEVEL = 5;
-	public static final int ENTITY_MAX_SPEED_LEVEL = 10;
+	public static  final float ENTITY_LEVEL_0_SPEED = 0.00025f;
+	public static  final float ENTITY_LEVEL_1_SPEED = 0.0005f;
+	public static  final float ENTITY_LEVEL_2_SPEED = 0.001f;
+	public static  final float ENTITY_LEVEL_3_SPEED = 0.002f;
+	public static  final float ENTITY_LEVEL_4_SPEED = 0.003f;
+	public static  final float ENTITY_LEVEL_5_SPEED = 0.004f;
+	public static  final float ENTITY_LEVEL_6_SPEED = 0.005f;
+	public static  final float ENTITY_LEVEL_7_SPEED = 0.006f;
+	public static  final float ENTITY_LEVEL_8_SPEED = 0.008f;
+	public static  final float ENTITY_LEVEL_9_SPEED = 0.01f;
+	public static  final float ENTITY_LEVEL_10_SPEED = 0.012f;
+	public static  final int ENTITY_MIN_SPEED_LEVEL = 0;
+	public static  final int ENTITY_DEFAULT_SPEED_LEVEL = 5;
+	public static  final int ENTITY_MAX_SPEED_LEVEL = 10;
 	
-	public static final int DEFAULT_MAP_HEIGHT = 10;
-	public static final int NOT_USED_ROWS = 3;
-	public static final long MESSAGE_DISPLAY_TIME = 3000; //in ms
+	public static  final int DEFAULT_MAP_HEIGHT = 10;
+	public static  final int NOT_USED_ROWS = 3;
+	public static  final long MESSAGE_DISPLAY_TIME = 3000; //in ms
 
     private static int scenarioPassingTime = SCENARIO_PASSING_TIME;
     private static String testFileName = TEST_FILE_NAME;

@@ -1,13 +1,15 @@
 package de.hpi.mod.sim.core.model;
 
 import java.util.List;
+import java.util.Map;
 
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.core.testing.EntityDescription;
 import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
+import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
-import de.hpi.mod.sim.setting.robot.Robot;
 
 public abstract class Setting {
 
@@ -29,9 +31,9 @@ public abstract class Setting {
         return frame;
     }
 
-    public void initialize(DriveSimFrame frame) {
+    public void initialize(DriveSimFrame frame, Simulation simulation) {
         this.frame = frame;
-        simulation = new Simulation(this);
+        this.simulation = simulation;
     }
 
     public void clearEntities() {
@@ -41,26 +43,9 @@ public abstract class Setting {
     public abstract void updateEntities(float delta);
 
     public abstract IRobotDispatch getRoboterDispatch();
-    
-    public synchronized Entity addEntity() {  // TODO Think about where to put addRobotStuff
-        return getSimulation().addEntityRunner(() -> getRoboterDispatch().addRobot());
-    }
 
-    public Entity addRobotAtPosition(Position pos, Robot.RobotState initialState, Orientation facing, List<Position> targets,
-            int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery,
-            boolean hardArrivedConstraint) {
-
-        return getSimulation()
-                .addEntityRunner(() -> getRoboterDispatch().addRobotAtPosition(pos, initialState, facing,
-                targets, delay, initialDelay, fuzzyEnd, unloadingTest, hasReservedBattery, hardArrivedConstraint));
-    }
-
-    public Entity addRobotInScenario(Position pos, Orientation facing, int delay) {
-        return getSimulation().addEntityRunner(() -> getRoboterDispatch().addRobotInScenario(pos, facing, delay));
-    }
-    
     public void runScenario(Scenario scenario) {
-        frame.allowRunning();
+        getSimulation().setRunForbidden(false);
         frame.setResizable(scenario.isResizable());
         getSimulation().reset();
         getSimulation().playScenario(scenario);
@@ -84,4 +69,20 @@ public abstract class Setting {
 	}
 
     public abstract void onSimulationPropertyRefresh();
+    
+    public abstract List<Scenario> getScenarios();
+
+    public abstract Map<String, List<TestScenario>> getTestGroups();
+
+    public abstract void render(java.awt.Graphics graphics);
+
+    public abstract void refreshSimulationProperties(int currentHeight, int currentWidth);
+
+    public void mousePressed(java.awt.event.MouseEvent e) { }
+
+	public void resetView() {
+	}
+
+    public abstract <E extends Entity> E fromDescription(EntityDescription<E> e);
+
 }

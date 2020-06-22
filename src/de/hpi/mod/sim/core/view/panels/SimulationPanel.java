@@ -13,7 +13,7 @@ import java.awt.*;
 public class SimulationPanel extends JPanel implements ITimeListener{
 
 	private static final long serialVersionUID = 4048135614810423369L;
-	private int currentLevel = SimulatorConfig.getDefaultEntitySpeedLevel();
+	private int currentLevel;
 	private Simulation simulation;
 	private ScenarioManager scenarioManager;
 	private JTextField valueField;
@@ -27,7 +27,8 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 	private ImageIcon stopIcon;
 	private ImageIcon resetIcon;
 	
-    public SimulationPanel(Simulation simulation, ScenarioManager scenarioManager) {
+	public SimulationPanel(Simulation simulation, ScenarioManager scenarioManager) {
+		this.currentLevel = SimulatorConfig.getDefaultEntitySpeedLevel();
     	this.simulation = simulation;
     	this.scenarioManager = scenarioManager;
     	

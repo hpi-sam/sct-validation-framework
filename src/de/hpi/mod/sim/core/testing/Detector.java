@@ -2,6 +2,7 @@ package de.hpi.mod.sim.core.testing;
 
 import java.util.List;
 
+import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.setting.robot.Robot;
 
@@ -15,9 +16,9 @@ public abstract class Detector {
 
     public void report(String reason, Robot involved1, Robot involved2) {
         if (involved1 != null)
-            setting.getSimulation().setHighlightedEntity1(involved1);
+            setting.getSimulation().getSimulationWorld().setHighlighted1(involved1);
         if (involved2 != null)
-            setting.getSimulation().setHighlightedEntity2(involved2);
+            setting.getSimulation().getSimulationWorld().setHighlighted2(involved2);
 
         if (setting.getSimulation().isRunning())
             setting.getSimulation().toggleRunning();
@@ -30,7 +31,7 @@ public abstract class Detector {
         report(reason, involved, null);
     }
 
-    public abstract void update(List<Robot> robots);
+    public abstract void update(List<? extends Entity> entities);
 
     public abstract void reset();
 }

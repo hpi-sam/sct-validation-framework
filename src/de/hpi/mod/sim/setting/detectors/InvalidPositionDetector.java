@@ -2,20 +2,19 @@ package de.hpi.mod.sim.setting.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
 
-public class InvalidPositionDetector extends Detector {
-	public InvalidPositionDetector(Setting setting) {
+public class InvalidPositionDetector extends RobotDetector {
+	public InvalidPositionDetector(InfiniteWarehousesSetting setting) {
 		super(setting);
 	}
 
 	boolean invalidPositionReported = false;
 	
 	@Override
-	public void update(List<Robot> robots) {
+	public void robotUpdate(List<Robot> robots) {
 		if (!invalidPositionReported) {
 			for (int i = 0; i < robots.size(); i++) {
 				Robot robot = robots.get(i);
@@ -43,7 +42,7 @@ public class InvalidPositionDetector extends Detector {
 	private void reportInvalidPosition(Robot robot, Position invalidPosition) {
 		String reason = "Robot at invalid position at: (" + String.valueOf(invalidPosition.getX()) + 
 				"," + String.valueOf(invalidPosition.getY()) + ")!";
-		setting.getFrame().reportInvalidPosition(robot, reason);
+		setting.reportInvalidPosition(robot, reason);
 		report(reason, robot);
 	}
 

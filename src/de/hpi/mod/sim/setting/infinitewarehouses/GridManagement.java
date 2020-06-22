@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.hpi.mod.sim.core.model.*;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -48,11 +47,11 @@ public class GridManagement implements ISensorDataProvider {
 		} else {
 			if (position.getX() % 3 == 0 && position.getY() < 0 && position.getY() > -4)
 				return CellType.BATTERY;
-			if (position.getX() % 3 == 0 || position.getY() < -SimulatorConfig.QUEUE_SIZE)
+			if (position.getX() % 3 == 0 || position.getY() < - InfiniteWarehouseSimConfig.getQueueSize())
 				return CellType.BLOCK;
 			if (position.getY() == 0 && Math.floorMod(position.getX(), 3) == 2)
 				return CellType.LOADING;
-			if (position.getY() < 0 && position.getY() > -SimulatorConfig.QUEUE_SIZE
+			if (position.getY() < 0 && position.getY() > - InfiniteWarehouseSimConfig.getQueueSize()
 					&& Math.floorMod(position.getX(), 3) == 2)
 				return CellType.QUEUE;
 			return CellType.STATION;
@@ -512,7 +511,7 @@ public class GridManagement implements ISensorDataProvider {
 			if (current.getX() > target.getX())
 				return Orientation.WEST;
 			if (current.getX() < target.getX()) {
-				if (current.getY() > -SimulatorConfig.QUEUE_SIZE)
+				if (current.getY() > - InfiniteWarehouseSimConfig.getQueueSize())
 					return Orientation.SOUTH;
 				return Orientation.EAST;
 			}
@@ -573,7 +572,7 @@ public class GridManagement implements ISensorDataProvider {
 			//odd station ID means the station is on the left
 			x = -(stationID + 1)/2 * 3 + 2;
 		}
-		return new Position(x, -SimulatorConfig.QUEUE_SIZE);
+		return new Position(x, - InfiniteWarehouseSimConfig.getQueueSize());
 	}
 
 	public Position getChargerPositionAtStation(int stationID, int chargerID) {
@@ -604,9 +603,9 @@ public class GridManagement implements ISensorDataProvider {
 	public Position getUnloadingPositionFromID(int unloadingID) {
 		int x, y;
 
-		y = (Math.abs(unloadingID) % SimulatorConfig.getMapHeight()) * 3 + 3;
-		y += 3*SimulatorConfig.getNotUsedRows();
-		x = unloadingID / SimulatorConfig.getMapHeight() * 3;
+		y = (Math.abs(unloadingID) % InfiniteWarehouseSimConfig.getMapHeight()) * 3 + 3;
+		y += 3* InfiniteWarehouseSimConfig.getNotUsedRows();
+		x = unloadingID / InfiniteWarehouseSimConfig.getMapHeight() * 3;
 		
 		return new Position(x, y);
 	}

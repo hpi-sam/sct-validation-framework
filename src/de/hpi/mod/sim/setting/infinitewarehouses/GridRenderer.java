@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.view.sim;
+package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import de.hpi.mod.sim.core.model.CellType;
 import de.hpi.mod.sim.core.model.IGrid;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 
 /**
  * Renders the Grid of the Simulation
@@ -33,8 +33,8 @@ public class GridRenderer {
     
     private void loadImages() {
         try {
-        	leftClickedRobotBlocking = ImageIO.read(new File(SimulatorConfig.getStringPathToLeftClickedRobotBlocking()));
-        	rightClickedRobotBlocking = ImageIO.read(new File(SimulatorConfig.getStringPathToRightClickedRobotBlocking()));
+        	leftClickedRobotBlocking = ImageIO.read(new File(InfiniteWarehouseSimConfig.getStringPathToLeftClickedRobotBlocking()));
+        	rightClickedRobotBlocking = ImageIO.read(new File(InfiniteWarehouseSimConfig.getStringPathToRightClickedRobotBlocking()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class GridRenderer {
         int widthInBlocks = (int) (world.getView().getWidth() / blockSize + 2);
         int heightInBlocks = (int) (world.getView().getHeight() / blockSize + 2);
 
-        int stationDepth = SimulatorConfig.QUEUE_SIZE + 1;
+        int stationDepth = InfiniteWarehouseSimConfig.getQueueSize() + 1;
 
         for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
             for (int x = (int) blocksOffsetX - widthInBlocks/2; x < widthInBlocks/2 + blocksOffsetX; x++) {
@@ -73,7 +73,7 @@ public class GridRenderer {
                 boolean isZeroZero = current.is(new Position(0, 0));
                 
                 // Unused stations should be drawn differently
-                int stationCount = SimulatorConfig.getChargingStationsInUse();
+                int stationCount = InfiniteWarehouseSimConfig.getChargingStationsInUse();
                 boolean isUnusedStationBlock = (cellType == CellType.BATTERY || cellType == CellType.STATION || cellType == CellType.LOADING || cellType == CellType.QUEUE) 
                 		&& (current.getX() >= stationCount * 3 / 2 - stationCount % 2 || current.getX() < -stationCount * 3 / 2 + stationCount % 2);
                 

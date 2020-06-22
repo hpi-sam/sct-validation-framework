@@ -2,21 +2,20 @@ package de.hpi.mod.sim.setting.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
 
-public class InvalidUnloadingDetector extends Detector {
+public class InvalidUnloadingDetector extends RobotDetector {
 
-	public InvalidUnloadingDetector(Setting setting) {
+	public InvalidUnloadingDetector(InfiniteWarehousesSetting setting) {
 		super(setting);
 	}
 
 	boolean invalidUnloadingReported = false;
 	
 	@Override
-	public void update(List<Robot> robots) {
+	public void robotUpdate(List<Robot> robots) {
 		if (!invalidUnloadingReported) {
 			for (int i = 0; i < robots.size(); i++) {
 				Robot robot = robots.get(i);
@@ -39,7 +38,7 @@ public class InvalidUnloadingDetector extends Detector {
 	private void reportInvalidPosition(Robot robot, Position invalidPosition) {
 		String reason = "Robot at (" + String.valueOf(invalidPosition.getX()) + 
 				"," + String.valueOf(invalidPosition.getY()) + ") unloaded to illegal position!";
-		setting.getFrame().reportInvalidUnloading(robot, reason);
+		setting.reportInvalidUnloading(robot, reason);
 		report(reason, robot);
 	}
 

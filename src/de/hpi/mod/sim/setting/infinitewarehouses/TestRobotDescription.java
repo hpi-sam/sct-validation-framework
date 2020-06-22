@@ -1,13 +1,11 @@
-package de.hpi.mod.sim.core.testing.tests;
+package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.Orientation;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.testing.RobotDescription;
 import de.hpi.mod.sim.setting.robot.Robot;
 import de.hpi.mod.sim.setting.robot.Robot.RobotState;
 
@@ -156,14 +154,14 @@ public class TestRobotDescription extends RobotDescription {
     }
 
     @Override
-    public void refreshRobot() {
+    public void refreshEntity() {
         targets.clear();
         targets.addAll(targetsCopy);
     }
 
     @Override
-    public Robot register(Setting setting) {
-        return setting.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd,
+    public Robot getRobot(RobotDispatcher robotDispatcher) {
+        return robotDispatcher.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd,
                 requireUnload, hasReservedBattery, hardArrivedConstraint);
     }
 }

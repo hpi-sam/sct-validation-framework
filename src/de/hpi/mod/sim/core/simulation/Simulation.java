@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.hpi.mod.sim.core.model.Entity;
+import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
@@ -37,11 +38,8 @@ public class Simulation {
 	 */
 	private List<ITimeListener> timeListeners = new ArrayList<>();
 
-	public Simulation(Setting setting) {
+	public Simulation(Setting setting, SimulationWorld simulationWorld) {
 		this.setting = setting;
-	}
-
-	public void initialize(SimulationWorld simulationWorld) {
 		this.simulationWorld = simulationWorld;
 	}
 
@@ -112,17 +110,17 @@ public class Simulation {
 		return simulationWorld;
 	}
 
-	public Entity addEntityRunner(Supplier<Entity> entityGetter) { 
+	public <E extends Entity> E addEntityRunner(Supplier<E> entityGetter) { 
 		while (isRefreshing || isUpdating) {
 			// Do nothing while refreshing or updating
 		}
 
-		Entity e = entityGetter.get();
-		if (e.isHighlightable()) {
-			if (simulationWorld.getHighlightedEntity1() == null)
-				setHighlightedEntity1(e);
+		E e = entityGetter.get();
+		if (e instanceof IHighlightable) {
+			if (simulationWorld.getHighlighted1() == null)
+				simulationWorld.setHighlighted1((IHighlightable) e);
 			else
-				setHighlightedEntity2(e);
+				simulationWorld.setHighlighted2((IHighlightable) e);
 		}
 		return e;
 	}
@@ -141,19 +139,5 @@ public class Simulation {
 
 	public void setRunForbidden(boolean isForbidden) {
 		runForbidden = isForbidden;
-	}
-
-	public void onSimulationPropertyRefresh(int chargingStationsInUse) {
-		setting.onSimulationPropertyRefresh(); 
-	}
-
-	// TODO move.
-	public void setHighlightedEntity2(Entity e) {
-		simulationWorld.setHighlightedEntity2(e);
-	}
-
-	// TODO move
-	public void setHighlightedEntity1(Entity e) {
-		simulationWorld.setHighlightedEntity1(e);
 	}
 }

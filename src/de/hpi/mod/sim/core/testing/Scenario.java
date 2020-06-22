@@ -2,6 +2,7 @@ package de.hpi.mod.sim.core.testing;
 
 import java.util.List;
 
+import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
 
@@ -31,14 +32,15 @@ public abstract class Scenario {
     	return description;
     }
 
-    protected abstract List<RobotDescription> initializeScenario();
+    protected abstract List<EntityDescription<?>> initializeScenario();
 
     public void loadScenario(Setting setting) { 
-        List<RobotDescription> newRobots = initializeScenario();
-        newRobots.forEach(robot -> robot.register(setting));
+        List<EntityDescription<? extends Entity>> newEntities = initializeScenario();
+        newEntities.forEach(e -> setting.getSimulation().addEntityRunner(() -> setting.fromDescription(e)));
     }
 
 	public boolean isResizable() {
 		return resizable;
 	};
 }
+

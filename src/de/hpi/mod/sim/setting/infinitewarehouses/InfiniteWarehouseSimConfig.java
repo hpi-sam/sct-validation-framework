@@ -1,8 +1,5 @@
 package de.hpi.mod.sim.setting.infinitewarehouses;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 
@@ -58,8 +55,6 @@ public class InfiniteWarehouseSimConfig extends SimulatorConfig {
     private static int spaceBetweenChargingStations = SPACE_BETWEEN_CHARGING_STATIONS;
 	private static float recommendedRobotsPerStation = RECOMMENDED_ROBOTS_PER_STATION;
     private static int maxRobotsPerStation = MAX_ROBOTS_PER_STATION;
-    private static int scenarioPassingTime = SCENARIO_PASSING_TIME;
-    private static String testFileName = TEST_FILE_NAME;
     private static String stringPathToRobotIcon = STRING_PATH_TO_ROBOT_ICON;
     private static String stringPathToLeftClickedRobotIcon = STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON;
     private static String stringPathToRightClickedRobotIcon = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON;
@@ -67,10 +62,6 @@ public class InfiniteWarehouseSimConfig extends SimulatorConfig {
     private static String stringPathToRightClickedRobotBlocking = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_BLOCKING;
     private static String stringPathToEmptyBattery = STRING_PATH_TO_EMPTY_BATTERY;
     private static String stringPathToPackage = STRING_PATH_TO_PACKAGE;
-    private static String stringPathToPlayIcon = STRING_PATH_TO_PLAY_ICON;
-    private static String stringPathToPauseIcon = STRING_PATH_TO_PAUSE_ICON;
-    private static String stringPathToStopIcon = STRING_PATH_TO_STOP_ICON;
-    private static String stringPathToResetIcon = STRING_PATH_TO_RESET_ICON;
     private static String urlToExplosion = URL_TO_EXPLOSION;
     private static float defaultRotationSpeed = DEFAULT_ROTATION_SPEED;
    	private static long defaultUnloadingTime = DEFAULT_UNLOADING_TIME;
@@ -83,146 +74,106 @@ public class InfiniteWarehouseSimConfig extends SimulatorConfig {
 	private static float minWaitingTimeBeforeLoading = MIN_WAITING_TIME_BEFORE_LOADING;
 	private static float maxWaitingTimeBeforeLoading = MAX_WAITING_TIME_BEFORE_LOADING;
    	
-   	private static int defaultWaitingTimeBeforeTest = DEFAULT_WAITING_TIME_BEFORE_TEST;
-   	
-	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
+  	private static int defaultUnloadingRange = DEFAULT_UNLOADING_RANGE;
    	private static int queueSize = QUEUE_SIZE;
    	private static int batteriesPerStation = BATTERIES_PER_STATION;
    	private static int chargingStationsInUse = DEFAULT_CHARGING_STATIONS_IN_USE;
     private static int unloadingRange = DEFAULT_UNLOADING_RANGE;
-    
-    
-    
-    public static int getDefaultChargingStationsInUse() {
-    	return defaultChargingStationsInUse;
-    }
-    
-    public static int getSpaceBetweenChargingStations() {
-    	return spaceBetweenChargingStations;
-    }
+
+	public static int getDefaultChargingStationsInUse() {
+		return defaultChargingStationsInUse;
+	}
+
+	public static int getSpaceBetweenChargingStations() {
+		return spaceBetweenChargingStations;
+	}
 
 	public static float getRecommendedRobotsPerStation() {
 		return recommendedRobotsPerStation;
 	}
-    
-    public static int getMaxRobotsPerStation() {
-    	return maxRobotsPerStation;
-    }
-    
-    public static Position getFirstStationTop() {
-    	return new Position(-chargingStationsInUse/2 * 3, -2);
-    }
-	
-	public static String getStringPathToRobotIcon(){
+
+	public static int getMaxRobotsPerStation() {
+		return maxRobotsPerStation;
+	}
+
+	public static Position getFirstStationTop() {
+		return new Position(-chargingStationsInUse / 2 * 3, -2);
+	}
+
+	public static String getStringPathToRobotIcon() {
 		return stringPathToRobotIcon;
 	}
-	
+
 	public static String getStringPathToLeftClickedRobotIcon() {
 		return stringPathToLeftClickedRobotIcon;
 	}
-	
+
 	public static String getStringPathToRightClickedRobotIcon() {
 		return stringPathToRightClickedRobotIcon;
 	}
-	
+
 	public static String getStringPathToLeftClickedRobotBlocking() {
 		return stringPathToLeftClickedRobotBlocking;
 	}
-	
+
 	public static String getStringPathToRightClickedRobotBlocking() {
 		return stringPathToRightClickedRobotBlocking;
 	}
-	
+
 	public static String getStringPathToEmptyBattery() {
 		return stringPathToEmptyBattery;
 	}
-	
+
 	public static String getStringPathToPackage() {
 		return stringPathToPackage;
 	}
-	
+
 	public static String getURLToExplosion() {
 		return urlToExplosion;
 	}
-	
+
 	public static float getDefaultRotationSpeed() {
 		return defaultRotationSpeed;
 	}
-	
+
 	public static long getDefaultUnloadingTime() {
 		return defaultUnloadingTime;
 	}
-	
+
 	public static float getBatteryFull() {
 		return batteryFull;
 	}
-	
+
 	public static float getBatteryLow() {
 		return batteryLow;
 	}
-	
+
 	public static float getBatteryLoss() {
 		return batteryLoss;
 	}
-	
-	public static float getMinBatteryRatio (){
+
+	public static float getMinBatteryRatio() {
 		return minBatteryRatio;
 	}
-	
+
 	public static float getBatteryChargingSpeed() {
 		return batteryChargingSpeed;
 	}
-	
+
 	public static int getDefaultUnloadingRange() {
 		return defaultUnloadingRange;
 	}
-	
-	public static float getDefaultBlockSize() {
-		return defaultBlockSize;
-	}
-	
-   	public static float getDefaultOffsetX() {
-   		return defaultOffsetX;
-   	}
-   	
-   	public static float getDefaultOffsetY() {
-   		return defaultOffsetY;
-   	}
-   	
-   	public static float getDefaultRefreshInterval() {
-   		return defaultRefreshInterval;
-   	}
-   	
-   	public static float getMinBlockSize() {
-   		return minBlockSize;
-   	}
-   	
-   	public static float getMaxBlockSize() {
-   		return maxBlockSize;
-   	}
-   	
-   	public static int getQueueSize() {
-   		return queueSize;
-   	}
-   	
-   	public static int getBatteriesPerStation() {
-   		return batteriesPerStation;
-   	}
-   	
-   	public static int getDefaultMapHeight() {
-   		return defaultMapHeight;
-   	}
 
-	public static int getMapHeight() {
-		return mapHeight;
+	public static int getQueueSize() {
+		return queueSize;
 	}
-	
+
+	public static int getBatteriesPerStation() {
+		return batteriesPerStation;
+	}
+
 	public static int getDefaultStationUnblockingTime() {
 		return defaultStationUnblockingTime;
-	}
-
-	public static void setMapHeight(int mapHeight) {
-		SimulatorConfig.mapHeight = mapHeight;
 	}
 
 	public static int getUnloadingRange() {
@@ -230,7 +181,7 @@ public class InfiniteWarehouseSimConfig extends SimulatorConfig {
 	}
 
 	public static void setUnloadingRange(int unloadingRange) {
-		SimulatorConfig.unloadingRange = unloadingRange;
+		InfiniteWarehouseSimConfig.unloadingRange = unloadingRange;
 	}
 
 	public static int getChargingStationsInUse() {
@@ -238,15 +189,7 @@ public class InfiniteWarehouseSimConfig extends SimulatorConfig {
 	}
 
 	public static void setChargingStationsInUse(int chargingStationsInUse) {
-		SimulatorConfig.chargingStationsInUse = chargingStationsInUse;
-	}
-
-	public static int getNotUsedRows() {
-		return notUsedRows;
-	}
-
-	public static long getMessageDisplayTime() {
-		return messageDisplayTime ;
+		InfiniteWarehouseSimConfig.chargingStationsInUse = chargingStationsInUse;
 	}
 
 	public static float getMinWaitingTimeBeforeLoading() {

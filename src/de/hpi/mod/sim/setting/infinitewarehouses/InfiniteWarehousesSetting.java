@@ -1,16 +1,21 @@
 package de.hpi.mod.sim.setting.infinitewarehouses;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.IGrid;
 import de.hpi.mod.sim.core.model.IRobotController;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.core.testing.EntityDescription;
+import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
+import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.setting.detectors.*;
 import de.hpi.mod.sim.setting.robot.Robot;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
@@ -25,12 +30,20 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
 
     private ScenarioManager scenarioManager;
 
+    private GridRenderer gridRenderer;
+    private RobotRenderer robotRenderer;
+    private ExplosionRenderer explosionRenderer;
+
     @Override
-    public void initialize(DriveSimFrame frame) {
-        super.initialize(frame);
+    public void initialize(DriveSimFrame frame, Simulation simulation) {
+        super.initialize(frame, simulation);
         grid = new GridManagement(this);
-        robotDispatcher = new RobotDispatcher(grid, new StationManager(SimulatorConfig.getChargingStationsInUse()));
+        robotDispatcher = new RobotDispatcher(grid,
+                new StationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse()));
         scenarioManager = new ScenarioManager(this);
+        gridRenderer = new GridRenderer(getSimulation().getSimulationWorld(), getGrid());
+        robotRenderer = new RobotRenderer(robotDispatcher, getSimulation().getSimulationWorld());
+        explosionRenderer = new ExplosionRenderer(getSimulation().getSimulationWorld());
         initializeDetectors();
     }
 
@@ -78,9 +91,9 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
 
     @Override
     public List<? extends Entity> getEntities() {
-        return getRoboterDispatch().getRobots();
+        return getRobots();
     }
-    
+
     @Override
     public RobotDispatcher getRoboterDispatch() {
         return robotDispatcher;
@@ -88,6 +101,90 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
 
     @Override
     public void onSimulationPropertyRefresh() {
-        getRoboterDispatch().createNewStationManager(SimulatorConfig.getChargingStationsInUse());
+        getRoboterDispatch().createNewStationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse());
     }
+
+    public List<Robot> getRobots() {
+        return getRoboterDispatch().getRobots();
+    }
+
+    @Override
+    public List<Scenario> getScenarios() {
+        return ScenarioGenerator.getScenarios();
+    }
+
+    @Override
+    public Map<String, List<TestScenario>> getTestGroups() {
+        return TestCaseGenerator.getAllTestCases();
+    }
+
+    @Override
+    public void render(Graphics graphics) {
+        gridRenderer.render(graphics);
+        robotRenderer.render(graphics);
+        explosionRenderer.render(graphics);
+    }
+
+    @Override
+    public void refreshSimulationProperties(int currentHeight, int currentWidth) { // TODO this is not nice
+        float blockSize = InfiniteWarehouseSimConfig.getDefaultBlockSize();
+        int heightBlocks = (int) (currentHeight / blockSize);
+        int widthBlocks = (int) (currentWidth / blockSize);
+
+        int chargingStations = widthBlocks / InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations();
+        if (chargingStations % 2 != 0)
+            chargingStations--;
+        InfiniteWarehouseSimConfig.setChargingStationsInUse(chargingStations);
+        int unloadingRange = (widthBlocks / 3) * ((heightBlocks - InfiniteWarehouseSimConfig.getQueueSize()) / 3);
+        InfiniteWarehouseSimConfig.setUnloadingRange(unloadingRange);
+    }
+
+    @Override
+    public void mousePressed(java.awt.event.MouseEvent e) {
+        explosionRenderer.mousePressed(e);
+    }
+
+    public void reportCollision(Robot r1, Robot r2, String reason) {
+        getFrame().displayWarningMessage(reason);
+        getSimulation().setRunForbidden(true);
+        renderExplosion(r1);
+    }
+
+    public void reportInvalidPosition(Robot robot1, String reason) {
+        getFrame().displayWarningMessage(reason);
+        getSimulation().setRunForbidden(true);
+    }
+
+    public void reportInvalidTurning(Robot robot, String reason) {
+        getFrame().displayWarningMessage(reason);
+        getSimulation().setRunForbidden(true);
+    }
+
+    public void reportInvalidUnloading(Robot robot, String reason) {
+        getFrame().displayWarningMessage(reason);
+    }
+
+    public void reportDeadlock(String reason) {
+        getFrame().displayWarningMessage(reason);
+    }
+
+    public void renderExplosion(Robot robot) {
+        explosionRenderer.showExplosion(robot);
+    }
+
+    @Override
+    public void resetView() {
+        explosionRenderer.reset();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E extends Entity> E fromDescription(EntityDescription<E> description) {  //TODO very ugly, beautify
+        if (description instanceof RobotDescription) {
+            return (E) ((RobotDescription) description).getRobot(getRoboterDispatch());
+        } else {
+            return null;
+        }
+    }
+    
 }

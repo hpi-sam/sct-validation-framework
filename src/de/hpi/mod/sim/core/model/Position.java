@@ -48,10 +48,11 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Position{" + "x=" + x + ", y=" + y + '}';
+    }
+    
+    public String stringify() {
+        return String.format("(%s, %s)", getX(), getY());
     }
     
     public Position getModified(int dx, int dy) {

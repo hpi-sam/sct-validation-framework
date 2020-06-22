@@ -1,16 +1,15 @@
 package de.hpi.mod.sim.core.view;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.panels.*;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 import de.hpi.mod.sim.core.view.sim.SimulatorView;
-import de.hpi.mod.sim.setting.robot.Robot;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -25,9 +24,9 @@ public class DriveSimFrame extends JFrame {
 
 	private static final long serialVersionUID = 4683030810403226266L;
 	private Setting setting;
-	private SimulatorView sim;
-	private RobotInfoPanel robotInfoPanel1;
-	private RobotInfoPanel robotInfoPanel2;
+	private SimulatorView simView;
+	private EntityInfoPanel robotInfoPanel1;
+	private EntityInfoPanel robotInfoPanel2;
 	private ScenarioPanel scenarioPanel;
 	private TestListPanel testListPanel;
 	private JScrollPane testListScrollPane;
@@ -45,11 +44,13 @@ public class DriveSimFrame extends JFrame {
 	public DriveSimFrame(Setting setting) {
 		super("Drive System Simulator");
 		this.setting = setting;
-		setting.initialize(this);
-		sim = new SimulatorView(setting.getSimulation(), setting.getGrid());
-		SimulationWorld simWorld = sim.getSimulationWorld(); // TODO rethink structure of
-													// simulationWorld/simulationView/MetaWorld
-		setting.getSimulation().initialize(simWorld);
+		// TODO rethink structure of simulationWorld/simulationView/MetaWorld
+		SimulationWorld simWorld = new SimulationWorld();
+		Simulation simulation = new Simulation(setting, simWorld);
+		setting.initialize(this, simulation);
+		simView = new SimulatorView(setting, simWorld);
+		simWorld.initialize(simView);
+
 		setLayout(new GridBagLayout());
 
 		createFileIfNotExist(SimulatorConfig.getTestFileName());
@@ -69,6 +70,10 @@ public class DriveSimFrame extends JFrame {
 		displayMessage(message, MAIN_MENU_COLOR);
 	}
 
+	public void displayWarningMessage(String message) {
+		displayMessage(message, MENU_RED);
+	}
+
 	public void displayMessage(String message, Color color) {
 		Popup popup = createPopup(message, color);
 		popup.show();
@@ -86,45 +91,13 @@ public class DriveSimFrame extends JFrame {
 		popupHider.start();
 	}
 
-	public void reportCollision(Robot r1, Robot r2, String reason) {
-		displayMessage(reason, MENU_RED);
-		forbidFurtherRunning();
-		sim.renderExplosion(r1);
-	}
-
-	public void reportInvalidPosition(Robot robot1, String reason) {
-		displayMessage(reason, MENU_RED);
-		forbidFurtherRunning();
-	}
-
-	public void reportInvalidTurning(Robot robot, String reason) {
-		displayMessage(reason, MENU_RED);
-		forbidFurtherRunning();
-	}
-
-	public void reportInvalidUnloading(Robot robot, String reason) {
-		displayMessage(reason, MENU_RED);
-	}
-
-	public void reportDeadlock(String reason) {
-		displayMessage(reason, MENU_RED);
-	}
-
-	public void forbidFurtherRunning() {
-		setting.getSimulation().setRunForbidden(true);
-	}
-
-	public void allowRunning() {
-		setting.getSimulation().setRunForbidden(false);
-	}
-
 	public void clearSelections() {
 		testListPanel.clearSelections();
 		scenarioPanel.clearSelections();
 	}
 
 	public void resetSimulationView() {
-		sim.reset();
+		setting.resetView();
 	}
 
 	public boolean isRunning() {
@@ -163,13 +136,13 @@ public class DriveSimFrame extends JFrame {
     }
     
     private void initializePanels(SimulationWorld simulationWorld) {
-		robotInfoPanel1 = new RobotInfoPanel(simulationWorld, false);
-        robotInfoPanel2 = new RobotInfoPanel(simulationWorld, true);
+		robotInfoPanel1 = new EntityInfoPanel(simulationWorld, false);
+        robotInfoPanel2 = new EntityInfoPanel(simulationWorld, true);
         simulationPanel = new SimulationPanel(setting.getSimulation(), setting.getScenarioManager());
         testListPanel = new TestListPanel(setting.getScenarioManager());
         testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         testOverviewPanel = new TestOverviewPanel(setting.getScenarioManager(), this);
-        timerPanel = new TimerPanel(setting.getSimulation());
+		timerPanel = new TimerPanel(setting.getSimulation());
         scenarioPanel = new ScenarioPanel(setting.getScenarioManager());
         setJMenuBar(new DriveSimMenu(setting.getSimulation(), simulationWorld));
 	}
@@ -243,7 +216,7 @@ public class DriveSimFrame extends JFrame {
 		simConstraints.weightx = 1.0;
 		simConstraints.weighty = 1.0;
 		simConstraints.gridheight = 5;
-		add(sim, simConstraints);
+		add(simView, simConstraints);
 		
 		//add the gray spacer to the right of the simulation panel
 		JPanel spacer = new JPanel();
@@ -311,12 +284,12 @@ public class DriveSimFrame extends JFrame {
 		setMinimumSize(new Dimension(902, 800));
 		setPreferredSize(new Dimension(1212, 800));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        try {
-			setIconImage(ImageIO.read(new File(SimulatorConfig.getStringPathToRobotIcon())));
-		} catch (IOException e) {
-			System.out.println("hi");
-			e.printStackTrace();
-		}
+        // try {
+		// 	setIconImage(ImageIO.read(new File(SimulatorConfig.getStringPathToRobotIcon())));
+		// } catch (IOException e) {
+		// 	System.out.println("hi");
+		// 	e.printStackTrace();
+		// }
         pack();
         setVisible(true);
 	}
@@ -398,8 +371,8 @@ public class DriveSimFrame extends JFrame {
         lastFrame = System.currentTimeMillis();
         
         setting.getSimulation().refresh();
-        robotInfoPanel1.onHighlightedEntityChange();
-        robotInfoPanel2.onHighlightedEntityChange();
+        robotInfoPanel1.onHighlightedChange();
+        robotInfoPanel2.onHighlightedChange();
         setting.getScenarioManager().refresh();
         setting.getSimulation().update(delta);
 

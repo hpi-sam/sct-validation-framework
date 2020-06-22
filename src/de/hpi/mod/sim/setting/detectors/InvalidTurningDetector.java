@@ -2,13 +2,12 @@ package de.hpi.mod.sim.setting.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.CellType;
-import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
 
-public class InvalidTurningDetector extends Detector {
-	public InvalidTurningDetector(Setting setting) {
+public class InvalidTurningDetector extends RobotDetector {
+	public InvalidTurningDetector(InfiniteWarehousesSetting setting) {
 		super(setting);
 	}
 
@@ -16,7 +15,7 @@ public class InvalidTurningDetector extends Detector {
 	
 	
 	@Override
-	public void update(List<Robot> robots) {
+	public void robotUpdate(List<Robot> robots) {
 		if (!invalidTurningReported) {
 			for (int i = 0; i < robots.size(); i++) {
 				Robot robot = robots.get(i);
@@ -36,7 +35,7 @@ public class InvalidTurningDetector extends Detector {
 
 	private void reportInvalidTurning(Robot robot) {
 		String reason = "Robot destroyed charging apparature because robot turned on battery!";
-		setting.getFrame().reportInvalidTurning(robot, reason);
+		setting.reportInvalidTurning(robot, reason);
 		report(reason, robot);
 	}
 

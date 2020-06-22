@@ -1,10 +1,11 @@
 package de.hpi.mod.sim.setting.robot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.model.*;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 
 /**
  * Controller for a Robot.
@@ -14,7 +15,7 @@ import de.hpi.mod.sim.core.simulation.SimulatorConfig;
  * It relays sensor-information from a {@link ISensorDataProvider} to the Drive-System.
  * It uses a {@link IRobotStationDispatcher} to drive in a station and {@link ILocation} to get new Targets.
  */
-public class Robot implements IProcessor, ISensor, DriveListener, Entity {  //TODO draw as much as possible into core
+public class Robot implements IProcessor, ISensor, DriveListener, StateChartEntity, IHighlightable { 
 
     /**
      * Used so each Robot has an unique id
@@ -230,8 +231,8 @@ public class Robot implements IProcessor, ISensor, DriveListener, Entity {  //TO
 
     private void handleFinishedLoading() {
     	if(now == 0 && !isInTest) {
-    		long minWaitTime = (long) (SimulatorConfig.getMinWaitingTimeBeforeLoading() / SimulatorConfig.getEntitySpeedFactor());
-    		long maxWaitTime = (long) (SimulatorConfig.getMaxWaitingTimeBeforeLoading() / SimulatorConfig.getEntitySpeedFactor());
+    		long minWaitTime = (long) (InfiniteWarehouseSimConfig.getMinWaitingTimeBeforeLoading() / InfiniteWarehouseSimConfig.getEntitySpeedFactor());
+    		long maxWaitTime = (long) (InfiniteWarehouseSimConfig.getMaxWaitingTimeBeforeLoading() / InfiniteWarehouseSimConfig.getEntitySpeedFactor());
     		if(isAlone) {
     			delay = minWaitTime;
     		}else {
@@ -280,7 +281,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, Entity {  //TO
     		invalidUnloadingPosition  = manager.currentPosition();
     	}
 		
-        boolean needsLoading = manager.getBattery() < SimulatorConfig.BATTERY_LOW;
+        boolean needsLoading = manager.getBattery() < InfiniteWarehouseSimConfig.BATTERY_LOW;
         stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
         drive.newTarget();
         if(!isInTest) {
@@ -380,10 +381,12 @@ public class Robot implements IProcessor, ISensor, DriveListener, Entity {  //TO
     
     @Override
     public boolean canChargeAtTarget() {
-    	return this.pos().is(this.oldPos()) && grid.cellType(this.pos()) == CellType.STATION && 
-    			grid.cellType(target) == CellType.BATTERY && manager.currentPosition().equals(target.getModified(1,0));
+        return this.pos().is(this.oldPos()) && grid.cellType(this.pos()) == CellType.STATION
+                && grid.cellType(target) == CellType.BATTERY
+                && manager.currentPosition().equals(target.getModified(1, 0));
     }
     
+    @Override
     public boolean hasPassedAllTestCriteria() {
     	return testPositionTargets.isEmpty() && this.isOnTarget()  
     			&& (!requireArrivedForTestCompletion || arrivedEventWasCalled) 
@@ -536,7 +539,14 @@ public class Robot implements IProcessor, ISensor, DriveListener, Entity {  //TO
 	}
 
     @Override
-    public boolean isHighlightable() {
-        return true;
+    public List<String> getHighlightInfo() {
+        List<String> infos = new ArrayList<>();
+        infos.add("ID: " + getID());
+        infos.add("Battery: " + (int) getBattery());
+        infos.add("Pos: " + pos().stringify() + " (" + posType().toString() + ")");
+        infos.add("Target: " + getTarget().stringify());
+        infos.add("Facing: " + posOrientation().toString());
+        infos.add("Target Direction: " + (isOnTargetOrNearby() ? "-" : targetDirection().toString()));
+        return infos;
     }
 }

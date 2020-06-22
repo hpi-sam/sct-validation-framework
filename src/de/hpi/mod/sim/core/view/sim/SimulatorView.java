@@ -2,10 +2,11 @@ package de.hpi.mod.sim.core.view.sim;
 
 import javax.swing.*;
 
-import de.hpi.mod.sim.core.model.IGrid;
+import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.simulation.Simulation;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.setting.infinitewarehouses.GridRenderer;
+import de.hpi.mod.sim.setting.infinitewarehouses.RobotRenderer;
 import de.hpi.mod.sim.setting.robot.Robot;
 
 import java.awt.*;
@@ -20,23 +21,17 @@ import java.awt.event.MouseMotionListener;
 public class SimulatorView extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = -361892313938561668L;
-	private GridRenderer gridRenderer;
-    private RobotRenderer robotRenderer;
-    private ExplosionRenderer explosionRenderer;
 
+    private Setting setting;
     private SimulationWorld simulationWorld;
-    private Simulation simulation;
     
     private int currentHeight;
     private int currentWidth;
 
 
-    public SimulatorView(Simulation simulation, IGrid grid) {
-        this.simulation = simulation;
-        simulationWorld = new SimulationWorld(this);
-        gridRenderer = new GridRenderer(simulationWorld, grid);
-        robotRenderer = new RobotRenderer(simulation, simulationWorld);
-        explosionRenderer = new ExplosionRenderer(simulationWorld);
+    public SimulatorView(Setting setting, SimulationWorld simulationWorld) {
+        this.setting = setting;
+        this.simulationWorld = simulationWorld;
 
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -44,51 +39,31 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
         setFocusable(true);
     }
 
-    public SimulationWorld getSimulationWorld() {
-        return simulationWorld;
-    }
-
     @Override
     protected void paintComponent(Graphics graphic) {
         super.paintComponent(graphic);
 
         // Draw Grid
-        gridRenderer.render(graphic);
-        robotRenderer.render(graphic);
-        explosionRenderer.render(graphic);
+        setting.render(graphic);
         
         //Refresh simulation properties
         refreshSimulationSize();
-        refreshSimulationProperties();
+        setting.refreshSimulationProperties(currentHeight, currentWidth);
     }
 
-    private void refreshSimulationProperties() {
-    	float blockSize = SimulatorConfig.getDefaultBlockSize();
-    	int heightBlocks = (int) (currentHeight/blockSize);
-    	int widthBlocks = (int) (currentWidth/blockSize);
-    	
-    	
-    	int chargingStations = widthBlocks/SimulatorConfig.getSpaceBetweenChargingStations();
-    	if(chargingStations % 2 != 0)
-    		chargingStations--;
-    	SimulatorConfig.setChargingStationsInUse(chargingStations);
-    	int unloadingRange = (widthBlocks/3)*((heightBlocks-SimulatorConfig.getQueueSize())/3);
-    	SimulatorConfig.setUnloadingRange(unloadingRange);
-    	simulation.onSimulationPropertyRefresh();
-    	
-	}
 
 	@Override
     public void mouseClicked(MouseEvent e) {
         Position pos = simulationWorld.toGridPosition(e.getX(), e.getY());
-        for (Robot r : simulation.getRobots()) {
-            if (r.getDriveManager().currentPosition().equals(pos) || r.getDriveManager().getOldPosition().equals(pos)) {
+        for (Entity entityO : setting.getEntities()) {
+            Robot entity = (Robot) entityO; //TODO I bet we want to handle mouseClicks directly on the paintedcomponents
+            if (entity.getDriveManager().currentPosition().equals(pos) || entity.getDriveManager().getOldPosition().equals(pos)) {
             	if(e.getButton() == MouseEvent.BUTTON1) {
-            		simulation.setHighlightedEntity1(r);
+            		simulationWorld.setHighlighted1(entity);
             	} else if (e.getButton() == MouseEvent.BUTTON3) {
-            		simulation.setHighlightedEntity2(r);
+            		simulationWorld.setHighlighted2(entity);
             	} else {
-            		simulation.setHighlightedEntity1(r);
+            		simulationWorld.setHighlighted1(entity);
             	}
                 break;
             }
@@ -97,7 +72,7 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 
     @Override
     public void mousePressed(MouseEvent e) {
-    	explosionRenderer.mousePressed(e);
+    	setting.mousePressed(e);
     }
 
     @Override
@@ -127,11 +102,4 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
     	currentWidth = rectangle.width;
     }
 
-	public void renderExplosion(Robot robot) {
-		explosionRenderer.showExplosion(robot);
-	}
-
-	public void reset() {
-		explosionRenderer.reset();
-	}
 }

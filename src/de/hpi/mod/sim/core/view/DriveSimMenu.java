@@ -2,9 +2,10 @@ package de.hpi.mod.sim.core.view;
 
 import javax.swing.*;
 
+import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.testing.RobotDescription;
+import de.hpi.mod.sim.core.testing.EntityDescription;
 import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
@@ -52,7 +53,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
 
         Scenario resetSimulationScenario = new Scenario() {
             @Override
-            protected List<RobotDescription> initializeScenario() {
+            protected List<EntityDescription<? extends Entity>> initializeScenario() {
                 return new ArrayList<>();
             }
         };

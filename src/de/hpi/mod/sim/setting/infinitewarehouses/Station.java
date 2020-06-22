@@ -2,7 +2,6 @@ package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import java.util.*;
 
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.setting.AbstractStation;
 import de.hpi.mod.sim.setting.Battery;
 
@@ -34,7 +33,7 @@ public class Station extends AbstractStation {
      * Adds the batteries with IDs 0, 1, 2 to the station
      */
     private void initializeBatteries() {
-        batteries = new Battery[SimulatorConfig.BATTERIES_PER_STATION];
+        batteries = new Battery[InfiniteWarehouseSimConfig.BATTERIES_PER_STATION];
         for (int i = 0; i < batteries.length; i++) {
             batteries[i] = new Battery(i);
         }
@@ -53,7 +52,7 @@ public class Station extends AbstractStation {
     }
 
     boolean hasFreeQueuePosition() {
-        return getQueueSize() < SimulatorConfig.QUEUE_SIZE;
+        return getQueueSize() < InfiniteWarehouseSimConfig.QUEUE_SIZE;
     }
 
     boolean hasFreeBattery() {
@@ -99,7 +98,7 @@ public class Station extends AbstractStation {
      */
     private Battery getFreeBattery() {
     	int freeID = 0;
-        for(int i=0; i<SimulatorConfig.getBatteriesPerStation(); i++) {
+        for(int i=0; i< InfiniteWarehouseSimConfig.getBatteriesPerStation(); i++) {
         	if(batteries[i].isFree()) {
         		freeID = i;
         	}
@@ -130,7 +129,7 @@ public class Station extends AbstractStation {
     @Override
     public void clear() {
         blockedQueue = false;
-        for (int i = 0; i < SimulatorConfig.getBatteriesPerStation(); i++) {
+        for (int i = 0; i < InfiniteWarehouseSimConfig.getBatteriesPerStation(); i++) {
             batteries[i].setRobotNotPresent();
         }
     }

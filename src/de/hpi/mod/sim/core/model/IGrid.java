@@ -20,5 +20,5 @@ public interface IGrid {
 
 	public void clearInvalidPositions();
 
-	public void makePositionInvalid(Position pos);
+    public void makePositionInvalid(Position pos);
 }

@@ -33,7 +33,6 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	public TestOverviewPanel(ScenarioManager scenarioManager, DriveSimFrame frame) {
 		this.scenarioManager = scenarioManager;
 		this.frame = frame;
-		
 		// -----------------------------------
     	// |  -----------	---------------	 |
     	// |  |Progress |	|  Run All    |	 |

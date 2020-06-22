@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.testing.Detector;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
 
-public class DeadlockDetector extends Detector {
+public class DeadlockDetector extends RobotDetector {
 
-	public DeadlockDetector(Setting setting) {
+	public DeadlockDetector(InfiniteWarehousesSetting setting) {
 		super(setting);
 		getRobotPositions();
 	}
@@ -24,12 +23,12 @@ public class DeadlockDetector extends Detector {
 	private boolean deactivated = true;
 
 	@Override
-	public void update(List<Robot> robots) {
+	public void robotUpdate(List<Robot> robots) {
 		if (!setting.getSimulation().isRunning() || deactivated) {
 			return;
 		}
 
-		offset = (long) Math.max(defaultOffset, defaultOffset / SimulatorConfig.getEntitySpeedFactor());
+		offset = (long) Math.max(defaultOffset, defaultOffset / InfiniteWarehouseSimConfig.getEntitySpeedFactor());
 		if (currentTime + offset <= System.currentTimeMillis()) {
 			checkForDeadlock();
 			getRobotPositions();
@@ -67,7 +66,7 @@ public class DeadlockDetector extends Detector {
 	private void reportDeadlock() {
 		deactivate();
 		String reason = "Deadlock detected!";
-		setting.getFrame().reportDeadlock(reason);
+		setting.reportDeadlock(reason);
 		if (setting.getScenarioManager().isRunningTest()) {
 			setting.getScenarioManager().failCurrentTest(reason);
 		}

@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.view.sim;
+package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -9,7 +9,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 import de.hpi.mod.sim.setting.robot.DriveManager;
 import de.hpi.mod.sim.setting.robot.Robot;
 
@@ -27,7 +27,7 @@ public class ExplosionRenderer {
 
 	private void loadImage() {
 		//As we want to display an animated gif we can not use ImageIO. Instead we need to load the image using getResource
-		URL url = ExplosionRenderer.class.getResource(SimulatorConfig.getURLToExplosion());
+		URL url = ExplosionRenderer.class.getResource(InfiniteWarehouseSimConfig.getURLToExplosion());
 		explosion = new ImageIcon(url).getImage();
 	}
 	
