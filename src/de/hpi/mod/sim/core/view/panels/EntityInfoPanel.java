@@ -95,11 +95,11 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
                 StateChartEntity entity = (StateChartEntity) highlight;
 
                 if (entity != null) {
-                    String robotState = entity.getMachineState();
-                    if (!robotState.equals(currentDisplay)) {
-                        currentDisplay = robotState;
+                    String state = entity.getMachineState();
+                    if (!state.equals(currentDisplay)) {
+                        currentDisplay = state;
 
-                        String[] states = splitStates(robotState);
+                        String[] states = splitStates(state);
                         StringBuilder stringBuilder = new StringBuilder("<html>State:<br/>");
                         for (int i = 0; i < states.length; i++) {
                             for (int j = 0; j < 2 * i + 1; j++)
@@ -125,7 +125,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 	    private String[] splitStates(String machineState) {
 	    	try {
 	    		//Only enabled when the main region is called "Drive System"
-	    		if(machineState.substring(0, 12).equals("drive_System")) {
+	    		if(machineState.substring(0, 12).equals("drive_System")) { //TODO generalize
 		    		
 			    	//remove the top state prefix
 		    		String[] hierarchyLevels = machineState.substring(13).split("__");

@@ -2,12 +2,11 @@ package de.hpi.mod.sim.core.view.sim;
 
 import javax.swing.*;
 
-import de.hpi.mod.sim.core.model.Entity;
+import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.setting.infinitewarehouses.GridRenderer;
 import de.hpi.mod.sim.setting.infinitewarehouses.RobotRenderer;
-import de.hpi.mod.sim.setting.robot.Robot;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -55,18 +54,15 @@ public class SimulatorView extends JPanel implements MouseListener, MouseMotionL
 	@Override
     public void mouseClicked(MouseEvent e) {
         Position pos = simulationWorld.toGridPosition(e.getX(), e.getY());
-        for (Entity entityO : setting.getEntities()) {
-            Robot entity = (Robot) entityO; //TODO I bet we want to handle mouseClicks directly on the paintedcomponents
-            if (entity.getDriveManager().currentPosition().equals(pos) || entity.getDriveManager().getOldPosition().equals(pos)) {
-            	if(e.getButton() == MouseEvent.BUTTON1) {
-            		simulationWorld.setHighlighted1(entity);
-            	} else if (e.getButton() == MouseEvent.BUTTON3) {
-            		simulationWorld.setHighlighted2(entity);
-            	} else {
-            		simulationWorld.setHighlighted1(entity);
-            	}
-                break;
-            }
+        IHighlightable highlight = setting.getHighlightAtPosition(pos);
+        if (highlight == null)
+            return;
+        if(e.getButton() == MouseEvent.BUTTON1) {
+            simulationWorld.setHighlighted1(highlight);
+        } else if (e.getButton() == MouseEvent.BUTTON3) {
+            simulationWorld.setHighlighted2(highlight);
+        } else {
+            simulationWorld.setHighlighted1(highlight);
         }
     }
 

@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.scenario.Detector;
+import de.hpi.mod.sim.core.scenario.EntityDescription;
+import de.hpi.mod.sim.core.scenario.Scenario;
+import de.hpi.mod.sim.core.scenario.ScenarioManager;
+import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.IGrid;
+import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.core.model.IRobotController;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.testing.Detector;
-import de.hpi.mod.sim.core.testing.EntityDescription;
-import de.hpi.mod.sim.core.testing.Scenario;
-import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
-import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.setting.detectors.*;
 import de.hpi.mod.sim.setting.robot.Robot;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
@@ -34,10 +35,13 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
     private RobotRenderer robotRenderer;
     private ExplosionRenderer explosionRenderer;
 
+    public InfiniteWarehousesSetting() {
+        grid = new GridManagement(this);
+    }
+
     @Override
     public void initialize(DriveSimFrame frame, Simulation simulation) {
         super.initialize(frame, simulation);
-        grid = new GridManagement(this);
         robotDispatcher = new RobotDispatcher(grid,
                 new StationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse()));
         scenarioManager = new ScenarioManager(this);
@@ -179,7 +183,7 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends Entity> E fromDescription(EntityDescription<E> description) {  //TODO very ugly, beautify
+    public <E extends Entity> E fromDescription(EntityDescription<E> description) { //TODO very ugly, beautify
         if (description instanceof RobotDescription) {
             return (E) ((RobotDescription) description).getRobot(getRoboterDispatch());
         } else {
@@ -187,4 +191,12 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
         }
     }
     
+    @Override
+	public IHighlightable getHighlightAtPosition(Position pos) {
+        for (Robot robot : getRobots()) {
+            if (robot.getDriveManager().currentPosition().equals(pos) || robot.getDriveManager().getOldPosition().equals(pos))
+                return robot;
+        }
+        return null;
+	}
 }

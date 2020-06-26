@@ -1,10 +1,9 @@
-package de.hpi.mod.sim.core.testing;
+package de.hpi.mod.sim.core.scenario;
 
 import java.util.List;
 
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
 
 /**
  * Contains Positions of Robots which can be applied to the Simulation.

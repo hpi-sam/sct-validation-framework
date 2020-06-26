@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.testing;
+package de.hpi.mod.sim.core.scenario;
 
 import de.hpi.mod.sim.core.model.Entity;
 

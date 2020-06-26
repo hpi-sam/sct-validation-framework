@@ -3,8 +3,11 @@ package de.hpi.mod.sim.setting.infinitewarehouses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.awt.geom.Point2D;
 
 import de.hpi.mod.sim.core.model.*;
+import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -740,4 +743,32 @@ public class GridManagement implements ISensorDataProvider {
 	public void clearInvalidPositions() {
 		invalidPositions.clear();
 	}
+
+	@Override
+	public Position toGridPosition(int x, int y, SimulationWorld simWorld) {
+		float blockSize = simWorld.getBlockSize();
+		y = (int) (simWorld.getView().getHeight() - y - blockSize/ 2);
+		int blockX = (int) Math.floor(x / blockSize - simWorld.getView().getWidth() / (2 * blockSize) + simWorld.getOffsetX());
+		int blockY = (int) Math.floor(y / blockSize - InfiniteWarehouseSimConfig.getQueueSize() + simWorld.getOffsetY()); 
+
+		return new Position(blockX, blockY);
+	}
+
+	@Override
+	public Point2D toDrawPosition(float x, float y, SimulationWorld simWorld) {
+		float blockSize = simWorld.getBlockSize();
+		float drawX = simWorld.getView().getWidth() / 2 + (x - simWorld.getOffsetX()) * blockSize;
+		float drawY = simWorld.getView().getHeight() - (y + InfiniteWarehouseSimConfig.getQueueSize() + 1.5f - simWorld.getOffsetY()) * blockSize;
+		return new Point2D.Float(drawX, drawY);
+	}
+
+	@Override
+	public boolean affects(IHighlightable highlight, Position position) {
+		if (highlight == null || !(highlight instanceof Robot))
+			return false;
+		Robot r = (Robot) highlight;
+		return position.is(r.pos()) || position.is(r.oldPos());
+	}
+
+
 }

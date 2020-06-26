@@ -4,9 +4,9 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.panels.*;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 import de.hpi.mod.sim.core.view.sim.SimulatorView;
@@ -45,7 +45,7 @@ public class DriveSimFrame extends JFrame {
 		super("Drive System Simulator");
 		this.setting = setting;
 		// TODO rethink structure of simulationWorld/simulationView/MetaWorld
-		SimulationWorld simWorld = new SimulationWorld();
+		SimulationWorld simWorld = new SimulationWorld(setting.getGrid());
 		Simulation simulation = new Simulation(setting, simWorld);
 		setting.initialize(this, simulation);
 		simView = new SimulatorView(setting, simWorld);
@@ -61,7 +61,7 @@ public class DriveSimFrame extends JFrame {
 		setDesignOfMainWindow();
 
 		lastFrame = System.currentTimeMillis();
-		while (running)			//TODO move this loop to ... Simulation, I guess
+		while (running)
 			update();
 		close();
 	}
@@ -148,8 +148,8 @@ public class DriveSimFrame extends JFrame {
 	}
     
     private void addListeners(SimulationWorld simulationWorld) {
-		simulationWorld.addHighlightedRobotListener(robotInfoPanel1);
-        simulationWorld.addHighlightedRobotListener2(robotInfoPanel2);
+		simulationWorld.addHighlightedListener(robotInfoPanel1);
+        simulationWorld.addHighlightedListener(robotInfoPanel2);
         setting.getSimulation().addTimeListener(simulationPanel);
         setting.getScenarioManager().addTestListener(testListPanel);
         setting.getScenarioManager().addTestListener(testOverviewPanel);

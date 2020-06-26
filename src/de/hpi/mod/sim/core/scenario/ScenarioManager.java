@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.testing.scenarios;
+package de.hpi.mod.sim.core.scenario;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,11 +8,6 @@ import java.util.Queue;
 
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.testing.Detector;
-import de.hpi.mod.sim.core.testing.ITestListener;
-import de.hpi.mod.sim.core.testing.EntityDescription;
-import de.hpi.mod.sim.core.testing.Scenario;
-import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
 
 public class ScenarioManager {

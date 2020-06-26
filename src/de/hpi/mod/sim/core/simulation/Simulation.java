@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.testing.Scenario;
+import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
 import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 

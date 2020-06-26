@@ -1,11 +1,10 @@
-package de.hpi.mod.sim.core.testing.tests;
+package de.hpi.mod.sim.core.scenario;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.testing.Scenario;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
 
 public abstract class TestScenario extends Scenario {

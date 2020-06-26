@@ -3,12 +3,12 @@ package de.hpi.mod.sim.core.model;
 import java.util.List;
 import java.util.Map;
 
+import de.hpi.mod.sim.core.scenario.Detector;
+import de.hpi.mod.sim.core.scenario.EntityDescription;
+import de.hpi.mod.sim.core.scenario.Scenario;
+import de.hpi.mod.sim.core.scenario.ScenarioManager;
+import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
-import de.hpi.mod.sim.core.testing.Detector;
-import de.hpi.mod.sim.core.testing.EntityDescription;
-import de.hpi.mod.sim.core.testing.Scenario;
-import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
-import de.hpi.mod.sim.core.testing.tests.TestScenario;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
 
 public abstract class Setting {
@@ -84,5 +84,7 @@ public abstract class Setting {
 	}
 
     public abstract <E extends Entity> E fromDescription(EntityDescription<E> e);
+
+    public abstract IHighlightable getHighlightAtPosition(Position pos);
 
 }

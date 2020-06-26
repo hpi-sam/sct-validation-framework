@@ -9,8 +9,8 @@ import java.util.Random;
 
 import de.hpi.mod.sim.core.model.Orientation;
 import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.testing.EntityDescription;
-import de.hpi.mod.sim.core.testing.tests.TestScenario;
+import de.hpi.mod.sim.core.scenario.EntityDescription;
+import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.setting.robot.Robot.RobotState;
 
 public class TestCaseGenerator {

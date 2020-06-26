@@ -2,9 +2,9 @@ package de.hpi.mod.sim.core.view.panels;
 
 import javax.swing.*;
 
-import de.hpi.mod.sim.core.testing.ITestListener;
-import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
-import de.hpi.mod.sim.core.testing.tests.TestScenario;
+import de.hpi.mod.sim.core.scenario.ITestListener;
+import de.hpi.mod.sim.core.scenario.ScenarioManager;
+import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
 
 import java.awt.*;

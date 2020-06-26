@@ -1,6 +1,4 @@
-package de.hpi.mod.sim.core.testing;
-
-import de.hpi.mod.sim.core.testing.tests.TestScenario;
+package de.hpi.mod.sim.core.scenario;
 
 public interface ITestListener {
     void onTestCompleted(TestScenario test);

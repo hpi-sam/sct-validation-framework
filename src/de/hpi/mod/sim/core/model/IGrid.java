@@ -1,5 +1,9 @@
 package de.hpi.mod.sim.core.model;
 
+import java.awt.geom.Point2D;
+
+import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+
 public interface IGrid {
     
     CellType cellType(Position pos);
@@ -21,4 +25,16 @@ public interface IGrid {
 	public void clearInvalidPositions();
 
     public void makePositionInvalid(Position pos);
+
+    /**
+	 * Converts a draw-position to a grid-position
+	 */
+    public Position toGridPosition(int x, int y, SimulationWorld simWorld);
+
+    /**
+	 * Converts a grid-position to the draw-position
+	 */
+    public Point2D toDrawPosition(float x, float y, SimulationWorld simWorld);
+
+    public boolean affects(IHighlightable highlight, Position pos);
 }

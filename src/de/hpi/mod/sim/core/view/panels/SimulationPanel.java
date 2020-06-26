@@ -2,9 +2,9 @@ package de.hpi.mod.sim.core.view.panels;
 
 import javax.swing.*;
 
+import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.testing.scenarios.ScenarioManager;
 import de.hpi.mod.sim.core.view.DriveSimFrame;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
 
@@ -79,7 +79,7 @@ public class SimulationPanel extends JPanel implements ITimeListener{
 		JSlider valueSlider = new JSlider(SimulatorConfig.ENTITY_MIN_SPEED_LEVEL, SimulatorConfig.ENTITY_MAX_SPEED_LEVEL, SimulatorConfig.ENTITY_DEFAULT_SPEED_LEVEL);
         setter = SimulatorConfig::setEntitySpeedLevel;
         setter.setValue(SimulatorConfig.getDefaultEntitySpeedLevel());
-        valueSlider.setToolTipText("Adjust Robot Speed");
+        valueSlider.setToolTipText("Adjust Entity Speed");
         valueSlider.setEnabled(true); //in the begin the speed slider should be changeable, even if not afterwards while paused simulation
         valueSlider.setMajorTickSpacing(5);
         valueSlider.setPaintTicks(true);
