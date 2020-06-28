@@ -1,8 +1,8 @@
-package de.hpi.mod.sim.setting.detectors;
+package de.hpi.mod.sim.setting.infinitewarehouses.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.model.Position;
+import de.hpi.mod.sim.setting.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
 
@@ -18,15 +18,15 @@ public class InvalidPositionDetector extends RobotDetector {
 		if (!invalidPositionReported) {
 			for (int i = 0; i < robots.size(); i++) {
 				Robot robot = robots.get(i);
-				if (setting.getGrid().isInvalid(robot.pos())) {
+				if (setting.getGridManagement().isInvalid(robot.pos())) {
 					invalidPositionReported = true;
 					reportInvalidPosition(robot, robot.pos());
 				}
-				if (setting.getGrid().isInvalid(robot.oldPos())) {
+				if (setting.getGridManagement().isInvalid(robot.oldPos())) {
 					invalidPositionReported = true;
 					reportInvalidPosition(robot, robot.oldPos());
 				}
-				if (setting.getGrid().invalidManoeuvre(robot.oldPos(), robot.pos())) {
+				if (setting.getGridManagement().invalidManoeuvre(robot.oldPos(), robot.pos())) {
 					invalidPositionReported = true;
 					reportInvalidPosition(robot, robot.pos());
 				}

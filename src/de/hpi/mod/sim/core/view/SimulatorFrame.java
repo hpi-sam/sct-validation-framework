@@ -8,8 +8,7 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.core.view.panels.*;
-import de.hpi.mod.sim.core.view.sim.SimulationWorld;
-import de.hpi.mod.sim.core.view.sim.SimulatorView;
+import de.hpi.mod.sim.core.view.sim.SimulationView;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -20,11 +19,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class DriveSimFrame extends JFrame {
+public class SimulatorFrame extends JFrame {
 
 	private static final long serialVersionUID = 4683030810403226266L;
 	private Setting setting;
-	private SimulatorView simView;
+	private SimulationView simView;
 	private EntityInfoPanel robotInfoPanel1;
 	private EntityInfoPanel robotInfoPanel2;
 	private ScenarioPanel scenarioPanel;
@@ -41,22 +40,19 @@ public class DriveSimFrame extends JFrame {
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
 	public static Color MENU_RED = new Color(0xffe1d0);
 
-	public DriveSimFrame(Setting setting) {
+	public SimulatorFrame(Setting setting) {
 		super("Drive System Simulator");
 		this.setting = setting;
-		// TODO rethink structure of simulationWorld/simulationView/MetaWorld
-		SimulationWorld simWorld = new SimulationWorld(setting.getGrid());
-		Simulation simulation = new Simulation(setting, simWorld);
+		simView = setting.getView();
+		Simulation simulation = new Simulation(setting, simView);
 		setting.initialize(this, simulation);
-		simView = new SimulatorView(setting, simWorld);
-		simWorld.initialize(simView);
 
 		setLayout(new GridBagLayout());
 
 		createFileIfNotExist(SimulatorConfig.getTestFileName());
-		initializePanels(simWorld);
+		initializePanels(simView);
 		loadTestFileContent(SimulatorConfig.getTestFileName());
-		addListeners(simWorld);
+		addListeners(simView);
 		setDesignOfSubpanels();
 		setDesignOfMainWindow();
 
@@ -135,7 +131,7 @@ public class DriveSimFrame extends JFrame {
 		}
     }
     
-    private void initializePanels(SimulationWorld simulationWorld) {
+    private void initializePanels(SimulationView simulationWorld) {
 		robotInfoPanel1 = new EntityInfoPanel(simulationWorld, false);
         robotInfoPanel2 = new EntityInfoPanel(simulationWorld, true);
         simulationPanel = new SimulationPanel(setting.getSimulation(), setting.getScenarioManager());
@@ -147,7 +143,7 @@ public class DriveSimFrame extends JFrame {
         setJMenuBar(new DriveSimMenu(setting.getSimulation(), simulationWorld));
 	}
     
-    private void addListeners(SimulationWorld simulationWorld) {
+    private void addListeners(SimulationView simulationWorld) {
 		simulationWorld.addHighlightedListener(robotInfoPanel1);
         simulationWorld.addHighlightedListener(robotInfoPanel2);
         setting.getSimulation().addTimeListener(simulationPanel);
@@ -380,7 +376,7 @@ public class DriveSimFrame extends JFrame {
     }
 
 	private void close() {
-		setting.getRoboterDispatch().close();
+		setting.close();
         setVisible(false);
         dispose();
         System.exit(0);

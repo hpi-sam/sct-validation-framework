@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
-import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -39,7 +39,7 @@ public class ScenarioPanel extends JPanel {
         labelConstraints.gridy = scenarios.size();
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.weightx = 1.0;
-        add(new MenuWrapper(300, 30, DriveSimFrame.MAIN_MENU_COLOR, label), labelConstraints);
+        add(new MenuWrapper(300, 30, SimulatorFrame.MAIN_MENU_COLOR, label), labelConstraints);
 
         JButton run = newRunButton(scenario);
         GridBagConstraints runConstraints = new GridBagConstraints();
@@ -47,7 +47,7 @@ public class ScenarioPanel extends JPanel {
         runConstraints.gridy = scenarios.size();
         runConstraints.fill = GridBagConstraints.HORIZONTAL;
         runConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(74, 24, DriveSimFrame.MAIN_MENU_COLOR, run), runConstraints);
+        add(new MenuWrapper(74, 24, SimulatorFrame.MAIN_MENU_COLOR, run), runConstraints);
         
         scenarios.put(scenario, label);
     }
@@ -63,7 +63,7 @@ public class ScenarioPanel extends JPanel {
     
     public void select(Scenario scenario) {
     	JLabel label = scenarios.get(scenario);
-    	((DriveSimFrame) SwingUtilities.windowForComponent(this)).clearSelections();
+    	((SimulatorFrame) SwingUtilities.windowForComponent(this)).clearSelections();
 		Font oldFont = label.getFont();
 		Font newFont = new Font(oldFont.getName(), Font.ITALIC | Font.BOLD, oldFont.getSize());
 		label.setFont(newFont);

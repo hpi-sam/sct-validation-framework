@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -8,10 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import de.hpi.mod.sim.core.model.CellType;
-import de.hpi.mod.sim.core.model.IGrid;
-import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 
 /**
  * Renders the Grid of the Simulation
@@ -19,13 +16,13 @@ import de.hpi.mod.sim.core.view.sim.SimulationWorld;
 public class GridRenderer {
 
     private IGrid grid;
-    private SimulationWorld world;
+    private SimulationBlockView simView;
     
     private BufferedImage leftClickedRobotBlocking, rightClickedRobotBlocking;
 
 
-    public GridRenderer(SimulationWorld world, IGrid grid) {
-        this.world = world;
+    public GridRenderer(SimulationBlockView simView, IGrid grid) {
+        this.simView = simView;
         this.grid = grid;
         
         loadImages();
@@ -47,41 +44,33 @@ public class GridRenderer {
     public void render(Graphics graphic) {
 
         // Shift Viewpoint by offset
-        float blocksOffsetX = world.getOffsetX();
-        float blocksOffsetY = world.getOffsetY();
+        float blocksOffsetX = simView.getOffsetX();
+        float blocksOffsetY = simView.getOffsetY();
 
-        float blockSize = world.getBlockSize();
+        float blockSize = simView.getBlockSize();
 
         // The Size if the Window in Blocks
-        int widthInBlocks = (int) (world.getView().getWidth() / blockSize + 2);
-        int heightInBlocks = (int) (world.getView().getHeight() / blockSize + 2);
+        int widthInBlocks = (int) (simView.getWidth() / blockSize + 2);
+        int heightInBlocks = (int) (simView.getHeight() / blockSize + 2);
 
         int stationDepth = InfiniteWarehouseSimConfig.getQueueSize() + 1;
 
         for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
             for (int x = (int) blocksOffsetX - widthInBlocks/2; x < widthInBlocks/2 + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
-                CellType cellType = grid.cellType(current);
-                
-                // Some cells need a border on the left
-                boolean borderLeft = (cellType == CellType.BATTERY || cellType == CellType.QUEUE || cellType == CellType.LOADING);
+                ICellType cellType = grid.cellType(current);
 
                 // Highlighted Cells are special
-                boolean highlight = world.isMousePointing() && world.getMousePointer().equals(current);
+                boolean highlight = simView.isMousePointing() && simView.getMousePointer().equals(current);
                 
                 // The Zero Zero Cell should be marked
                 boolean isZeroZero = current.is(new Position(0, 0));
                 
-                // Unused stations should be drawn differently
-                int stationCount = InfiniteWarehouseSimConfig.getChargingStationsInUse();
-                boolean isUnusedStationBlock = (cellType == CellType.BATTERY || cellType == CellType.STATION || cellType == CellType.LOADING || cellType == CellType.QUEUE) 
-                		&& (current.getX() >= stationCount * 3 / 2 - stationCount % 2 || current.getX() < -stationCount * 3 / 2 + stationCount % 2);
-                
-                boolean blockedBy1 = grid.affects(world.getHighlighted1(), current);
-                boolean blockedBy2 = grid.affects(world.getHighlighted2(), current);
+                boolean blockedBy1 = grid.affects(simView.getHighlighted1(), current);
+                boolean blockedBy2 = grid.affects(simView.getHighlighted2(), current);
 
                 // Draw the block
-                drawBlock(graphic, cellType, world.toDrawPosition(current), borderLeft, highlight, isZeroZero, isUnusedStationBlock, blockedBy1, blockedBy2);
+                drawBlock(graphic, cellType, simView.toDrawPosition(current), cellType.borderLeft(), highlight, isZeroZero, blockedBy1, blockedBy2);
             }
         }
     }
@@ -94,25 +83,13 @@ public class GridRenderer {
      * @param borderLeft should a border be drawn on the left of the block?
      * @param highlight Highlighted?
      * @param isZeroZero should the zero-zero highlight be drawn?
-     * @param isUnusedStationBlock is this block part of an unused station?
  	 * @param blockedBy1 is this block blocked by the first highlighted robot?
  	 * @param blockedBy2 is this block blocked by the second highlighted robot?
      */
-    private void drawBlock(Graphics graphic, CellType cell, Point2D drawPosition, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean isUnusedStationBlock, boolean blockedBy1, boolean blockedBy2) {
-        float blockSize = world.getBlockSize();
+    private void drawBlock(Graphics graphic, ICellType cell, Point2D drawPosition, boolean borderLeft, boolean highlight, boolean isZeroZero, boolean blockedBy1, boolean blockedBy2) {
+        float blockSize = simView.getBlockSize();
 
-        if (cell == CellType.BLOCK || isUnusedStationBlock)
-            graphic.setColor(Color.DARK_GRAY);
-        else if (cell == CellType.WAYPOINT)
-            graphic.setColor(Color.WHITE);
-        else if (cell == CellType.CROSSROAD)
-            graphic.setColor(Color.LIGHT_GRAY);
-        else if (cell == CellType.BATTERY)
-            graphic.setColor(new Color(0xe0d9f9));
-        else if (cell == CellType.LOADING)
-            graphic.setColor(new Color(0xc0e8ed));
-        else if (cell == CellType.STATION || cell == CellType.QUEUE)
-            graphic.setColor(new Color(0xfff3e2));
+        graphic.setColor(cell.getColor());
 
         //draw the block
         graphic.fillRect((int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize);

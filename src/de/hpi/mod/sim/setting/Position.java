@@ -1,4 +1,6 @@
-package de.hpi.mod.sim.core.model;
+package de.hpi.mod.sim.setting;
+
+import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
 
 public class Position {
 

@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting;
+package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

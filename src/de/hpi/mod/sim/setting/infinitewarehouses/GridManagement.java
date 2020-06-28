@@ -3,10 +3,12 @@ package de.hpi.mod.sim.setting.infinitewarehouses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.awt.geom.Point2D;
 
 import de.hpi.mod.sim.core.model.*;
-import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+import de.hpi.mod.sim.setting.Direction;
+import de.hpi.mod.sim.setting.ICellType;
+import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.robot.IRobotController;
 import de.hpi.mod.sim.setting.robot.Robot;
 
 /**
@@ -30,13 +32,13 @@ public class GridManagement implements ISensorDataProvider {
 	}
 
 	/**
-	 * The {@link CellType} of the given Position.
+	 * The {@link ICellType} of the given Position.
 	 * 
 	 * @param position The Position
-	 * @return CellType
+	 * @return ICellType
 	 */
 	@Override
-	public CellType cellType(Position position) {
+	public ICellType cellType(Position position) {
 
 		// Not in Station
 		if (position.getY() > 0) {
@@ -48,21 +50,30 @@ public class GridManagement implements ISensorDataProvider {
 				return CellType.WAYPOINT;
 			return CellType.CROSSROAD;
 		} else {
+			// Unused stations should be drawn differently
+			int stationCount = InfiniteWarehouseSimConfig.getChargingStationsInUse();
+			boolean isUsed = position.getX() < stationCount * 3 / 2 - stationCount % 2
+					&& position.getX() >= -stationCount * 3 / 2 + stationCount % 2;
+
 			if (position.getX() % 3 == 0 && position.getY() < 0 && position.getY() > -4)
-				return CellType.BATTERY;
-			if (position.getX() % 3 == 0 || position.getY() < - InfiniteWarehouseSimConfig.getQueueSize())
+				return isUsed ? CellType.BATTERY : CellType.BATTERY_UNUSED;
+			if (position.getX() % 3 == 0 || position.getY() < -InfiniteWarehouseSimConfig.getQueueSize())
 				return CellType.BLOCK;
 			if (position.getY() == 0 && Math.floorMod(position.getX(), 3) == 2)
-				return CellType.LOADING;
-			if (position.getY() < 0 && position.getY() > - InfiniteWarehouseSimConfig.getQueueSize()
+				return isUsed ? CellType.LOADING : CellType.LOADING_UNUSED;
+			if (position.getY() < 0 && position.getY() > -InfiniteWarehouseSimConfig.getQueueSize()
 					&& Math.floorMod(position.getX(), 3) == 2)
-				return CellType.QUEUE;
-			return CellType.STATION;
+				return isUsed ? CellType.QUEUE : CellType.QUEUE_UNUSED;
+			return isUsed ? CellType.STATION : CellType.STATION_UNUSED;
 		}
 	}
 	
+	public PositionType posType(Position position) {
+		return PositionType.get(cellType(position));
+	}
+	
 	public boolean isInvalid(Position position) {
-		CellType cellType = cellType(position);
+		ICellType cellType = cellType(position);
 		if(cellType == CellType.BLOCK) {
 			return true;
 		}
@@ -742,24 +753,6 @@ public class GridManagement implements ISensorDataProvider {
 
 	public void clearInvalidPositions() {
 		invalidPositions.clear();
-	}
-
-	@Override
-	public Position toGridPosition(int x, int y, SimulationWorld simWorld) {
-		float blockSize = simWorld.getBlockSize();
-		y = (int) (simWorld.getView().getHeight() - y - blockSize/ 2);
-		int blockX = (int) Math.floor(x / blockSize - simWorld.getView().getWidth() / (2 * blockSize) + simWorld.getOffsetX());
-		int blockY = (int) Math.floor(y / blockSize - InfiniteWarehouseSimConfig.getQueueSize() + simWorld.getOffsetY()); 
-
-		return new Position(blockX, blockY);
-	}
-
-	@Override
-	public Point2D toDrawPosition(float x, float y, SimulationWorld simWorld) {
-		float blockSize = simWorld.getBlockSize();
-		float drawX = simWorld.getView().getWidth() / 2 + (x - simWorld.getOffsetX()) * blockSize;
-		float drawY = simWorld.getView().getHeight() - (y + InfiniteWarehouseSimConfig.getQueueSize() + 1.5f - simWorld.getOffsetY()) * blockSize;
-		return new Point2D.Float(drawX, drawY);
 	}
 
 	@Override

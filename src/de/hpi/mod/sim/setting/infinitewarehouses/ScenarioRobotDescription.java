@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.setting.infinitewarehouses;
 
-import de.hpi.mod.sim.core.model.Orientation;
-import de.hpi.mod.sim.core.model.Position;
+import de.hpi.mod.sim.setting.Position;
 import de.hpi.mod.sim.setting.robot.Robot;
 
 public class ScenarioRobotDescription extends RobotDescription {

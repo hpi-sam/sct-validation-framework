@@ -58,7 +58,8 @@ public class SimulatorConfig {
 
 	private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
    	private static float defaultOffsetX = DEFAULT_OFFSET_X;
-   	private static float defaultOffsetY = DEFAULT_OFFSET_Y;
+	private static float defaultOffsetY = DEFAULT_OFFSET_Y;
+	
    	private static float defaultRefreshInterval = DEFAULT_REFRESH_INTERVAL;
    	private static float minBlockSize = MIN_BLOCK_SIZE;
    	private static float maxBlockSize = MAX_BLOCK_SIZE;

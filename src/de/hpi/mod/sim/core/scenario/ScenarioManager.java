@@ -8,7 +8,7 @@ import java.util.Queue;
 
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 public class ScenarioManager {
 	private List<Scenario> scenarios;
@@ -27,7 +27,7 @@ public class ScenarioManager {
 
 	private TestScenario activeTest = null;
 
-	DriveSimFrame frame;
+	SimulatorFrame frame;
 	private List<TestScenario> tests = new ArrayList<>();
 	private Setting setting;
 

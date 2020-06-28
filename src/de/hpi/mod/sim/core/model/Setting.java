@@ -9,15 +9,14 @@ import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
-import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.core.view.SimulatorFrame;
+import de.hpi.mod.sim.core.view.sim.SimulationView;
 
 public abstract class Setting {
 
-    private DriveSimFrame frame;
+    private SimulatorFrame frame;
 
     private Simulation simulation;
-
-    public abstract IGrid getGrid();
 
     public abstract List<Detector> getDetectors();
 
@@ -27,11 +26,11 @@ public abstract class Setting {
         return simulation;
     }
     
-    public DriveSimFrame getFrame() {
+    public SimulatorFrame getFrame() {
         return frame;
     }
 
-    public void initialize(DriveSimFrame frame, Simulation simulation) {
+    public void initialize(SimulatorFrame frame, Simulation simulation) {
         this.frame = frame;
         this.simulation = simulation;
     }
@@ -42,20 +41,20 @@ public abstract class Setting {
 
     public abstract void updateEntities(float delta);
 
-    public abstract IRobotDispatch getRoboterDispatch();
-
     public void runScenario(Scenario scenario) {
         getSimulation().setRunForbidden(false);
         frame.setResizable(scenario.isResizable());
         getSimulation().reset();
         getSimulation().playScenario(scenario);
-        getRoboterDispatch().releaseAllLocks();
+        resetScenario();
         resetDetectors();
         if (!getSimulation().isRunning())
             getSimulation().toggleRunning();
 
         frame.resetSimulationView();
     }
+
+    public abstract void resetScenario();
 
     public void resetDetectors() {
         for (Detector detector : getDetectors())
@@ -64,9 +63,7 @@ public abstract class Setting {
 
     public abstract List<? extends Entity> getEntities();
 
-    public void refreshEntities() {
-        getRoboterDispatch().refresh();
-	}
+    public abstract void refreshEntities();
 
     public abstract void onSimulationPropertyRefresh();
     
@@ -85,6 +82,10 @@ public abstract class Setting {
 
     public abstract <E extends Entity> E fromDescription(EntityDescription<E> e);
 
-    public abstract IHighlightable getHighlightAtPosition(Position pos);
+    public abstract IHighlightable getHighlightAtPosition(int x, int y);
+
+    public abstract void close();
+
+    public abstract SimulationView getView();
 
 }

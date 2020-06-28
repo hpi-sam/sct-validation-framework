@@ -3,8 +3,8 @@ package de.hpi.mod.sim.env;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.hpi.mod.sim.core.model.IRobotStationDispatcher;
 import de.hpi.mod.sim.setting.infinitewarehouses.StationManager;
+import de.hpi.mod.sim.setting.robot.IRobotStationDispatcher;
 
 import static org.junit.Assert.*;
 

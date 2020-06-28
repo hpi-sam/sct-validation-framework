@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.core.view.model;
 
 /**
- * Has to be registered on {@link de.hpi.mod.sim.core.view.sim.SimulationWorld}.
+ * Has to be registered on {@link de.hpi.mod.sim.core.view.sim.SimulationView}.
  * Gets called if one of the highlighted Robots changes
  */
 public interface IHighlightedListener {

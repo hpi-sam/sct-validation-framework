@@ -2,9 +2,9 @@ package de.hpi.mod.sim.env.robot;
 
 import org.junit.Test;
 
-import de.hpi.mod.sim.core.model.Orientation;
-import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
 import de.hpi.mod.sim.setting.robot.DriveListener;
 import de.hpi.mod.sim.setting.robot.DriveManager;
 

@@ -5,7 +5,7 @@ import javax.swing.*;
 import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.core.model.StateChartEntity;
 import de.hpi.mod.sim.core.view.model.IHighlightedListener;
-import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+import de.hpi.mod.sim.core.view.sim.SimulationView;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 
 	private static final long serialVersionUID = -42067353669036945L;
-	private SimulationWorld world;
+	private SimulationView world;
     private boolean isRightClickedEntity = false;
 
     /**
@@ -33,7 +33,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
      *                             world.highlightedEntity2 is the one to be
      *                             observed otherwise world.highlightedEntity
      */
-    public EntityInfoPanel(SimulationWorld world, boolean isRightClickedEntity) {
+    public EntityInfoPanel(SimulationView world, boolean isRightClickedEntity) {
         this.world = world;
         this.isRightClickedEntity = isRightClickedEntity;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

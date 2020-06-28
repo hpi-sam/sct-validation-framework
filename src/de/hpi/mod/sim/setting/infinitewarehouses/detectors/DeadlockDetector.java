@@ -1,10 +1,10 @@
-package de.hpi.mod.sim.setting.detectors;
+package de.hpi.mod.sim.setting.infinitewarehouses.detectors;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.mod.sim.core.model.Position;
+import de.hpi.mod.sim.setting.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;

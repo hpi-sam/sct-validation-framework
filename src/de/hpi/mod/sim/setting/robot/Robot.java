@@ -5,7 +5,15 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.model.*;
+import de.hpi.mod.sim.setting.Direction;
+import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.infinitewarehouses.CellType;
+import de.hpi.mod.sim.setting.infinitewarehouses.ILocation;
+import de.hpi.mod.sim.setting.infinitewarehouses.ISensorDataProvider;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
+import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
+import de.hpi.mod.sim.setting.infinitewarehouses.PositionType;
+import de.hpi.mod.sim.setting.infinitewarehouses.GridManagement;
 
 /**
  * Controller for a Robot.
@@ -61,9 +69,9 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
 	private boolean requireUnloadingForTestCompletion = false;
 	private boolean requireArrivedForTestCompletion = false;
 
-	private boolean arrivedEventWasCalled = true;
+    private boolean arrivedEventWasCalled = true;
 
-    public Robot(int robotID, int stationID, ISensorDataProvider grid,
+    public Robot(int robotID, int stationID, GridManagement grid,
                  IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing) {
         this.robotID = robotID;
@@ -84,7 +92,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
      * @param hasReservedBattery2 
      * @param state 
      */
-    public Robot(int robotID, int stationID, ISensorDataProvider grid,
+    public Robot(int robotID, int stationID, GridManagement grid,
                  IRobotStationDispatcher dispatcher, 
             ILocation location, IScanner scanner,
                  Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery, boolean hardArrivedConstraint) {
@@ -101,10 +109,10 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
         this.requireArrivedForTestCompletion = hardArrivedConstraint;
     }
 
-    public Robot(int robotID2, int i, ISensorDataProvider grid2, IRobotStationDispatcher stations, 
+    public Robot(int robotID2, int i, GridManagement grid, IRobotStationDispatcher stations, 
             ILocation simulator,
 			IScanner simulator2, Position position, Orientation facing, int delay) {
-		this(robotID2, i, grid2, stations, simulator, simulator2, position, facing);
+		this(robotID2, i, grid, stations, simulator, simulator2, position, facing);
 		manager.setMaxDelay(delay);
 	}
 
@@ -316,7 +324,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
 
     @Override
     public PositionType posType() {
-        return grid.posType(manager.currentPosition());
+        return PositionType.get(grid.cellType(pos()));
     }
 
     @Override
@@ -372,7 +380,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
 
     @Override
     public boolean canUnloadToTarget() {
-        return this.pos().equals(this.oldPos()) && grid.posType(this.pos()) == PositionType.WAYPOINT &&  grid.cellType(target) == CellType.BLOCK &&
+        return this.pos().equals(this.oldPos()) && posType() == PositionType.WAYPOINT &&  grid.cellType(target) == CellType.BLOCK &&
         		((manager.currentPosition().equals(target.getModified(-1,0)) ) ||
         		 (manager.currentPosition().equals(target.getModified(1,0)) ) ||
         		 (manager.currentPosition().equals(target.getModified(0,-1)) ) ||

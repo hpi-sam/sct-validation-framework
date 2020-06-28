@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.model;
+package de.hpi.mod.sim.setting.robot;
 
 /**
  * Represents the Default interface in the Statechart.

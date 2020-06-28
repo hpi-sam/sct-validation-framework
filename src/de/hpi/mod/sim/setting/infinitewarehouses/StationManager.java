@@ -6,8 +6,8 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import de.hpi.mod.sim.core.model.IRobotStationDispatcher;
-import de.hpi.mod.sim.core.model.Position;
+import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.robot.IRobotStationDispatcher;
 
 /**
  * Manages stations and acts as dispatcher in the robot-reservation-protocol

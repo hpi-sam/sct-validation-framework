@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.scenario.Detector;
 import de.hpi.mod.sim.core.scenario.EntityDescription;
 import de.hpi.mod.sim.core.scenario.Scenario;
@@ -13,15 +12,18 @@ import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.model.Entity;
-import de.hpi.mod.sim.core.model.IGrid;
 import de.hpi.mod.sim.core.model.IHighlightable;
-import de.hpi.mod.sim.core.model.IRobotController;
-import de.hpi.mod.sim.core.model.Position;
-import de.hpi.mod.sim.setting.detectors.*;
+import de.hpi.mod.sim.setting.infinitewarehouses.detectors.*;
+import de.hpi.mod.sim.setting.robot.DriveManager;
+import de.hpi.mod.sim.setting.robot.IRobotController;
 import de.hpi.mod.sim.setting.robot.Robot;
-import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.core.view.SimulatorFrame;
+import de.hpi.mod.sim.setting.GridSetting;
+import de.hpi.mod.sim.setting.IGrid;
+import de.hpi.mod.sim.setting.Position;
+import java.awt.geom.Point2D;
 
-public class InfiniteWarehousesSetting extends Setting implements IRobotController {
+public class InfiniteWarehousesSetting extends GridSetting implements IRobotController {
 
     private GridManagement grid;
 
@@ -31,23 +33,22 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
 
     private ScenarioManager scenarioManager;
 
-    private GridRenderer gridRenderer;
     private RobotRenderer robotRenderer;
     private ExplosionRenderer explosionRenderer;
 
     public InfiniteWarehousesSetting() {
+        super();
         grid = new GridManagement(this);
     }
 
     @Override
-    public void initialize(DriveSimFrame frame, Simulation simulation) {
+    public void initialize(SimulatorFrame frame, Simulation simulation) {
         super.initialize(frame, simulation);
         robotDispatcher = new RobotDispatcher(grid,
                 new StationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse()));
         scenarioManager = new ScenarioManager(this);
-        gridRenderer = new GridRenderer(getSimulation().getSimulationWorld(), getGrid());
-        robotRenderer = new RobotRenderer(robotDispatcher, getSimulation().getSimulationWorld());
-        explosionRenderer = new ExplosionRenderer(getSimulation().getSimulationWorld());
+        robotRenderer = new RobotRenderer(robotDispatcher, getSimulationBlockView());
+        explosionRenderer = new ExplosionRenderer();
         initializeDetectors();
     }
 
@@ -61,9 +62,13 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
 
     }
 
+    public GridManagement getGridManagement() {
+        return grid;
+    }
+
     @Override
     public IGrid getGrid() {
-        return grid;
+        return getGridManagement();
     }
 
     @Override
@@ -98,7 +103,6 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
         return getRobots();
     }
 
-    @Override
     public RobotDispatcher getRoboterDispatch() {
         return robotDispatcher;
     }
@@ -124,8 +128,8 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
 
     @Override
     public void render(Graphics graphics) {
-        gridRenderer.render(graphics);
-        robotRenderer.render(graphics);
+        super.render(graphics);
+        robotRenderer.render(graphics, getSimulationBlockView().getBlockSize());
         explosionRenderer.render(graphics);
     }
 
@@ -173,7 +177,9 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
     }
 
     public void renderExplosion(Robot robot) {
-        explosionRenderer.showExplosion(robot);
+        DriveManager drive = robot.getDriveManager();
+        Point2D drawPos = getSimulationBlockView().toDrawPosition(drive.getX(), drive.getY());
+        explosionRenderer.showExplosion(drawPos);
     }
 
     @Override
@@ -192,11 +198,28 @@ public class InfiniteWarehousesSetting extends Setting implements IRobotControll
     }
     
     @Override
-	public IHighlightable getHighlightAtPosition(Position pos) {
+    public IHighlightable getHighlightAtPosition(int x, int y) {
+        Position pos = getSimulationBlockView().toGridPosition(x, y);
         for (Robot robot : getRobots()) {
-            if (robot.getDriveManager().currentPosition().equals(pos) || robot.getDriveManager().getOldPosition().equals(pos))
+            if (robot.getDriveManager().currentPosition().equals(pos)
+                    || robot.getDriveManager().getOldPosition().equals(pos))
                 return robot;
         }
         return null;
-	}
+    }
+    
+    @Override
+    public void refreshEntities() { 
+        getRoboterDispatch().refresh();
+    }
+
+    @Override
+    public void resetScenario() {
+        getRoboterDispatch().releaseAllLocks();
+    }
+
+    @Override
+    public void close() {
+        getRoboterDispatch().close();
+    }
 }

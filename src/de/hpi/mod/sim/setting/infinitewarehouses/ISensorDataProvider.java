@@ -1,4 +1,8 @@
-package de.hpi.mod.sim.core.model;
+package de.hpi.mod.sim.setting.infinitewarehouses;
+
+import de.hpi.mod.sim.setting.Direction;
+import de.hpi.mod.sim.setting.IGrid;
+import de.hpi.mod.sim.setting.Position;
 
 public interface ISensorDataProvider extends IGrid {
 

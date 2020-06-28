@@ -1,8 +1,8 @@
-package de.hpi.mod.sim.setting.detectors;
+package de.hpi.mod.sim.setting.infinitewarehouses.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.model.Position;
+import de.hpi.mod.sim.setting.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
 
@@ -23,7 +23,7 @@ public class InvalidUnloadingDetector extends RobotDetector {
 					robot.resetInvalidUnloadingPosition();
 					invalidUnloadingReported = true;
 					reportInvalidPosition(robot, robot.pos());
-					setting.getGrid().makePositionInvalid(robot.pos());
+					setting.getGridManagement().makePositionInvalid(robot.pos());
 				}
 			}
 		}
@@ -32,7 +32,7 @@ public class InvalidUnloadingDetector extends RobotDetector {
 	@Override
 	public void reset() {
 		invalidUnloadingReported = false;
-		setting.getGrid().clearInvalidPositions();
+		setting.getGridManagement().clearInvalidPositions();
 	}
 
 	private void reportInvalidPosition(Robot robot, Position invalidPosition) {

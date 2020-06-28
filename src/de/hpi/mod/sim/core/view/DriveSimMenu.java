@@ -8,7 +8,7 @@ import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
-import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+import de.hpi.mod.sim.core.view.sim.SimulationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class DriveSimMenu extends JMenuBar implements ITimeListener {
     private KeyManager keyManager;
 
 
-    public DriveSimMenu(Simulation simulation, SimulationWorld simulationWorld) {
+    public DriveSimMenu(Simulation simulation, SimulationView simulationWorld) {
         this.simulation = simulation;
 
         loadIcons();

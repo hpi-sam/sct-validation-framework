@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.detectors;
+package de.hpi.mod.sim.setting.infinitewarehouses.detectors;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,6 @@
-package de.hpi.mod.sim.core.model;
+package de.hpi.mod.sim.setting.robot;
+
+import de.hpi.mod.sim.setting.Position;
 
 /**
  * A Robot can use the Dispatcher to get through a Station.

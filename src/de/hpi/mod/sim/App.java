@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import javax.swing.JOptionPane;
 
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 /**
  * 
@@ -39,8 +39,8 @@ public class App {
     }
 
     public static void main(String[] args) {
-        DriveSimFrame.setSystemLookAndFeel();
+        SimulatorFrame.setSystemLookAndFeel();
         Setting setting = selectSetting();
-        new DriveSimFrame(setting);
+        new SimulatorFrame(setting);
     }
 }

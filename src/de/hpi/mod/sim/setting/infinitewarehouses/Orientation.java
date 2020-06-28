@@ -1,6 +1,8 @@
-package de.hpi.mod.sim.core.model;
+package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import java.util.Random;
+
+import de.hpi.mod.sim.setting.Direction;
 
 /**
  * The orientation a robot can face

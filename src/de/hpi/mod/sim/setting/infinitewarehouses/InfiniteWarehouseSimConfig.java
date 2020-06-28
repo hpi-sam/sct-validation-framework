@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.setting.infinitewarehouses;
 
-import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.setting.Position;
 
 /**
  * Contains all "magic-numbers" set in the Infinite-Warehouse-Simulation.

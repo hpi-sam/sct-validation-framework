@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.mod.sim.ITimer;
-import de.hpi.mod.sim.core.model.*;
 import de.hpi.mod.sim.drivesystem.DrivesystemStatemachine;
 import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
+import de.hpi.mod.sim.setting.Direction;
+import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
+import de.hpi.mod.sim.setting.infinitewarehouses.PositionType;
 
 /**
  * Handles calls to the statechard.

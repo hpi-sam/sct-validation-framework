@@ -1,8 +1,9 @@
-package de.hpi.mod.sim.core.model;
+package de.hpi.mod.sim.setting.robot;
 
 import java.util.List;
 
-import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
 
 
 public interface IRobotDispatch {

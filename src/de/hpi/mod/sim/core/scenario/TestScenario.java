@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
-import de.hpi.mod.sim.core.view.DriveSimFrame;
+import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 public abstract class TestScenario extends Scenario {
 
@@ -24,9 +24,9 @@ public abstract class TestScenario extends Scenario {
         return hasRun && entities.stream().allMatch(Entity::hasPassedAllTestCriteria);
     }
     
-    public void notifySuccessToUser(DriveSimFrame frame) {
+    public void notifySuccessToUser(SimulatorFrame frame) {
     	if(!alreadyPrinted) {
-    		frame.displayMessage("Finished test \"" + name + "\" succesfully", DriveSimFrame.MENU_GREEN);
+    		frame.displayMessage("Finished test \"" + name + "\" succesfully", SimulatorFrame.MENU_GREEN);
     		alreadyPrinted = true;
     	}
     }
@@ -36,9 +36,9 @@ public abstract class TestScenario extends Scenario {
 		alreadyPrinted = false;
 	}
 
-	public void notifyFailToUser(DriveSimFrame frame, String reason) {
+	public void notifyFailToUser(SimulatorFrame frame, String reason) {
 		if(!alreadyPrinted) {
-    		frame.displayMessage("Test \"" + name + "\" failed beacuse " + reason, DriveSimFrame.MENU_RED);
+    		frame.displayMessage("Test \"" + name + "\" failed beacuse " + reason, SimulatorFrame.MENU_RED);
     		alreadyPrinted = true;
     	}
 	}

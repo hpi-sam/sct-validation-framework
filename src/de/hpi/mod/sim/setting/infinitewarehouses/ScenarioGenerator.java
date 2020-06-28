@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.model.Entity;
-import de.hpi.mod.sim.core.model.Orientation;
-import de.hpi.mod.sim.core.model.Position;
 import de.hpi.mod.sim.core.scenario.EntityDescription;
 import de.hpi.mod.sim.core.scenario.Scenario;
+import de.hpi.mod.sim.setting.Position;
 
 public class ScenarioGenerator {
 

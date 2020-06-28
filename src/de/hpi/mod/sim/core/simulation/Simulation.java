@@ -10,10 +10,10 @@ import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
-import de.hpi.mod.sim.core.view.sim.SimulationWorld;
+import de.hpi.mod.sim.core.view.sim.SimulationView;
 
 public class Simulation { 
-	private SimulationWorld simulationWorld;
+	private SimulationView simulationView;
 
 	private Setting setting;
 
@@ -38,15 +38,13 @@ public class Simulation {
 	 */
 	private List<ITimeListener> timeListeners = new ArrayList<>();
 
-	public Simulation(Setting setting, SimulationWorld simulationWorld) {
+	public Simulation(Setting setting, SimulationView simulationView) {
 		this.setting = setting;
-		this.simulationWorld = simulationWorld;
+		this.simulationView = simulationView;
 	}
 
 	public void reset() {
-		simulationWorld.resetZoom();
-		simulationWorld.resetOffset();
-		simulationWorld.resetHighlightedEntities();
+		simulationView.reset();
 	}
 
 
@@ -106,8 +104,8 @@ public class Simulation {
 		}
 	}
 
-	public SimulationWorld getSimulationWorld() {
-		return simulationWorld;
+	public SimulationView getSimulationWorld() {
+		return simulationView;
 	}
 
 	public <E extends Entity> E addEntityRunner(Supplier<E> entityGetter) { 
@@ -117,10 +115,10 @@ public class Simulation {
 
 		E e = entityGetter.get();
 		if (e instanceof IHighlightable) {
-			if (simulationWorld.getHighlighted1() == null)
-				simulationWorld.setHighlighted1((IHighlightable) e);
+			if (simulationView.getHighlighted1() == null)
+				simulationView.setHighlighted1((IHighlightable) e);
 			else
-				simulationWorld.setHighlighted2((IHighlightable) e);
+				simulationView.setHighlighted2((IHighlightable) e);
 		}
 		return e;
 	}

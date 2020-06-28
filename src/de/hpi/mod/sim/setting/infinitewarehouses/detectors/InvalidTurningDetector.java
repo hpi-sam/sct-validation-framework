@@ -1,8 +1,8 @@
-package de.hpi.mod.sim.setting.detectors;
+package de.hpi.mod.sim.setting.infinitewarehouses.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.model.CellType;
+import de.hpi.mod.sim.setting.infinitewarehouses.CellType;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
 

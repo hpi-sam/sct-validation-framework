@@ -4,7 +4,11 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import de.hpi.mod.sim.core.model.*;
+import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.robot.IRobotController;
+import de.hpi.mod.sim.setting.robot.IRobotDispatch;
+import de.hpi.mod.sim.setting.robot.IRobotStationDispatcher;
+import de.hpi.mod.sim.setting.robot.IScanner;
 import de.hpi.mod.sim.setting.robot.Robot;
 
 
