@@ -8,8 +8,6 @@ import de.hpi.mod.sim.core.view.model.IHighlightedListener;
 import de.hpi.mod.sim.core.view.sim.SimulationView;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Shows informations about the currently highlighted robot
@@ -20,10 +18,8 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 	private SimulationView world;
     private boolean isRightClickedEntity = false;
 
-    /**
-     * List of refreshable information
-     */
-    private List<InfoRefresher> refresher = new ArrayList<>();
+    private JLabel[] infoLabels = null;
+    private StateTree stateTree;
 
     /**
      * @param world                We need to ask the simulation for the reference
@@ -37,26 +33,26 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
         this.world = world;
         this.isRightClickedEntity = isRightClickedEntity;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        	
-        addStateTree();
     }
 
     private void addStateTree() {
-    	JLabel stateTree = new JLabel();
-    	
-    	StateTreeRefresher stateTreeRefresher = new StateTreeRefresher(stateTree);
-    	refresher.add(stateTreeRefresher);
-    	stateTreeRefresher.refresh();
-    	
-    	add(stateTree);
+    	JLabel stateTreeLabel = new JLabel();
+    	stateTree = new StateTree(stateTreeLabel);
+    	add(stateTreeLabel);
     }
     
-    private void addInfo(String info) {
-        JLabel label = new JLabel();
-        label.setFont(label.getFont().deriveFont(Font.PLAIN));
+    private void addInfos(int number) {
+        removeAll();
+        infoLabels = new JLabel[number];
+        for (int i = 0; i < number; i++) {
+            JLabel label = new JLabel();
+            infoLabels[i] = label;
+            label.setFont(label.getFont().deriveFont(Font.PLAIN));
 
-        label.setAlignmentX(LEFT_ALIGNMENT);
-        add(label);
+            label.setAlignmentX(LEFT_ALIGNMENT);
+            add(label);
+        }
+        addStateTree();
     }
 
     /**
@@ -65,28 +61,37 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
     @Override
     public void onHighlightedChange() {
         IHighlightable highlight = isRightClickedEntity ? world.getHighlighted2() : world.getHighlighted1();
-        
-        if (highlight == null) {
+         if (highlight == null) {
+             if (infoLabels == null || infoLabels.length != 1)
+                addInfos(1);
             String prefix = isRightClickedEntity ? "Right" : "Left";
-            addInfo(prefix + "-click an entity to display its information");
-        } else {
-            for (String info : highlight.getHighlightInfo())
-                addInfo(info);
+            infoLabels[0].setText(prefix + "-click an entity");
+            return;
+         }
+
+        java.util.List<String> infos = highlight.getHighlightInfo();
+
+        if (infoLabels == null || infoLabels.length != infos.size()) {
+            addInfos(infos.size());
         }
+       
+        for (int i = 0; i < infos.size(); i++)
+            infoLabels[i].setText(infos.get(i));
+        
+        stateTree.refresh();
         repaint();
     }
 
 
-    private class StateTreeRefresher implements InfoRefresher {
+    private class StateTree {
     	
     	private JLabel label;
     	private String currentDisplay = "";
 
-		public StateTreeRefresher(JLabel label) {
+		public StateTree(JLabel label) {
 			this.label = label;
 		}
 
-		@Override
         public void refresh() {
             IHighlightable highlight = isRightClickedEntity ? world.getHighlighted2() : world.getHighlighted1();
             if (highlight == null || !(highlight instanceof StateChartEntity)) {
@@ -122,7 +127,8 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 	     * 2. When regions are used they have to either be unnamed or start with an underscore "_".
 	     * 3. No other underscores "_" can be used in state names.
 	     */
-	    private String[] splitStates(String machineState) {
+        private String[] splitStates(String machineState) {
+            System.out.println("Yes: " + machineState);
 	    	try {
 	    		//Only enabled when the main region is called "Drive System"
 	    		if(machineState.substring(0, 12).equals("drive_System")) { //TODO generalize
@@ -155,9 +161,5 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 	    	
 		}
     	
-    }
-    
-    private interface InfoRefresher {
-    	public void refresh();
     }
 }
