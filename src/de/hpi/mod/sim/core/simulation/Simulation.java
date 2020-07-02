@@ -10,7 +10,7 @@ import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.view.model.ITimeListener;
-import de.hpi.mod.sim.core.view.sim.SimulationView;
+import de.hpi.mod.sim.core.view.panels.SimulationView;
 
 public class Simulation { 
 	private SimulationView simulationView;

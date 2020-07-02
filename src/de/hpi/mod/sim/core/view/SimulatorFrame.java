@@ -8,7 +8,6 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.core.view.panels.*;
-import de.hpi.mod.sim.core.view.sim.SimulationView;
 
 import java.awt.*;
 import java.io.BufferedReader;

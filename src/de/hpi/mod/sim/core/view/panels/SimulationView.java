@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.core.view.sim;
+package de.hpi.mod.sim.core.view.panels;
 
 import java.util.ArrayList;
 import java.util.List;

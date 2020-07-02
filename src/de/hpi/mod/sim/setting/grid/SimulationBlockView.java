@@ -2,7 +2,7 @@ package de.hpi.mod.sim.setting.grid;
 
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.core.view.sim.SimulationView;
+import de.hpi.mod.sim.core.view.panels.SimulationView;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 
 import java.awt.event.MouseEvent;

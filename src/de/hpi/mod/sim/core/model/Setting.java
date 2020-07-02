@@ -10,7 +10,7 @@ import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
-import de.hpi.mod.sim.core.view.sim.SimulationView;
+import de.hpi.mod.sim.core.view.panels.SimulationView;
 
 public abstract class Setting {
 

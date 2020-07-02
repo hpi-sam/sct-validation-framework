@@ -3,7 +3,7 @@ package de.hpi.mod.sim.setting.grid;
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
-import de.hpi.mod.sim.core.view.sim.SimulationView;
+import de.hpi.mod.sim.core.view.panels.SimulationView;
 
 import java.awt.Graphics;
 
