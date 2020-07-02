@@ -6,6 +6,7 @@ import de.hpi.mod.sim.setting.grid.Direction;
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
 import de.hpi.mod.sim.IStatemachine;
+import de.hpi.mod.sim.core.model.StateChartWrapper;
 
 /**
  * Handles calls to the statechard.

@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.robot;
+package de.hpi.mod.sim.core.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,6 +7,7 @@ import java.util.List;
 
 import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.ITimer;
+import de.hpi.mod.sim.setting.robot.SimulationTimerService;
 
 /**
  * Handles calls to the statechart.
