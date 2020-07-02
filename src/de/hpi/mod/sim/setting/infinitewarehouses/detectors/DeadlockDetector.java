@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.robot.RobotDetector;
 
 public class DeadlockDetector extends RobotDetector {
 

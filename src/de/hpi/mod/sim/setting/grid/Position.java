@@ -1,6 +1,4 @@
-package de.hpi.mod.sim.setting;
-
-import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
+package de.hpi.mod.sim.setting.grid;
 
 public class Position {
 

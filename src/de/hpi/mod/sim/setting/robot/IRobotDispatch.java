@@ -2,8 +2,8 @@ package de.hpi.mod.sim.setting.robot;
 
 import java.util.List;
 
-import de.hpi.mod.sim.setting.Position;
-import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
 
 
 public interface IRobotDispatch {

@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting;
+package de.hpi.mod.sim.setting.grid;
 
 import de.hpi.mod.sim.core.model.Setting;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;

@@ -1,7 +1,9 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.env;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 
 /**
  * Manages the Queue, Drive-Lock and Batteries of a station

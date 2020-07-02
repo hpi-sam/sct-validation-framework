@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.env;
 
 /**
  * A charging position in a station.

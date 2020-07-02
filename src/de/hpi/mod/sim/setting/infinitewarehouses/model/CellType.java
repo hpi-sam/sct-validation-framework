@@ -1,7 +1,8 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.model;
 
-import de.hpi.mod.sim.setting.ICellType;
 import java.awt.Color;
+
+import de.hpi.mod.sim.setting.grid.ICellType;
 
 public enum CellType implements ICellType {
     WAYPOINT, CROSSROAD, BLOCK, BATTERY, LOADING, STATION, QUEUE, BATTERY_UNUSED, LOADING_UNUSED, QUEUE_UNUSED, STATION_UNUSED;

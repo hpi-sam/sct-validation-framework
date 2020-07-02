@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.robot.RobotDetector;
 
 public class CollisionDetector extends RobotDetector {
 

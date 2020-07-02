@@ -14,13 +14,20 @@ import de.hpi.mod.sim.core.simulation.Simulation;
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.setting.infinitewarehouses.detectors.*;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.GridManagement;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotDispatcher;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.StationManager;
+import de.hpi.mod.sim.setting.infinitewarehouses.scenario.ScenarioGenerator;
+import de.hpi.mod.sim.setting.infinitewarehouses.scenario.TestCaseGenerator;
 import de.hpi.mod.sim.setting.robot.DriveManager;
 import de.hpi.mod.sim.setting.robot.IRobotController;
 import de.hpi.mod.sim.setting.robot.Robot;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
-import de.hpi.mod.sim.setting.GridSetting;
-import de.hpi.mod.sim.setting.IGrid;
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.ExplosionRenderer;
+import de.hpi.mod.sim.setting.grid.GridSetting;
+import de.hpi.mod.sim.setting.grid.IGrid;
+import de.hpi.mod.sim.setting.grid.Position;
+
 import java.awt.geom.Point2D;
 
 public class InfiniteWarehousesSetting extends GridSetting implements IRobotController {

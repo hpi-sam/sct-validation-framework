@@ -2,7 +2,8 @@ package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import javax.imageio.ImageIO;
 
-import de.hpi.mod.sim.setting.SimulationBlockView;
+import de.hpi.mod.sim.setting.grid.SimulationBlockView;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotDispatcher;
 import de.hpi.mod.sim.setting.robot.DriveManager;
 import de.hpi.mod.sim.setting.robot.Robot;
 

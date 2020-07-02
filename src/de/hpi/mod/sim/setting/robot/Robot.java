@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.model.*;
-import de.hpi.mod.sim.setting.Direction;
-import de.hpi.mod.sim.setting.Position;
-import de.hpi.mod.sim.setting.infinitewarehouses.CellType;
-import de.hpi.mod.sim.setting.infinitewarehouses.ILocation;
-import de.hpi.mod.sim.setting.infinitewarehouses.ISensorDataProvider;
+import de.hpi.mod.sim.setting.grid.Direction;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
-import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
-import de.hpi.mod.sim.setting.infinitewarehouses.PositionType;
-import de.hpi.mod.sim.setting.infinitewarehouses.GridManagement;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.GridManagement;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.CellType;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.ILocation;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.ISensorDataProvider;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
 
 /**
  * Controller for a Robot.

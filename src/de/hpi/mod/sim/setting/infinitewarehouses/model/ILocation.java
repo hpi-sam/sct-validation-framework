@@ -1,6 +1,6 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.model;
 
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Position;
 
 /**
  * Accesses the position of locations the robot needs to drive to.

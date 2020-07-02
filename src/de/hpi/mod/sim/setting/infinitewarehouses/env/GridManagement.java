@@ -1,13 +1,18 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.env;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import de.hpi.mod.sim.core.model.*;
-import de.hpi.mod.sim.setting.Direction;
-import de.hpi.mod.sim.setting.ICellType;
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Direction;
+import de.hpi.mod.sim.setting.grid.ICellType;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.CellType;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.ISensorDataProvider;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
 import de.hpi.mod.sim.setting.robot.IRobotController;
 import de.hpi.mod.sim.setting.robot.Robot;
 

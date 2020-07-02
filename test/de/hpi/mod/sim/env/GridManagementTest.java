@@ -2,11 +2,11 @@ package de.hpi.mod.sim.env;
 
 import org.junit.Test;
 
-import de.hpi.mod.sim.setting.Direction;
-import de.hpi.mod.sim.setting.Position;
-import de.hpi.mod.sim.setting.infinitewarehouses.CellType;
-import de.hpi.mod.sim.setting.infinitewarehouses.GridManagement;
-import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
+import de.hpi.mod.sim.setting.grid.Direction;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.GridManagement;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.CellType;
 import de.hpi.mod.sim.setting.robot.IRobotController;
 
 import java.util.Arrays;

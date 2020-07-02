@@ -2,9 +2,10 @@ package de.hpi.mod.sim.setting.infinitewarehouses.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.setting.infinitewarehouses.CellType;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.CellType;
 import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.robot.RobotDetector;
 
 public class InvalidTurningDetector extends RobotDetector {
 	public InvalidTurningDetector(InfiniteWarehousesSetting setting) {

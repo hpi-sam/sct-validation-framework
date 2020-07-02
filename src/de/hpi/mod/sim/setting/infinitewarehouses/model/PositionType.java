@@ -1,6 +1,6 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.model;
 
-import de.hpi.mod.sim.setting.ICellType;
+import de.hpi.mod.sim.setting.grid.ICellType;
 
 /**
  * The types of cells the robot can stand on

@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.scenario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +9,8 @@ import java.util.Random;
 
 import de.hpi.mod.sim.core.scenario.EntityDescription;
 import de.hpi.mod.sim.core.scenario.TestScenario;
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.robot.Robot.RobotState;
 
 public class TestCaseGenerator {

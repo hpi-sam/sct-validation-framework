@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting;
+package de.hpi.mod.sim.setting.grid;
 
 import java.util.Random;
 

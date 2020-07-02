@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -8,6 +8,8 @@ import java.awt.geom.Point2D;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
+
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 
 public class ExplosionRenderer {
 	private Image explosion;

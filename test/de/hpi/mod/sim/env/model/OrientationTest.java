@@ -2,8 +2,8 @@ package de.hpi.mod.sim.env.model;
 
 import org.junit.Test;
 
-import de.hpi.mod.sim.setting.Direction;
-import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
+import de.hpi.mod.sim.setting.grid.Direction;
+import de.hpi.mod.sim.setting.grid.Orientation;
 
 import static org.junit.Assert.assertEquals;
 

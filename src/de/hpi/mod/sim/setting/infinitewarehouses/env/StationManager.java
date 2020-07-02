@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.env;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.robot.IRobotStationDispatcher;
 
 /**

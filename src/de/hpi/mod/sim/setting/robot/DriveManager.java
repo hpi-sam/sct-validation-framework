@@ -2,9 +2,9 @@ package de.hpi.mod.sim.setting.robot;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
-import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
 
 /**
  * Calculates the real x and y position, angle and battery

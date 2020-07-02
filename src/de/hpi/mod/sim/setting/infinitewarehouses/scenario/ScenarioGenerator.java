@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.scenario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.scenario.EntityDescription;
 import de.hpi.mod.sim.core.scenario.Scenario;
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
+import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
+import de.hpi.mod.sim.setting.infinitewarehouses.ScenarioRobotDescription;
 
 public class ScenarioGenerator {
 

@@ -2,9 +2,10 @@ package de.hpi.mod.sim.setting.infinitewarehouses.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehousesSetting;
 import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.robot.RobotDetector;
 
 public class InvalidPositionDetector extends RobotDetector {
 	public InvalidPositionDetector(InfiniteWarehousesSetting setting) {

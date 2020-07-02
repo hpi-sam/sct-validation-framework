@@ -1,8 +1,8 @@
 package de.hpi.mod.sim.setting.robot;
 
-import de.hpi.mod.sim.setting.Direction;
-import de.hpi.mod.sim.setting.infinitewarehouses.Orientation;
-import de.hpi.mod.sim.setting.infinitewarehouses.PositionType;
+import de.hpi.mod.sim.setting.grid.Direction;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
 
 /**
  * Represents the Data interface in the Statechard.

@@ -1,10 +1,13 @@
-package de.hpi.mod.sim.setting.infinitewarehouses;
+package de.hpi.mod.sim.setting.infinitewarehouses.scenario;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
-import de.hpi.mod.sim.setting.Position;
+import de.hpi.mod.sim.setting.grid.Orientation;
+import de.hpi.mod.sim.setting.grid.Position;
+import de.hpi.mod.sim.setting.infinitewarehouses.RobotDescription;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotDispatcher;
 import de.hpi.mod.sim.setting.robot.Robot;
 import de.hpi.mod.sim.setting.robot.Robot.RobotState;
 
