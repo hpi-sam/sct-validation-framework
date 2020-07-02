@@ -5,8 +5,12 @@ import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
 import de.hpi.mod.sim.setting.grid.Direction;
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
+import de.hpi.mod.sim.setting.robot.model.IDriveSystem;
+import de.hpi.mod.sim.setting.robot.model.IProcessor;
+import de.hpi.mod.sim.setting.robot.model.IRobotActors;
+import de.hpi.mod.sim.setting.robot.model.ISensor;
 import de.hpi.mod.sim.IStatemachine;
-import de.hpi.mod.sim.core.model.StateChartWrapper;
+import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 
 /**
  * Handles calls to the statechard.

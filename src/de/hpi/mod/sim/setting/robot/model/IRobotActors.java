@@ -1,4 +1,6 @@
-package de.hpi.mod.sim.setting.robot;
+package de.hpi.mod.sim.setting.robot.model;
+
+import de.hpi.mod.sim.setting.robot.DriveSystemWrapper;
 
 /**
  * Represents the IRobotActors interface in the Statechard.

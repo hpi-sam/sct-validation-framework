@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.hpi.mod.sim.setting.grid.Position;
-import de.hpi.mod.sim.setting.robot.IRobotStationDispatcher;
+import de.hpi.mod.sim.setting.robot.model.IRobotStationDispatcher;
 
 /**
  * Manages stations and acts as dispatcher in the robot-reservation-protocol

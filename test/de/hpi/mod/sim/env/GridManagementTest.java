@@ -7,7 +7,7 @@ import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.env.GridManagement;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.CellType;
-import de.hpi.mod.sim.setting.robot.IRobotController;
+import de.hpi.mod.sim.setting.robot.model.IRobotController;
 
 import java.util.Arrays;
 

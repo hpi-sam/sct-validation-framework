@@ -1,4 +1,7 @@
-package de.hpi.mod.sim.setting.robot;
+package de.hpi.mod.sim.setting.robot.model;
+
+import de.hpi.mod.sim.setting.robot.DriveSystemWrapper;
+import de.hpi.mod.sim.setting.robot.Robot;
 
 /**
  * Represents the Default interface in the Statechart.

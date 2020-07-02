@@ -3,7 +3,7 @@ package de.hpi.mod.sim.core.view.panels;
 import javax.swing.*;
 
 import de.hpi.mod.sim.core.model.IHighlightable;
-import de.hpi.mod.sim.core.model.StateChartEntity;
+import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.view.model.IHighlightedListener;
 
 import java.awt.*;

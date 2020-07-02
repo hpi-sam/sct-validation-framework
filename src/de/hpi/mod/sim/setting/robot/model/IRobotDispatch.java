@@ -1,9 +1,11 @@
-package de.hpi.mod.sim.setting.robot;
+package de.hpi.mod.sim.setting.robot.model;
 
 import java.util.List;
 
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.grid.Position;
+import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.robot.Robot.RobotState;
 
 
 public interface IRobotDispatch {

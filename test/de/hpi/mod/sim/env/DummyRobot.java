@@ -3,9 +3,9 @@ package de.hpi.mod.sim.env;
 import de.hpi.mod.sim.setting.grid.Direction;
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
-import de.hpi.mod.sim.setting.robot.IProcessor;
-import de.hpi.mod.sim.setting.robot.IRobotActors;
-import de.hpi.mod.sim.setting.robot.ISensor;
+import de.hpi.mod.sim.setting.robot.model.IProcessor;
+import de.hpi.mod.sim.setting.robot.model.IRobotActors;
+import de.hpi.mod.sim.setting.robot.model.ISensor;
 
 public class DummyRobot implements ISensor, IRobotActors, IProcessor {
 

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.model.*;
+import de.hpi.mod.sim.core.statechart.StateChartEntity;
+import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.setting.grid.Direction;
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.grid.Position;
@@ -14,6 +16,12 @@ import de.hpi.mod.sim.setting.infinitewarehouses.model.CellType;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.ILocation;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.ISensorDataProvider;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
+import de.hpi.mod.sim.setting.robot.model.DriveListener;
+import de.hpi.mod.sim.setting.robot.model.IDriveSystem;
+import de.hpi.mod.sim.setting.robot.model.IProcessor;
+import de.hpi.mod.sim.setting.robot.model.IRobotStationDispatcher;
+import de.hpi.mod.sim.setting.robot.model.IScanner;
+import de.hpi.mod.sim.setting.robot.model.ISensor;
 
 /**
  * Controller for a Robot.

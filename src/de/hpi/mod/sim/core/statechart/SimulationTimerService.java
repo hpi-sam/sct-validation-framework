@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.setting.robot;
+package de.hpi.mod.sim.core.statechart;
 
 import java.util.ArrayList;
 import java.util.List;

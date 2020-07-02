@@ -9,11 +9,11 @@ import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.ILocation;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
-import de.hpi.mod.sim.setting.robot.IRobotController;
-import de.hpi.mod.sim.setting.robot.IRobotDispatch;
-import de.hpi.mod.sim.setting.robot.IRobotStationDispatcher;
-import de.hpi.mod.sim.setting.robot.IScanner;
 import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.robot.model.IRobotController;
+import de.hpi.mod.sim.setting.robot.model.IRobotDispatch;
+import de.hpi.mod.sim.setting.robot.model.IRobotStationDispatcher;
+import de.hpi.mod.sim.setting.robot.model.IScanner;
 
 
 public class RobotManagement implements IRobotController, ILocation, IScanner, IRobotDispatch { 

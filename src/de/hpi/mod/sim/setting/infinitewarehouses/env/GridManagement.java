@@ -13,8 +13,8 @@ import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.CellType;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.ISensorDataProvider;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
-import de.hpi.mod.sim.setting.robot.IRobotController;
 import de.hpi.mod.sim.setting.robot.Robot;
+import de.hpi.mod.sim.setting.robot.model.IRobotController;
 
 /**
  * Represents the Map and contains all logic which is dependant of the

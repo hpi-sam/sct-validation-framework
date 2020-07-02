@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.hpi.mod.sim.setting.infinitewarehouses.env.StationManager;
-import de.hpi.mod.sim.setting.robot.IRobotStationDispatcher;
+import de.hpi.mod.sim.setting.robot.model.IRobotStationDispatcher;
 
 import static org.junit.Assert.*;
 

@@ -5,8 +5,8 @@ import org.junit.Test;
 import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.grid.Position;
-import de.hpi.mod.sim.setting.robot.DriveListener;
 import de.hpi.mod.sim.setting.robot.DriveManager;
+import de.hpi.mod.sim.setting.robot.model.DriveListener;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
