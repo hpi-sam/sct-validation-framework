@@ -33,7 +33,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     private DriveManager manager;
     private IDriveSystem drive;
     private ISensorDataProvider grid;
-    private IRobotStationDispatcher dispatcher;
+    private IRobotStationDispatcher robots;
     private ILocation location;
     private IScanner scanner;
 
@@ -74,12 +74,12 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     private boolean arrivedEventWasCalled = true;
 
     public Robot(int robotID, int stationID, GridManagement grid,
-                 IRobotStationDispatcher dispatcher, ILocation location, IScanner scanner,
+                 IRobotStationDispatcher robots, ILocation location, IScanner scanner,
                  Position startPosition, Orientation startFacing) {
         this.robotID = robotID;
         this.stationID = stationID;
         this.grid = grid;
-        this.dispatcher = dispatcher;
+        this.robots = robots;
         this.location = location;
         this.scanner = scanner;
         manager = new DriveManager(this, startPosition, startFacing);
@@ -97,10 +97,10 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
      * @param state 
      */
     public Robot(int robotID, int stationID, GridManagement grid,
-                 IRobotStationDispatcher dispatcher, 
+                 IRobotStationDispatcher robots, 
             ILocation location, IScanner scanner,
                  Position startPosition, RobotState initialState, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedBattery, boolean hardArrivedConstraint) {
-        this(robotID, (int) startPosition.getX()/3, grid, dispatcher, location, scanner, startPosition, startFacing);
+        this(robotID, (int) startPosition.getX()/3, grid, robots, location, scanner, startPosition, startFacing);
         testPositionTargets = targets;
         isInTest  = true;
         this.robotSpecificDelay = robotSpecificDelay;
@@ -170,9 +170,9 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     private void handleArriveAtStation() {
         if (hasReservedBattery) {
         	startDrivingToCharging();
-        	if(dispatcher.requestEnteringBattery(robotID, stationID)) {
+        	if(robots.requestEnteringBattery(robotID, stationID)) {
         		if(!isInTest) {
-        			batteryID = dispatcher.getReservedChargerAtStation(robotID, stationID);
+        			batteryID = robots.getReservedChargerAtStation(robotID, stationID);
         		} else {
         			// If in test: Translate coordinates from queue to battery id
         			target = testPositionTargets.get(0);
@@ -194,7 +194,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
         	}
         } else {
         	drive.newTarget();
-        	if (dispatcher.requestEnteringStation(robotID, stationID)) {
+        	if (robots.requestEnteringStation(robotID, stationID)) {
         		target = location.getQueuePositionAtStation(stationID);
                 state = RobotState.TO_QUEUE;
         	}
@@ -205,7 +205,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
 
     private void handleArriveAtBattery() {
         if(manager.currentFacing() == Orientation.EAST) {
-        	dispatcher.reportChargingAtStation(robotID, stationID, batteryID);
+        	robots.reportChargingAtStation(robotID, stationID, batteryID);
         	manager.setLoading(true);
         }
     }
@@ -217,7 +217,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     private void handleFinishedCharging() {
         manager.setLoading(false);
 
-        if (dispatcher.requestLeavingBattery(robotID, stationID, batteryID)) {
+        if (robots.requestLeavingBattery(robotID, stationID, batteryID)) {
         	drive.newTarget();
         	target = location.getQueuePositionAtStation(stationID);
             state = RobotState.TO_QUEUE;
@@ -226,7 +226,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     }
 
     private void handleArriveAtQueue() {
-        dispatcher.reportEnteringQueueAtStation(robotID, stationID);
+        robots.reportEnteringQueueAtStation(robotID, stationID);
         drive.newTarget();
     	if(!isInTest) {
         	target = location.getLoadingPositionAtStation(stationID);
@@ -269,7 +269,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
             	}
     		}
     		if (!isInTest) {
-    			dispatcher.reportLeaveStation(robotID, stationID);
+    			robots.reportLeaveStation(robotID, stationID);
     		}
             state = RobotState.TO_UNLOADING;
             now = 0;
@@ -294,7 +294,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     	}
 		
         boolean needsLoading = manager.getBattery() < InfiniteWarehouseSimConfig.BATTERY_LOW;
-        stationID = dispatcher.getReservationNextForStation(robotID, needsLoading);
+        stationID = robots.getReservationNextForStation(robotID, needsLoading);
         drive.newTarget();
         if(!isInTest) {
         	target = location.getArrivalPositionAtStation(stationID);
@@ -302,7 +302,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
         	if(((manager.currentPosition().fuzzyEquals(target) || manager.getOldPosition().fuzzyEquals(target)) && !manager.hasPackage()) && (!requireArrivedForTestCompletion || arrivedEventWasCalled)) {
         		target = testPositionTargets.get(0);
         		testPositionTargets.remove(0);
-        		stationID = dispatcher.getStationIDFromPosition(target);
+        		stationID = robots.getStationIDFromPosition(target);
         		arrivedEventWasCalled = false;
         	}
         }

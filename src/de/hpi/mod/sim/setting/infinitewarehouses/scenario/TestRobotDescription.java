@@ -7,7 +7,7 @@ import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.RobotDescription;
-import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotDispatcher;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotManagement;
 import de.hpi.mod.sim.setting.robot.Robot;
 import de.hpi.mod.sim.setting.robot.Robot.RobotState;
 
@@ -162,8 +162,8 @@ public class TestRobotDescription extends RobotDescription {
     }
 
     @Override
-    public Robot getRobot(RobotDispatcher robotDispatcher) {
-        return robotDispatcher.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd,
+    public Robot getRobot(RobotManagement robots) {
+        return robots.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd,
                 requireUnload, hasReservedBattery, hardArrivedConstraint);
     }
 }

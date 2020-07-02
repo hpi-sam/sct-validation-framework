@@ -16,7 +16,7 @@ import de.hpi.mod.sim.setting.robot.IScanner;
 import de.hpi.mod.sim.setting.robot.Robot;
 
 
-public class RobotDispatcher implements IRobotController, ILocation, IScanner, IRobotDispatch { 
+public class RobotManagement implements IRobotController, ILocation, IScanner, IRobotDispatch { 
 
     private List<Robot> robots = new CopyOnWriteArrayList<>();
     private GridManagement gridData;
@@ -26,7 +26,7 @@ public class RobotDispatcher implements IRobotController, ILocation, IScanner, I
     private int[] heights = new int[mapHeight];
 
 
-    public RobotDispatcher(GridManagement grid, IRobotStationDispatcher stations) {
+    public RobotManagement(GridManagement grid, IRobotStationDispatcher stations) {
         this.gridData = grid;
         this.stations = stations;
     }

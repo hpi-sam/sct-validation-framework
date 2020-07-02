@@ -3,7 +3,7 @@ package de.hpi.mod.sim.setting.infinitewarehouses;
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.setting.grid.SimulationBlockView;
-import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotDispatcher;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotManagement;
 import de.hpi.mod.sim.setting.robot.DriveManager;
 import de.hpi.mod.sim.setting.robot.Robot;
 
@@ -20,14 +20,14 @@ import java.io.IOException;
  */
 public class RobotRenderer {
 
-    private RobotDispatcher robotDispatcher;
+    private RobotManagement robots;
     private SimulationBlockView simView;
     private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
 
 
     public RobotRenderer(
-            RobotDispatcher robotDispatcher, SimulationBlockView simView) {
-        this.robotDispatcher = robotDispatcher;
+            RobotManagement robots, SimulationBlockView simView) {
+        this.robots = robots;
         this.simView = simView;
 
         loadImages();
@@ -47,7 +47,7 @@ public class RobotRenderer {
 
     void render(Graphics graphic, float size) {
         // Draw Robots
-        for (Robot robot : robotDispatcher.getRobots()) {
+        for (Robot robot : robots.getRobots()) {
 	            DriveManager drive = robot.getDriveManager();
 	            Point2D drawPosition = simView.toDrawPosition(drive.getX(), drive.getY());
 	
@@ -58,7 +58,7 @@ public class RobotRenderer {
         }
 
         // Render additional Info like Targets
-        for (Robot r : robotDispatcher.getRobots()) {
+        for (Robot r : robots.getRobots()) {
             if (r.equals(simView.getHighlighted1()) || r.equals(simView.getHighlighted2())) {
 	                DriveManager drive = r.getDriveManager();
 	                Point2D drawPos = simView.toDrawPosition(drive.getX(), drive.getY());

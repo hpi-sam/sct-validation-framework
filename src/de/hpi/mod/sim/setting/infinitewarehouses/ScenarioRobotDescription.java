@@ -2,7 +2,7 @@ package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.grid.Position;
-import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotDispatcher;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotManagement;
 import de.hpi.mod.sim.setting.robot.Robot;
 
 public class ScenarioRobotDescription extends RobotDescription {
@@ -23,8 +23,8 @@ public class ScenarioRobotDescription extends RobotDescription {
 	}
 
 	@Override
-	public Robot getRobot(RobotDispatcher robotDispatcher) {
-		Robot robot = robotDispatcher.addRobotInScenario(position, facing, delay);
+	public Robot getRobot(RobotManagement robots) {
+		Robot robot = robots.addRobotInScenario(position, facing, delay);
 		robot.setIsAlone(isAlone);
 		return robot;
 	}

@@ -15,7 +15,7 @@ import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.IHighlightable;
 import de.hpi.mod.sim.setting.infinitewarehouses.detectors.*;
 import de.hpi.mod.sim.setting.infinitewarehouses.env.GridManagement;
-import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotDispatcher;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotManagement;
 import de.hpi.mod.sim.setting.infinitewarehouses.env.StationManager;
 import de.hpi.mod.sim.setting.infinitewarehouses.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.setting.infinitewarehouses.scenario.TestCaseGenerator;
@@ -36,7 +36,7 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
 
     private List<Detector> detectors;
 
-    private RobotDispatcher robotDispatcher;
+    private RobotManagement robots;
 
     private ScenarioManager scenarioManager;
 
@@ -51,10 +51,10 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
     @Override
     public void initialize(SimulatorFrame frame, Simulation simulation) {
         super.initialize(frame, simulation);
-        robotDispatcher = new RobotDispatcher(grid,
+        robots = new RobotManagement(grid,
                 new StationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse()));
         scenarioManager = new ScenarioManager(this);
-        robotRenderer = new RobotRenderer(robotDispatcher, getSimulationBlockView());
+        robotRenderer = new RobotRenderer(robots, getSimulationBlockView());
         explosionRenderer = new ExplosionRenderer();
         initializeDetectors();
     }
@@ -97,7 +97,7 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
 
     @Override
     public boolean isBlockedByRobot(Position pos) {
-        return robotDispatcher.isBlockedByRobot(pos);
+        return robots.isBlockedByRobot(pos);
     }
 
     @Override
@@ -110,17 +110,13 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
         return getRobots();
     }
 
-    public RobotDispatcher getRoboterDispatch() {
-        return robotDispatcher;
-    }
-
     @Override
     public void onSimulationPropertyRefresh() {
-        getRoboterDispatch().createNewStationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse());
+        robots.createNewStationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse());
     }
 
     public List<Robot> getRobots() {
-        return getRoboterDispatch().getRobots();
+        return robots.getRobots();
     }
 
     @Override
@@ -198,7 +194,7 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
     @SuppressWarnings("unchecked")
     public <E extends Entity> E fromDescription(EntityDescription<E> description) { //TODO very ugly, beautify
         if (description instanceof RobotDescription) {
-            return (E) ((RobotDescription) description).getRobot(getRoboterDispatch());
+            return (E) ((RobotDescription) description).getRobot(robots);
         } else {
             return null;
         }
@@ -217,16 +213,16 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
     
     @Override
     public void refreshEntities() { 
-        getRoboterDispatch().refresh();
+        robots.refresh();
     }
 
     @Override
     public void resetScenario() {
-        getRoboterDispatch().releaseAllLocks();
+        robots.releaseAllLocks();
     }
 
     @Override
     public void close() {
-        getRoboterDispatch().close();
+        robots.close();
     }
 }
