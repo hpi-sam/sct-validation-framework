@@ -1,11 +1,12 @@
 package de.hpi.mod.sim.setting.infinitewarehouses;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Manages the Queue, Drive-Lock and Batteries of a station
  */
-public class Station extends AbstractStation { 
+public class Station { 
 
     /**
      * How many robots want to drive or are in the queue.
@@ -18,11 +19,16 @@ public class Station extends AbstractStation {
      */
     private Battery[] batteries;
 
-	private boolean blockedQueue = false;
+    private boolean blockedQueue = false;
+    
+    private int stationID;
+
+    private CopyOnWriteArrayList<Integer> requestedLocks = new CopyOnWriteArrayList<Integer>();
+
 
 
     public Station(int stationID) {
-        super(stationID);
+        this.stationID = stationID;
         initializeBatteries();
     }
 
@@ -123,7 +129,6 @@ public class Station extends AbstractStation {
         batteries[batteryID].setRobotNotPresent();
     }
 
-    @Override
     public void clear() {
         blockedQueue = false;
         for (int i = 0; i < InfiniteWarehouseSimConfig.getBatteriesPerStation(); i++) {
@@ -131,13 +136,48 @@ public class Station extends AbstractStation {
         }
     }
 
-    @Override
     public boolean lockAllowed() {
         return !blockedQueue;
     }
 
-    @Override
     public void onLock() {
         blockQueue();
+    }
+
+    public int getStationID() {
+        return stationID;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null || getClass() != object.getClass())
+            return false;
+
+        Station station = (Station) object;
+
+        return stationID == station.stationID;
+    }
+
+    public void releaseLocks() {
+        requestedLocks.clear();
+        clear();
+    }
+
+    public void registerRequestLock(int robotID) {
+        if (!requestedLocks.contains(robotID)) {
+            requestedLocks.add(0, robotID);
+        }
+    }
+
+    public boolean requestLock(int robotID) {
+        if (requestedLocks.get(0) == robotID && lockAllowed()) {
+            requestedLocks.remove(0);
+            onLock();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
