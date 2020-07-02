@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.hpi.mod.sim.core.scenario.Detector;
-import de.hpi.mod.sim.core.scenario.EntityDescription;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
@@ -121,12 +120,12 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
 
     @Override
     public List<Scenario> getScenarios() {
-        return ScenarioGenerator.getScenarios();
+        return new ScenarioGenerator(robots).getScenarios();
     }
 
     @Override
     public Map<String, List<TestScenario>> getTestGroups() {
-        return TestCaseGenerator.getAllTestCases();
+        return TestCaseGenerator.getAllTestCases(robots);
     }
 
     @Override
@@ -190,14 +189,8 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
         explosionRenderer.reset();
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <E extends Entity> E fromDescription(EntityDescription<E> description) { //TODO very ugly, beautify
-        if (description instanceof RobotDescription) {
-            return (E) ((RobotDescription) description).getRobot(robots);
-        } else {
-            return null;
-        }
+    public Robot getRobotFromDescription(RobotDescription description) {
+        return description.getRobot(robots);
     }
     
     @Override

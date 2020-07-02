@@ -1,8 +1,6 @@
 package de.hpi.mod.sim.core.scenario;
 
 import java.util.List;
-
-import de.hpi.mod.sim.core.model.Entity;
 import de.hpi.mod.sim.core.model.Setting;
 
 /**
@@ -34,8 +32,8 @@ public abstract class Scenario {
     protected abstract List<EntityDescription<?>> initializeScenario();
 
     public void loadScenario(Setting setting) { 
-        List<EntityDescription<? extends Entity>> newEntities = initializeScenario();
-        newEntities.forEach(e -> setting.getSimulation().addEntityRunner(() -> setting.fromDescription(e)));
+        List<EntityDescription<?>> newEntities = initializeScenario();
+        newEntities.forEach(e -> setting.getSimulation().addEntityRunner(() -> e.get()));
     }
 
 	public boolean isResizable() {

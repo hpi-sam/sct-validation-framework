@@ -11,10 +11,17 @@ import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.grid.Position;
 import de.hpi.mod.sim.setting.infinitewarehouses.InfiniteWarehouseSimConfig;
 import de.hpi.mod.sim.setting.infinitewarehouses.ScenarioRobotDescription;
+import de.hpi.mod.sim.setting.infinitewarehouses.env.RobotManagement;
 
 public class ScenarioGenerator {
 
-    private static class OneRobotScenario extends Scenario {
+    RobotManagement robots;
+
+    public ScenarioGenerator(RobotManagement robots) {
+        this.robots = robots;
+    }
+
+    private class OneRobotScenario extends Scenario {
         public OneRobotScenario() {
             name = "One Robot";
         }
@@ -30,7 +37,7 @@ public class ScenarioGenerator {
                 station_number = ThreadLocalRandom.current().nextInt(maxStations);
             } while (robotsAtStations[station_number] >= InfiniteWarehouseSimConfig.getMaxRobotsPerStation());
 
-            ScenarioRobotDescription singleRobot = new ScenarioRobotDescription(new Position(
+            ScenarioRobotDescription singleRobot = new ScenarioRobotDescription(robots, new Position(
                             (InfiniteWarehouseSimConfig.getFirstStationTop().getX()
                                     + station_number * InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations()) + 2,
                             InfiniteWarehouseSimConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2),
@@ -41,7 +48,7 @@ public class ScenarioGenerator {
         }
     }
 
-    private static class EasyScenario extends Scenario {
+    private class EasyScenario extends Scenario {
         public EasyScenario() {
             name = "Few Robots";
         }
@@ -58,7 +65,8 @@ public class ScenarioGenerator {
                     station_number = ThreadLocalRandom.current().nextInt(maxStations);
                 } while (robotsAtStations[station_number] >= InfiniteWarehouseSimConfig.getMaxRobotsPerStation());
 
-                newRobots.add(new ScenarioRobotDescription(new Position(
+                newRobots.add(new ScenarioRobotDescription(robots,
+                        new Position(
                         (InfiniteWarehouseSimConfig.getFirstStationTop().getX()
                                 + station_number * InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations()) + 2,
                         InfiniteWarehouseSimConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2),
@@ -69,7 +77,7 @@ public class ScenarioGenerator {
         }
     }
 
-    private static class MediumScenario extends Scenario {
+    private class MediumScenario extends Scenario {
         public MediumScenario() {
             name = "Average number of Robots";
         }
@@ -87,7 +95,8 @@ public class ScenarioGenerator {
                     station_number = ThreadLocalRandom.current().nextInt(maxStations);
                 } while (robotsAtStations[station_number] >= InfiniteWarehouseSimConfig.getMaxRobotsPerStation());
 
-                newRobots.add(new ScenarioRobotDescription(new Position(
+                newRobots.add(new ScenarioRobotDescription(robots,
+                        new Position(
                         (InfiniteWarehouseSimConfig.getFirstStationTop().getX()
                                 + station_number * InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations()) + 2,
                         InfiniteWarehouseSimConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2),
@@ -98,7 +107,7 @@ public class ScenarioGenerator {
         }
     }
 
-    private static class HardScenario extends Scenario {
+    private class HardScenario extends Scenario {
         public HardScenario() {
             name = "Many Robots";
         }
@@ -116,7 +125,8 @@ public class ScenarioGenerator {
                     station_number = ThreadLocalRandom.current().nextInt(maxStations);
                 } while (robotsAtStations[station_number] >= InfiniteWarehouseSimConfig.getMaxRobotsPerStation());
 
-                newRobots.add(new ScenarioRobotDescription(new Position(
+                newRobots.add(new ScenarioRobotDescription(robots,
+                        new Position(
                         (InfiniteWarehouseSimConfig.getFirstStationTop().getX()
                                 + station_number * InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations()) + 2,
                         InfiniteWarehouseSimConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2),
@@ -127,7 +137,7 @@ public class ScenarioGenerator {
         }
     }
 
-    private static class HardcoreScenario extends Scenario {
+    private class HardcoreScenario extends Scenario {
         public HardcoreScenario() {
             name = "Many Robots + Reaction Delay [Extreme mode]";
         }
@@ -146,7 +156,8 @@ public class ScenarioGenerator {
                     station_number = ThreadLocalRandom.current().nextInt(maxStations);
                 } while (robotsAtStations[station_number] >= InfiniteWarehouseSimConfig.getMaxRobotsPerStation());
 
-                newRobots.add(new ScenarioRobotDescription(new Position(
+                newRobots.add(new ScenarioRobotDescription(robots,
+                        new Position(
                         (InfiniteWarehouseSimConfig.getFirstStationTop().getX()
                                 + station_number * InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations()) + 2,
                         InfiniteWarehouseSimConfig.getFirstStationTop().getY() - robotsAtStations[station_number] + 2),
@@ -157,7 +168,7 @@ public class ScenarioGenerator {
         }
     }
 
-	public static List<Scenario> getScenarios() {
+	public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList<>();
         scenarios.add(new OneRobotScenario());
         scenarios.add(new EasyScenario());

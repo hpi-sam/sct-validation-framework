@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.hpi.mod.sim.core.scenario.Detector;
-import de.hpi.mod.sim.core.scenario.EntityDescription;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
@@ -79,8 +78,6 @@ public abstract class Setting {
 
 	public void resetView() {
 	}
-
-    public abstract <E extends Entity> E fromDescription(EntityDescription<E> e);
 
     public abstract IHighlightable getHighlightAtPosition(int x, int y);
 

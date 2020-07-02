@@ -11,12 +11,14 @@ public class ScenarioRobotDescription extends RobotDescription {
 	private int delay = 0;
 	private boolean isAlone = false;
 	
-	public ScenarioRobotDescription(Position position, Orientation facing) {
+	public ScenarioRobotDescription(RobotManagement robots, Position position, Orientation facing) {
+		super(robots);
 		this.position = position;
 		this.facing = facing;
 	}
 	
-	public ScenarioRobotDescription(Position position, Orientation facing, int delay) {
+	public ScenarioRobotDescription(RobotManagement robots, Position position, Orientation facing, int delay) {
+		super(robots);
 		this.position = position;
 		this.facing = facing;
 		this.delay = delay;
