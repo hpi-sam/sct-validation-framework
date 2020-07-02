@@ -37,6 +37,8 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     private ILocation location;
     private IScanner scanner;
 
+    private StateChartWrapper<?> chart;
+
     private Position target = null;
     private List<Position> testPositionTargets = null;
     private int robotID;
@@ -81,7 +83,9 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
         this.location = location;
         this.scanner = scanner;
         manager = new DriveManager(this, startPosition, startFacing);
-        drive = new DriveSystemWrapper(this, manager, this);
+        DriveSystemWrapper drive = new DriveSystemWrapper(this, manager, this);
+        this.drive = drive;
+        this.chart = drive;
         target = startPosition;
     }
 
@@ -143,7 +147,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
             drive.dataRefresh();
             
     		// Update timer
-            drive.updateTimer();
+            chart.updateTimer();
     	}
     }
 
@@ -314,7 +318,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
 
 	private void startDriving() {
         robotHasDriveTarget = true;
-        drive.getUpdate();
+        chart.update();
     }
 
     @Override
@@ -467,7 +471,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     }
 
     public void close() {
-        drive.close();
+        chart.close();
     }
 
     public DriveManager getDriveManager() {
@@ -507,7 +511,7 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
     }
     
     public String getMachineState() {
-    	return drive.getMachineState();
+    	return chart.getMachineState();
     }
 
     public enum RobotState {
@@ -556,5 +560,10 @@ public class Robot implements IProcessor, ISensor, DriveListener, StateChartEnti
         infos.add("Facing: " + posOrientation().toString());
         infos.add("Target Direction: " + (isOnTargetOrNearby() ? "-" : targetDirection().toString()));
         return infos;
+    }
+
+    @Override
+    public String getTopStateName() {
+        return "drive_System";
     }
 }

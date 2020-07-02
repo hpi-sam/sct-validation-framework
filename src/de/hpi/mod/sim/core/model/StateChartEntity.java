@@ -4,4 +4,6 @@ public interface StateChartEntity extends Entity {
 
 	String getMachineState();
 
+	String getTopStateName();
+
 }

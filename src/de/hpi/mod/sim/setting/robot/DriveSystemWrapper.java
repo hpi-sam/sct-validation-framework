@@ -1,58 +1,28 @@
 package de.hpi.mod.sim.setting.robot;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
-import de.hpi.mod.sim.ITimer;
 import de.hpi.mod.sim.drivesystem.DrivesystemStatemachine;
 import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
 import de.hpi.mod.sim.setting.grid.Direction;
 import de.hpi.mod.sim.setting.grid.Orientation;
 import de.hpi.mod.sim.setting.infinitewarehouses.model.PositionType;
+import de.hpi.mod.sim.IStatemachine;
 
 /**
  * Handles calls to the statechard.
  * This should be the only file with logic depending on the statechard implementation.
  */
-public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOperationCallback, IDrivesystemStatemachine.SCIRawDataOperationCallback, IDriveSystem {
-
-    /**
-     * The generated Statemachine
-     */
-    private IDrivesystemStatemachine machine;
+public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStatemachine.State> implements IDrivesystemStatemachine.SCIDataOperationCallback, IDrivesystemStatemachine.SCIRawDataOperationCallback, IDriveSystem {
 
     private ISensor data;
     private IRobotActors actors;
     private IProcessor processor;
 
-    private RobotTimerService timer = null;
-
-
     public DriveSystemWrapper(ISensor data, IRobotActors actors, IProcessor processor) {
-        DrivesystemStatemachine machine = new DrivesystemStatemachine();
-        Method methodToFind = null;
-        timer = new RobotTimerService();
-        try {
-        	  methodToFind = DrivesystemStatemachine.class.getMethod("setTimer", new Class[] {ITimer.class});
-        	} catch (NoSuchMethodException | SecurityException e) {
-        	}
-        if(methodToFind != null) {
-        	try {
-				methodToFind.invoke(machine, new Object[] {timer});
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
-        }
+        super();
         this.data = data;
         this.actors = actors;
         this.processor = processor;
-        this.machine = machine;
-        this.machine.getSCIData().setSCIDataOperationCallback(this);
-        this.machine.getSCIRawData().setSCIRawDataOperationCallback(this);
-        this.machine.init();
-        this.machine.enter();
+        start();
     }
 
     /**
@@ -63,62 +33,71 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         this.actors = actors;
         this.processor = processor;
         this.machine = machine;
-        this.machine.getSCIData().setSCIDataOperationCallback(this);
-        this.machine.getSCIRawData().setSCIRawDataOperationCallback(this);
-        this.machine.init();
-        this.machine.enter();
+        start();
+    }
+
+    @Override
+    public IStatemachine createStatemachine() {
+        return new DrivesystemStatemachine();
+    }
+
+    @Override
+    public void start() {
+        getStatemachine().getSCIData().setSCIDataOperationCallback(this);
+        getStatemachine().getSCIRawData().setSCIRawDataOperationCallback(this);
+        super.start();
+    }
+
+    private DrivesystemStatemachine getStatemachine() {
+        return (DrivesystemStatemachine) machine;
     }
 
     /**
      * Runs a cycle of the statemachine and checks if any functions got fired
      */
-    private void update() {
-        if (machine.getSCIActors().isRaisedDriveForward())
-            actors.driveForward();
-        if (machine.getSCIActors().isRaisedDriveBackward())
-        	actors.driveBackward();
-        if (machine.getSCIActors().isRaisedStartUnload())
-            actors.startUnloading();
-        if (machine.getSCIActors().isRaisedTurnLeft())
-            actors.turnLeft();
-        if (machine.getSCIActors().isRaisedTurnRight())
-            actors.turnRight();
-        if (machine.getSCIProcessor().isRaisedArrived())
-            processor.arrived();
-    }
-
     @Override
-    public void getUpdate() {
-    	update();
+    public void update() {
+        if (getStatemachine().getSCIActors().isRaisedDriveForward())
+            actors.driveForward();
+        if (getStatemachine().getSCIActors().isRaisedDriveBackward())
+        	actors.driveBackward();
+        if (getStatemachine().getSCIActors().isRaisedStartUnload())
+            actors.startUnloading();
+        if (getStatemachine().getSCIActors().isRaisedTurnLeft())
+            actors.turnLeft();
+        if (getStatemachine().getSCIActors().isRaisedTurnRight())
+            actors.turnRight();
+        if (getStatemachine().getSCIProcessor().isRaisedArrived())
+            processor.arrived();
     }
     
     @Override
     public void dataRefresh() {
-        machine.getSCInterface().raiseDataRefresh();
+        getStatemachine().getSCInterface().raiseDataRefresh();
         update();
     }
     
     @Override
     public void newTarget() {
-        machine.getSCInterface().raiseNewTarget();
+        getStatemachine().getSCInterface().raiseNewTarget();
         update();
     }
     
     @Override
     public void newUnloadingTarget() {
-    	machine.getSCInterface().raiseNewUnloadingTarget();
+    	getStatemachine().getSCInterface().raiseNewUnloadingTarget();
     	update();
     }
     
     @Override
     public void newChargingTarget() {
-    	machine.getSCInterface().raiseNewChargingTarget();
+    	getStatemachine().getSCInterface().raiseNewChargingTarget();
     	update();
     }
 
     @Override
     public void actionCompleted() {
-        machine.getSCInterface().raiseActionCompleted();
+        getStatemachine().getSCInterface().raiseActionCompleted();
         update();
     }
 
@@ -160,11 +139,11 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private long toSCIPositionType(PositionType type) {
         switch (type) {
             case WAYPOINT:
-                return machine.getSCIPositionType().getWAYPOINT();
+                return getStatemachine().getSCIPositionType().getWAYPOINT();
             case STATION:
-                return machine.getSCIPositionType().getSTATION();
+                return getStatemachine().getSCIPositionType().getSTATION();
             case CROSSROAD:
-                return machine.getSCIPositionType().getCROSSROAD();
+                return getStatemachine().getSCIPositionType().getCROSSROAD();
             default:
                 throw new IllegalArgumentException();
         }
@@ -173,13 +152,13 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private long toSCIOrientation(Orientation orient) {
         switch (orient) {
             case NORTH:
-                return machine.getSCIOrientation().getNORTH();
+                return getStatemachine().getSCIOrientation().getNORTH();
             case EAST:
-                return machine.getSCIOrientation().getEAST();
+                return getStatemachine().getSCIOrientation().getEAST();
             case SOUTH:
-                return machine.getSCIOrientation().getSOUTH();
+                return getStatemachine().getSCIOrientation().getSOUTH();
             case WEST:
-                return machine.getSCIOrientation().getWEST();
+                return getStatemachine().getSCIOrientation().getWEST();
             default:
                 throw new IllegalArgumentException();
         }
@@ -188,13 +167,13 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
     private long toSCIDirection(Direction dir) {
         switch (dir) {
             case LEFT:
-                return machine.getSCIDirection().getLEFT();
+                return getStatemachine().getSCIDirection().getLEFT();
             case AHEAD:
-                return machine.getSCIDirection().getAHEAD();
+                return getStatemachine().getSCIDirection().getAHEAD();
             case RIGHT:
-                return machine.getSCIDirection().getRIGHT();
+                return getStatemachine().getSCIDirection().getRIGHT();
             case BEHIND:
-                return machine.getSCIDirection().getBEHIND();
+                return getStatemachine().getSCIDirection().getBEHIND();
             default:
                 throw new IllegalArgumentException();
         }
@@ -251,42 +230,23 @@ public class DriveSystemWrapper implements IDrivesystemStatemachine.SCIDataOpera
         return data.blockedCrossroadRight();
     }
 
-    @Override
-    public void close() {
-        timer.cancel();
+	@Override
+    public boolean canChargeAtTarget() {
+        return data.canChargeAtTarget();
     }
     
     @Override
-    public String getMachineState() {
-    	try {
-	    	List<String> activeStates = new ArrayList<>();
-	    	for(DrivesystemStatemachine.State state : DrivesystemStatemachine.State.values()) {
-	    		/*
-	    		* This is not intended by the YAKINDU implementation and source generation. 
-	    		* Officially, the YAKINDU interface does not support this, which is why we have 
-	    		* to cast to the actual DrivesystemStatemachine object.
-	    		*/
-	    		if(((DrivesystemStatemachine) machine).isStateActive(state)) {
-	    			activeStates.add(state.toString());
-	    		}
-	    		
-	    		
-	    	}
-    		return activeStates.get(activeStates.size() - 1);
-    	} catch (Exception e) { //avoid problems with version changes
-    		return "";
-    	}
+    public boolean isActive(DrivesystemStatemachine.State state) {
+        /*
+        * This is not intended by the YAKINDU implementation and source generation. 
+        * Officially, the YAKINDU interface does not support this, which is why we have 
+        * to cast to the actual DrivesystemStatemachine object.
+        */
+        return ((DrivesystemStatemachine) machine).isStateActive(state);
     }
 
-	@Override
-	public boolean canChargeAtTarget() {
-		return data.canChargeAtTarget();
-	}
-
-	public void updateTimer() {
-		if(this.timer != null) {
-			this.timer.update();
-			update();
-		}
-	}
+    @Override
+    public DrivesystemStatemachine.State[] getStates() {
+        return DrivesystemStatemachine.State.values();
+    }
 }

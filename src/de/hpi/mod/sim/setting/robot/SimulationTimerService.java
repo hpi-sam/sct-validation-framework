@@ -10,7 +10,7 @@ import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 /**
  * Can be used to (un)set timers considering the simulation time
  */
-public class RobotTimerService implements ITimer {
+public class SimulationTimerService implements ITimer {
 
 	// Timers in real-world system time
 	private long lastUpdateSystemTime;
@@ -94,7 +94,7 @@ public class RobotTimerService implements ITimer {
   
     }
 
-	public RobotTimerService() {
+	public SimulationTimerService() {
 		// Init system timers with current system time
 		this.lastUpdateSystemTime = System.currentTimeMillis();
 	}

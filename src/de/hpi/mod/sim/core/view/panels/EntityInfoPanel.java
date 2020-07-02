@@ -104,7 +104,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
                     if (!state.equals(currentDisplay)) {
                         currentDisplay = state;
 
-                        String[] states = splitStates(state);
+                        String[] states = splitStates(state, entity.getTopStateName());
                         StringBuilder stringBuilder = new StringBuilder("<html>State:<br/>");
                         for (int i = 0; i < states.length; i++) {
                             for (int j = 0; j < 2 * i + 1; j++)
@@ -120,21 +120,23 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 		}
 		
 		/*
-	     * This splits the YAKINDU state name into the hierarchy levels.
-	     * 
-	     * This only works with the following naming conventions in the state chart:
-	     * 1. The top state must be called "Drive System" (or any other String with exactly 13 characters).
-	     * 2. When regions are used they have to either be unnamed or start with an underscore "_".
-	     * 3. No other underscores "_" can be used in state names.
-	     */
-        private String[] splitStates(String machineState) {
-            System.out.println("Yes: " + machineState);
+         * This splits the YAKINDU state name into the hierarchy levels.
+         * 
+         * This only works with the following naming conventions in the state chart: 
+         * 1. The top state must be called as specified in {@link
+         * StateChartEntity#getTopStateName()}
+         * 2. When regions are used they have to either be unnamed or start
+         * with an underscore "_". 
+         * 3. No other underscores "_" can be used in state
+         * names.
+         */
+        private String[] splitStates(String machineState, String topStateName) {
 	    	try {
-	    		//Only enabled when the main region is called "Drive System"
-	    		if(machineState.substring(0, 12).equals("drive_System")) { //TODO generalize
+	    		//Only enabled when the main region is named according to topStateName
+	    		if(machineState.startsWith(topStateName + "_")) {
 		    		
 			    	//remove the top state prefix
-		    		String[] hierarchyLevels = machineState.substring(13).split("__");
+		    		String[] hierarchyLevels = machineState.substring(topStateName.length() + 1).split("__");
 			    	
 			    	//if the state is not in the highest hierarchy it has a region prefix which we want to remove.
 			    	for(int i = 1; i < hierarchyLevels.length; i++) {
