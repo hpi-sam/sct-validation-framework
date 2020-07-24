@@ -131,22 +131,16 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
     }
 
     @Override
-    public void refreshSimulationProperties(int currentHeight, int currentWidth) { // TODO this is not nice
-        float blockSize = InfiniteWarehouseSimConfig.getDefaultBlockSize();
-        int heightBlocks = (int) (currentHeight / blockSize);
-        int widthBlocks = (int) (currentWidth / blockSize);
+    public void refreshSimulationProperties(int currentHeight, int currentWidth) {
 
-        int chargingStations = widthBlocks / InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations();
-        if (chargingStations % 2 != 0)
-            chargingStations--;
+        int chargingStations = grid.chargingStationsInUse(currentHeight, currentWidth);
             
         if (InfiniteWarehouseSimConfig.getChargingStationsInUse() != chargingStations) {                
             InfiniteWarehouseSimConfig.setChargingStationsInUse(chargingStations);
             robots.createNewStationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse());
         }
-        
-        int unloadingRange = (widthBlocks / 3) * ((heightBlocks - InfiniteWarehouseSimConfig.getQueueSize()) / 3);
-        InfiniteWarehouseSimConfig.setUnloadingRange(unloadingRange);
+    
+        InfiniteWarehouseSimConfig.setUnloadingRange(grid.unloadingRange(currentHeight, currentWidth));
     }
 
     @Override

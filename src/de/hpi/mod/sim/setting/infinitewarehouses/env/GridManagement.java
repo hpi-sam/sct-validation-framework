@@ -768,5 +768,20 @@ public class GridManagement implements ISensorDataProvider {
 		return position.is(r.pos()) || position.is(r.oldPos());
 	}
 
+	public int chargingStationsInUse(int currentHeight, int currentWidth) {
+		float blockSize = InfiniteWarehouseSimConfig.getDefaultBlockSize();
+		int widthBlocks = (int) (currentWidth / blockSize);
+		int chargingStations = widthBlocks / InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations();
+		if (chargingStations % 2 != 0)
+			chargingStations--;
+		return chargingStations;
+	}
 
+	public int unloadingRange(int currentHeight, int currentWidth) {
+		float blockSize = InfiniteWarehouseSimConfig.getDefaultBlockSize();
+		int heightBlocks = (int) (currentHeight / blockSize);
+		int widthBlocks = (int) (currentWidth / blockSize);
+		int unloadingRange = (widthBlocks / 3) * ((heightBlocks - InfiniteWarehouseSimConfig.getQueueSize()) / 3);
+		return unloadingRange;
+	}
 }
