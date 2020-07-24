@@ -10,6 +10,8 @@ public abstract class Detector {
 
     protected Setting setting;
 
+    private boolean activated = false;
+
     protected Detector(Setting setting) {
         this.setting = setting;
     }
@@ -38,4 +40,16 @@ public abstract class Detector {
     public abstract void update(List<? extends Entity> entities);
 
     public abstract void reset();
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void activate() {
+        activated = true;
+    }
+
+    public void deactivate() {
+        activated = false;
+    }
 }

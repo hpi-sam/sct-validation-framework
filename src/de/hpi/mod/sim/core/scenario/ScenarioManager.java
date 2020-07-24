@@ -132,7 +132,7 @@ public class ScenarioManager {
     public void refresh() {
 		if (isRunningTest) {
 			if (currentTestFailed) {
-				setting.resetDetectors(); //TODO: originally just deadlockDetector.deactivate(); Does it work?
+				setting.deactivateDetectors();
 				for (ITestListener listener : listeners) {
 					listener.failTest(activeTest);
 				}
@@ -143,7 +143,7 @@ public class ScenarioManager {
 				if (runningAllTests)
 					runNextTest();
 			} else if (activeTest.isPassed()) {
-				setting.resetDetectors(); // TODO: originally just deadlockDetector.deactivate(); Does it work?
+				setting.deactivateDetectors();
 				for (ITestListener listener : listeners) {
 					listener.onTestCompleted(activeTest);
 				}

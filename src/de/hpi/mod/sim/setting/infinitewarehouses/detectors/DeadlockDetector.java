@@ -21,11 +21,10 @@ public class DeadlockDetector extends RobotDetector {
 	private long defaultOffset = 12000;
 	private long offset = 7000;
 	private Map<Integer, Position> robotPositions = new HashMap<>();
-	private boolean deactivated = true;
 
 	@Override
 	public void robotUpdate(List<Robot> robots) {
-		if (!setting.getSimulation().isRunning() || deactivated) {
+		if (!setting.getSimulation().isRunning() || !isActivated()) {
 			return;
 		}
 
@@ -35,14 +34,6 @@ public class DeadlockDetector extends RobotDetector {
 			getRobotPositions();
 			getCurrentTime();
 		}
-	}
-
-	public void deactivate() {
-		deactivated = true;
-	}
-
-	public void reactivate() {
-		deactivated = false;
 	}
 
 	private void checkForDeadlock() {
@@ -78,7 +69,7 @@ public class DeadlockDetector extends RobotDetector {
 	}
 
 	private void getRobotPositions() {
-		List<Robot> robotList = setting.getRobots();  
+		List<Robot> robotList = setting.getRobots();
 		for (Robot robot : robotList) {
 			robotPositions.put(robot.getID(), robot.pos());
 		}
@@ -86,6 +77,6 @@ public class DeadlockDetector extends RobotDetector {
 
 	@Override
 	public void reset() {
-		reactivate();
+		activate();
 	}
 }

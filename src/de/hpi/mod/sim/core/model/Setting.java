@@ -46,7 +46,8 @@ public abstract class Setting {
         getSimulation().reset();
         getSimulation().playScenario(scenario);
         resetScenario();
-        resetDetectors();
+        for (Detector detector : getDetectors())
+            detector.reset();
         if (!getSimulation().isRunning())
             getSimulation().toggleRunning();
 
@@ -54,10 +55,10 @@ public abstract class Setting {
     }
 
     public abstract void resetScenario();
-
-    public void resetDetectors() {
+    
+    public void deactivateDetectors() {
         for (Detector detector : getDetectors())
-            detector.reset();
+            detector.deactivate();
     }
 
     public abstract List<? extends Entity> getEntities();
@@ -84,5 +85,7 @@ public abstract class Setting {
     public abstract void close();
 
     public abstract SimulationView getView();
+
+	
 
 }
