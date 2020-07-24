@@ -109,11 +109,6 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
         return getRobots();
     }
 
-    @Override
-    public void onSimulationPropertyRefresh() {
-        robots.createNewStationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse());
-    }
-
     public List<Robot> getRobots() {
         return robots.getRobots();
     }
@@ -144,7 +139,12 @@ public class InfiniteWarehousesSetting extends GridSetting implements IRobotCont
         int chargingStations = widthBlocks / InfiniteWarehouseSimConfig.getSpaceBetweenChargingStations();
         if (chargingStations % 2 != 0)
             chargingStations--;
-        InfiniteWarehouseSimConfig.setChargingStationsInUse(chargingStations);
+            
+        if (InfiniteWarehouseSimConfig.getChargingStationsInUse() != chargingStations) {                
+            InfiniteWarehouseSimConfig.setChargingStationsInUse(chargingStations);
+            robots.createNewStationManager(InfiniteWarehouseSimConfig.getChargingStationsInUse());
+        }
+        
         int unloadingRange = (widthBlocks / 3) * ((heightBlocks - InfiniteWarehouseSimConfig.getQueueSize()) / 3);
         InfiniteWarehouseSimConfig.setUnloadingRange(unloadingRange);
     }

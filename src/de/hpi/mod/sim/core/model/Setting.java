@@ -64,8 +64,6 @@ public abstract class Setting {
     public abstract List<? extends Entity> getEntities();
 
     public abstract void refreshEntities();
-
-    public abstract void onSimulationPropertyRefresh();
     
     public abstract List<Scenario> getScenarios();
 
