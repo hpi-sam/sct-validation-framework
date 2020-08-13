@@ -3,10 +3,10 @@ package de.hpi.mod.sim.core.view;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.scenario.TestScenario;
-import de.hpi.mod.sim.core.simulation.Simulation;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.core.simulation.SimulationRunner;
 import de.hpi.mod.sim.core.view.panels.*;
 
 import java.awt.*;
@@ -21,15 +21,15 @@ import java.io.IOException;
 public class SimulatorFrame extends JFrame {
 
 	private static final long serialVersionUID = 4683030810403226266L;
-	private Setting setting;
-	private SimulationView simView;
+	private World world;
+	private AnimationPanel animationPanel;
 	private EntityInfoPanel robotInfoPanel1;
 	private EntityInfoPanel robotInfoPanel2;
 	private ScenarioPanel scenarioPanel;
 	private TestListPanel testListPanel;
 	private JScrollPane testListScrollPane;
 	private TestOverviewPanel testOverviewPanel;
-	private SimulationPanel simulationPanel;
+	private SimulationControlPanel simulationControlPanel;
 	private TimerPanel timerPanel;
 
 	private long lastFrame;
@@ -39,19 +39,19 @@ public class SimulatorFrame extends JFrame {
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
 	public static Color MENU_RED = new Color(0xffe1d0);
 
-	public SimulatorFrame(Setting setting) {
+	public SimulatorFrame(World world) {
 		super("Drive System Simulator");
-		this.setting = setting;
-		simView = setting.getView();
-		Simulation simulation = new Simulation(setting, simView);
-		setting.initialize(this, simulation);
+		this.world = world;
+		animationPanel = world.getAnimationPanel();
+		SimulationRunner simulationRunner = new SimulationRunner(world, animationPanel);
+		world.initialize(this, simulationRunner);
 
 		setLayout(new GridBagLayout());
 
-		createFileIfNotExist(SimulatorConfig.getTestFileName());
-		initializePanels(simView);
-		loadTestFileContent(SimulatorConfig.getTestFileName());
-		addListeners(simView);
+		createFileIfNotExist(Configuration.getTestFileName());
+		initializePanels(animationPanel);
+		loadTestFileContent(Configuration.getTestFileName());
+		addListeners(animationPanel);
 		setDesignOfSubpanels();
 		setDesignOfMainWindow();
 
@@ -76,7 +76,7 @@ public class SimulatorFrame extends JFrame {
 		Thread popupHider = new Thread() {
 			public void run() {
 				try {
-					Thread.sleep(SimulatorConfig.getMessageDisplayTime());
+					Thread.sleep(Configuration.getMessageDisplayTime());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -91,8 +91,8 @@ public class SimulatorFrame extends JFrame {
 		scenarioPanel.clearSelections();
 	}
 
-	public void resetSimulationView() {
-		setting.resetView();
+	public void resetAnimationPanel() {
+		world.resetAnimationPanel();
 	}
 
 	public boolean isRunning() {
@@ -103,8 +103,8 @@ public class SimulatorFrame extends JFrame {
 		return scenarioPanel;
 	}
 
-	public SimulationPanel getSimulationPanel() {
-		return simulationPanel;
+	public SimulationControlPanel getSimulationControlPanel() {
+		return simulationControlPanel;
 	}
 
 	public TestListPanel getTestListPanel() {
@@ -130,24 +130,24 @@ public class SimulatorFrame extends JFrame {
 		}
     }
     
-    private void initializePanels(SimulationView simulationWorld) {
-		robotInfoPanel1 = new EntityInfoPanel(simulationWorld, false);
-        robotInfoPanel2 = new EntityInfoPanel(simulationWorld, true);
-        simulationPanel = new SimulationPanel(setting.getSimulation(), setting.getScenarioManager());
-        testListPanel = new TestListPanel(setting.getScenarioManager());
+    private void initializePanels(AnimationPanel animationPanel) {
+		robotInfoPanel1 = new EntityInfoPanel(animationPanel, false);
+        robotInfoPanel2 = new EntityInfoPanel(animationPanel, true);
+        simulationControlPanel = new SimulationControlPanel(world.getSimulationRunner(), world.getScenarioManager());
+        testListPanel = new TestListPanel(world.getScenarioManager());
         testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        testOverviewPanel = new TestOverviewPanel(setting.getScenarioManager(), this);
-		timerPanel = new TimerPanel(setting.getSimulation());
-        scenarioPanel = new ScenarioPanel(setting.getScenarioManager());
-        setJMenuBar(new DriveSimMenu(setting.getSimulation(), simulationWorld));
+        testOverviewPanel = new TestOverviewPanel(world.getScenarioManager(), this);
+		timerPanel = new TimerPanel(world.getSimulationRunner());
+        scenarioPanel = new ScenarioPanel(world.getScenarioManager());
+        setJMenuBar(new DriveSimMenuBar(world.getSimulationRunner(), animationPanel));
 	}
     
-    private void addListeners(SimulationView simulationWorld) {
-		simulationWorld.addHighlightedListener(robotInfoPanel1);
-        simulationWorld.addHighlightedListener(robotInfoPanel2);
-        setting.getSimulation().addTimeListener(simulationPanel);
-        setting.getScenarioManager().addTestListener(testListPanel);
-        setting.getScenarioManager().addTestListener(testOverviewPanel);
+    private void addListeners(AnimationPanel animationPanel) {
+		animationPanel.addHighlightedListener(robotInfoPanel1);
+        animationPanel.addHighlightedListener(robotInfoPanel2);
+        world.getSimulationRunner().addTimeListener(simulationControlPanel);
+        world.getScenarioManager().addTestScenarioListener(testListPanel);
+        world.getScenarioManager().addTestScenarioListener(testOverviewPanel);
 	}
     
     private void setDesignOfSubpanels() {
@@ -157,8 +157,8 @@ public class SimulatorFrame extends JFrame {
         scenarioPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Scenarios"));
         scenarioPanel.setBackground(MAIN_MENU_COLOR);
         
-        simulationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Simulation"));
-        simulationPanel.setBackground(MAIN_MENU_COLOR);
+        simulationControlPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Simulation"));
+        simulationControlPanel.setBackground(MAIN_MENU_COLOR);
         
         timerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Timer"));
         timerPanel.setBackground(MAIN_MENU_COLOR);
@@ -178,7 +178,7 @@ public class SimulatorFrame extends JFrame {
         
         int testListScrollPanelHeight = testOverviewPanel.getPreferredSize().height +
         		scenarioPanel.getPreferredSize().height +
-        		simulationPanel.getPreferredSize().height +
+        		simulationControlPanel.getPreferredSize().height +
         		timerPanel.getPreferredSize().height +
         		robotInfoPanel1.getPreferredSize().height;
         int testListScrollPanelWidth = testListPanel.getPreferredSize().width + 50;
@@ -211,7 +211,7 @@ public class SimulatorFrame extends JFrame {
 		simConstraints.weightx = 1.0;
 		simConstraints.weighty = 1.0;
 		simConstraints.gridheight = 5;
-		add(simView, simConstraints);
+		add(animationPanel, simConstraints);
 		
 		//add the gray spacer to the right of the simulation panel
 		JPanel spacer = new JPanel();
@@ -242,7 +242,7 @@ public class SimulatorFrame extends JFrame {
 		simulationConstraints.gridy = 2;
 		simulationConstraints.gridwidth = 2;
 		simulationConstraints.fill = GridBagConstraints.HORIZONTAL;
-		add(simulationPanel, simulationConstraints);
+		add(simulationControlPanel, simulationConstraints);
 		
 		GridBagConstraints timerConstraints = new GridBagConstraints();
 		timerConstraints.gridx = 2;
@@ -293,8 +293,8 @@ public class SimulatorFrame extends JFrame {
     	boolean written = true;
     	TestScenario test;
     	
-    	for (int i = 0; i < setting.getScenarioManager().getTests().size(); i++) {
-    		test = setting.getScenarioManager().getTests().get(i);
+    	for (int i = 0; i < world.getScenarioManager().getTests().size(); i++) {
+    		test = world.getScenarioManager().getTests().get(i);
 			written = writeLineIfNeeded(test, fileName);
     		if(!written && testPassed(test, fileName)) {
     			testListPanel.onTestCompleted(test);
@@ -355,7 +355,7 @@ public class SimulatorFrame extends JFrame {
 	}
 
     private void update() {
-    	while(System.currentTimeMillis() - lastFrame < SimulatorConfig.getDefaultRefreshInterval()) {
+    	while(System.currentTimeMillis() - lastFrame < Configuration.getDefaultRefreshInterval()) {
 	    	try {
 				Thread.sleep(3);
 			} catch (InterruptedException e) {
@@ -365,17 +365,17 @@ public class SimulatorFrame extends JFrame {
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
         
-        setting.getSimulation().refresh();
+        world.getSimulationRunner().refresh();
         robotInfoPanel1.onHighlightedChange();
         robotInfoPanel2.onHighlightedChange();
-        setting.getScenarioManager().refresh();
-        setting.getSimulation().update(delta);
+        world.getScenarioManager().refresh();
+        world.getSimulationRunner().update(delta);
 
         this.repaint();
     }
 
 	private void close() {
-		setting.close();
+		world.close();
         setVisible(false);
         dispose();
         System.exit(0);

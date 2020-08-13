@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.core.scenario;
 
 import java.util.List;
-import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.World;
 
 /**
  * Contains Positions of Robots which can be applied to the Simulation.
@@ -29,11 +29,11 @@ public abstract class Scenario {
     	return description;
     }
 
-    protected abstract List<EntityDescription<?>> initializeScenario();
+    protected abstract List<EntitySpecification<?>> initializeScenario();
 
-    public void loadScenario(Setting setting) { 
-        List<EntityDescription<?>> newEntities = initializeScenario();
-        newEntities.forEach(e -> setting.getSimulation().addEntityRunner(() -> e.get()));
+    public void loadScenario(World world) { 
+        List<EntitySpecification<?>> newEntities = initializeScenario();
+        newEntities.forEach(e -> world.getSimulationRunner().addEntityRunner(() -> e.get()));
     }
 
 	public boolean isResizable() {

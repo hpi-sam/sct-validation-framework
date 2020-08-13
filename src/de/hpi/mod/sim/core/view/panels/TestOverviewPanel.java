@@ -2,10 +2,10 @@ package de.hpi.mod.sim.core.view.panels;
 
 import javax.swing.*;
 
-import de.hpi.mod.sim.core.scenario.ITestListener;
+import de.hpi.mod.sim.core.Configuration;
+import de.hpi.mod.sim.core.scenario.ITestScenarioListener;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 import java.awt.*;
@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class TestOverviewPanel extends JPanel implements ITestListener {
+public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 
 	private static final long serialVersionUID = -3210286617906504416L;
 	private ScenarioManager scenarioManager;
@@ -145,7 +145,7 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 		JButton button = new JButton("Reset Results");
 		
 		button.addActionListener(e -> {
-			resetTestFile(SimulatorConfig.getTestFileName());
+			resetTestFile(Configuration.getTestFileName());
 			resetTests();
 			updateProgressDisplay();
 			frame.getTestListPanel().resetColors();
@@ -188,11 +188,11 @@ public class TestOverviewPanel extends JPanel implements ITestListener {
 	}
 	
 	private void writeTestPassed(TestScenario test) throws IOException {
-		changeContent(SimulatorConfig.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
+		changeContent(Configuration.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
 	}
 	
 	private int getCompletedTestCount() {
-		Path path = Paths.get(SimulatorConfig.getTestFileName());
+		Path path = Paths.get(Configuration.getTestFileName());
 		Charset charset = StandardCharsets.UTF_8;
 		
 		int count = 0;

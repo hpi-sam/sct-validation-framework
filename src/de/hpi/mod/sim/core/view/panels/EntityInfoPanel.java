@@ -2,7 +2,7 @@ package de.hpi.mod.sim.core.view.panels;
 
 import javax.swing.*;
 
-import de.hpi.mod.sim.core.model.IHighlightable;
+import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.view.model.IHighlightedListener;
 
@@ -14,22 +14,22 @@ import java.awt.*;
 public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 
 	private static final long serialVersionUID = -42067353669036945L;
-	private SimulationView world;
+	private AnimationPanel animationPanel;
     private boolean isRightClickedEntity = false;
 
     private JLabel[] infoLabels = null;
     private StateTree stateTree;
 
     /**
-     * @param world                We need to ask the simulation for the reference
+     * @param animationPanel                We need to ask the simulation for the reference
      *                             to the highlighted Entity constantly to be able
      *                             to react on changes.
      * @param isRightClickedEntity If we monitor the right clicked Entity
      *                             world.highlightedEntity2 is the one to be
      *                             observed otherwise world.highlightedEntity
      */
-    public EntityInfoPanel(SimulationView world, boolean isRightClickedEntity) {
-        this.world = world;
+    public EntityInfoPanel(AnimationPanel animationPanel, boolean isRightClickedEntity) {
+        this.animationPanel = animationPanel;
         this.isRightClickedEntity = isRightClickedEntity;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     }
@@ -59,7 +59,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
      */
     @Override
     public void onHighlightedChange() {
-        IHighlightable highlight = isRightClickedEntity ? world.getHighlighted2() : world.getHighlighted1();
+        IHighlightable highlight = isRightClickedEntity ? animationPanel.getHighlighted2() : animationPanel.getHighlighted1();
          if (highlight == null) {
              if (infoLabels == null || infoLabels.length != 1)
                 addInfos(1);
@@ -92,7 +92,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 		}
 
         public void refresh() {
-            IHighlightable highlight = isRightClickedEntity ? world.getHighlighted2() : world.getHighlighted1();
+            IHighlightable highlight = isRightClickedEntity ? animationPanel.getHighlighted2() : animationPanel.getHighlighted1();
             if (highlight == null || !(highlight instanceof StateChartEntity)) {
                 label.setText("<html>State: -");
             } else {

@@ -2,7 +2,7 @@ package de.hpi.mod.sim.core.view.panels;
 
 import javax.swing.*;
 
-import de.hpi.mod.sim.core.scenario.ITestListener;
+import de.hpi.mod.sim.core.scenario.ITestScenarioListener;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.Set;
 
-public class TestListPanel extends JPanel implements ITestListener {
+public class TestListPanel extends JPanel implements ITestScenarioListener {
 
 	private static final long serialVersionUID = 7429792932382048548L;
 	private static Map<TestScenario, JLabel> tests = new HashMap<>();

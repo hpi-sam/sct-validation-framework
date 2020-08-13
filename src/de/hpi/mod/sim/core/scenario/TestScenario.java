@@ -3,8 +3,8 @@ package de.hpi.mod.sim.core.scenario;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import de.hpi.mod.sim.core.model.Entity;
-import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 public abstract class TestScenario extends Scenario {
@@ -14,9 +14,9 @@ public abstract class TestScenario extends Scenario {
     private boolean alreadyPrinted = false;
 
     @Override
-    public void loadScenario(Setting setting) {
+    public void loadScenario(World world) {
         entities.clear();
-        super.loadScenario(setting);
+        super.loadScenario(world);
         hasRun = true;
     }
 

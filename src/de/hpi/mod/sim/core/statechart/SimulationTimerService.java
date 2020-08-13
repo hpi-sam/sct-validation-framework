@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.hpi.mod.sim.ITimer;
 import de.hpi.mod.sim.ITimerCallback;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.core.Configuration;
 
 /**
  * Can be used to (un)set timers considering the simulation time
@@ -130,7 +130,7 @@ public class SimulationTimerService implements ITimer {
 		this.lastUpdateSystemTime = now;
 		
 		// Calculate simulation time...
-		long simulationTimeSinceLastUpdate =  (long) Math.floor(systemTimeSinceLastUpdate * SimulatorConfig.getEntitySpeedFactor());
+		long simulationTimeSinceLastUpdate =  (long) Math.floor(systemTimeSinceLastUpdate * Configuration.getEntitySpeedFactor());
 		
 		List<SimulationTimer> copyList = new ArrayList<SimulationTimer>(this.timerList);
 		for(SimulationTimer timer: copyList) {

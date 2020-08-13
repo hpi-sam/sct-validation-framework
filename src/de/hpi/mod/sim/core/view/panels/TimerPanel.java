@@ -10,20 +10,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 
-import de.hpi.mod.sim.core.simulation.Simulation;
-import de.hpi.mod.sim.core.simulation.SimulatorConfig;
+import de.hpi.mod.sim.core.Configuration;
+import de.hpi.mod.sim.core.simulation.SimulationRunner;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 public class TimerPanel extends JPanel {
 	
 	private static final long serialVersionUID = 8453578481264370011L;
 	private Timer timer;
-	private Simulation simulation;
+	private SimulationRunner simulationRunner;
 	private float time;
 	private JTextField valueField;
 	
-	public TimerPanel(Simulation simulation){
-		this.simulation = simulation;
+	public TimerPanel(SimulationRunner simulationRunner){
+		this.simulationRunner = simulationRunner;
 		
 		setLayout(new GridBagLayout());
 		
@@ -65,8 +65,8 @@ public class TimerPanel extends JPanel {
 	private void initializeTimer() {
 		timer = new Timer(1000,new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(simulation.isRunning()) {
-			        time += 1 * SimulatorConfig.getEntitySpeedFactor();
+				if(simulationRunner.isRunning()) {
+			        time += 1 * Configuration.getEntitySpeedFactor();
 			        displayNewTime();
 				}
 			}

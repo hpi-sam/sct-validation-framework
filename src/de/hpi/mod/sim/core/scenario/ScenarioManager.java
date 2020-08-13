@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import de.hpi.mod.sim.core.model.Entity;
-import de.hpi.mod.sim.core.model.Setting;
+import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 public class ScenarioManager {
@@ -15,7 +15,7 @@ public class ScenarioManager {
 	private Scenario clear = new EmptyScenario();
 	private Scenario currentScenario;
 	private Map<String, List<TestScenario>> testGroups;
-	private List<ITestListener> listeners = new ArrayList<>();
+	private List<ITestScenarioListener> listeners = new ArrayList<>();
 
 	private Queue<TestScenario> testsToRun = new LinkedList<>();
 	private boolean runningAllTests = false;
@@ -29,13 +29,13 @@ public class ScenarioManager {
 
 	SimulatorFrame frame;
 	private List<TestScenario> tests = new ArrayList<>();
-	private Setting setting;
+	private World world;
 
-	public ScenarioManager(Setting setting) {
-		this.setting = setting;
-		this.frame = setting.getFrame();
-		scenarios = setting.getScenarios();
-		testGroups = setting.getTestGroups();
+	public ScenarioManager(World world) {
+		this.world = world;
+		this.frame = world.getFrame();
+		scenarios = world.getScenarios();
+		testGroups = world.getTestGroups();
 		initializeTestList();
 	}
 
@@ -48,13 +48,13 @@ public class ScenarioManager {
 	}
 
 	private void updateDetectors() {
-		List<? extends Entity> entities = setting.getEntities();
-		for (Detector detector : setting.getDetectors())
+		List<? extends Entity> entities = world.getEntities();
+		for (Detector detector : world.getDetectors())
 			detector.update(entities);
 	}
 
     private void runScenario(Scenario scenario, boolean isTest) {
-    	setting.runScenario(scenario);
+    	world.runScenario(scenario);
         
         if (isTest) {
         	activeTest = (TestScenario) scenario;
@@ -107,7 +107,7 @@ public class ScenarioManager {
     	}
 	}
 
-	public void addTestListener(ITestListener listener) {
+	public void addTestScenarioListener(ITestScenarioListener listener) {
         listeners.add(listener);
     }
 	
@@ -132,8 +132,8 @@ public class ScenarioManager {
     public void refresh() {
 		if (isRunningTest) {
 			if (currentTestFailed) {
-				setting.deactivateDetectors();
-				for (ITestListener listener : listeners) {
+				world.deactivateDetectors();
+				for (ITestScenarioListener listener : listeners) {
 					listener.failTest(activeTest);
 				}
 				activeTest.notifyFailToUser(frame, failReason);
@@ -143,8 +143,8 @@ public class ScenarioManager {
 				if (runningAllTests)
 					runNextTest();
 			} else if (activeTest.isPassed()) {
-				setting.deactivateDetectors();
-				for (ITestListener listener : listeners) {
+				world.deactivateDetectors();
+				for (ITestScenarioListener listener : listeners) {
 					listener.onTestCompleted(activeTest);
 				}
 				activeTest.notifySuccessToUser(frame);
@@ -173,7 +173,7 @@ public class ScenarioManager {
         }
 
         @Override
-        public List<EntityDescription<?>> initializeScenario() {
+        public List<EntitySpecification<?>> initializeScenario() {
             return new ArrayList<>();
         }
     }

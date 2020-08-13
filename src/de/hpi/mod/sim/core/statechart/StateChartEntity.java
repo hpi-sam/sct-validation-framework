@@ -1,6 +1,6 @@
 package de.hpi.mod.sim.core.statechart;
 
-import de.hpi.mod.sim.core.model.Entity;
+import de.hpi.mod.sim.core.simulation.Entity;
 
 public interface StateChartEntity extends Entity {
 
