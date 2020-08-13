@@ -15,14 +15,11 @@ public class Configuration {
     public static  final String STRING_PATH_TO_STOP_ICON = "res/stop.png";
     public static  final String STRING_PATH_TO_RESET_ICON = "res/reset.png";
    
-	public static  final int DEFAULT_WAITING_TIME_BEFORE_TEST = 1000; //in ms
+	public static final float DEFAULT_OFFSET_X = 0;
+	public static final float DEFAULT_OFFSET_Y = 0;
 	
-	public static  final float DEFAULT_BLOCK_SIZE = 20;
-	public static  final float DEFAULT_OFFSET_X = 0;
-	public static  final float DEFAULT_OFFSET_Y = 0;
+	public static  final int DEFAULT_WAITING_TIME_BEFORE_TEST = 1000; //in ms
 	public static  final float DEFAULT_REFRESH_INTERVAL = 25;
-	public static  final float MIN_BLOCK_SIZE = 5;
-	public static  final float MAX_BLOCK_SIZE = 30;
 	
 	public static  final float ENTITY_LEVEL_0_SPEED = 0.00025f;
 	public static  final float ENTITY_LEVEL_1_SPEED = 0.0005f;
@@ -39,9 +36,10 @@ public class Configuration {
 	public static  final int ENTITY_DEFAULT_SPEED_LEVEL = 5;
 	public static  final int ENTITY_MAX_SPEED_LEVEL = 10;
 	
-	public static  final int DEFAULT_MAP_HEIGHT = 10;
-	public static  final int NOT_USED_ROWS = 3;
-	public static  final long MESSAGE_DISPLAY_TIME = 3000; //in ms
+	public static final long MESSAGE_DISPLAY_TIME = 3000; //in ms
+	
+	private static float defaultOffsetX = DEFAULT_OFFSET_X;
+	private static float defaultOffsetY = DEFAULT_OFFSET_Y;
 
     private static int scenarioPassingTime = SCENARIO_PASSING_TIME;
     private static String testFileName = TEST_FILE_NAME;
@@ -56,21 +54,12 @@ public class Configuration {
 		return defaultWaitingTimeBeforeTest;
 	}
 
-	private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
-   	private static float defaultOffsetX = DEFAULT_OFFSET_X;
-	private static float defaultOffsetY = DEFAULT_OFFSET_Y;
-	
-   	private static float defaultRefreshInterval = DEFAULT_REFRESH_INTERVAL;
-   	private static float minBlockSize = MIN_BLOCK_SIZE;
-   	private static float maxBlockSize = MAX_BLOCK_SIZE;
+	private static float defaultRefreshInterval = DEFAULT_REFRESH_INTERVAL;
    	
    	private static int entitySpeedLevel = ENTITY_DEFAULT_SPEED_LEVEL;
    	private static int defaultEntitySpeedLevel = ENTITY_DEFAULT_SPEED_LEVEL;
    	
-   	private static int defaultMapHeight = DEFAULT_MAP_HEIGHT;
-   	private static int mapHeight = DEFAULT_MAP_HEIGHT;
-    private static Map<Integer,Float> entitySpeedsMap = null;
-	private static int notUsedRows = NOT_USED_ROWS;
+   	private static Map<Integer,Float> entitySpeedsMap = null;
 	private static long messageDisplayTime = MESSAGE_DISPLAY_TIME;
 	
     static {
@@ -136,48 +125,20 @@ public class Configuration {
 	public static String getStringPathToResetIcon() {
 		return stringPathToResetIcon;
 	}
-	
-	public static float getDefaultBlockSize() {
-		return defaultBlockSize;
-	}
-	
-   	public static float getDefaultOffsetX() {
-   		return defaultOffsetX;
-   	}
-   	
-   	public static float getDefaultOffsetY() {
-   		return defaultOffsetY;
-   	}
    	
    	public static float getDefaultRefreshInterval() {
    		return defaultRefreshInterval;
    	}
    	
-   	public static float getMinBlockSize() {
-   		return minBlockSize;
-   	}
-   	
-   	public static float getMaxBlockSize() {
-   		return maxBlockSize;
-   	}
-   	
-   	public static int getDefaultMapHeight() {
-   		return defaultMapHeight;
-   	}
-
-	public static int getMapHeight() {
-		return mapHeight;
+	public static long getMessageDisplayTime() {
+		return messageDisplayTime;
 	}
 	
-	public static void setMapHeight(int mapHeight) {
-		Configuration.mapHeight = mapHeight;
+	public static float getDefaultOffsetX() {
+		return defaultOffsetX;
 	}
 
-	public static int getNotUsedRows() {
-		return notUsedRows;
-	}
-
-	public static long getMessageDisplayTime() {
-		return messageDisplayTime ;
+	public static float getDefaultOffsetY() {
+		return defaultOffsetY;
 	}
 }

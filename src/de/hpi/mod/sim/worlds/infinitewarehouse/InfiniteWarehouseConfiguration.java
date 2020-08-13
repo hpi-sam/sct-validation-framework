@@ -1,13 +1,13 @@
 package de.hpi.mod.sim.worlds.infinitewarehouse;
 
-import de.hpi.mod.sim.core.Configuration;
+import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
 /**
  * Contains all "magic-numbers" set in the Infinite-Warehouse-Simulation.
  * Can be set by the view.
  */
-public class InfiniteWarehouseConfiguration extends Configuration {
+public class InfiniteWarehouseConfiguration extends GridConfiguration {
 
     public static final int DEFAULT_CHARGING_STATIONS_IN_USE = 10;
     public static final int SPACE_BETWEEN_CHARGING_STATIONS = 3;
@@ -20,7 +20,6 @@ public class InfiniteWarehouseConfiguration extends Configuration {
     public static final String STRING_PATH_TO_RIGHT_CLICKED_ROBOT_BLOCKING = "res/robot-right-blocking.png";
     public static final String STRING_PATH_TO_EMPTY_BATTERY = "res/battery_empty.png";
     public static final String STRING_PATH_TO_PACKAGE = "res/package.png";
-    public static final String URL_TO_EXPLOSION = "/explosion.gif"; //the gif needs to be loaded using getResource. For this reason the path looks different to the other paths
     public static final float DEFAULT_ROTATION_SPEED = .5f;
 	public static final long DEFAULT_UNLOADING_TIME = 1000;
 	public static final float BATTERY_FULL = 100;
@@ -39,6 +38,11 @@ public class InfiniteWarehouseConfiguration extends Configuration {
      * Changes to this value require changes in the implementation of the map too.
      */
 	public static final int QUEUE_SIZE = 5;
+	static {
+		GridConfiguration.setOriginOffsetY(QUEUE_SIZE);
+	}
+
+
 	/**
      * The number of chargers in a station.
      * Changes to this value require changes in the implementation of the map too.
@@ -62,7 +66,6 @@ public class InfiniteWarehouseConfiguration extends Configuration {
     private static String stringPathToRightClickedRobotBlocking = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_BLOCKING;
     private static String stringPathToEmptyBattery = STRING_PATH_TO_EMPTY_BATTERY;
     private static String stringPathToPackage = STRING_PATH_TO_PACKAGE;
-    private static String urlToExplosion = URL_TO_EXPLOSION;
     private static float defaultRotationSpeed = DEFAULT_ROTATION_SPEED;
    	private static long defaultUnloadingTime = DEFAULT_UNLOADING_TIME;
    	private static float batteryFull = BATTERY_FULL;
@@ -126,10 +129,6 @@ public class InfiniteWarehouseConfiguration extends Configuration {
 
 	public static String getStringPathToPackage() {
 		return stringPathToPackage;
-	}
-
-	public static String getURLToExplosion() {
-		return urlToExplosion;
 	}
 
 	public static float getDefaultRotationSpeed() {

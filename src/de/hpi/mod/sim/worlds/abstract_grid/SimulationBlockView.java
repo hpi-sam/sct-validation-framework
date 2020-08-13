@@ -1,9 +1,7 @@
 package de.hpi.mod.sim.worlds.abstract_grid;
 
 import de.hpi.mod.sim.core.World;
-import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -23,24 +21,24 @@ public class SimulationBlockView extends AnimationPanel {
 
     public SimulationBlockView(World world) {
         super(world);
-        blockSize = Configuration.getDefaultBlockSize();
+        blockSize = GridConfiguration.getDefaultBlockSize();
     }
 
     @Override
     public void zoomIn(float zoom) {
-        if (blockSize < Configuration.getMaxBlockSize())
+        if (blockSize < GridConfiguration.getMaxBlockSize())
             blockSize += zoom;
     }
 
     @Override
     public void zoomOut(float zoom) {
-        if (blockSize > Configuration.getMinBlockSize())
+        if (blockSize > GridConfiguration.getMinBlockSize())
             blockSize -= zoom;
     }
 
     @Override
     public void resetZoom() {
-        blockSize = Configuration.getDefaultBlockSize();
+        blockSize = GridConfiguration.getDefaultBlockSize();
     }
 
     public float getBlockSize() {
@@ -67,9 +65,10 @@ public class SimulationBlockView extends AnimationPanel {
      */
     public Position toGridPosition(int x, int y) {
         y = (int) (getHeight() - y - blockSize / 2);
-        int blockX = (int) Math.floor(x / blockSize - getWidth() / (2 * blockSize) + getOffsetX());
+        int blockX = (int) Math.floor(
+                x / blockSize - getWidth() / (2 * blockSize) - GridConfiguration.getOriginOffsetX() + getOffsetX());
         int blockY = (int) Math
-                .floor(y / blockSize - InfiniteWarehouseConfiguration.getQueueSize() + getOffsetY());
+                .floor(y / blockSize - GridConfiguration.getOriginOffsetY() + getOffsetY());
 
         return new Position(blockX, blockY);
     }
@@ -85,9 +84,9 @@ public class SimulationBlockView extends AnimationPanel {
      * Converts a grid-position to the draw-position
      */
     public Point2D toDrawPosition(float x, float y) {
-        float drawX = getWidth() / 2 + (x - getOffsetX()) * blockSize;
+        float drawX = getWidth() / 2 + (x + GridConfiguration.getOriginOffsetX() - getOffsetX()) * blockSize;
         float drawY = getHeight()
-                - (y + InfiniteWarehouseConfiguration.getQueueSize() + 1.5f - getOffsetY()) * blockSize;
+                - (y + GridConfiguration.getOriginOffsetY() + 1.5f - getOffsetY()) * blockSize;
         return new Point2D.Float(drawX, drawY);
     }
 

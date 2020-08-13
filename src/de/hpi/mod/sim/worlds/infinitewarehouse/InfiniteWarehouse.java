@@ -25,6 +25,7 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.TestCaseGenerator;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.DriveManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.RobotRenderer;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController;
 import de.hpi.mod.sim.worlds.util.ExplosionRenderer;
 

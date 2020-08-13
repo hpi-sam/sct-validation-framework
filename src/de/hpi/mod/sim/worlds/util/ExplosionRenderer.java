@@ -6,10 +6,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.net.URL;
-
 import javax.swing.ImageIcon;
-
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
 
 public class ExplosionRenderer {
 	private Image explosion;
@@ -23,7 +20,7 @@ public class ExplosionRenderer {
 
 	private void loadImage() {
 		//As we want to display an animated gif we can not use ImageIO. Instead we need to load the image using getResource
-		URL url = ExplosionRenderer.class.getResource(InfiniteWarehouseConfiguration.getURLToExplosion());
+		URL url = ExplosionRenderer.class.getResource(UtilConfiguration.getURLToExplosion());
 		explosion = new ImageIcon(url).getImage();
 	}
 	

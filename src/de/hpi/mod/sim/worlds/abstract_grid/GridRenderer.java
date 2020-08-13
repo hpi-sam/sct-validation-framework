@@ -2,13 +2,6 @@ package de.hpi.mod.sim.worlds.abstract_grid;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
 
 /**
  * Renders the Grid of the Simulation
@@ -17,24 +10,11 @@ public class GridRenderer {
 
     private IGrid grid;
     private SimulationBlockView simView;
-    
-    private BufferedImage leftClickedRobotBlocking, rightClickedRobotBlocking;
 
 
     public GridRenderer(SimulationBlockView simView, IGrid grid) {
         this.simView = simView;
         this.grid = grid;
-        
-        loadImages();
-    }
-    
-    private void loadImages() {
-        try {
-        	leftClickedRobotBlocking = ImageIO.read(new File(InfiniteWarehouseConfiguration.getStringPathToLeftClickedRobotBlocking()));
-        	rightClickedRobotBlocking = ImageIO.read(new File(InfiniteWarehouseConfiguration.getStringPathToRightClickedRobotBlocking()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -53,10 +33,11 @@ public class GridRenderer {
         int widthInBlocks = (int) (simView.getWidth() / blockSize + 2);
         int heightInBlocks = (int) (simView.getHeight() / blockSize + 2);
 
-        int stationDepth = InfiniteWarehouseConfiguration.getQueueSize() + 1;
+        int lowestY = GridConfiguration.getOriginOffsetY() + 1;
+        int leftertX = GridConfiguration.getOriginOffsetX() + 1;
 
-        for (int y = -stationDepth + (int) blocksOffsetY; y < heightInBlocks - stationDepth + blocksOffsetY; y++) {
-            for (int x = (int) blocksOffsetX - widthInBlocks/2; x < widthInBlocks/2 + blocksOffsetX; x++) {
+        for (int y = -lowestY + (int) blocksOffsetY; y < heightInBlocks - lowestY + blocksOffsetY; y++) {
+            for (int x = -leftertX + (int) blocksOffsetX - widthInBlocks/2; x < widthInBlocks/2 + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
                 ICellType cellType = grid.cellType(current);
 
@@ -120,15 +101,6 @@ public class GridRenderer {
                     (int) (drawPosition.getY() + blockSize / 4),
                     (int) (blockSize / 2),
                     (int) (blockSize / 2));
-        }
-        
-        //draw the robot blocking
-        if (blockedBy1) {
-        	graphic.drawImage(leftClickedRobotBlocking, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize, null);
-        }
-        
-        if (blockedBy2) {
-        	graphic.drawImage(rightClickedRobotBlocking, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) blockSize, (int) blockSize, null);
         }
     }
     

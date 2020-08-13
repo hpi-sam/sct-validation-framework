@@ -1,11 +1,10 @@
-package de.hpi.mod.sim.worlds.infinitewarehouse;
+package de.hpi.mod.sim.worlds.infinitewarehouse.robot;
 
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
+import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.RobotManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.DriveManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -45,7 +44,7 @@ public class RobotRenderer {
         }
     }
 
-    void render(Graphics graphic, float size) {
+    public void render(Graphics graphic, float size) {
         // Draw Robots
         for (Robot robot : robots.getRobots()) {
 	            DriveManager drive = robot.getDriveManager();
