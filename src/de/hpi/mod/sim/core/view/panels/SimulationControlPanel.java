@@ -5,8 +5,8 @@ import javax.swing.*;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.simulation.SimulationRunner;
+import de.hpi.mod.sim.core.view.ITimeListener;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
-import de.hpi.mod.sim.core.view.model.ITimeListener;
 
 import java.awt.*;
 

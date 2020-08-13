@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.scenario.Scenario;
-import de.hpi.mod.sim.core.view.model.ITimeListener;
+import de.hpi.mod.sim.core.view.ITimeListener;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 public class SimulationRunner { 

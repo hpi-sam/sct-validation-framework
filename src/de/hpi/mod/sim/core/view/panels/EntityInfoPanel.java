@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
-import de.hpi.mod.sim.core.view.model.IHighlightedListener;
+import de.hpi.mod.sim.core.view.IHighlightedListener;
 
 import java.awt.*;
 

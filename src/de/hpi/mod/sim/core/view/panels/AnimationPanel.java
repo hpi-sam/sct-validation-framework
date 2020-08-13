@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
-import de.hpi.mod.sim.core.view.model.IHighlightedListener;
+import de.hpi.mod.sim.core.view.IHighlightedListener;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

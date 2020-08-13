@@ -7,7 +7,6 @@ import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.SimulationRunner;
-import de.hpi.mod.sim.core.view.model.ITimeListener;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 import java.util.ArrayList;
