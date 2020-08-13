@@ -1,7 +1,10 @@
 package de.hpi.mod.sim.core.scenario;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.simulation.Entity;
 
 /**
  * Contains Positions of Robots which can be applied to the Simulation.
@@ -15,6 +18,7 @@ public abstract class Scenario {
     protected String name = "Unnamed";
     protected String description = "No description available";
     protected boolean resizable = false;
+    protected List<Entity> entities = new CopyOnWriteArrayList<>();
 
 
     protected Scenario() {
@@ -32,8 +36,14 @@ public abstract class Scenario {
     protected abstract List<EntitySpecification<?>> initializeScenario();
 
     public void loadScenario(World world) { 
-        List<EntitySpecification<?>> newEntities = initializeScenario();
-        newEntities.forEach(e -> world.getSimulationRunner().addEntityRunner(() -> e.get()));
+        entities.clear();
+        List<EntitySpecification<?>> specs = initializeScenario();
+        
+        specs.forEach(spec -> world.getSimulationRunner().addEntityRunner(() -> {
+            Entity e = spec.get();
+            entities.add(e);
+            return e;
+        }));
     }
 
 	public boolean isResizable() {

@@ -1,21 +1,16 @@
 package de.hpi.mod.sim.core.scenario;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 public abstract class TestScenario extends Scenario {
 
-    private List<Entity> entities = new CopyOnWriteArrayList<>();
     private boolean hasRun = false;
     private boolean alreadyPrinted = false;
 
     @Override
     public void loadScenario(World world) {
-        entities.clear();
         super.loadScenario(world);
         hasRun = true;
     }
