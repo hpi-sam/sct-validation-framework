@@ -278,13 +278,8 @@ public class SimulatorFrame extends JFrame {
 		setBackground(MAIN_MENU_COLOR);
 		setMinimumSize(new Dimension(902, 800));
 		setPreferredSize(new Dimension(1212, 800));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // try {
-		// 	setIconImage(ImageIO.read(new File(SimulatorConfig.getStringPathToRobotIcon())));
-		// } catch (IOException e) {
-		// 	System.out.println("hi");
-		// 	e.printStackTrace();
-		// }
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
         pack();
         setVisible(true);
 	}
