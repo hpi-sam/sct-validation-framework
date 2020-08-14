@@ -378,7 +378,7 @@ public class SimulatorFrame extends JFrame {
     }
     
     //create a new popup with the provided text 
-	sprivate Popup createPopup(String message, Color color) {
+	private Popup createPopup(String message, Color color) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
 		popupPanel.setPreferredSize(new Dimension(460, 100));
 		popupPanel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 192));
