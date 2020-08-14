@@ -43,21 +43,21 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
 
 	@Override
     public void onTestCompleted(TestScenario test) {
-    	//set the background of the menu wrapper of the label to green
-        tests.get(test).getParent().setBackground(SimulatorFrame.MENU_GREEN);
+        //set the background of the label to green
+        tests.get(test).setBackground(SimulatorFrame.MENU_GREEN);
         repaint();
     }
     
     @Override
 	public void failTest(TestScenario test) {
-    	tests.get(test).getParent().setBackground(SimulatorFrame.MENU_RED);	
+    	tests.get(test).setBackground(SimulatorFrame.MENU_RED);	
     	repaint();
 	}
 
 	public void resetColors() {
-		//set the background off the menu wrappers of all test labels to the generic menu color
+		//set the background of all test labels to the generic menu color
 		for (JLabel label : tests.values())
-            label.getParent().setBackground(SimulatorFrame.MAIN_MENU_COLOR);
+            label.setBackground(SimulatorFrame.MAIN_MENU_COLOR);
 		repaint();
 	}
 
@@ -72,7 +72,7 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.weightx = 1.0;
-        add(new MenuWrapper(180, 30, SimulatorFrame.MAIN_MENU_COLOR, label), labelConstraints);
+        add(SimulatorFrame.setComponentDesign(180, 30, SimulatorFrame.MAIN_MENU_COLOR, label), labelConstraints);
 	}
 	
     private void addTest(TestScenario test) {
@@ -90,7 +90,7 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
         labelConstraints.fill = GridBagConstraints.HORIZONTAL;
         labelConstraints.anchor = GridBagConstraints.LINE_START;
         labelConstraints.weightx = 1.0;
-        add(new MenuWrapper(180, 30, SimulatorFrame.MAIN_MENU_COLOR, label), labelConstraints);
+        add(SimulatorFrame.setComponentDesign(180, 30, SimulatorFrame.MAIN_MENU_COLOR, label), labelConstraints);
         
         JButton run = newRunButton(test);
         GridBagConstraints runConstraints = new GridBagConstraints();
@@ -98,7 +98,7 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
         runConstraints.gridy = yCoordinate;
         runConstraints.fill = GridBagConstraints.HORIZONTAL;
         runConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(74, 24, SimulatorFrame.MAIN_MENU_COLOR, run), runConstraints);
+        add(SimulatorFrame.setComponentDesign(74, 24, SimulatorFrame.MAIN_MENU_COLOR, run), runConstraints);
         
         tests.put(test, label);
     }

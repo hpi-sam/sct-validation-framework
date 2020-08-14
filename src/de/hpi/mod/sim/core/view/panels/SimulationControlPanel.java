@@ -53,7 +53,7 @@ public class SimulationControlPanel extends JPanel implements ITimeListener{
         GridBagConstraints valueFieldConstraints = new GridBagConstraints();
         valueFieldConstraints.gridx = 0;
         valueFieldConstraints.gridy = 1;
-        add(new MenuWrapper(60, 60, SimulatorFrame.MAIN_MENU_COLOR, valueField), valueFieldConstraints);
+        add(SimulatorFrame.setComponentDesign(60, 60, SimulatorFrame.MENU_WHITE, valueField), valueFieldConstraints);
 	}
 	
 	private JTextField newValueField() {
@@ -72,7 +72,7 @@ public class SimulationControlPanel extends JPanel implements ITimeListener{
         sliderConstraints.fill = GridBagConstraints.HORIZONTAL;
         sliderConstraints.weightx = 1.0; //the slider gets all the additional space
         sliderConstraints.insets = new Insets(0, 3, 0, 3);
-        add(new MenuWrapper(100, 60, SimulatorFrame.MAIN_MENU_COLOR, valueSlider), sliderConstraints);
+        add(SimulatorFrame.setComponentDesign(100, 60, SimulatorFrame.MAIN_MENU_COLOR, valueSlider), sliderConstraints);
 	}
 	
 	private JSlider newSpeedSlider() {
@@ -98,7 +98,7 @@ public class SimulationControlPanel extends JPanel implements ITimeListener{
         playButtonConstraints.gridx = 2;
         playButtonConstraints.gridy = 1;
         playButtonConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(60, 60, SimulatorFrame.MAIN_MENU_COLOR, playButton), playButtonConstraints);
+        add(SimulatorFrame.setComponentDesign(60, 60, SimulatorFrame.MAIN_MENU_COLOR, playButton), playButtonConstraints);
 	}
 	
 	private JButton newPlayButton() {
@@ -117,7 +117,7 @@ public class SimulationControlPanel extends JPanel implements ITimeListener{
 		stopButtonConstraints.gridx = 3;
 		stopButtonConstraints.gridy = 1;
 		stopButtonConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(60, 60, SimulatorFrame.MAIN_MENU_COLOR, stopButton), stopButtonConstraints);
+        add(SimulatorFrame.setComponentDesign(60, 60, SimulatorFrame.MAIN_MENU_COLOR, stopButton), stopButtonConstraints);
 	}
 	
 	private JButton newStopButton() {
@@ -135,7 +135,7 @@ public class SimulationControlPanel extends JPanel implements ITimeListener{
 		restartButtonConstraints.gridx = 4;
 		restartButtonConstraints.gridy = 1;
 		restartButtonConstraints.insets = new Insets(3, 3, 3, 3);
-        add(new MenuWrapper(60, 60, SimulatorFrame.MAIN_MENU_COLOR, restartButton), restartButtonConstraints);
+        add(SimulatorFrame.setComponentDesign(60, 60, SimulatorFrame.MAIN_MENU_COLOR, restartButton), restartButtonConstraints);
 	}
 	
 	private JButton newRestartButton() {

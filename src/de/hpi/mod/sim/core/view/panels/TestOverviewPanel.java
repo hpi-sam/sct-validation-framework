@@ -59,7 +59,7 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 		progressDisplayConstraints.gridy = 0;
 		progressDisplayConstraints.weightx = 1.0;
 		progressDisplayConstraints.weighty = 1.0;
-		add(new MenuWrapper(194, 26, SimulatorFrame.MAIN_MENU_COLOR, progressDisplay), progressDisplayConstraints);
+		add(SimulatorFrame.setComponentDesign(194, 26, SimulatorFrame.MAIN_MENU_COLOR, progressDisplay), progressDisplayConstraints);
 	}
 
 	private void addShowHideButton() {
@@ -70,7 +70,7 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 		showHideButtonConstraints.weightx = 1.0;
 		showHideButtonConstraints.weighty = 1.0;
 		showHideButtonConstraints.insets = new Insets(3, 3, 3, 3);
-		add(new MenuWrapper(194, 24, SimulatorFrame.MAIN_MENU_COLOR, showHideButton), showHideButtonConstraints);
+		add(SimulatorFrame.setComponentDesign(194, 24, SimulatorFrame.MAIN_MENU_COLOR, showHideButton), showHideButtonConstraints);
 	}
 
 	private void addRunAllButton() {
@@ -81,7 +81,7 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 		runAllButtonConstraints.weightx = 1.0;
 		runAllButtonConstraints.weighty = 1.0;
 		runAllButtonConstraints.insets = new Insets(3, 3, 3, 3);
-		add(new MenuWrapper(194, 24, SimulatorFrame.MAIN_MENU_COLOR, runAllButton), runAllButtonConstraints);
+		add(SimulatorFrame.setComponentDesign(194, 24, SimulatorFrame.MAIN_MENU_COLOR, runAllButton), runAllButtonConstraints);
 	}
 
 	private void addResetButton() {
@@ -92,7 +92,7 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 		resetButtonConstraints.weightx = 1.0;
 		resetButtonConstraints.weighty = 1.0;
 		resetButtonConstraints.insets = new Insets(3, 3, 3, 3);
-		add(new MenuWrapper(194, 24, SimulatorFrame.MAIN_MENU_COLOR, resetButton), resetButtonConstraints);
+		add(SimulatorFrame.setComponentDesign(194, 24, SimulatorFrame.MAIN_MENU_COLOR, resetButton), resetButtonConstraints);
 	}
 	
 	private JProgressBar newProgressDisplay() {

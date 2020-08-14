@@ -39,7 +39,7 @@ public class TimerPanel extends JPanel {
         valueFieldConstraints.gridx = 0;
         valueFieldConstraints.gridy = 1;
         valueFieldConstraints.anchor = GridBagConstraints.LINE_START;
-        add(new MenuWrapper(60, 60, SimulatorFrame.MAIN_MENU_COLOR, valueField), valueFieldConstraints);
+        add(SimulatorFrame.setComponentDesign(60, 60, SimulatorFrame.MENU_WHITE, valueField), valueFieldConstraints);
 	}
 	
 	private JTextField newValueField() {
@@ -54,12 +54,11 @@ public class TimerPanel extends JPanel {
 	private void addSpacer() {
 		//The spacer takes up additional space and pushed the timer field to the left
 		JPanel spacer = new JPanel();
-        spacer.setBackground(SimulatorFrame.MAIN_MENU_COLOR);
         GridBagConstraints spacerConstraints = new GridBagConstraints();
         spacerConstraints.gridx = 1;
         spacerConstraints.gridy = 1;
         spacerConstraints.weightx = 1.0;
-        add(new MenuWrapper(100, 60, SimulatorFrame.MAIN_MENU_COLOR, spacer), spacerConstraints);
+        add(SimulatorFrame.setComponentDesign(100, 60, SimulatorFrame.MAIN_MENU_COLOR, spacer), spacerConstraints);
 	}
 	
 	private void initializeTimer() {

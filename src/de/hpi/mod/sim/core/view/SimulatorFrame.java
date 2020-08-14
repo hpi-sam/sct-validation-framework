@@ -38,6 +38,7 @@ public class SimulatorFrame extends JFrame {
 	public static Color MAIN_MENU_COLOR = new Color(0xfff3e2);
 	public static Color MENU_GREEN = new Color(0xdcf3d0);
 	public static Color MENU_RED = new Color(0xffe1d0);
+	public static Color MENU_WHITE = Color.WHITE;
 
 	public SimulatorFrame(World world) {
 		super("Drive System Simulator");
@@ -377,7 +378,7 @@ public class SimulatorFrame extends JFrame {
     }
     
     //create a new popup with the provided text 
-    private Popup createPopup(String message, Color color) {
+	sprivate Popup createPopup(String message, Color color) {
 		JPanel popupPanel = new JPanel(new BorderLayout());
 		popupPanel.setPreferredSize(new Dimension(460, 100));
 		popupPanel.setBackground(new Color(color.getRed(), color.getGreen(), color.getBlue(), 192));
@@ -386,10 +387,24 @@ public class SimulatorFrame extends JFrame {
 		Font original = (Font) UIManager.get("Label.font");
 		popupLabel.setFont(original.deriveFont(Font.BOLD, 16));
 		popupPanel.add(popupLabel);
-		
+
 		PopupFactory pf = PopupFactory.getSharedInstance();
-		
-		Popup popup = pf.getPopup(this, popupPanel, (int)this.getLocation().getX() + 10, (int)this.getLocation().getY() + 55);
+
+		Popup popup = pf.getPopup(this, popupPanel, (int) this.getLocation().getX() + 10,
+				(int) this.getLocation().getY() + 55);
 		return popup;
+	}
+	
+	public static <C extends Component> C setComponentDesign(int width, int height, Color color, C component) {
+		// By default, JLabels are not opaque so the background color is not displayed
+		if (component instanceof JLabel)
+			((JLabel) component).setOpaque(true);
+
+		component.setBackground(color);
+
+		// set both sizes because some Layout Managers look at different size attributes
+		component.setMinimumSize(new Dimension(width, height));
+		component.setPreferredSize(new Dimension(width, height));
+		return component;
 	}
 }
