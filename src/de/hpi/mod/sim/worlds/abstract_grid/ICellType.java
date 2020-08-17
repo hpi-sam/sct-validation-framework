@@ -7,4 +7,10 @@ public interface ICellType {
     public Color getColor();
 
     public boolean borderLeft();
+
+    public boolean borderTop();
+
+    public boolean borderRight();
+
+    public boolean borderBottom();
 }
