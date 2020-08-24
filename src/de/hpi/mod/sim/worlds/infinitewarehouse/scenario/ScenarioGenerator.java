@@ -10,13 +10,13 @@ import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.RobotManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 
 public class ScenarioGenerator {
 
-    RobotManager robots;
+    WarehouseManager robots;
 
-    public ScenarioGenerator(RobotManager robots) {
+    public ScenarioGenerator(WarehouseManager robots) {
         this.robots = robots;
     }
 

@@ -6,9 +6,9 @@ import java.util.List;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.RobotManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot.RobotState;
+import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot.RobotState;
 
 public class TestRobotSpecification extends RobotSpecification {
     private Position position;
@@ -43,7 +43,7 @@ public class TestRobotSpecification extends RobotSpecification {
         this.initialDelay = initialDelay;
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing,
             List<Position> targets) {
         super(robots);
         this.position = position;
@@ -55,7 +55,7 @@ public class TestRobotSpecification extends RobotSpecification {
         this.initialDelay = Configuration.getDefaultWaitingTimeBeforeTest();
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             int delay) {
         super(robots);
         this.position = position;
@@ -67,7 +67,7 @@ public class TestRobotSpecification extends RobotSpecification {
         this.initialDelay = Configuration.getDefaultWaitingTimeBeforeTest();
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             int delay, int initialDelay) {
         super(robots);
 this.position = position;
@@ -79,7 +79,7 @@ this.position = position;
         this.initialDelay = initialDelay;
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             boolean fuzzy) {
         super(robots);
         this.position = position;
@@ -92,7 +92,7 @@ this.position = position;
         this.fuzzyEnd = fuzzy;
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             boolean fuzzy, boolean initialChargerStatus) {
         super(robots);
         this.position = position;
@@ -106,7 +106,7 @@ this.position = position;
         this.hasReservedCharger = initialChargerStatus;
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             boolean fuzzy, boolean initialChargerStatus, boolean hardArrivedConstraint) {
         super(robots);
         this.position = position;
@@ -121,7 +121,7 @@ this.position = position;
         this.hardArrivedConstraint = hardArrivedConstraint;
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             int delay, int initialDelay, boolean fuzzy) {
         super(robots);
         this.position = position;
@@ -134,7 +134,7 @@ this.position = position;
         this.fuzzyEnd = fuzzy;
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             int delay, int initialDelay, boolean fuzzy, boolean initialChargerStatus) {
         super(robots);
         this.position = position;
@@ -148,7 +148,7 @@ this.position = position;
         this.hasReservedCharger = initialChargerStatus;
     }
 
-    public TestRobotSpecification(RobotManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
+    public TestRobotSpecification(WarehouseManager robots, Position position, RobotState startingState, Orientation facing, List<Position> targets,
             int delay, int initialDelay, boolean fuzzy, boolean initialChargerStatus, boolean hardArrivedConstraint) {
         super(robots);
         this.position = position;
@@ -170,7 +170,7 @@ this.position = position;
     }
 
     @Override
-    public Robot getRobot(RobotManager robots) {
+    public WarehouseRobot getRobot(WarehouseManager robots) {
         return robots.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd,
                 requireUnload, hasReservedCharger, hardArrivedConstraint);
     }

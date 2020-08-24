@@ -5,28 +5,29 @@ import org.junit.Test;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.CellType;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.GridManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController;
 
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class GridManagerTest {
+public class WarehouseManagerTest {
 
-    private GridManager getGridWithRobotsAtPositions(Position[] pos) {
+    private WarehouseManager getGridWithRobotsAtPositions(Position[] pos) {
         IRobotController control = new DummyRobotController(pos);
-        return new GridManager(control);
+        return new WarehouseManager(control);
     }
 
-    private GridManager getGrid() {
-        return new GridManager(new DummyRobotController());
+    private WarehouseManager getGrid() {
+        return new WarehouseManager(new DummyRobotController());
     }
 
     @Test
     public void cellType() {
-        GridManager grid = getGrid();
+        RobotGridManager grid = getGrid();
         assertEquals(CellType.BLOCK, grid.cellType(new Position(0, 0)));
         assertEquals(CellType.BLOCK, grid.cellType(new Position(0, 3)));
         assertEquals(CellType.BLOCK, grid.cellType(new Position(-3, 3)));

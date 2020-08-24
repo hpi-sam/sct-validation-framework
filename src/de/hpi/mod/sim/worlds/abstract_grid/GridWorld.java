@@ -13,16 +13,19 @@ public abstract class GridWorld extends World {
     
     private SimulationBlockView simView;
 
+    private GridManager gridManager;
+
     public GridWorld() {
+        gridManager = createGridManager();
         simView = new SimulationBlockView(this);
     }
 
-    public abstract IGrid getGrid();
+    protected abstract GridManager createGridManager();
 
     @Override
     public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
         super.initialize(frame, simulationRunner);
-        gridRenderer = new GridRenderer(getSimulationBlockView(), getGrid());
+        gridRenderer = new GridRenderer(getSimulationBlockView(), getGridManager());
     }
     
     @Override
@@ -38,4 +41,9 @@ public abstract class GridWorld extends World {
     public SimulationBlockView getSimulationBlockView() {
         return simView;
     }
+
+    public GridManager getGridManager() {
+        return gridManager;
+    }
+
 }

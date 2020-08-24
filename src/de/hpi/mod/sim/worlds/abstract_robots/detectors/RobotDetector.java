@@ -1,17 +1,18 @@
-package de.hpi.mod.sim.worlds.infinitewarehouse.robot;
+package de.hpi.mod.sim.worlds.abstract_robots.detectors;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import de.hpi.mod.sim.core.scenario.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 
 public abstract class RobotDetector extends Detector {
 
-    protected InfiniteWarehouse world;
+    protected RobotWorld world;
 
-    protected RobotDetector(InfiniteWarehouse world) {
+    protected RobotDetector(RobotWorld world) {
         super(world);
         this.world = world;
     }

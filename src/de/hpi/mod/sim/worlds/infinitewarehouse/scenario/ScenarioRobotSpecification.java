@@ -2,8 +2,8 @@ package de.hpi.mod.sim.worlds.infinitewarehouse.scenario;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.RobotManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
+import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
 public class ScenarioRobotSpecification extends RobotSpecification {
 	private Position position;
@@ -11,13 +11,13 @@ public class ScenarioRobotSpecification extends RobotSpecification {
 	private int delay = 0;
 	private boolean isAlone = false;
 	
-	public ScenarioRobotSpecification(RobotManager robots, Position position, Orientation facing) {
+	public ScenarioRobotSpecification(WarehouseManager robots, Position position, Orientation facing) {
 		super(robots);
 		this.position = position;
 		this.facing = facing;
 	}
 	
-	public ScenarioRobotSpecification(RobotManager robots, Position position, Orientation facing, int delay) {
+	public ScenarioRobotSpecification(WarehouseManager robots, Position position, Orientation facing, int delay) {
 		super(robots);
 		this.position = position;
 		this.facing = facing;
@@ -25,8 +25,8 @@ public class ScenarioRobotSpecification extends RobotSpecification {
 	}
 
 	@Override
-	public Robot getRobot(RobotManager robots) {
-		Robot robot = robots.addRobotInScenario(position, facing, delay);
+	public WarehouseRobot getRobot(WarehouseManager robots) {
+		WarehouseRobot robot = robots.addRobotInScenario(position, facing, delay);
 		robot.setIsAlone(isAlone);
 		return robot;
 	}

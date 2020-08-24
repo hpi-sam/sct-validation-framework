@@ -341,10 +341,10 @@ public class DriveManager implements IRobotActors {
         return currentPosition;
     }
 
-    public Orientation currentFacing() {
-        return oldFacing;
-    }
-    
+	public Orientation currentFacing() {
+		return oldFacing;
+	}
+	
     public Position getOldPosition() {
     	return oldPosition;
     }

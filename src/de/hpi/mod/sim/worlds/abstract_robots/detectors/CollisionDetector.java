@@ -1,14 +1,13 @@
-package de.hpi.mod.sim.worlds.infinitewarehouse.detectors;
+package de.hpi.mod.sim.worlds.abstract_robots.detectors;
 
 import java.util.List;
 
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.RobotDetector;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 
 public class CollisionDetector extends RobotDetector {
 
-	public CollisionDetector(InfiniteWarehouse world) {
+	public CollisionDetector(RobotWorld world) {
 		super(world);
 	}
 

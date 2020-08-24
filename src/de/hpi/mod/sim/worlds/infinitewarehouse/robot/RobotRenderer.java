@@ -3,10 +3,13 @@ package de.hpi.mod.sim.worlds.infinitewarehouse.robot;
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.RobotManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.AffineTransformOp;
@@ -17,18 +20,15 @@ import java.io.IOException;
 /**
  * Render all Robots.
  */
-public class RobotRenderer {
+public class RobotRenderer { //TODO generalize for AbstractRobotWorld
 
-    private RobotManager robots;
     private SimulationBlockView simView;
     private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
+    private WarehouseManager robots;
 
-
-    public RobotRenderer(
-            RobotManager robots, SimulationBlockView simView) {
-        this.robots = robots;
+    public RobotRenderer(SimulationBlockView simView, WarehouseManager robots) {
         this.simView = simView;
-
+        this.robots = robots;
         loadImages();
     }
 
@@ -46,7 +46,8 @@ public class RobotRenderer {
 
     public void render(Graphics graphic, float size) {
         // Draw Robots
-        for (Robot robot : robots.getRobots()) {
+        for (Robot generalRobot : robots.getRobots()) {
+            WarehouseRobot robot = (WarehouseRobot) generalRobot;
 	            DriveManager drive = robot.getDriveManager();
 	            Point2D drawPosition = simView.toDrawPosition(drive.getX(), drive.getY());
 	
@@ -57,11 +58,12 @@ public class RobotRenderer {
         }
 
         // Render additional Info like Targets
-        for (Robot r : robots.getRobots()) {
-            if (r.equals(simView.getHighlighted1()) || r.equals(simView.getHighlighted2())) {
-	                DriveManager drive = r.getDriveManager();
+        for (Robot generalRobot : robots.getRobots()) {
+            WarehouseRobot robot = (WarehouseRobot) generalRobot;
+            if (robot.equals(simView.getHighlighted1()) || robot.equals(simView.getHighlighted2())) {
+	                DriveManager drive = robot.getDriveManager();
 	                Point2D drawPos = simView.toDrawPosition(drive.getX(), drive.getY());
-	                Point2D targetPos = simView.toDrawPosition(r.getTarget());
+	                Point2D targetPos = simView.toDrawPosition(robot.getTarget());
 	
 	                drawTarget(graphic, drawPos, targetPos, size);
             }

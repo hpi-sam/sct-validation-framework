@@ -3,15 +3,20 @@ package de.hpi.mod.sim.worlds.infinitewarehouse.environment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotDispatch;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotStationDispatcher;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IScanner;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -20,17 +25,16 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController
  * the coordinate system. All cells which have a Y value below or equal to 0 are
  * in a station.
  */
-public class GridManager implements ISensorDataProvider {
+public class WarehouseManager extends RobotGridManager implements ISensorDataProvider, IRobotController, IRobotDispatch, ILocation, IScanner {
 
-	/**
-	 * Because the Map doesn't have direct access to newRobots, it needs a
-	 * controller to find out if a cells is blocked by a robot.
-	 */
-	private IRobotController control;
 	private List<Position> invalidPositions = new ArrayList<Position>();
+	private IRobotStationDispatcher stations;
+	private int unloadingRange = InfiniteWarehouseConfiguration.getUnloadingRange();
+	private int mapHeight = InfiniteWarehouseConfiguration.getMapHeight();
+	private int[] heights = new int[mapHeight];
 
-	public GridManager(IRobotController control) {
-		this.control = control;
+	public WarehouseManager(IRobotStationDispatcher stations) {
+		this.stations = stations;
 	}
 
 	/**
@@ -68,6 +72,58 @@ public class GridManager implements ISensorDataProvider {
 				return isUsed ? CellType.QUEUE : CellType.QUEUE_UNUSED;
 			return isUsed ? CellType.STATION : CellType.STATION_UNUSED;
 		}
+	}
+
+	/**
+	 * Whether the robot can stand on this position
+	 * 
+	 * @param position The position of the Robot
+	 */
+	@Override
+	public boolean isBlockedByMap(Position position) {
+		if (cellType(position) == CellType.BLOCK)
+			return true;
+
+		boolean isInvalid = false;
+		for (int i = 0; i < invalidPositions.size(); i++) {
+			if (invalidPositions.get(i).is(position)) {
+				isInvalid = true;
+				break;
+			}
+		}
+		return isInvalid;
+	}
+
+	@Override
+	public boolean[] blocked(Orientation facing, Position position) {
+		boolean blocked[] = super.blocked(facing, position);
+
+		Direction[] directions = Direction.values();
+		// All four orientations rotated by the facing of the Robot
+		// Sides: Left, Ahead, Right, Bottom (Same order like in the enum Direction)
+		Orientation[] sides = Arrays.stream(directions).map(dir -> Orientation.rotate(facing, dir))
+				.toArray(Orientation[]::new);
+
+		// In the Station a robot cannot enter a charger from the west
+		// so we have to check, if the eastern neighbor is charger
+		if (cellType(Position.nextPositionInOrientation(Orientation.EAST, position)) == CellType.CHARGER) {
+			int i = Arrays.asList(sides).indexOf(Orientation.EAST);
+			blocked[i] = true;
+		}
+
+		// In a station a robot cannot shortcut to the queue, it has to drive to the
+		// bottom
+		// First, check from west to east
+		if (Math.floorMod(position.getX(), 3) == 1 && position.getY() <= 0 && position.getY() > -5) {
+			int i = Arrays.asList(sides).indexOf(Orientation.EAST);
+			blocked[i] = true;
+		}
+		// Than check from east to west
+		else if (Math.floorMod(position.getX(), 3) == 2 && position.getY() <= 0 && position.getY() > -5) {
+			int i = Arrays.asList(sides).indexOf(Orientation.WEST);
+			blocked[i] = true;
+		}
+		return blocked;
 	}
 	
 	public PositionType posType(Position position) {
@@ -110,92 +166,9 @@ public class GridManager implements ISensorDataProvider {
 		}
 		return false;
 	};
-
-	/**
-	 * Is another Robot on this position?
-	 * 
-	 * @param position The position to check
-	 */
-	public boolean isBlockedByRobot(Position position) {
-		return control.isBlockedByRobot(position);
-	}
-
-	/**
-	 * Whether the robot can stand on this position
-	 * 
-	 * @param pos The position of the Robot
-	 */
-	public boolean isBlockedByMap(Position pos) {
-		boolean isBlock = cellType(pos) == CellType.BLOCK;
-		boolean isInvalid = false;
-		for(int i=0; i<invalidPositions.size(); i++) {
-			if(invalidPositions.get(i).is(pos)) {
-				isInvalid = true;
-				break;
-			}
-		}
-		
-		return isBlock || isInvalid;
-	}
 	
 	public void makePositionInvalid(Position pos) {
 		invalidPositions.add(pos);	
-	}
-
-	
-
-	/**
-	 * Checks all four neighbors of the cell and returns if they are blocked,
-	 * ordered by the facing
-	 * 
-	 * @param facing   The orientation of the robot
-	 * @param position The Position of the robot
-	 * @return Whether the neighbors are blocked (The directions are corresponding
-	 *         to the order in enum Directions)
-	 */
-	@Override
-	public boolean[] blocked(Orientation facing, Position position) {
-
-		// A boolean storing all directions
-		boolean[] blocked = new boolean[4];
-
-		Direction[] directions = Direction.values();
-
-		// All four orientations rotated by the facing of the Robot
-		// Sides: Left, Ahead, Right, Bottom (Same order like in the enum Direction)
-		Orientation[] sides = Arrays.stream(directions).map(dir -> Orientation.rotate(facing, dir))
-				.toArray(Orientation[]::new);
-
-		// All four neighbor positions of the robot in the same order as sides
-		Position[] neighbors = Arrays.stream(sides).map(side -> Position.nextPositionInOrientation(side, position))
-				.toArray(Position[]::new);
-
-		// If a neighbor is blocked, its corresponding boolean is set to true
-		for (int i = 0; i < blocked.length; i++) {
-			blocked[i] = isBlockedByMap(neighbors[i]) || isBlockedByRobot(neighbors[i]);
-		}
-
-		// In the Station a robot cannot enter a charger from the west
-		// so we have to check, if the eastern neighbor is charger
-		if (cellType(Position.nextPositionInOrientation(Orientation.EAST, position)) == CellType.CHARGER) {
-			int i = Arrays.asList(sides).indexOf(Orientation.EAST);
-			blocked[i] = true;
-		}
-
-		// In a station a robot cannot shortcut to the queue, it has to drive to the
-		// bottom
-		// First, check from west to east
-		if (Math.floorMod(position.getX(), 3) == 1 && position.getY() <= 0 && position.getY() > -5) {
-			int i = Arrays.asList(sides).indexOf(Orientation.EAST);
-			blocked[i] = true;
-		}
-		// Than check from east to west
-		else if (Math.floorMod(position.getX(), 3) == 2 && position.getY() <= 0 && position.getY() > -5) {
-			int i = Arrays.asList(sides).indexOf(Orientation.WEST);
-			blocked[i] = true;
-		}
-
-		return blocked;
 	}
 
 	/**
@@ -513,11 +486,10 @@ public class GridManager implements ISensorDataProvider {
 	public Orientation targetOrientation(Position current, Position target) {
 
 		// If already ON target: return random orientation
-		if(current.equals( target)) {
+		if (current.equals(target)) {
 			return Orientation.random();
 		}
-		
-		
+
 		// If Position is in Station
 		if (posType(current) == PositionType.STATION) {
 			if (cellType(current) == CellType.CHARGER)
@@ -527,14 +499,13 @@ public class GridManager implements ISensorDataProvider {
 			if (current.getX() > target.getX())
 				return Orientation.WEST;
 			if (current.getX() < target.getX()) {
-				if (current.getY() > - InfiniteWarehouseConfiguration.getQueueSize())
+				if (current.getY() > -InfiniteWarehouseConfiguration.getQueueSize())
 					return Orientation.SOUTH;
 				return Orientation.EAST;
 			}
 			return Orientation.NORTH;
 		}
-		
-		
+
 		// Special Case
 		// If target exactly below return EAST
 		if (Position.nextPositionInOrientation(Orientation.SOUTH, current).equals(target))
@@ -567,6 +538,7 @@ public class GridManager implements ISensorDataProvider {
 		return Orientation.SOUTH;
 	}
 
+	@Override
 	public Position getArrivalPositionAtStation(int stationID) {
 		int x;
 		if((stationID % 2) == 0) {
@@ -579,6 +551,7 @@ public class GridManager implements ISensorDataProvider {
 		return new Position(x, 0);
 	}
 
+	@Override
 	public Position getQueuePositionAtStation(int stationID) {
 		int x;
 		if((stationID & 1) == 0) {
@@ -591,6 +564,7 @@ public class GridManager implements ISensorDataProvider {
 		return new Position(x, - InfiniteWarehouseConfiguration.getQueueSize());
 	}
 
+	@Override
 	public Position getChargerPositionAtStation(int stationID, int chargerID) {
 		int x;
 		if((stationID % 2) == 0) {
@@ -604,6 +578,7 @@ public class GridManager implements ISensorDataProvider {
 		return new Position(x, y);
 	}
 
+	@Override
 	public Position getLoadingPositionAtStation(int stationID) {
 		int x;
 		if((stationID % 2) == 0) {
@@ -616,6 +591,7 @@ public class GridManager implements ISensorDataProvider {
 		return new Position(x, 0);
 	}
 
+	@Override
 	public Position getUnloadingPositionFromID(int unloadingID) {
 		int x, y;
 
@@ -759,9 +735,9 @@ public class GridManager implements ISensorDataProvider {
 
 	@Override
 	public boolean affects(IHighlightable highlight, Position position) {
-		if (highlight == null || !(highlight instanceof Robot))
+		if (highlight == null || !(highlight instanceof WarehouseRobot))
 			return false;
-		Robot r = (Robot) highlight;
+		WarehouseRobot r = (WarehouseRobot) highlight;
 		return position.is(r.pos()) || position.is(r.oldPos());
 	}
 
@@ -781,4 +757,117 @@ public class GridManager implements ISensorDataProvider {
 		int unloadingRange = (widthBlocks / 3) * ((heightBlocks - InfiniteWarehouseConfiguration.getQueueSize()) / 3);
 		return unloadingRange;
 	}
+	
+	/**
+	 * Creates and adds new Robot at given Position if it is a Waypoint, with given
+	 * Orientation and target. This should only be used for Debug-Scenarios, since
+	 * the Robots may be in an invalid state after reaching their targets
+	 *
+	 * @param position              The Waypoint where the Robot will be placed
+	 * @param state
+	 * @param facing                The Orientation of the Robot at its starting
+	 *                              position
+	 * @param fuzzyEnd              whether or not the robot is allowed to be near
+	 *                              the last target or has to be exactly on it
+	 * @param hasReservedCharger    whether or not the robot should drive to charger
+	 * @param hardArrivedConstraint whether
+	 * @param target                The target of the Robot to drive to
+	 * @return The added Robot or NULL if the Position is not a Waypoint
+	 */
+	public WarehouseRobot addRobotAtPosition(Position position, WarehouseRobot.RobotState state, Orientation facing,
+			List<Position> targets, int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest,
+			boolean hasReservedCharger, boolean hardArrivedConstraint) {
+
+		WarehouseRobot robot = new WarehouseRobot(this, stations, position, state, facing, targets, delay, initialDelay,
+				fuzzyEnd, unloadingTest, hasReservedCharger, hardArrivedConstraint);
+		addRobot(robot);
+		return robot;
+	}
+	
+	public WarehouseRobot addRobotInScenario(Position position, Orientation facing, int delay) {
+
+		if (posType(position) == PositionType.STATION || posType(position) == PositionType.WAYPOINT) {
+			int stationID = stations.getStationIDFromPosition(position);
+			WarehouseRobot robot = new WarehouseRobot(WarehouseRobot.incrementID(), stationID, this, stations, position, facing, delay);
+			addRobot(robot);
+			return robot;
+		} else {
+			throw new IllegalStateException(
+					"Illegal initial position for scenario robot. Please contact the mod chair");
+		}
+	}
+	
+	@Override
+	public int getPackageID(int stationID, Position robotPosition) {
+		return getRandomUnloadingID(robotPosition);
+	}
+	
+	private int getRandomUnloadingID(Position robotPosition) {
+		int id = ThreadLocalRandom.current().nextInt(100) + 1;
+		int min_pos = 0;
+		int minimum = Integer.MAX_VALUE;
+
+		if (id > 70) {
+			id = ThreadLocalRandom.current().nextInt(3 * unloadingRange / 4, unloadingRange);
+		} else if (id > 55) {
+			id = ThreadLocalRandom.current().nextInt(unloadingRange / 2, 3 * unloadingRange / 4);
+		} else if (id > 40) {
+			id = ThreadLocalRandom.current().nextInt(unloadingRange / 4, unloadingRange / 2);
+		} else if (id > 15) {
+			id = ThreadLocalRandom.current().nextInt(0, unloadingRange / 4);
+		} else {
+			id = ThreadLocalRandom.current().nextInt(-unloadingRange, 0);
+		}
+		for (int i = 0; i < heights.length; i++) {
+			if (heights[i] < minimum) {
+				minimum = heights[i];
+				min_pos = i;
+			}
+			if (heights[i] >= 100) {
+				heights[i] = 0;
+			}
+		}
+		if (heights[Math.abs(id) / mapHeight] > minimum) {
+			heights[min_pos]++;
+			if (id < 0) {
+				id = (min_pos * mapHeight + id % mapHeight) * -1;
+			} else {
+				id = min_pos * mapHeight + id % mapHeight;
+			}
+		} else {
+			heights[Math.abs(id) / mapHeight]++;
+		}
+
+		return id;
+	}
+	
+	@Override
+	public boolean hasPackage(int stationID) {
+		return true;
+	}
+	
+	@Override
+	public void releaseAllLocks() {
+		stations.releaseAllLocks();
+	}
+	
+	@Override
+	public void createNewStationManager(int chargingStationsInUse) {
+		if (chargingStationsInUse != stations.getUsedStations()) {
+			stations = new StationManager(chargingStationsInUse);
+		}
+	}
+
+	@Override
+	public WarehouseRobot addRobot() {
+		int robotID = WarehouseRobot.incrementID();
+		int stationID = stations.getReservationNextForStation(robotID, true);
+		int chargerID = stations.getReservedChargerAtStation(robotID, stationID);
+		stations.reportChargingAtStation(robotID, stationID, chargerID);
+		WarehouseRobot robot = new WarehouseRobot(robotID, stationID, this, stations, getChargerPositionAtStation(stationID, chargerID),
+				Orientation.EAST);
+		addRobot(robot);
+		return robot;
+	}
+
 }

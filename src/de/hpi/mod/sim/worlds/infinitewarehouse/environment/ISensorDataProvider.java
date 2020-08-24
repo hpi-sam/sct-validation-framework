@@ -1,11 +1,10 @@
 package de.hpi.mod.sim.worlds.infinitewarehouse.environment;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
-import de.hpi.mod.sim.worlds.abstract_grid.IGrid;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
-public interface ISensorDataProvider extends IGrid {
+public interface ISensorDataProvider {
 
     boolean[] blocked(Orientation facing, Position pos);
     boolean[] blockedWaypoint(Orientation facing, Position pos);

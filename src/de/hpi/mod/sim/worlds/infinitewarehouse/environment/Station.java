@@ -12,12 +12,12 @@ public class Station {
 
     /**
      * How many robots want to drive or are in the queue.
-     * Must not be greater than {@link GridManager#QUEUE_SIZE}
+     * Must not be greater than {@link RobotGridManager#QUEUE_SIZE}
      */
     private int queueSize = 0;
 
     /**
-     * There are {@link GridManager#CHARGERS_PER_STATION} chargers in this station.
+     * There are {@link RobotGridManager#CHARGERS_PER_STATION} chargers in this station.
      */
     private Charger[] chargers;
 

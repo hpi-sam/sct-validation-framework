@@ -1,18 +1,17 @@
-package de.hpi.mod.sim.worlds.infinitewarehouse.detectors;
+package de.hpi.mod.sim.worlds.abstract_robots.detectors;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse;
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.RobotDetector;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 
 public class DeadlockDetector extends RobotDetector {
 
-	public DeadlockDetector(InfiniteWarehouse world) {
+	public DeadlockDetector(RobotWorld world) {
 		super(world);
 		getRobotPositions();
 	}
@@ -28,7 +27,7 @@ public class DeadlockDetector extends RobotDetector {
 			return;
 		}
 
-		offset = (long) Math.max(defaultOffset, defaultOffset / InfiniteWarehouseConfiguration.getEntitySpeedFactor());
+		offset = (long) Math.max(defaultOffset, defaultOffset / GridConfiguration.getEntitySpeedFactor());
 		if (currentTime + offset <= System.currentTimeMillis()) {
 			checkForDeadlock();
 			getRobotPositions();

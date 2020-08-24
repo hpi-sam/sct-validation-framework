@@ -4,16 +4,16 @@ import java.util.List;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
 
 public interface IRobotDispatch {
 
-    public Robot addRobot();
+    public WarehouseRobot addRobot();
 
-    public Robot addRobotInScenario(Position position, Orientation facing, int delay);
+    public WarehouseRobot addRobotInScenario(Position position, Orientation facing, int delay);
 
-    public Robot addRobotAtPosition(Position position, Robot.RobotState state, Orientation facing, List<Position> targets,
+    public WarehouseRobot addRobotAtPosition(Position position, WarehouseRobot.RobotState state, Orientation facing, List<Position> targets,
             int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedCharger,
             boolean hardArrivedConstraint);
 

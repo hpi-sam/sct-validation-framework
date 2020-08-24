@@ -3,9 +3,10 @@ package de.hpi.mod.sim.worlds.infinitewarehouse.detectors;
 import java.util.List;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.abstract_robots.detectors.RobotDetector;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.RobotDetector;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
 public class InvalidUnloadingDetector extends RobotDetector {
 
@@ -19,12 +20,15 @@ public class InvalidUnloadingDetector extends RobotDetector {
 	public void robotUpdate(List<Robot> robots) {
 		if (!invalidUnloadingReported) {
 			for (int i = 0; i < robots.size(); i++) {
-				Robot robot = robots.get(i);
+				Robot general_robot = robots.get(i);
+				if (!(general_robot instanceof WarehouseRobot))
+					continue;
+				WarehouseRobot robot = (WarehouseRobot) general_robot;
 				if (robot.getInvalidUnloadingPosition() != null) {
 					robot.resetInvalidUnloadingPosition();
 					invalidUnloadingReported = true;
 					reportInvalidPosition(robot, robot.pos());
-					world.getGridManager().makePositionInvalid(robot.pos());
+					getWorld().getWarehouseManager().makePositionInvalid(robot.pos());
 				}
 			}
 		}
@@ -33,14 +37,18 @@ public class InvalidUnloadingDetector extends RobotDetector {
 	@Override
 	public void reset() {
 		invalidUnloadingReported = false;
-		world.getGridManager().clearInvalidPositions();
+		getWorld().getWarehouseManager().clearInvalidPositions();
 	}
 
-	private void reportInvalidPosition(Robot robot, Position invalidPosition) {
-		String reason = "Robot at (" + String.valueOf(invalidPosition.getX()) + 
-				"," + String.valueOf(invalidPosition.getY()) + ") unloaded to illegal position!";
-		world.reportInvalidUnloading(robot, reason);
+	private void reportInvalidPosition(WarehouseRobot robot, Position invalidPosition) {
+		String reason = "Robot at (" + String.valueOf(invalidPosition.getX()) + ","
+				+ String.valueOf(invalidPosition.getY()) + ") unloaded to illegal position!";
+		getWorld().reportInvalidUnloading(robot, reason);
 		report(reason, robot);
+	}
+	
+	private InfiniteWarehouse getWorld() {
+		return (InfiniteWarehouse) world;
 	}
 
 }

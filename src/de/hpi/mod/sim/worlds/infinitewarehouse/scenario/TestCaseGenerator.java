@@ -11,15 +11,15 @@ import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.RobotManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot.RobotState;
+import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot.RobotState;
 
 public class TestCaseGenerator {
 	
 	private static Random rand = new Random();
 
 	
-    public static Map<String, List<TestScenario>> getAllTestCases(RobotManager robots) {
+    public static Map<String, List<TestScenario>> getAllTestCases(WarehouseManager robots) {
         Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
 		testGroups.put("I. Driving in Station", generateStationTests(robots));
         testGroups.put("II. Driving at Crossroads", generateSimpleCrossroadTests(robots));
@@ -57,7 +57,7 @@ public class TestCaseGenerator {
     // return testScenarios;
     // }
 
-    private static List<TestScenario> generateUnloadingTests(RobotManager robots) {
+    private static List<TestScenario> generateUnloadingTests(WarehouseManager robots) {
 
         // Start list of test scenarios
         List<TestScenario> testScenarios = new ArrayList<>();
@@ -125,7 +125,7 @@ public class TestCaseGenerator {
         return testScenarios;
     }
 
-    private static List<TestScenario> generateCompleteDriveRoutineTests(RobotManager robots) {
+    private static List<TestScenario> generateCompleteDriveRoutineTests(WarehouseManager robots) {
         List<TestScenario> testScenarios = new ArrayList<>();
         List<EntitySpecification<?>> newRobots = new ArrayList<>();
         List<Position> targets;
@@ -200,7 +200,7 @@ public class TestCaseGenerator {
         return new ArrayList<>(Arrays.asList(r));
     }
 
-    private static List<TestScenario> generateStationTests(RobotManager robots) {
+    private static List<TestScenario> generateStationTests(WarehouseManager robots) {
 
         // Start list of test scenarios
         List<TestScenario> testScenarios = new ArrayList<>();
@@ -341,7 +341,7 @@ public class TestCaseGenerator {
         return testScenarios;
     }
 
-    private static List<TestScenario> generateCrossroadConflicTests(RobotManager robots) {
+    private static List<TestScenario> generateCrossroadConflicTests(WarehouseManager robots) {
         List<TestScenario> testScenarios = new ArrayList<>();
         testScenarios.addAll(generateTwoRobotsOnCrossroadTests(robots));
         testScenarios.addAll(generateThreeRobotsOnCrossroadTests(robots));
@@ -349,7 +349,7 @@ public class TestCaseGenerator {
         return testScenarios;
     }
 
-    private static List<TestScenario> generateTwoRobotsOnCrossroadTests(RobotManager robots) {
+    private static List<TestScenario> generateTwoRobotsOnCrossroadTests(WarehouseManager robots) {
         List<TestScenario> testScenarios = new ArrayList<>();
         List<EntitySpecification<?>> newRobots = new ArrayList<>();
         List<Position> targetsRobotOne, targetsRobotTwo, targetsRobotThree;
@@ -441,7 +441,7 @@ public class TestCaseGenerator {
         return testScenarios;
     }
 
-    private static List<TestScenario> generateThreeRobotsOnCrossroadTests(RobotManager robots) {
+    private static List<TestScenario> generateThreeRobotsOnCrossroadTests(WarehouseManager robots) {
         List<TestScenario> testScenarios = new ArrayList<>();
         int biasX = rand.nextInt(5);
         int biasY = rand.nextInt(5);
@@ -518,7 +518,7 @@ public class TestCaseGenerator {
         return testScenarios;
     }
 
-    private static List<TestScenario> generateFourRobotsOnCrossroadTest(RobotManager robots) {
+    private static List<TestScenario> generateFourRobotsOnCrossroadTest(WarehouseManager robots) {
         List<TestScenario> testScenarios = new ArrayList<>();
 
         List<EntitySpecification<?>> newRobots = new ArrayList<>();
@@ -545,7 +545,7 @@ public class TestCaseGenerator {
 
     }
 
-    private static List<TestScenario> generateSimpleCrossroadTests(RobotManager robots) {
+    private static List<TestScenario> generateSimpleCrossroadTests(WarehouseManager robots) {
 		List<TestScenario> testScenarios = new ArrayList<>();
 		testScenarios.addAll(generateEnteringCrossroadTests(robots));
 		testScenarios.addAll(generatePassingCrossroadAheadTests(robots));
@@ -554,7 +554,7 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private static List<TestScenario> generatePassingCrossroadAheadTests(RobotManager robots) {
+	private static List<TestScenario> generatePassingCrossroadAheadTests(WarehouseManager robots) {
 		List<TestScenario> testScenarios = new ArrayList<>();
 		TestRobotSpecification testRobot;
 		int biasX, biasY;
@@ -586,7 +586,7 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private static List<TestScenario> generateTurningLeftOnCrossroadTests(RobotManager robots) {
+	private static List<TestScenario> generateTurningLeftOnCrossroadTests(WarehouseManager robots) {
 		List<TestScenario> testScenarios = new ArrayList<>();
 		TestRobotSpecification testRobot;
 		int biasX, biasY;
@@ -613,7 +613,7 @@ public class TestCaseGenerator {
         
 	}
 
-	private static List<TestScenario> generateTurningRightOnCrossroadTests(RobotManager robots) {
+	private static List<TestScenario> generateTurningRightOnCrossroadTests(WarehouseManager robots) {
 		List<TestScenario> testScenarios = new ArrayList<>();
 		TestRobotSpecification testRobot;
 		int biasX, biasY;
@@ -639,7 +639,7 @@ public class TestCaseGenerator {
 		return testScenarios;
 	}
 
-	private static List<TestScenario> generateEnteringCrossroadTests(RobotManager robots) {
+	private static List<TestScenario> generateEnteringCrossroadTests(WarehouseManager robots) {
 		List<TestScenario> testScenarios = new ArrayList<>();
 		
 		int biasX = rand.nextInt(5);

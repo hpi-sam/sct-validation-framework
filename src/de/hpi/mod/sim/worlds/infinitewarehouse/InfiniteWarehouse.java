@@ -2,6 +2,7 @@ package de.hpi.mod.sim.worlds.infinitewarehouse;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,55 +10,70 @@ import de.hpi.mod.sim.core.scenario.Detector;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
-import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.simulation.SimulationRunner;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
-import de.hpi.mod.sim.worlds.abstract_grid.GridWorld;
-import de.hpi.mod.sim.worlds.abstract_grid.IGrid;
+import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
+import de.hpi.mod.sim.worlds.abstract_robots.detectors.CollisionDetector;
+import de.hpi.mod.sim.worlds.abstract_robots.detectors.DeadlockDetector;
 import de.hpi.mod.sim.worlds.infinitewarehouse.detectors.*;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.GridManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.RobotManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.StationManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.RobotSpecification;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.TestCaseGenerator;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.DriveManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.Robot;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.RobotRenderer;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController;
-import de.hpi.mod.sim.worlds.util.ExplosionRenderer;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
-import java.awt.geom.Point2D;
+public class InfiniteWarehouse extends RobotWorld {
 
-public class InfiniteWarehouse extends GridWorld implements IRobotController {
-
-    private GridManager grid;
+    private WarehouseManager warehouseManager;
 
     private List<Detector> detectors;
-
-    private RobotManager robots;
 
     private ScenarioManager scenarioManager;
 
     private RobotRenderer robotRenderer;
-    private ExplosionRenderer explosionRenderer;
 
-    public InfiniteWarehouse() {
-        super();
-        grid = new GridManager(this);
+    private Iterable<WarehouseRobot> robots = new Iterable<WarehouseRobot>(){
+        private Iterator<Robot> robots = getWarehouseManager().getRobots().iterator();
+
+        @Override
+        public Iterator<WarehouseRobot> iterator() {
+            return new Iterator<WarehouseRobot>() {
+                @Override
+                public boolean hasNext() {
+                    return robots.hasNext();
+                }
+
+                @Override
+                public WarehouseRobot next() {
+                    return (WarehouseRobot) robots.next();
+                }
+            };
+        }
+    };
+    
+    @Override
+    protected GridManager createGridManager() {
+        int chargingStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
+        StationManager stationManager = new StationManager(chargingStations);
+        return new WarehouseManager(stationManager);
     }
 
     @Override
     public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
         super.initialize(frame, simulationRunner);
-        robots = new RobotManager(grid,
-                new StationManager(InfiniteWarehouseConfiguration.getChargingStationsInUse()));
         scenarioManager = new ScenarioManager(this);
-        robotRenderer = new RobotRenderer(robots, getSimulationBlockView());
-        explosionRenderer = new ExplosionRenderer();
+        robotRenderer = new RobotRenderer(getSimulationBlockView(), getWarehouseManager());
         initializeDetectors();
+    }
+
+    public Iterable<WarehouseRobot> getWarehouseRobots() {
+        return robots;
     }
 
     protected void initializeDetectors() {
@@ -70,13 +86,8 @@ public class InfiniteWarehouse extends GridWorld implements IRobotController {
 
     }
 
-    public GridManager getGridManager() {
-        return grid;
-    }
-
-    @Override
-    public IGrid getGrid() {
-        return getGridManager();
+    public WarehouseManager getWarehouseManager() {
+        return (WarehouseManager) getGridManager();
     }
 
     @Override
@@ -86,7 +97,7 @@ public class InfiniteWarehouse extends GridWorld implements IRobotController {
 
     @Override
     public void updateEntities(float delta) {
-        for (Robot robot : getRobots()) {
+        for (WarehouseRobot robot : getWarehouseRobots()) {
             if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
                 robot.getDriveManager().update(delta);
             } else {
@@ -97,102 +108,60 @@ public class InfiniteWarehouse extends GridWorld implements IRobotController {
     }
 
     @Override
-    public boolean isBlockedByRobot(Position pos) {
-        return robots.isBlockedByRobot(pos);
-    }
-
-    @Override
     public ScenarioManager getScenarioManager() {
         return scenarioManager;
     }
 
     @Override
-    public List<? extends Entity> getEntities() {
-        return getRobots();
-    }
-
-    public List<Robot> getRobots() {
-        return robots.getRobots();
-    }
-
-    @Override
     public List<Scenario> getScenarios() {
-        return new ScenarioGenerator(robots).getScenarios();
+        return new ScenarioGenerator(getWarehouseManager()).getScenarios();
     }
 
     @Override
     public Map<String, List<TestScenario>> getTestGroups() {
-        return TestCaseGenerator.getAllTestCases(robots);
+        return TestCaseGenerator.getAllTestCases(getWarehouseManager());
     }
 
     @Override
-    public void render(Graphics graphics) {
-        super.render(graphics);
+    public void renderEntities(Graphics graphics) {
         robotRenderer.render(graphics, getSimulationBlockView().getBlockSize());
-        explosionRenderer.render(graphics);
     }
 
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
 
-        int chargingStations = grid.chargingStationsInUse(currentHeight, currentWidth);
+        int chargingStations = warehouseManager.chargingStationsInUse(currentHeight, currentWidth);
             
         if (InfiniteWarehouseConfiguration.getChargingStationsInUse() != chargingStations) {                
             InfiniteWarehouseConfiguration.setChargingStationsInUse(chargingStations);
-            robots.createNewStationManager(InfiniteWarehouseConfiguration.getChargingStationsInUse());
+            getWarehouseManager().createNewStationManager(InfiniteWarehouseConfiguration.getChargingStationsInUse());
         }
     
-        InfiniteWarehouseConfiguration.setUnloadingRange(grid.unloadingRange(currentHeight, currentWidth));
+        InfiniteWarehouseConfiguration.setUnloadingRange(warehouseManager.unloadingRange(currentHeight, currentWidth));
     }
-
-    @Override
-    public void mousePressed(java.awt.event.MouseEvent e) {
-        explosionRenderer.mousePressed(e);
-    }
-
-    public void reportCollision(Robot r1, Robot r2, String reason) {
+    
+    public void reportInvalidPosition(WarehouseRobot robot1, String reason) {
         getFrame().displayWarningMessage(reason);
         getSimulationRunner().setRunForbidden(true);
-        renderExplosion(r1);
     }
-
-    public void reportInvalidPosition(Robot robot1, String reason) {
+    
+    public void reportInvalidTurning(WarehouseRobot robot, String reason) {
         getFrame().displayWarningMessage(reason);
         getSimulationRunner().setRunForbidden(true);
     }
 
-    public void reportInvalidTurning(Robot robot, String reason) {
-        getFrame().displayWarningMessage(reason);
-        getSimulationRunner().setRunForbidden(true);
-    }
-
-    public void reportInvalidUnloading(Robot robot, String reason) {
+    public void reportInvalidUnloading(WarehouseRobot robot, String reason) {
         getFrame().displayWarningMessage(reason);
     }
 
-    public void reportDeadlock(String reason) {
-        getFrame().displayWarningMessage(reason);
-    }
-
-    public void renderExplosion(Robot robot) {
-        DriveManager drive = robot.getDriveManager();
-        Point2D drawPos = getSimulationBlockView().toDrawPosition(drive.getX(), drive.getY());
-        explosionRenderer.showExplosion(drawPos);
-    }
-
-    @Override
-    public void resetAnimationPanel() {
-        explosionRenderer.reset();
-    }
-
-    public Robot getRobotFromSpecification(RobotSpecification specification) {
-        return specification.getRobot(robots);
+    public WarehouseRobot getRobotFromSpecification(RobotSpecification specification) {
+        return specification.getRobot(getWarehouseManager());
     }
     
     @Override
     public IHighlightable getHighlightAtPosition(int x, int y) {
         Position pos = getSimulationBlockView().toGridPosition(x, y);
-        for (Robot robot : getRobots()) {
+        for (WarehouseRobot robot : getWarehouseRobots()) {
             if (robot.getDriveManager().currentPosition().equals(pos)
                     || robot.getDriveManager().getOldPosition().equals(pos))
                 return robot;
@@ -202,16 +171,16 @@ public class InfiniteWarehouse extends GridWorld implements IRobotController {
     
     @Override
     public void refreshEntities() { 
-        robots.refresh();
+        getWarehouseManager().refresh();
     }
 
     @Override
     public void resetScenario() {
-        robots.releaseAllLocks();
+        getWarehouseManager().releaseAllLocks();
     }
 
     @Override
     public void close() {
-        robots.close();
+        getWarehouseManager().close();
     }
 }

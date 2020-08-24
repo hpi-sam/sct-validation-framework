@@ -8,11 +8,11 @@ import java.awt.geom.Point2D;
  */
 public class GridRenderer {
 
-    private IGrid grid;
+    private GridManager grid;
     private SimulationBlockView simView;
 
 
-    public GridRenderer(SimulationBlockView simView, IGrid grid) {
+    public GridRenderer(SimulationBlockView simView, GridManager grid) {
         this.simView = simView;
         this.grid = grid;
     }
