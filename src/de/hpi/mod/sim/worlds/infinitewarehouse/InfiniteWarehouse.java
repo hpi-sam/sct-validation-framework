@@ -30,8 +30,6 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
 public class InfiniteWarehouse extends RobotWorld {
 
-    private WarehouseManager warehouseManager;
-
     private List<Detector> detectors;
 
     private ScenarioManager scenarioManager;
@@ -130,14 +128,15 @@ public class InfiniteWarehouse extends RobotWorld {
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
 
-        int chargingStations = warehouseManager.chargingStationsInUse(currentHeight, currentWidth);
+        int chargingStations = getWarehouseManager().chargingStationsInUse(currentHeight, currentWidth);
             
         if (InfiniteWarehouseConfiguration.getChargingStationsInUse() != chargingStations) {                
             InfiniteWarehouseConfiguration.setChargingStationsInUse(chargingStations);
             getWarehouseManager().createNewStationManager(InfiniteWarehouseConfiguration.getChargingStationsInUse());
         }
     
-        InfiniteWarehouseConfiguration.setUnloadingRange(warehouseManager.unloadingRange(currentHeight, currentWidth));
+        InfiniteWarehouseConfiguration.setUnloadingRange(
+                getWarehouseManager().unloadingRange(currentHeight, currentWidth));
     }
     
     public void reportInvalidPosition(WarehouseRobot robot1, String reason) {

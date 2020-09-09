@@ -13,7 +13,6 @@ import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotDispatch;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotStationDispatcher;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IScanner;
@@ -25,7 +24,7 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IScanner;
  * the coordinate system. All cells which have a Y value below or equal to 0 are
  * in a station.
  */
-public class WarehouseManager extends RobotGridManager implements ISensorDataProvider, IRobotController, IRobotDispatch, ILocation, IScanner {
+public class WarehouseManager extends RobotGridManager implements ISensorDataProvider, IRobotDispatch, ILocation, IScanner {
 
 	private List<Position> invalidPositions = new ArrayList<Position>();
 	private IRobotStationDispatcher stations;
