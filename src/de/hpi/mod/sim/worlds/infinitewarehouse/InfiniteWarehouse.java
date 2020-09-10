@@ -1,6 +1,5 @@
 package de.hpi.mod.sim.worlds.infinitewarehouse;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,6 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.RobotSpecification;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.TestCaseGenerator;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.RobotRenderer;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
 public class InfiniteWarehouse extends RobotWorld {
@@ -30,8 +28,6 @@ public class InfiniteWarehouse extends RobotWorld {
     private List<Detector> detectors;
 
     private ScenarioManager scenarioManager;
-
-    private RobotRenderer robotRenderer;
     
     @Override
     protected GridManager createGridManager() {
@@ -44,7 +40,6 @@ public class InfiniteWarehouse extends RobotWorld {
     public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
         super.initialize(frame, simulationRunner);
         scenarioManager = new ScenarioManager(this);
-        robotRenderer = new RobotRenderer(getSimulationBlockView(), getWarehouseManager());
         initializeDetectors();
     }
 
@@ -93,11 +88,6 @@ public class InfiniteWarehouse extends RobotWorld {
     @Override
     public Map<String, List<TestScenario>> getTestGroups() {
         return TestCaseGenerator.getAllTestCases(getWarehouseManager());
-    }
-
-    @Override
-    public void renderEntities(Graphics graphics) {
-        robotRenderer.render(graphics, getSimulationBlockView().getBlockSize());
     }
 
     @Override

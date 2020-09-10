@@ -19,11 +19,14 @@ public abstract class RobotWorld extends GridWorld {
     
     private ExplosionRenderer explosionRenderer;
 
+    private RobotRenderer robotRenderer;
+
     @Override
     public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
         super.initialize(frame, simulationRunner);
         gridRenderer = new GridRenderer(getSimulationBlockView(), getGridManager());
         explosionRenderer = new ExplosionRenderer();
+        robotRenderer = new RobotRenderer(getSimulationBlockView(), getRobotGridManager());
     }
 
     @Override
@@ -32,8 +35,6 @@ public abstract class RobotWorld extends GridWorld {
         renderEntities(graphics);
         explosionRenderer.render(graphics);
     }
-
-    protected abstract void renderEntities(Graphics graphics);
 
     @Override
     public void resetAnimationPanel() {
@@ -81,5 +82,9 @@ public abstract class RobotWorld extends GridWorld {
                 return robot;
         }
         return null;
+    }
+    
+    protected void renderEntities(Graphics graphics) {
+        robotRenderer.render(graphics, getSimulationBlockView().getBlockSize());
     }
 }

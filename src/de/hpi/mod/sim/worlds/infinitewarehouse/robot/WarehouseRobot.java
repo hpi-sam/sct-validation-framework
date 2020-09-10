@@ -392,6 +392,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         return packageID;
     }
 
+    @Override
     public boolean hasPackage() {
         return manager.hasPackage();
     }

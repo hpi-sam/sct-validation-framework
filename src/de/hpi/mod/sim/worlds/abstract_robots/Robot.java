@@ -54,9 +54,8 @@ public abstract class Robot implements Entity, IHighlightable {
         setRobotTo(startPosition);
         oldPosition = startPosition;
         target = startPosition;
-        facing = startFacing;
-        targetFacing = startFacing;
-        angle = facing.getAngle();
+        turnRobotTo(startFacing);
+        setTargetFacing(startFacing);
     }
 
     public Robot(RobotGridManager grid, Position startPosition, Orientation startFacing) {
@@ -143,7 +142,7 @@ public abstract class Robot implements Entity, IHighlightable {
     }
 
     public void increaseX(float x) {
-        setY(x() + x);
+        setX(x() + x);
     }
      
     public int targetX() {
@@ -167,7 +166,7 @@ public abstract class Robot implements Entity, IHighlightable {
     }
     
     public Orientation facing() {
-        return targetFacing;
+        return facing;
     }
 
     public Orientation targetFacing() {
@@ -183,8 +182,8 @@ public abstract class Robot implements Entity, IHighlightable {
     }
 
     public void turnRobotTo(Orientation facing) {
-        this.facing = facing;
-        this.angle = facing.getAngle();
+        setFacing(facing);
+        setAngle(facing.getAngle());
     }
 
     public void setTargetFacing(Orientation facing) {
@@ -311,4 +310,8 @@ public abstract class Robot implements Entity, IHighlightable {
     public void setArrivedEventWasCalled(boolean b) {
         this.arrivedEventWasCalled = b;
     }
+
+	public boolean hasPackage() {
+		return false;
+	}
 }

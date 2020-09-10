@@ -1,11 +1,9 @@
-package de.hpi.mod.sim.worlds.infinitewarehouse.robot;
+package de.hpi.mod.sim.worlds.abstract_robots;
 
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
-import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,13 +18,13 @@ import java.io.IOException;
 /**
  * Render all Robots.
  */
-public class RobotRenderer { //TODO generalize for AbstractRobotWorld
+public class RobotRenderer {
 
     private SimulationBlockView simView;
     private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
-    private WarehouseManager robots;
+    private RobotGridManager robots;
 
-    public RobotRenderer(SimulationBlockView simView, WarehouseManager robots) {
+    public RobotRenderer(SimulationBlockView simView, RobotGridManager robots) {
         this.simView = simView;
         this.robots = robots;
         loadImages();
@@ -46,8 +44,7 @@ public class RobotRenderer { //TODO generalize for AbstractRobotWorld
 
     public void render(Graphics graphic, float size) {
         // Draw Robots
-        for (Robot generalRobot : robots.getRobots()) {
-            WarehouseRobot robot = (WarehouseRobot) generalRobot;
+        for (Robot robot : robots.getRobots()) {
             Point2D drawPosition = simView.toDrawPosition(robot.x(), robot.y());
 	
 	            boolean leftClicked = robot.equals(simView.getHighlighted1());
@@ -57,8 +54,7 @@ public class RobotRenderer { //TODO generalize for AbstractRobotWorld
         }
 
         // Render additional Info like Targets
-        for (Robot generalRobot : robots.getRobots()) {
-            WarehouseRobot robot = (WarehouseRobot) generalRobot;
+        for (Robot robot : robots.getRobots()) {
             if (robot.equals(simView.getHighlighted1()) || robot.equals(simView.getHighlighted2())) {
 	                Point2D drawPos = simView.toDrawPosition(robot.x(), robot.y());
 	                Point2D targetPos = simView.toDrawPosition(robot.getTarget());
