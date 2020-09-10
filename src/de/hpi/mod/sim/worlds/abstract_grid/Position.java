@@ -90,10 +90,6 @@ public class Position {
 	}
 
 	public boolean is(Position position) {
-		if(position.getX() == x && position.getY() == y) {
-			return true;
-		} else {
-			return false;
-		}
+		return position.getX() == x && position.getY() == y;
 	}
 }
