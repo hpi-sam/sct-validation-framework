@@ -2,7 +2,6 @@ package de.hpi.mod.sim.worlds.infinitewarehouse;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +9,9 @@ import de.hpi.mod.sim.core.scenario.Detector;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
-import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.simulation.SimulationRunner;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
-import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.abstract_robots.detectors.CollisionDetector;

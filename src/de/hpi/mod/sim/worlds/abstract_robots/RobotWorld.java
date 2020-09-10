@@ -1,10 +1,12 @@
 package de.hpi.mod.sim.worlds.abstract_robots;
 
 import de.hpi.mod.sim.core.simulation.Entity;
+import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.simulation.SimulationRunner;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 import de.hpi.mod.sim.worlds.abstract_grid.GridRenderer;
 import de.hpi.mod.sim.worlds.abstract_grid.GridWorld;
+import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.util.ExplosionRenderer;
 
 import java.awt.Graphics;
