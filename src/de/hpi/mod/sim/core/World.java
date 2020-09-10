@@ -3,10 +3,10 @@ package de.hpi.mod.sim.core;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.mod.sim.core.scenario.Detector;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.simulation.SimulationRunner;
@@ -19,9 +19,13 @@ public abstract class World {
 
     private SimulationRunner simulationRunner;
 
+    private ScenarioManager scenarioManager;
+
     public abstract List<Detector> getDetectors();
 
-    public abstract ScenarioManager getScenarioManager();
+    public ScenarioManager getScenarioManager() {
+        return scenarioManager;
+    }
 
     public SimulationRunner getSimulationRunner() {
         return simulationRunner;
@@ -30,11 +34,17 @@ public abstract class World {
     public SimulatorFrame getFrame() {
         return frame;
     }
-
-    public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
+    
+    public final void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
         this.frame = frame;
         this.simulationRunner = simulationRunner;
+        initialize();
+        //As the scenarioManager depends on the lists of scenarios being prepared, it is created after the initialize() call
+        this.scenarioManager = new ScenarioManager(this);
     }
+
+
+    protected abstract void initialize();
 
     public void clearEntities() {
         getEntities().clear();

@@ -1,8 +1,6 @@
 package de.hpi.mod.sim.worlds.abstract_grid;
 
 import de.hpi.mod.sim.core.World;
-import de.hpi.mod.sim.core.simulation.SimulationRunner;
-import de.hpi.mod.sim.core.view.SimulatorFrame;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 import java.awt.Graphics;
@@ -23,8 +21,7 @@ public abstract class GridWorld extends World {
     protected abstract GridManager createGridManager();
 
     @Override
-    public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
-        super.initialize(frame, simulationRunner);
+    public void initialize() {
         gridRenderer = new GridRenderer(getSimulationBlockView(), getGridManager());
     }
     

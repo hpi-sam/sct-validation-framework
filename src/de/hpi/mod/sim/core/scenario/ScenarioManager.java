@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 

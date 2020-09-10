@@ -2,8 +2,6 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
-import de.hpi.mod.sim.core.simulation.SimulationRunner;
-import de.hpi.mod.sim.core.view.SimulatorFrame;
 import de.hpi.mod.sim.worlds.abstract_grid.GridRenderer;
 import de.hpi.mod.sim.worlds.abstract_grid.GridWorld;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
@@ -22,8 +20,8 @@ public abstract class RobotWorld extends GridWorld {
     private RobotRenderer robotRenderer;
 
     @Override
-    public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
-        super.initialize(frame, simulationRunner);
+    public void initialize() {
+        super.initialize();
         gridRenderer = new GridRenderer(getSimulationBlockView(), getGridManager());
         explosionRenderer = new ExplosionRenderer();
         robotRenderer = new RobotRenderer(getSimulationBlockView(), getRobotGridManager());

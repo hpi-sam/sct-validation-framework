@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import de.hpi.mod.sim.core.scenario.Detector;
 import de.hpi.mod.sim.core.scenario.Scenario;
-import de.hpi.mod.sim.core.scenario.ScenarioManager;
 import de.hpi.mod.sim.core.scenario.TestScenario;
-import de.hpi.mod.sim.core.simulation.SimulationRunner;
-import de.hpi.mod.sim.core.view.SimulatorFrame;
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
@@ -26,8 +23,6 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 public class InfiniteWarehouse extends RobotWorld {
 
     private List<Detector> detectors;
-
-    private ScenarioManager scenarioManager;
     
     @Override
     protected GridManager createGridManager() {
@@ -37,9 +32,8 @@ public class InfiniteWarehouse extends RobotWorld {
     }
 
     @Override
-    public void initialize(SimulatorFrame frame, SimulationRunner simulationRunner) {
-        super.initialize(frame, simulationRunner);
-        scenarioManager = new ScenarioManager(this);
+    public void initialize() {
+        super.initialize();
         initializeDetectors();
     }
 
@@ -73,11 +67,6 @@ public class InfiniteWarehouse extends RobotWorld {
             }
 
         }
-    }
-
-    @Override
-    public ScenarioManager getScenarioManager() {
-        return scenarioManager;
     }
 
     @Override

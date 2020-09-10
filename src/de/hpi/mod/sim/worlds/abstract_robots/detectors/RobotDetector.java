@@ -3,7 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_robots.detectors;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.hpi.mod.sim.core.scenario.Detector;
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;

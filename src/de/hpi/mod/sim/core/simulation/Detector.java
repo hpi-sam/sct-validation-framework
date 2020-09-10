@@ -1,9 +1,7 @@
-package de.hpi.mod.sim.core.scenario;
+package de.hpi.mod.sim.core.simulation;
 
 import java.util.List;
 
-import de.hpi.mod.sim.core.simulation.Entity;
-import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.World;
 
 public abstract class Detector {
