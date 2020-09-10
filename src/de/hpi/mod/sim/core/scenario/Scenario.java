@@ -7,7 +7,7 @@ import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.simulation.Entity;
 
 /**
- * Contains Positions of Robots which can be applied to the Simulation.
+ * An executable set up.
  * Some Scenarios are defined in {@link ScenarioManager}
  */
 public abstract class Scenario {

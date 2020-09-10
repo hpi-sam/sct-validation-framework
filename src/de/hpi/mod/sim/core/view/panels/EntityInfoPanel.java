@@ -9,7 +9,7 @@ import de.hpi.mod.sim.core.view.IHighlightedListener;
 import java.awt.*;
 
 /**
- * Shows informations about the currently highlighted robot
+ * Shows informations about the currently highlighted entity
  */
 public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 

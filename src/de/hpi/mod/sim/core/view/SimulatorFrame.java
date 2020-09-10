@@ -23,8 +23,8 @@ public class SimulatorFrame extends JFrame {
 	private static final long serialVersionUID = 4683030810403226266L;
 	private World world;
 	private AnimationPanel animationPanel;
-	private EntityInfoPanel robotInfoPanel1;
-	private EntityInfoPanel robotInfoPanel2;
+	private EntityInfoPanel entityInfoPanel1;
+	private EntityInfoPanel entityInfoPanel2;
 	private ScenarioPanel scenarioPanel;
 	private TestListPanel testListPanel;
 	private JScrollPane testListScrollPane;
@@ -132,8 +132,8 @@ public class SimulatorFrame extends JFrame {
     }
     
     private void initializePanels(AnimationPanel animationPanel) {
-		robotInfoPanel1 = new EntityInfoPanel(animationPanel, false);
-        robotInfoPanel2 = new EntityInfoPanel(animationPanel, true);
+		entityInfoPanel1 = new EntityInfoPanel(animationPanel, false);
+        entityInfoPanel2 = new EntityInfoPanel(animationPanel, true);
         simulationControlPanel = new SimulationControlPanel(world.getSimulationRunner(), world.getScenarioManager());
         testListPanel = new TestListPanel(world.getScenarioManager());
         testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -144,8 +144,8 @@ public class SimulatorFrame extends JFrame {
 	}
     
     private void addListeners(AnimationPanel animationPanel) {
-		animationPanel.addHighlightedListener(robotInfoPanel1);
-        animationPanel.addHighlightedListener(robotInfoPanel2);
+		animationPanel.addHighlightedListener(entityInfoPanel1);
+        animationPanel.addHighlightedListener(entityInfoPanel2);
         world.getSimulationRunner().addTimeListener(simulationControlPanel);
         world.getScenarioManager().addTestScenarioListener(testListPanel);
         world.getScenarioManager().addTestScenarioListener(testOverviewPanel);
@@ -165,15 +165,15 @@ public class SimulatorFrame extends JFrame {
         timerPanel.setBackground(MAIN_MENU_COLOR);
         
         //info panels work with a different layout than all other panels and need a specified size
-        robotInfoPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked robot"));
-        robotInfoPanel1.setMinimumSize(new Dimension(200, 200));
-        robotInfoPanel1.setPreferredSize(new Dimension(200, 200));
-        robotInfoPanel1.setBackground(MENU_GREEN);
+        entityInfoPanel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info left clicked entity"));
+        entityInfoPanel1.setMinimumSize(new Dimension(200, 200));
+        entityInfoPanel1.setPreferredSize(new Dimension(200, 200));
+        entityInfoPanel1.setBackground(MENU_GREEN);
         
-        robotInfoPanel2.setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked robot"));
-        robotInfoPanel2.setMinimumSize(new Dimension(200, 200));
-        robotInfoPanel2.setPreferredSize(new Dimension(200, 200));
-        robotInfoPanel2.setBackground(MENU_RED);
+        entityInfoPanel2.setBorder(BorderFactory.createTitledBorder( BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Info right clicked entity"));
+        entityInfoPanel2.setMinimumSize(new Dimension(200, 200));
+        entityInfoPanel2.setPreferredSize(new Dimension(200, 200));
+        entityInfoPanel2.setBackground(MENU_RED);
         
         testListPanel.setBackground(MAIN_MENU_COLOR);
         
@@ -181,7 +181,7 @@ public class SimulatorFrame extends JFrame {
         		scenarioPanel.getPreferredSize().height +
         		simulationControlPanel.getPreferredSize().height +
         		timerPanel.getPreferredSize().height +
-        		robotInfoPanel1.getPreferredSize().height;
+        		entityInfoPanel1.getPreferredSize().height;
         int testListScrollPanelWidth = testListPanel.getPreferredSize().width + 50;
         testListScrollPane.setPreferredSize(new Dimension(testListScrollPanelWidth, testListScrollPanelHeight));
         testListScrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED), "Tests"));
@@ -257,14 +257,14 @@ public class SimulatorFrame extends JFrame {
 		infoConstraints.gridy = 4;
 		infoConstraints.fill = GridBagConstraints.HORIZONTAL;
 		infoConstraints.anchor = GridBagConstraints.PAGE_START;
-		add(robotInfoPanel1, infoConstraints);
+		add(entityInfoPanel1, infoConstraints);
 		
 		GridBagConstraints info2Constraints = new GridBagConstraints();
 		info2Constraints.gridx = 3;
 		info2Constraints.gridy = 4;
 		info2Constraints.fill = GridBagConstraints.HORIZONTAL;
 		info2Constraints.anchor = GridBagConstraints.PAGE_START;
-		add(robotInfoPanel2, info2Constraints);
+		add(entityInfoPanel2, info2Constraints);
 		
 		GridBagConstraints testListConstraints = new GridBagConstraints();
 		testListConstraints.gridx = 4;
@@ -362,8 +362,8 @@ public class SimulatorFrame extends JFrame {
         lastFrame = System.currentTimeMillis();
         
 		world.getSimulationRunner().refresh();
-		robotInfoPanel1.onHighlightedChange();
-		robotInfoPanel2.onHighlightedChange();
+		entityInfoPanel1.onHighlightedChange();
+		entityInfoPanel2.onHighlightedChange();
 		world.getScenarioManager().refresh();
 		world.getSimulationRunner().update(delta);
 

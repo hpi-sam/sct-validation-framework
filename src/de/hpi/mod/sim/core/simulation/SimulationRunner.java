@@ -27,7 +27,7 @@ public class SimulationRunner {
 	private boolean runForbidden = false;
 
 	/**
-	 * Used for locking while the List of Robots gets traversed
+	 * Used for locking while the List of entities gets traversed
 	 */
 	private boolean isRefreshing = false, isUpdating = false;
 
@@ -72,8 +72,8 @@ public class SimulationRunner {
 	}
 
 	/**
-	 * Refreshes the Simulation and sends Sensor-Refreshes to all Robots. Locks the
-	 * List of robots
+	 * Refreshes the Simulation and sends Sensor-Refreshes to all entities. Locks the
+	 * List of entities
 	 */
 	public synchronized void refresh() {
 		if (running && !runForbidden) {

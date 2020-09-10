@@ -3,7 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_grid;
 import java.util.Random;
 
 /**
- * The orientation a robot can face
+ * The orientation an entity can face
  */
 public enum Orientation {
     NORTH, EAST, SOUTH, WEST;

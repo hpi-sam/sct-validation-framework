@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Render all Robots.
+ * Renders all Robots.
  */
 public class RobotRenderer {
 

@@ -77,8 +77,8 @@ public class GridRenderer {
      * @param drawPosition The draw-position
      * @param highlight Highlighted?
      * @param isZeroZero should the zero-zero highlight be drawn?
- 	 * @param blockedBy1 is this block blocked by the first highlighted robot?
- 	 * @param blockedBy2 is this block blocked by the second highlighted robot?
+ 	 * @param blockedBy1 is this block blocked by the first highlighted entity?
+ 	 * @param blockedBy2 is this block blocked by the second highlighted entity?
      */
     private void drawBlock(Graphics graphic, ICellType cell, Point2D drawPosition, boolean highlight,
             boolean isZeroZero, boolean blockedBy1, boolean blockedBy2) {

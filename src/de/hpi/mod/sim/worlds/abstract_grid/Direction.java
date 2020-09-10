@@ -3,7 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_grid;
 import java.util.Random;
 
 /**
- * The directions relative to a robot
+ * The directions relative to an entity
  */
 public enum Direction {
     LEFT, AHEAD, RIGHT, BEHIND;
