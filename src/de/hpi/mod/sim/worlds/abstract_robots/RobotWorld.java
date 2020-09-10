@@ -49,7 +49,7 @@ public abstract class RobotWorld extends GridWorld {
     }
 
     public void renderExplosion(Robot robot) {
-        Point2D drawPos = getSimulationBlockView().toDrawPosition(robot.posX(), robot.posY());
+        Point2D drawPos = getSimulationBlockView().toDrawPosition(robot.x(), robot.y());
         explosionRenderer.showExplosion(drawPos);
     }
     
@@ -69,5 +69,15 @@ public abstract class RobotWorld extends GridWorld {
     @Override
     public List<? extends Entity> getEntities() {
         return getRobots();
+    }
+    
+    @Override
+    public IHighlightable getHighlightAtPosition(int x, int y) {
+        Position pos = getSimulationBlockView().toGridPosition(x, y);
+        for (Robot robot : getRobots()) {
+            if (robot.pos().equals(pos) || robot.oldPos().equals(pos))
+                return robot;
+        }
+        return null;
     }
 }

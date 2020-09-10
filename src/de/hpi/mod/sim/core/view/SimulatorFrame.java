@@ -350,22 +350,22 @@ public class SimulatorFrame extends JFrame {
 		}
 	}
 
-    private void update() {
-    	while(System.currentTimeMillis() - lastFrame < Configuration.getDefaultRefreshInterval()) {
-	    	try {
+	private void update() {
+		while (System.currentTimeMillis() - lastFrame < Configuration.getDefaultRefreshInterval()) {
+			try {
 				Thread.sleep(3);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-    	}
+		}
         float delta = System.currentTimeMillis() - lastFrame;
         lastFrame = System.currentTimeMillis();
         
-        world.getSimulationRunner().refresh();
-        robotInfoPanel1.onHighlightedChange();
-        robotInfoPanel2.onHighlightedChange();
-        world.getScenarioManager().refresh();
-        world.getSimulationRunner().update(delta);
+		world.getSimulationRunner().refresh();
+		robotInfoPanel1.onHighlightedChange();
+		robotInfoPanel2.onHighlightedChange();
+		world.getScenarioManager().refresh();
+		world.getSimulationRunner().update(delta);
 
         this.repaint();
     }

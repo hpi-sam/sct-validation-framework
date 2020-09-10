@@ -40,17 +40,23 @@ public abstract class Robot implements Entity, IHighlightable {
 
     private boolean arrivedEventWasCalled = true;
 
-    private Position position;
-    private Orientation facing;
+    private Orientation facing, targetFacing;
 
     private float battery;
+
+    private float x, y, angle;
+
+    private Position position, oldPosition;
 
     public Robot(int robotID, RobotGridManager grid, Position startPosition, Orientation startFacing) {
         this.robotID = robotID; //TODO handle case of already given robotID
         this.grid = grid;
-        position = startPosition;
+        setRobotTo(startPosition);
+        oldPosition = startPosition;
         target = startPosition;
         facing = startFacing;
+        targetFacing = startFacing;
+        angle = facing.getAngle();
     }
 
     public Robot(RobotGridManager grid, Position startPosition, Orientation startFacing) {
@@ -63,15 +69,22 @@ public abstract class Robot implements Entity, IHighlightable {
      * @param hardArrivedConstraint 
      */
     public Robot(RobotGridManager grid,
-                 Position startPosition, Orientation startFacing, List<Position> targets, int robotSpecificDelay, int initialDelay, boolean fuzzyEnd, boolean hardArrivedConstraint) {
+            Position startPosition, Orientation startFacing, List<Position> targets, int robotSpecificDelay,
+            int initialDelay, boolean fuzzyEnd, boolean hardArrivedConstraint) {
         this(grid, startPosition, startFacing);
         testTargets = targets;
-        isInTest  = true;
+        isInTest = true;
         this.robotSpecificDelay = robotSpecificDelay;
-        this.initialDelay  = initialDelay;
+        this.initialDelay = initialDelay;
         this.initialNow = System.currentTimeMillis();
         this.fuzzyTestCompletion = fuzzyEnd;
         this.requireArrivedForTestCompletion = hardArrivedConstraint;
+    }
+    
+    private void setRobotTo(Position pos) {
+        this.x = pos.getX();
+        this.y = pos.getY();
+        this.position = pos;
     }
 
 	/**
@@ -98,20 +111,88 @@ public abstract class Robot implements Entity, IHighlightable {
         robotHasDriveTarget = true;
     }
     
+    public float x() {
+        return x;
+    }
+    
+    public float y() {
+        return y;
+    }
+
     public int posX() {
-    	return this.pos().getX();
+        return position.getX();
     }
-    
+
     public int posY() {
-    	return this.pos().getY();
+        return position.getY();
     }
     
+    public float getAngle() {
+        return angle;
+    }
+    
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+    public void increaseY(float y) {
+        setY(y() + y);
+    }
+
+    public void increaseX(float x) {
+        setY(x() + x);
+    }
+     
     public int targetX() {
     	return this.target.getX();
     }
     
     public int targetY() {
     	return this.target.getY();
+    }
+
+    public Position oldPos() {
+        return oldPosition;
+    }
+
+    public void setOldPos(Position pos) {
+        this.oldPosition = pos;
+    }
+
+    public void setPos(Position pos) {
+        this.position = pos;
+    }
+    
+    public Orientation facing() {
+        return targetFacing;
+    }
+
+    public Orientation targetFacing() {
+        return targetFacing;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+
+    public void increaseAngle(float angle) {
+        setAngle(getAngle() + angle);
+    }
+
+    public void turnRobotTo(Orientation facing) {
+        this.facing = facing;
+        this.angle = facing.getAngle();
+    }
+
+    public void setTargetFacing(Orientation facing) {
+        this.targetFacing = facing;
+    }
+
+    public void setFacing(Orientation facing) {
+        this.facing = facing;
     }
 
     public boolean isOnTarget() {
@@ -121,19 +202,14 @@ public abstract class Robot implements Entity, IHighlightable {
             return isOnTargetOrNearby() && this.pos().equals(this.oldPos());
         }
     }
-    
-    private Position currentPosition() {
-        return position;
-    }
 
-    public abstract Position oldPos(); //TODO
 
 	private boolean isOnTargetFuzzy() {
-		return currentPosition().fuzzyEquals(target);
+		return pos().fuzzyEquals(target);
 	}
 
 	public boolean isOnTargetOrNearby() {
-        return currentPosition().equals(target);
+        return pos().equals(target);
     }
     
     @Override

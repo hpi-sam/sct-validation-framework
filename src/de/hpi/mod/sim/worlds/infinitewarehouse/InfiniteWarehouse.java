@@ -35,25 +35,6 @@ public class InfiniteWarehouse extends RobotWorld {
     private ScenarioManager scenarioManager;
 
     private RobotRenderer robotRenderer;
-
-    private Iterable<WarehouseRobot> robots = new Iterable<WarehouseRobot>(){
-        private Iterator<Robot> robots = getWarehouseManager().getRobots().iterator();
-
-        @Override
-        public Iterator<WarehouseRobot> iterator() {
-            return new Iterator<WarehouseRobot>() {
-                @Override
-                public boolean hasNext() {
-                    return robots.hasNext();
-                }
-
-                @Override
-                public WarehouseRobot next() {
-                    return (WarehouseRobot) robots.next();
-                }
-            };
-        }
-    };
     
     @Override
     protected GridManager createGridManager() {
@@ -68,10 +49,6 @@ public class InfiniteWarehouse extends RobotWorld {
         scenarioManager = new ScenarioManager(this);
         robotRenderer = new RobotRenderer(getSimulationBlockView(), getWarehouseManager());
         initializeDetectors();
-    }
-
-    public Iterable<WarehouseRobot> getWarehouseRobots() {
-        return robots;
     }
 
     protected void initializeDetectors() {
@@ -95,7 +72,8 @@ public class InfiniteWarehouse extends RobotWorld {
 
     @Override
     public void updateEntities(float delta) {
-        for (WarehouseRobot robot : getWarehouseRobots()) {
+        for (Robot generalRobot : getRobots()) {
+            WarehouseRobot robot = (WarehouseRobot) generalRobot;
             if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
                 robot.getDriveManager().update(delta);
             } else {
@@ -158,18 +136,7 @@ public class InfiniteWarehouse extends RobotWorld {
     }
     
     @Override
-    public IHighlightable getHighlightAtPosition(int x, int y) {
-        Position pos = getSimulationBlockView().toGridPosition(x, y);
-        for (WarehouseRobot robot : getWarehouseRobots()) {
-            if (robot.getDriveManager().currentPosition().equals(pos)
-                    || robot.getDriveManager().getOldPosition().equals(pos))
-                return robot;
-        }
-        return null;
-    }
-    
-    @Override
-    public void refreshEntities() { 
+    public void refreshEntities() {
         getWarehouseManager().refresh();
     }
 

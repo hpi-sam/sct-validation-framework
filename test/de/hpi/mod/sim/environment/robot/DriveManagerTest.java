@@ -21,8 +21,8 @@ public class DriveManagerTest {
         DriveManager drive = new DriveManager(
                 new DummyDriveHandler(), initPosition, initFacing);
         assertEquals(initFacing.getAngle(), drive.getAngle(), 1);
-        assertEquals(initPosition.getX(), drive.getX(), 1);
-        assertEquals(initPosition.getY(), drive.getY(), 1);
+        assertEquals(initPosition.getX(), drive.x(), 1);
+        assertEquals(initPosition.getY(), drive.y(), 1);
         assertEquals(initPosition, drive.currentPosition());
     }
 
@@ -41,8 +41,8 @@ public class DriveManagerTest {
             drive.update(1000);  // 1 second has elapsed
 
             Position shouldCurrent = new Position(initPosition.getX(), i+1);
-            assertEquals(shouldCurrent.getX(), drive.getX(), .1);
-            assertEquals(shouldCurrent.getY(), drive.getY(), .1);
+            assertEquals(shouldCurrent.getX(), drive.x(), .1);
+            assertEquals(shouldCurrent.getY(), drive.y(), .1);
             assertFalse("Should have stopped moving", drive.isMoving());
             assertEquals(shouldCurrent, drive.currentPosition());
             assertEquals(i+1, handler.getCallCount());

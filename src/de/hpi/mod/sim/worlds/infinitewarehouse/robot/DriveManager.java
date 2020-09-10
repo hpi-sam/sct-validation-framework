@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IDriveListener;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotActors;
 
 /**
@@ -13,14 +12,8 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotActors;
  */
 public class DriveManager implements IRobotActors {
 	
-	private IDriveListener listener;
-
-    private float x, y, angle;
     private long delay = Integer.MAX_VALUE;
     private long now = System.currentTimeMillis();
-
-    private Position currentPosition;
-    private Orientation targetFacing;
 
     private boolean loading = false;
     private boolean isUnloading = false;
@@ -29,8 +22,6 @@ public class DriveManager implements IRobotActors {
     private boolean isMoving = false;
 
     private long unloadingStartTime;
-    private Position oldPosition;
-    private Orientation oldFacing;
 
     private long unloadingTime = InfiniteWarehouseConfiguration.getDefaultUnloadingTime();
     
@@ -48,21 +39,16 @@ public class DriveManager implements IRobotActors {
 	
 	private boolean hasUnloadedSomething = false;
 
+	private WarehouseRobot robot;
 
-    public DriveManager(IDriveListener listener, Position position, Orientation facing) {
-        this.listener = listener;
-        currentPosition = position;
-        oldPosition = position;
-        targetFacing = facing;
-        oldFacing = facing;
-        x = position.getX();
-        y = position.getY();
-        angle = facing.getAngle();
+
+    public DriveManager(WarehouseRobot robot) {
+		this.robot = robot;
     }
 
-    public void update(float delta) {
+	public void update(float delta) {
     	decreasePerTick();
-    	if(maxDelay > 0) {
+		if(maxDelay > 0) {
     		if(delay + now <= System.currentTimeMillis()) {
     			if (isWaitingToMoveForward) {
     				performDriveForward();
@@ -120,72 +106,71 @@ public class DriveManager implements IRobotActors {
 		if (System.currentTimeMillis() - unloadingStartTime > (unloadingTime/(InfiniteWarehouseConfiguration.getEntitySpeedLevel()+1))) {
 			isUnloading = false;
 			hasPackage = false;
-		    listener.actionCompleted();
+		    robot.actionCompleted();
 		}
 	}
 
 	private void calculateTurnRight(float delta) {
-		float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
+		float deltaAngle = robot.targetFacing().getAngle() - robot.facing().getAngle();
 		while (deltaAngle < 0) deltaAngle += 360;
 
-		angle += Math.copySign(getRotationSpeed() * delta, deltaAngle);
-		while (angle < 0) angle += 360;
+		robot.increaseAngle(Math.copySign(getRotationSpeed() * delta, deltaAngle));
+		while (robot.getAngle() < 0) 
+			robot.increaseAngle(360);
 
-		if (angle >= targetFacing.getAngle()) {
-		    angle = targetFacing.getAngle();
-		    oldFacing = targetFacing;
+		if (robot.getAngle() >= robot.targetFacing().getAngle()) {
+		    robot.turnRobotTo(robot.targetFacing());
 		    isTurningRight = false;
-		    listener.actionCompleted();
+		    robot.actionCompleted();
 		}
 	}
 
 	private void calculateTurnLeft(float delta) {
-			float deltaAngle = targetFacing.getAngle() - oldFacing.getAngle();
+			float deltaAngle = robot.targetFacing().getAngle() - robot.facing().getAngle();
 			while (deltaAngle > 0) deltaAngle -= 360;
 	
-			angle += Math.copySign(getRotationSpeed() * delta, deltaAngle);
+			robot.increaseAngle(Math.copySign(getRotationSpeed() * delta, deltaAngle));
 	
-			if (angle <= targetFacing.getAngle()) {
-			    angle = targetFacing.getAngle();
-			    oldFacing = targetFacing;
+			if (robot.getAngle() <= robot.targetFacing().getAngle()) {
+			    robot.turnRobotTo(robot.targetFacing());
 			    isTurningLeft = false;
-			    listener.actionCompleted();
+			    robot.actionCompleted();
 			}
 	}
 
 	private void calculateMovement(float delta) {
-		int deltaX = currentPosition.getX() - oldPosition.getX();
-		int deltaY = currentPosition.getY() - oldPosition.getY();
+		int deltaX = robot.posX() - robot.oldPos().getX();
+		int deltaY = robot.posY() - robot.oldPos().getY();
 
 		if (deltaY != 0) {
-		    y += Math.copySign(InfiniteWarehouseConfiguration.getEntitySpeed() * delta, deltaY);
+		    robot.increaseY(Math.copySign(InfiniteWarehouseConfiguration.getEntitySpeed() * delta, deltaY));
 
 		    // If y moved over target
-		    if (deltaY > 0 && y >= currentPosition.getY() ||
-		            deltaY < 0 && y <= currentPosition.getY()) {
-		        y = currentPosition.getY();
+		    if (deltaY > 0 && robot.y() >= robot.posY() ||
+		            deltaY < 0 && robot.y() <= robot.posY()) {
+		        robot.setY(robot.posY());
 		        finishMovement();
 		    }
 		} else if (deltaX != 0) {
-		    x += Math.copySign(InfiniteWarehouseConfiguration.getEntitySpeed() * delta, deltaX);
+			robot.increaseX(Math.copySign(InfiniteWarehouseConfiguration.getEntitySpeed() * delta, deltaX));
 
 		    // If x moved over target
-		    if (deltaX > 0 && x >= currentPosition.getX() ||
-		            deltaX < 0 && x <= currentPosition.getX()) {
-		        x = currentPosition.getX();
+		    if (deltaX > 0 && robot.x() >= robot.posX() ||
+		            deltaX < 0 && robot.x() <= robot.posX()) {
+		        robot.setX(robot.posX());
 		        finishMovement();
 		    }
 		}
 	}
 	
 	private void finishMovement() {
-		oldPosition = currentPosition;
+		robot.setOldPos(robot.pos());
         isMoving = false;
-        listener.actionCompleted();
+        robot.actionCompleted();
 	}
 
     @Override
-    public void driveForward() {
+	public void driveForward() {
     	if(!animationRunning()) {  	
 	        if (hasPower()) {
 	        	if(maxDelay > 0) {
@@ -217,8 +202,8 @@ public class DriveManager implements IRobotActors {
 	}
 	
 	private void performDriveBackward() {
-		oldPosition = currentPosition;
-		currentPosition = Position.nextPositionInOppositeOrientation(targetFacing, oldPosition);
+		robot.setOldPos(robot.pos());
+		robot.setPos(Position.nextPositionInOppositeOrientation(robot.targetFacing(), robot.oldPos()));
 		decreaseBattery();
 		isMoving = true;
 	}
@@ -241,8 +226,8 @@ public class DriveManager implements IRobotActors {
 	}
 
 	private void performDriveForward() {
-		oldPosition = currentPosition;
-		currentPosition = Position.nextPositionInOrientation(targetFacing, oldPosition);
+		robot.setOldPos(robot.pos());
+		robot.setPos(Position.nextPositionInOrientation(robot.targetFacing(), robot.oldPos()));
 		decreaseBattery();
 		isMoving = true;
 	}
@@ -263,8 +248,8 @@ public class DriveManager implements IRobotActors {
     }
 
 	private void performTurnLeft() {
-		oldFacing = targetFacing;
-		targetFacing = targetFacing.getTurnedLeft();
+		robot.setFacing(robot.targetFacing());
+		robot.setTargetFacing(robot.targetFacing().getTurnedLeft());
 		decreaseBattery();
 		isTurningLeft = true;
 	}
@@ -285,8 +270,8 @@ public class DriveManager implements IRobotActors {
     }
 
 	private void performTurnRight() {
-		oldFacing = targetFacing;
-		targetFacing = targetFacing.getTurnedRight();
+		robot.setFacing(robot.targetFacing());
+		robot.setTargetFacing(robot.targetFacing().getTurnedRight());
 		decreaseBattery();
 		isTurningRight = true;
 	}
@@ -334,33 +319,6 @@ public class DriveManager implements IRobotActors {
         this.loading = loading;
     }
 
-    /**
-     * @return The ceiling of the Position of the robot
-     */
-    public Position currentPosition() {
-        return currentPosition;
-    }
-
-	public Orientation currentFacing() {
-		return oldFacing;
-	}
-	
-    public Position getOldPosition() {
-    	return oldPosition;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getAngle() {
-        return angle;
-    }
-
     public boolean isUnloading() {
         return isUnloading;
     }
@@ -398,24 +356,24 @@ public class DriveManager implements IRobotActors {
 	}
 
 	public boolean isInPositionToUnloadIntoShaft() {
-		if(currentPosition.getY() <= 1) {
+		if(robot.posY() <= 1) {
 			return false; 
-		} else if(currentPosition.getY()%3 != 0 && currentPosition.getX()%3 != 0) {
+		} else if(robot.posY()%3 != 0 && robot.posX()%3 != 0) {
 			return false; 
-		} else if((currentPosition.getX() % 3 == 2 || currentPosition.getX() % 3 == -1) && currentPosition.getY() % 3 == 0) {
-			if(targetFacing == Orientation.NORTH) {
+		} else if((robot.posX() % 3 == 2 || robot.posX() % 3 == -1) && robot.posY() % 3 == 0) {
+			if(robot.targetFacing() == Orientation.NORTH) {
 				return true;
 			}
-		} else if((currentPosition.getX() % 3 == 1 || currentPosition.getX() % 3 == -2) && currentPosition.getY() % 3 == 0) {
-			if(targetFacing == Orientation.SOUTH) {
+		} else if((robot.posX() % 3 == 1 || robot.posX() % 3 == -2) && robot.posY() % 3 == 0) {
+			if(robot.targetFacing() == Orientation.SOUTH) {
 				return true;
 			}
-		} else if(currentPosition.getX() % 3 == 0 && currentPosition.getY() % 3 == 1) {
-			if(targetFacing == Orientation.EAST) {
+		} else if(robot.posX() % 3 == 0 && robot.posY() % 3 == 1) {
+			if(robot.targetFacing() == Orientation.EAST) {
 				return true;
 			}
-		} else if(currentPosition.getX() % 3 == 0 && currentPosition.getY() % 3 == 2) {
-			if(targetFacing == Orientation.WEST) {
+		} else if(robot.posX() % 3 == 0 && robot.posY() % 3 == 2) {
+			if(robot.targetFacing() == Orientation.WEST) {
 				return true;
 			}
 		}

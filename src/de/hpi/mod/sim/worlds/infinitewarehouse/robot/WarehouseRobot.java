@@ -45,7 +45,6 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     private long now = 0;
     private long delay = 0;
 
-    private boolean isInTest = false;
     private boolean isAlone = false;
 
     private Position invalidUnloadingPosition = null;
@@ -61,7 +60,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         this.robotDispatch = robots;
         this.location = grid;
         this.scanner = grid;
-        manager = new DriveManager(this, startPosition, startFacing);
+        manager = new DriveManager(this);
         DriveSystemWrapper drive = new DriveSystemWrapper(this, manager, this);
         this.drive = drive;
         this.chart = drive;
@@ -87,7 +86,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         this.robotDispatch = robotDispatch;
         this.location = grid;
         this.scanner = grid;
-        manager = new DriveManager(this, startPosition, startFacing);
+        manager = new DriveManager(this);
         DriveSystemWrapper drive = new DriveSystemWrapper(this, manager, this);
         this.drive = drive;
         this.chart = drive;
@@ -111,7 +110,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         drive.dataRefresh();
         chart.updateTimer();
     	if (!robotHasDriveTarget) {
-            if(!isInTest || !getTestTargets().isEmpty()) {
+            if(!isInTest() || !getTestTargets().isEmpty()) {
                 if (state == RobotState.TO_CHARGER && manager.isBatteryFull()) {
                     handleFinishedCharging();
                 } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
@@ -144,7 +143,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         if (hasReservedCharger) {
         	startDrivingToCharging();
         	if(robotDispatch.requestEnteringCharger(getID(), stationID)) {
-        		if(!isInTest) {
+        		if(!isInTest()) {
         			chargerID = robotDispatch.getReservedChargerAtStation(getID(), stationID);
         		} else {
         			// If in test: Translate coordinates from queue to charger id
@@ -177,7 +176,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     }
 
     private void handleArriveAtCharger() {
-        if(manager.currentFacing() == Orientation.EAST) {
+        if(facing() == Orientation.EAST) {
         	robotDispatch.reportChargingAtStation(getID(), stationID, chargerID);
         	manager.setLoading(true);
         }
@@ -201,13 +200,14 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     private void handleArriveAtQueue() {
         robotDispatch.reportEnteringQueueAtStation(getID(), stationID);
         drive.newTarget();
-    	if(!isInTest) {
+        if (!isInTest()) {
         	setTarget(location.getLoadingPositionAtStation(stationID));
         } else {
-        	if((manager.currentPosition().equals(getTarget()) || manager.getOldPosition().equals(getTarget())) && arrivementFullfilled()) {
+            if ((pos().equals(getTarget()) || oldPos().equals(getTarget()))
+                    && arrivementFullfilled()) {
         		setTarget(getTestTargets().get(0));
-        		getTestTargets().remove(0);
-        		setArrivedEventWasCalled(false);
+                getTestTargets().remove(0);
+                setArrivedEventWasCalled(false);
         	}
         }
         state = RobotState.TO_LOADING;
@@ -215,7 +215,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     }
 
     private void handleFinishedLoading() {
-    	if(now == 0 && !isInTest) {
+    	if(now == 0 && !isInTest()) {
     		long minWaitTime = (long) (InfiniteWarehouseConfiguration.getMinWaitingTimeBeforeLoading() / InfiniteWarehouseConfiguration.getEntitySpeedFactor());
     		long maxWaitTime = (long) (InfiniteWarehouseConfiguration.getMaxWaitingTimeBeforeLoading() / InfiniteWarehouseConfiguration.getEntitySpeedFactor());
     		if(isAlone) {
@@ -226,22 +226,22 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     		now = System.currentTimeMillis();
     	}
     	
-    	if(now < System.currentTimeMillis() - delay || isInTest)
+    	if(now < System.currentTimeMillis() - delay || isInTest())
         {
     		packageID = scanner.getPackageID(stationID, this.pos());
     		manager.setPackage(true);
-    		if(!isInTest) {
+    		if(!isInTest()) {
     			startDrivingToUnload();
     			setTarget(location.getUnloadingPositionFromID(packageID));
     		} else {
     			startDrivingToUnload();
-    			if((manager.currentPosition().fuzzyEquals(getTarget()) || manager.getOldPosition().fuzzyEquals(getTarget())) && arrivementFullfilled()) {
+    			if((pos().fuzzyEquals(getTarget()) || oldPos().fuzzyEquals(getTarget())) && arrivementFullfilled()) {
             		setTarget(getTestTargets().get(0));
             		getTestTargets().remove(0);
             		setArrivedEventWasCalled(false);
             	}
     		}
-    		if (!isInTest) {
+    		if (!isInTest()) {
     			robotDispatch.reportLeaveStation(getID(), stationID);
     		}
             state = RobotState.TO_UNLOADING;
@@ -256,23 +256,23 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
 	private void handleArriveAtUnloading() {
     	// if(!manager.isInPositionToUnloadIntoShaft() && manager.hasPackage()) {
-        if(isInTest && !manager.isInPositionToUnloadIntoShaft()) {
-    		invalidUnloadingPosition  = manager.currentPosition();
+        if(isInTest() && !manager.isInPositionToUnloadIntoShaft()) {
+    		invalidUnloadingPosition  = pos();
     	}
     }
 
 	private void handleFinishedUnloading() {
 		if(!manager.isInPositionToUnloadIntoShaft()) {
-    		invalidUnloadingPosition  = manager.currentPosition();
+    		invalidUnloadingPosition  = pos();
     	}
 		
         boolean needsLoading = manager.getBattery() < InfiniteWarehouseConfiguration.BATTERY_LOW;
         stationID = robotDispatch.getReservationNextForStation(getID(), needsLoading);
         drive.newTarget();
-        if(!isInTest) {
+        if(!isInTest()) {
         	setTarget(location.getArrivalPositionAtStation(stationID));
         } else {
-        	if(((manager.currentPosition().fuzzyEquals(getTarget()) || manager.getOldPosition().fuzzyEquals(getTarget())) && !manager.hasPackage()) && arrivementFullfilled()) {
+        	if(((pos().fuzzyEquals(getTarget()) || oldPos().fuzzyEquals(getTarget())) && !manager.hasPackage()) && arrivementFullfilled()) {
         		setTarget(getTestTargets().get(0));
         		getTestTargets().remove(0);
         		stationID = robotDispatch.getStationIDFromPosition(getTarget());
@@ -296,23 +296,18 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     }
 
     @Override
-    public Orientation posOrientation() {
-        return manager.currentFacing();
-    }
-
-    @Override
     public PositionType posType() {
         return PositionType.get(grid.cellType(pos()));
     }
     
     @Override
     public boolean isOnTarget() {
-        return super.isOnTarget() && correctFacing(this.pos());
+        return super.isOnTarget() && correctFacing(pos());
     }
 
     private boolean correctFacing(Position position) {
 		if(grid.cellType(position) == CellType.CHARGER) {
-			if(manager.currentFacing() != Orientation.EAST) {
+			if(facing() != Orientation.EAST) {
 				return false;
 			}
 		}
@@ -322,17 +317,17 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     @Override
     public boolean canUnloadToTarget() {
         return this.pos().equals(this.oldPos()) && posType() == PositionType.WAYPOINT &&  grid.cellType(getTarget()) == CellType.BLOCK &&
-        		((manager.currentPosition().equals(getTarget().getModified(-1,0)) ) ||
-        		 (manager.currentPosition().equals(getTarget().getModified(1,0)) ) ||
-        		 (manager.currentPosition().equals(getTarget().getModified(0,-1)) ) ||
-        		 (manager.currentPosition().equals(getTarget().getModified(0,1)) ));
+        		((pos().equals(getTarget().getModified(-1,0)) ) ||
+        		 (pos().equals(getTarget().getModified(1,0)) ) ||
+        		 (pos().equals(getTarget().getModified(0,-1)) ) ||
+        		 (pos().equals(getTarget().getModified(0,1)) ));
     }
     
     @Override
     public boolean canChargeAtTarget() {
         return this.pos().is(this.oldPos()) && grid.cellType(this.pos()) == CellType.STATION
                 && grid.cellType(getTarget()) == CellType.CHARGER
-                && manager.currentPosition().equals(getTarget().getModified(1, 0));
+                && pos().equals(getTarget().getModified(1, 0));
     }
     
     @Override
@@ -357,32 +352,22 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     }
 
     private boolean[] blockedWaypoint() {
-    	return getWarehouseManager().blockedWaypoint(manager.currentFacing(), manager.currentPosition());
+    	return getWarehouseManager().blockedWaypoint(facing(), pos());
     }
 
     @Override
     public boolean blockedCrossroadAhead() {
-    	return getWarehouseManager().blockedCrossroadAhead(manager.currentFacing(), manager.currentPosition());
+    	return getWarehouseManager().blockedCrossroadAhead(facing(), pos());
     }
 
     @Override
     public boolean blockedCrossroadRight() {
-    	return getWarehouseManager().blockedCrossroadRight(manager.currentFacing(), manager.currentPosition());
+    	return getWarehouseManager().blockedCrossroadRight(facing(), pos());
     }
 
     @Override
     public void actionCompleted() {
         drive.actionCompleted();
-    }
-
-    @Override
-    public Position pos() {
-        return manager.currentPosition();
-    }
-    
-    @Override
-    public Position oldPos() {
-        return manager.getOldPosition();
     }
 
     @Override
@@ -392,10 +377,6 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     public DriveManager getDriveManager() {
         return manager;
-    }
-
-    public IDriveSystem getDrive() {
-        return drive;
     }
 
     @Override

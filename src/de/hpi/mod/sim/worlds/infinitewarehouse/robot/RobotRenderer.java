@@ -48,21 +48,19 @@ public class RobotRenderer { //TODO generalize for AbstractRobotWorld
         // Draw Robots
         for (Robot generalRobot : robots.getRobots()) {
             WarehouseRobot robot = (WarehouseRobot) generalRobot;
-	            DriveManager drive = robot.getDriveManager();
-	            Point2D drawPosition = simView.toDrawPosition(drive.getX(), drive.getY());
+            Point2D drawPosition = simView.toDrawPosition(robot.x(), robot.y());
 	
 	            boolean leftClicked = robot.equals(simView.getHighlighted1());
 	            boolean rightClicked = robot.equals(simView.getHighlighted2());
 	
-	            drawRobot(graphic, drawPosition, size, drive.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
+	            drawRobot(graphic, drawPosition, size, robot.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
         }
 
         // Render additional Info like Targets
         for (Robot generalRobot : robots.getRobots()) {
             WarehouseRobot robot = (WarehouseRobot) generalRobot;
             if (robot.equals(simView.getHighlighted1()) || robot.equals(simView.getHighlighted2())) {
-	                DriveManager drive = robot.getDriveManager();
-	                Point2D drawPos = simView.toDrawPosition(drive.getX(), drive.getY());
+	                Point2D drawPos = simView.toDrawPosition(robot.x(), robot.y());
 	                Point2D targetPos = simView.toDrawPosition(robot.getTarget());
 	
 	                drawTarget(graphic, drawPos, targetPos, size);
