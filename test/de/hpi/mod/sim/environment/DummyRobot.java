@@ -2,12 +2,26 @@ package de.hpi.mod.sim.environment;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
+import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.PositionType;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IProcessor;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotActors;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.ISensor;
 
-public class DummyRobot implements ISensor, IRobotActors, IProcessor {
+public class DummyRobot extends Robot implements ISensor, IRobotActors, IProcessor {
+
+    Position pos;
+
+    public DummyRobot() {
+        this(null, null);
+    }
+
+    public DummyRobot(Position pos, RobotGridManager manager) {
+        super(0, manager, pos, Orientation.NORTH);
+        this.pos = pos;
+    }
 
     @Override
     public void driveForward() {
@@ -106,12 +120,12 @@ public class DummyRobot implements ISensor, IRobotActors, IProcessor {
 
 	@Override
 	public int posX() {
-		return 0;
+		return pos.getX();
 	}
 
 	@Override
 	public int posY() {
-		return 0;
+		return pos.getY();
 	}
 
 	@Override
@@ -128,4 +142,8 @@ public class DummyRobot implements ISensor, IRobotActors, IProcessor {
 	public boolean canChargeAtTarget() {
 		return false;
 	}
+
+    @Override
+    protected void onRefresh() {
+    }
 }

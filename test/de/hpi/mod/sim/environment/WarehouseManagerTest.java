@@ -8,21 +8,23 @@ import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.CellType;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController;
-
-import java.util.Arrays;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotStationDispatcher;
 
 import static org.junit.Assert.*;
 
 public class WarehouseManagerTest {
 
     private WarehouseManager getGridWithRobotsAtPositions(Position[] pos) {
-        IRobotController control = new DummyRobotController(pos);
-        return new WarehouseManager(control);
+        WarehouseManager manager = getGrid();
+        for (var p : pos) {
+            DummyRobot r = new DummyRobot(p, manager);
+            manager.addRobot(r);
+        }
+        return manager;
     }
 
     private WarehouseManager getGrid() {
-        return new WarehouseManager(new DummyRobotController());
+        return new WarehouseManager(new DummyRobotStationDispatcher());
     }
 
     @Test
@@ -1137,23 +1139,57 @@ public class WarehouseManagerTest {
     private Position p(int x, int y) {
         return new Position(x, y);
     }
+        
+    private class DummyRobotStationDispatcher implements IRobotStationDispatcher {
 
-    private class DummyRobotController implements IRobotController {
-
-        Position[] blocked;
-
-
-        private DummyRobotController() {
-            blocked = new Position[] {};
-        }
-
-        private DummyRobotController(Position[] blocked) {
-            this.blocked = blocked;
+        @Override
+        public int getReservationNextForStation(int robotID, boolean charge) {
+            return 0;
         }
 
         @Override
-        public boolean isBlockedByRobot(Position pos) {
-            return Arrays.asList(blocked).contains(pos);
+        public int getReservedChargerAtStation(int robotID, int stationID) {
+            return 0;
         }
+
+        @Override
+        public int getStationIDFromPosition(Position target) {
+            return 0;
+        }
+
+        @Override
+        public boolean requestEnteringStation(int robotID, int stationID) {
+            return false;
+        }
+
+        @Override
+        public boolean requestLeavingCharger(int robotID, int stationID, int chargerID) {
+            return false;
+        }
+
+        @Override
+        public void reportChargingAtStation(int robotID, int stationID, int chargerID) { }
+
+        @Override
+        public void reportEnteringQueueAtStation(int robotID, int stationID) {
+        }
+
+        @Override
+        public void reportLeaveStation(int robotID, int stationID) {
+        }
+
+        @Override
+        public boolean requestEnteringCharger(int robotID, int stationID) {
+            return false;
+        }
+
+        @Override
+        public void releaseAllLocks() {  }
+
+        @Override
+        public int getUsedStations() {
+            return 0;
+        }
+        
     }
 }
