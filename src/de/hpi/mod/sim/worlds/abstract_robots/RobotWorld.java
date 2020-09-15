@@ -13,8 +13,6 @@ import java.util.List;
 
 public abstract class RobotWorld extends GridWorld {
 
-    private GridRenderer gridRenderer;
-    
     private ExplosionRenderer explosionRenderer;
 
     private RobotRenderer robotRenderer;
@@ -22,14 +20,13 @@ public abstract class RobotWorld extends GridWorld {
     @Override
     public void initialize() {
         super.initialize();
-        gridRenderer = new GridRenderer(getSimulationBlockView(), getGridManager());
         explosionRenderer = new ExplosionRenderer();
         robotRenderer = new RobotRenderer(getSimulationBlockView(), getRobotGridManager());
     }
 
     @Override
     public void render(Graphics graphics) {
-        gridRenderer.render(graphics);
+        super.render(graphics);
         renderEntities(graphics);
         explosionRenderer.render(graphics);
     }
