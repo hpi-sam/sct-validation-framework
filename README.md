@@ -17,14 +17,14 @@ The project is devided into the following directories:
 - To start the simulator, execute the class `de.hpi.mod.sim.App`
 - The simulator code is devided in two packages, `de.hpi.mod.sim.core` and `de.hpi.mod.sim.core`.
   + The `core` package covers everything that is needed for *every* simulation, e.g. the setting up the frame and a framework for executing scenarios and test cases. When adding new applications of the simulator, the core package should not have to be touched. See details in **Core**.
-  + In the `world` package, code is placed to specify then environment and entities for ones application, that is in what the environment, in which the statechart is simulated, looks like. See details in **Worlds**.
+  + In the `world` package, code is placed to specify the environment and entities for ones application. That is, what the environment, in which the statechart is simulated, looks like. See details in **Worlds**.
 
 ### Core
 The core contains 2 classes and 4 packages.
 - `core.World` is the abstract class which is the base of every specific environment. It allows to hold entities and gives a list of abstract methods to be implemented in extending classes. See `Worlds`.
 - `core.Configuration` holds execution parameters (*magic numbers*) used for the simulation. If you need to adapt these or add more parameters, best do it by creating a subclass of this class in your world package, as done in `worlds.abstract_grid.GridConfiguration` or `worlds.infinitewarehouse.InfiniteWarehouseConfiguration`.
 - The package `core.scenario` holds classes to manage the execution of *scenarios* that is certain set ups of the environment. By default (`core.scenario.Scenario`), scenarios offer an open-end simulation. However, test cases (`core.scenario.TestScenario`) allow to simulate small situations and fail or pass depending on individually defined conditions, e.g. to verify the correct behavior of the statecharts. `core.scenario.ScenarioManager` manages the list of defined scenarios and test cases and their execution.
-- The package `core.simulation` handles running the simulation (starting and refreshing) and provides the interfaces `Entity` (active objects in the simulation) and `IHighlightable` (objects that can be clicked to view information). The concept of detectors (`Detector`) can be used to react to certain conditions in the simulation, e.g. fail the simulation if an entity goes to a place where it should not be able to go (e.g., a wall) and thereby testing the statechart implenentation.
+- The package `core.simulation` handles running the simulation (starting and refreshing) and provides the interfaces `Entity` (active objects in the simulation) and `IHighlightable` (objects that can be clicked to view information). The concept of detectors (`core.simulation.Detector`) can be used to react to certain conditions in the simulation, e.g. fail the simulation if an entity goes to a place where it should not be able to go (e.g., a wall) and thereby testing the statechart implenentation.
 - The package `statechart` provides utilities to include the statechart behavior into the environment. 
 - The package `view` holds all used UI elements.
 
