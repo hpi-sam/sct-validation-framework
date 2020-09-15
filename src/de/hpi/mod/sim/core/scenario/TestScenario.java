@@ -33,7 +33,7 @@ public abstract class TestScenario extends Scenario {
 
 	public void notifyFailToUser(SimulatorFrame frame, String reason) {
 		if(!alreadyPrinted) {
-    		frame.displayMessage("Test \"" + name + "\" failed beacuse " + reason, SimulatorFrame.MENU_RED);
+    		frame.displayMessage("Test \"" + name + "\" failed because " + reason, SimulatorFrame.MENU_RED);
     		alreadyPrinted = true;
     	}
 	}
