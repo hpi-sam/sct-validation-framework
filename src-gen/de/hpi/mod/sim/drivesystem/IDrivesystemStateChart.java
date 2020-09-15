@@ -1,9 +1,9 @@
 package de.hpi.mod.sim.drivesystem;
 
-import de.hpi.mod.sim.IStatemachine;
+import de.hpi.mod.sim.IStatechart;
 import de.hpi.mod.sim.ITimerCallback;
 
-public interface IDrivesystemStatemachine extends ITimerCallback,IStatemachine {
+public interface IDrivesystemStateChart extends ITimerCallback,IStatechart {
 	public interface SCInterface {
 	
 		public void raiseDataRefresh();

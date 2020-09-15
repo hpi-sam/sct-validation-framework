@@ -398,7 +398,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     }
 
     public String getMachineState() {
-    	return chart.getMachineState();
+    	return chart.getChartState();
     }
 
     public enum RobotState {

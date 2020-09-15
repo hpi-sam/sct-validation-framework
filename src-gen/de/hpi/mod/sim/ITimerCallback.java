@@ -1,7 +1,7 @@
 package de.hpi.mod.sim;
 
 /**
-* Interface for state machines which use timed event triggers.
+* Interface for state charts which use timed event triggers.
 */
 public interface ITimerCallback {
 	

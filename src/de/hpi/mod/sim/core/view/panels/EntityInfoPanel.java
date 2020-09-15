@@ -129,13 +129,13 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
          * 3. No other underscores "_" can be used in state
          * names.
          */
-        private String[] splitStates(String machineState, String topStateName) {
+        private String[] splitStates(String chartState, String topStateName) {
 	    	try {
 	    		//Only enabled when the main region is named according to topStateName
-	    		if(machineState.startsWith(topStateName + "_")) {
+	    		if(chartState.startsWith(topStateName + "_")) {
 		    		
 			    	//remove the top state prefix
-		    		String[] hierarchyLevels = machineState.substring(topStateName.length() + 1).split("__");
+		    		String[] hierarchyLevels = chartState.substring(topStateName.length() + 1).split("__");
 			    	
 			    	//if the state is not in the highest hierarchy it has a region prefix which we want to remove.
 			    	for(int i = 1; i < hierarchyLevels.length; i++) {

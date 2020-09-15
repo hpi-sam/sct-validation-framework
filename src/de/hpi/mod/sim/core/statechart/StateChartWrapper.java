@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.mod.sim.IStatemachine;
+import de.hpi.mod.sim.IStatechart;
 import de.hpi.mod.sim.ITimer;
 
 /**
@@ -15,34 +15,34 @@ import de.hpi.mod.sim.ITimer;
 public abstract class StateChartWrapper<T> {
 
     /**
-     * The generated Statemachine
+     * The generated Statechart
      */
 
     private SimulationTimerService timer = null;
 
-    protected IStatemachine machine;
+    protected IStatechart chart;
 
     public StateChartWrapper() {
-        IStatemachine machine = createStatemachine();
+        IStatechart chart = createStateChart();
         Method methodToFind = null;
         timer = new SimulationTimerService();
         try {
-            methodToFind = machine.getClass().getMethod("setTimer", new Class[] { ITimer.class });
+            methodToFind = chart.getClass().getMethod("setTimer", new Class[] { ITimer.class });
         } catch (NoSuchMethodException | SecurityException e) {
         }
         if (methodToFind != null) {
             try {
-                methodToFind.invoke(machine, new Object[] { timer });
+                methodToFind.invoke(chart, new Object[] { timer });
             } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
-        this.machine = machine;
+        this.chart = chart;
     }
 
     public void start() {
-        machine.init();
-        machine.enter();
+        chart.init();
+        chart.enter();
     }
 
     public void close() {
@@ -56,7 +56,7 @@ public abstract class StateChartWrapper<T> {
         }
     }
 
-    public String getMachineState() {
+    public String getChartState() {
     	try {
 	    	List<String> activeStates = new ArrayList<>();
 	    	for(T state : getStates()) {
@@ -72,7 +72,7 @@ public abstract class StateChartWrapper<T> {
 
     public abstract void update();
 
-    public abstract IStatemachine createStatemachine();
+    public abstract IStatechart createStateChart();
 
     protected abstract T[] getStates();
     

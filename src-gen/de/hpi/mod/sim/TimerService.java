@@ -39,7 +39,7 @@ public class TimerService implements ITimer {
 		 *            when the timer expires.
 		 *
 		 * @param eventID
-		 *            : Index position within the state machine's timeEvent
+		 *            : Index position within the state chart's timeEvent
 		 *            array.
 		 */
 		public TimeEventTask(ITimerCallback callback, int eventID) {

@@ -5,7 +5,7 @@
   Sie kann mit Yakindu modifiziert werden. 
   Die `.sgen` Datei ist zuständig für die Code-Generierung und wird beim Speichern in Yakindu automatisch ausgeführt.
 - `res` enthält Ressourcen für die GUI, wie z.B. Bilder.
-- `src-gen` enthält die generierte Statemachine. Diese darf nicht per Hand modifiziert werden.
+- `src-gen` enthält das generierte Statechart. Diese darf nicht per Hand modifiziert werden.
 - `test` enthält Tests für das Projekt.
 - `src` Source für das Projekt
   - `de.hpi.mod.sim` Von Yakindu generierte Interfaces
@@ -19,7 +19,7 @@
   - `.env.model` Interfaces, Enums und Klassen die zur Kommunikations zwischen Komponenten genutzt werden. Diese sind größtenteils gleich oder ähnlich der ursprünglichen Spezifikation, haben aber auch alle eine eigene Dokumentation
   - `.env.robot` Klassen die den Robot angehören
     - `Robot` Controller für den Robot
-    - `DriveSystemWrapper` Wrapper um die Statemachine
+    - `DriveSystemWrapper` Wrapper um das Statechart
     - `DriveManager` nimmt Fahrbefehle an und berechnet Position
   - `.env.view`
     - `DriveSimFrame` Oberste View
