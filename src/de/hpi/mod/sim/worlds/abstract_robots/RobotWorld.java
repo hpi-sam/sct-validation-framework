@@ -1,14 +1,17 @@
 package de.hpi.mod.sim.worlds.abstract_robots;
 
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
-import de.hpi.mod.sim.worlds.abstract_grid.GridRenderer;
 import de.hpi.mod.sim.worlds.abstract_grid.GridWorld;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.detectors.CollisionDetector;
+import de.hpi.mod.sim.worlds.abstract_robots.detectors.DeadlockDetector;
 import de.hpi.mod.sim.worlds.util.ExplosionRenderer;
 
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RobotWorld extends GridWorld {
@@ -22,6 +25,13 @@ public abstract class RobotWorld extends GridWorld {
         super.initialize();
         explosionRenderer = new ExplosionRenderer();
         robotRenderer = new RobotRenderer(getSimulationBlockView(), getRobotGridManager());
+    }
+
+    protected List<Detector> createDetectors() {
+        List<Detector> detectors = new ArrayList<>();
+        detectors.add(new DeadlockDetector(this));
+        detectors.add(new CollisionDetector(this));
+        return detectors;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.hpi.mod.sim.worlds.infinitewarehouse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,8 +9,6 @@ import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
-import de.hpi.mod.sim.worlds.abstract_robots.detectors.CollisionDetector;
-import de.hpi.mod.sim.worlds.abstract_robots.detectors.DeadlockDetector;
 import de.hpi.mod.sim.worlds.infinitewarehouse.detectors.*;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.StationManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
@@ -21,8 +18,6 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.TestCaseGenerator;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
 public class InfiniteWarehouse extends RobotWorld {
-
-    private List<Detector> detectors;
     
     @Override
     protected GridManager createGridManager() {
@@ -32,28 +27,16 @@ public class InfiniteWarehouse extends RobotWorld {
     }
 
     @Override
-    public void initialize() {
-        super.initialize();
-        initializeDetectors();
-    }
-
-    protected void initializeDetectors() {
-        detectors = new ArrayList<>();
-        detectors.add(new DeadlockDetector(this));
-        detectors.add(new CollisionDetector(this));
+    protected List<Detector> createDetectors() {
+        List<Detector> detectors = super.createDetectors();
         detectors.add(new InvalidPositionDetector(this));
         detectors.add(new InvalidUnloadingDetector(this));
         detectors.add(new InvalidTurningDetector(this));
-
+        return detectors;
     }
 
     public WarehouseManager getWarehouseManager() {
         return (WarehouseManager) getGridManager();
-    }
-
-    @Override
-    public List<Detector> getDetectors() {
-        return detectors;
     }
 
     @Override

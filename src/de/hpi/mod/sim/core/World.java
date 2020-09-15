@@ -21,7 +21,13 @@ public abstract class World {
 
     private ScenarioManager scenarioManager;
 
-    public abstract List<Detector> getDetectors();
+    private List<Detector> detectors;
+
+    protected abstract List<Detector> createDetectors();
+
+    public List<Detector> getDetectors() {
+        return detectors;
+    }
 
     public ScenarioManager getScenarioManager() {
         return scenarioManager;
@@ -41,6 +47,7 @@ public abstract class World {
         initialize();
         //As the scenarioManager depends on the lists of scenarios being prepared, it is created after the initialize() call
         this.scenarioManager = new ScenarioManager(this);
+        this.detectors = createDetectors();
     }
 
 
