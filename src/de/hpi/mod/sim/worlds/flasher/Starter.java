@@ -2,6 +2,7 @@ package de.hpi.mod.sim.worlds.flasher;
 
 import java.util.List;
 
+import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.simulation.Entity;
 
@@ -9,7 +10,7 @@ public abstract class Starter implements Entity, EntitySpecification<Starter> {
     
     private Bulb bulb;
     private int posBlink = 0, posWaiting = 0;
-    private float timeToWait;
+    private double timeToWait;
 
     private List<Integer> blinkCounts;
     private List<Float> waitingTimes;
@@ -25,14 +26,17 @@ public abstract class Starter implements Entity, EntitySpecification<Starter> {
         timeToWait -= delta;
         if (timeToWait <= 0) {
             bulb.start(getNextBlinkCount());
+            System.out.println("Started bulb");
             timeToWait = getNextWaitingTime();
         }
     }
 
-    private float getNextWaitingTime() {
+    private double getNextWaitingTime() {
         if (posWaiting == waitingTimes.size())
             posWaiting = 0;
-        return waitingTimes.get(posWaiting++);
+            // If the level is 5, the waiting time equals the given time. For each increased/decreased level, the waiting time halfs/doubles.
+        // return waitingTimes.get(posWaiting++) * Math.pow(2, -Configuration.getEntitySpeedLevel() + 5);
+        return waitingTimes.get(posWaiting++) / Configuration.getEntitySpeedFactor();
     }
     
     private int getNextBlinkCount() {

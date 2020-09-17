@@ -25,7 +25,67 @@ public class ScenarioGenerator {
         public List<EntitySpecification<? extends Entity>> initializeScenario() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             Bulb bulb = new Bulb();
-            Starter starter =new Starter(bulb) {
+            Starter starter = new Starter(bulb) {
+                @Override
+                protected List<Integer> getBlinkCounts() {
+                    return Arrays.asList(1);
+                }
+
+                @Override
+                protected List<Float> getWaitingTimes() {
+                    return Arrays.asList(3000f);
+                }
+            };
+
+            world.setBulb(bulb);
+            world.setStarter(starter);
+
+            list.add(bulb);
+            list.add(starter);
+            return list;
+        }
+    }
+
+    private class OneBlinkScenario extends Scenario {
+        public OneBlinkScenario() {
+            name = "One Blink";
+        }
+
+        @Override
+        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+            List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
+            Bulb bulb = new Bulb();
+            Starter starter = new Starter(bulb) {
+                @Override
+                protected List<Integer> getBlinkCounts() {
+                    return Arrays.asList(1);
+                }
+
+                @Override
+                protected List<Float> getWaitingTimes() {
+                    return Arrays.asList(3000f);
+                }
+            };
+
+            world.setBulb(bulb);
+            world.setStarter(starter);
+
+            list.add(bulb);
+            list.add(starter);
+            return list;
+        }
+    }
+    
+    private class FibonacciScenario extends Scenario {
+        public OneBlinkScenario() {
+            name = "One Blink";
+        }
+
+        @Override
+        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+            List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
+            Bulb bulb = new Bulb();
+            Starter starter = new Starter(bulb) {
                 @Override
                 protected List<Integer> getBlinkCounts() {
                     return Arrays.asList(1);

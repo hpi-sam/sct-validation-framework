@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.worlds.flasher;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,12 +26,9 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State> implement
 		start();
 	}
 
-	public void bulbRender(Graphics graphics) {
-		if (bulbIsLightning) {
-			graphics.drawImage(bulbOn, 0, 0, null);
-		} else {
-			graphics.drawImage(bulbOff, 0, 0, null);
-		}
+	public void bulbRender(Graphics graphics, int width, int height) {
+		BufferedImage img = bulbIsLightning ? bulbOn : bulbOff;
+		graphics.drawImage(img, (width - img.getWidth()) / 2, (height-img.getHeight()) / 2, null);
 	}
 
 	private void loadImages() {

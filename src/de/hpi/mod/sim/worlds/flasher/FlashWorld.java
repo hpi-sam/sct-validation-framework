@@ -19,6 +19,7 @@ public class FlashWorld extends World {
 
 	private Bulb bulb;
 	private Starter starter;
+	private int width, height;
 	 
 	@Override
 	public List<Detector> createDetectors() {
@@ -65,13 +66,14 @@ public class FlashWorld extends World {
 
 	@Override
 	public void render(Graphics graphics) {
-		bulb.bulbRender(graphics);
+		if (bulb != null)
+			bulb.bulbRender(graphics, width, height);
 	}
 
 	@Override
 	public void refreshSimulationProperties(int currentHeight, int currentWidth) {
-		// TODO Auto-generated method stub
-		
+		this.width = currentWidth;
+		this.height = currentHeight;
 	}
 
 	@Override
@@ -121,7 +123,6 @@ public class FlashWorld extends World {
 	public void setStarter(Starter starter) {
 		this.starter = starter;
 	}
-
 	
 	
 	
