@@ -1,14 +1,11 @@
 package de.hpi.mod.sim.worlds.flasher;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.scenario.Scenario;
@@ -17,60 +14,53 @@ import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
-import de.hpi.mod.sim.worlds.flasher.FlasherConfiguration;
 
 public class FlashWorld extends World {
 
 	private Bulb bulb;
-
-	 
+	private Starter starter;
 	 
 	@Override
 	public List<Detector> createDetectors() {
 		return new ArrayList<>() ;
 	}
-	
-	
 
 	@Override
 	protected void initialize() {
-		bulb = new Bulb();
 	}
 
 	@Override
 	public void updateEntities(float delta) {
-		// TODO Auto-generated method stub
-		
+		starter.update(delta);		
 	}
 
 	@Override
 	public void resetScenario() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public List<? extends Entity> getEntities() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Entity> list = new ArrayList<>(1);
+		list.add(bulb);
+		list.add(starter);
+		return list;
 	}
 
 	@Override
 	public void refreshEntities() {
-		// TODO Auto-generated method stub
-		
+		bulb.updateTimer();
 	}
 
 	@Override
 	public List<Scenario> getScenarios() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ScenarioGenerator(this).getScenarios();
 	}
 
 	@Override
 	public Map<String, List<TestScenario>> getTestGroups() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Hashtable<>();
 	}
 
 	@Override
@@ -122,6 +112,14 @@ public class FlashWorld extends World {
 			}
 			
 		};
+	}
+
+	public void setBulb(Bulb bulb) {
+		this.bulb = bulb;
+	}
+
+	public void setStarter(Starter starter) {
+		this.starter = starter;
 	}
 
 	
