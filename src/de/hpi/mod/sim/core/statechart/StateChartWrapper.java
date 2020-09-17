@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.mod.sim.IStatechart;
+import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.ITimer;
 
 /**
@@ -20,10 +20,10 @@ public abstract class StateChartWrapper<T> {
 
     private SimulationTimerService timer = null;
 
-    protected IStatechart chart;
+    protected IStatemachine chart;
 
     public StateChartWrapper() {
-        IStatechart chart = createStateChart();
+        IStatemachine chart = createStateMachine();
         Method methodToFind = null;
         timer = new SimulationTimerService();
         try {
@@ -72,7 +72,7 @@ public abstract class StateChartWrapper<T> {
 
     public abstract void update();
 
-    public abstract IStatechart createStateChart();
+    public abstract IStatemachine createStateMachine();
 
     protected abstract T[] getStates();
     

@@ -2,7 +2,7 @@ package de.hpi.mod.sim.drivesystem;
 
 import de.hpi.mod.sim.ITimer;
 
-public class DrivesystemStateChart implements IDrivesystemStateChart {
+public class DrivesystemStatemachine implements IDrivesystemStatemachine {
 	protected class SCInterfaceImpl implements SCInterface {
 	
 		private boolean dataRefresh;
@@ -422,7 +422,7 @@ public class DrivesystemStateChart implements IDrivesystemStateChart {
 		return driveMode;
 	}
 	
-	public DrivesystemStateChart() {
+	public DrivesystemStatemachine() {
 		sCInterface = new SCInterfaceImpl();
 		sCIProcessor = new SCIProcessorImpl();
 		sCIActors = new SCIActorsImpl();
@@ -609,7 +609,7 @@ public class DrivesystemStateChart implements IDrivesystemStateChart {
 	}
 	
 	/**
-	 * @see IStatechart#isActive()
+	 * @see IStatemachine#isActive()
 	 */
 	public boolean isActive() {
 		return stateVector[0] != State.$NullState$;
@@ -618,7 +618,7 @@ public class DrivesystemStateChart implements IDrivesystemStateChart {
 	/** 
 	* Always returns 'false' since this state machine can never become final.
 	*
-	* @see IStatechart#isFinal()
+	* @see IStatemachine#isFinal()
 	*/
 	public boolean isFinal() {
 		return false;
