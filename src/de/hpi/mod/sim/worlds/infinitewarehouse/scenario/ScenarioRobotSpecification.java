@@ -31,10 +31,6 @@ public class ScenarioRobotSpecification extends RobotSpecification {
 		return robot;
 	}
 
-	@Override
-	public void refreshEntity() {
-	}
-
 	public void setIsAlone(boolean b) {
 		this.isAlone = b;
 	}	

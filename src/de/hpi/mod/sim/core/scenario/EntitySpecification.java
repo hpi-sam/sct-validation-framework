@@ -5,5 +5,4 @@ import de.hpi.mod.sim.core.simulation.Entity;
 public interface EntitySpecification<E extends Entity> {
 
     public E get(); 
-    public void refreshEntity();
 }

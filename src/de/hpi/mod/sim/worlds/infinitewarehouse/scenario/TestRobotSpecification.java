@@ -17,7 +17,6 @@ public class TestRobotSpecification extends RobotSpecification {
     private Orientation facing;
     private int robotSpecificDelay = 0;
     private int initialDelay = 0;
-    private List<Position> targetsCopy = new ArrayList<Position>();
     private boolean fuzzyEnd = false;
     private boolean requireUnload = false;
     private boolean hasReservedCharger = false;
@@ -49,7 +48,6 @@ public class TestRobotSpecification extends RobotSpecification {
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
         this.initialDelay = Configuration.getDefaultWaitingTimeBeforeTest();
@@ -61,7 +59,6 @@ public class TestRobotSpecification extends RobotSpecification {
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = delay;
         this.initialDelay = Configuration.getDefaultWaitingTimeBeforeTest();
@@ -73,7 +70,6 @@ public class TestRobotSpecification extends RobotSpecification {
 this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = delay;
         this.initialDelay = initialDelay;
@@ -85,7 +81,6 @@ this.position = position;
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
         this.initialDelay = Configuration.getDefaultWaitingTimeBeforeTest();
@@ -98,7 +93,6 @@ this.position = position;
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
         this.initialDelay = Configuration.getDefaultWaitingTimeBeforeTest();
@@ -112,7 +106,6 @@ this.position = position;
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = 0;
         this.initialDelay = Configuration.getDefaultWaitingTimeBeforeTest();
@@ -127,7 +120,6 @@ this.position = position;
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = initialDelay;
         this.initialDelay = delay;
@@ -140,7 +132,6 @@ this.position = position;
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = initialDelay;
         this.initialDelay = delay;
@@ -154,19 +145,12 @@ this.position = position;
         this.position = position;
         this.state = startingState;
         this.targets = targets;
-        this.targetsCopy.addAll(targets);
         this.facing = facing;
         this.robotSpecificDelay = initialDelay;
         this.initialDelay = delay;
         this.fuzzyEnd = fuzzy;
         this.hasReservedCharger = initialChargerStatus;
         this.hardArrivedConstraint = hardArrivedConstraint;
-    }
-
-    @Override
-    public void refreshEntity() {
-        targets.clear();
-        targets.addAll(targetsCopy);
     }
 
     @Override

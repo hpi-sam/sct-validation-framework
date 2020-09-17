@@ -689,9 +689,6 @@ public class TestCaseGenerator {
 
         @Override
         public List<EntitySpecification<?>> initializeScenario() {
-            for(int i=0; i<newEntities.size(); i++) {
-            	newEntities.get(i).refreshEntity();
-            }
             return newEntities;
         }
     }
