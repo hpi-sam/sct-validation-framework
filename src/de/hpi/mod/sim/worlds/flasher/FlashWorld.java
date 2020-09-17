@@ -2,7 +2,7 @@ package de.hpi.mod.sim.worlds.flasher;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +23,21 @@ public class FlashWorld extends World {
 	 
 	@Override
 	public List<Detector> createDetectors() {
-		return new ArrayList<>() ;
+		Detector det = new Detector(this) {
+
+			@Override
+			public void update(List<? extends Entity> entities) {
+				if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0)
+					 report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
+			}
+
+			@Override
+			public void reset() {}
+		};
+		return Arrays.asList(det);
 	}
+
+	
 
 	@Override
 	protected void initialize() {
@@ -32,12 +45,13 @@ public class FlashWorld extends World {
 
 	@Override
 	public void updateEntities(float delta) {
-		starter.update(delta);		
+		if (starter != null)
+			starter.update(delta);		
 	}
 
 	@Override
 	public void resetScenario() {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -50,7 +64,8 @@ public class FlashWorld extends World {
 
 	@Override
 	public void refreshEntities() {
-		bulb.updateTimer();
+		if (bulb != null)
+			bulb.updateTimer();
 	}
 
 	@Override
@@ -60,8 +75,7 @@ public class FlashWorld extends World {
 
 	@Override
 	public Map<String, List<TestScenario>> getTestGroups() {
-		// TODO Auto-generated method stub
-		return new Hashtable<>();
+		return TestCaseGenerator.getAllTestCases(this);
 	}
 
 	@Override
@@ -78,14 +92,12 @@ public class FlashWorld extends World {
 
 	@Override
 	public IHighlightable getHighlightAtPosition(int x, int y) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		bulb.close();
 	}
 
 	@Override
@@ -97,20 +109,14 @@ public class FlashWorld extends World {
 
 			@Override
 			public void resetZoom() {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void zoomIn(float zoom) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void zoomOut(float zoom) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 		};
@@ -122,6 +128,12 @@ public class FlashWorld extends World {
 
 	public void setStarter(Starter starter) {
 		this.starter = starter;
+	}
+
+	@Override
+	public void clearEntities() {
+		bulb = null;
+		starter = null;
 	}
 	
 	

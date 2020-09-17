@@ -6,7 +6,7 @@ import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.simulation.Entity;
 
-public abstract class Starter implements Entity, EntitySpecification<Starter> {
+public class Starter implements Entity, EntitySpecification<Starter> {
     
     private Bulb bulb;
     private int posBlink = 0, posWaiting = 0;
@@ -14,40 +14,47 @@ public abstract class Starter implements Entity, EntitySpecification<Starter> {
 
     private List<Integer> blinkCounts;
     private List<Float> waitingTimes;
+    private boolean onRepeat;
+    private boolean running = true;
 
-    public Starter(Bulb bulb) {
+    public Starter(Bulb bulb, List<Integer> blinkCounts, List<Float> waitingTimes, boolean onRepeat) {
         this.bulb = bulb;
-        blinkCounts = getBlinkCounts();
-        waitingTimes = getWaitingTimes();
-        timeToWait = getNextWaitingTime();
+        this.blinkCounts = blinkCounts;
+        this.waitingTimes = waitingTimes;
+        timeToWait = 0;
+        this.onRepeat = onRepeat;
+    }
+
+    public Starter(Bulb bulb, List<Integer> blinkCounts, List<Float> waitingTimes) {
+        this(bulb, blinkCounts, waitingTimes, false);
     }
 
     public void update(float delta) {
-        timeToWait -= delta;
-        if (timeToWait <= 0) {
-            bulb.start(getNextBlinkCount());
-            System.out.println("Started bulb");
-            timeToWait = getNextWaitingTime();
+        if (running) {
+            timeToWait -= delta;
+            if (timeToWait <= 0) {
+                bulb.start(getNextBlinkCount());
+                timeToWait = getNextWaitingTime();
+            }
         }
     }
 
     private double getNextWaitingTime() {
         if (posWaiting == waitingTimes.size())
             posWaiting = 0;
-            // If the level is 5, the waiting time equals the given time. For each increased/decreased level, the waiting time halfs/doubles.
-        // return waitingTimes.get(posWaiting++) * Math.pow(2, -Configuration.getEntitySpeedLevel() + 5);
         return waitingTimes.get(posWaiting++) / Configuration.getEntitySpeedFactor();
     }
     
     private int getNextBlinkCount() {
-        if (posBlink == blinkCounts.size())
+        if (posBlink == blinkCounts.size()) {
+            if (!onRepeat) {
+                running = false;
+                return 0;
+            }
             posBlink = 0;
+        }
         return blinkCounts.get(posBlink++);
     }
-    
-    protected abstract List<Integer> getBlinkCounts();
-
-    protected abstract List<Float> getWaitingTimes();
 
     @Override
     public Starter get() {

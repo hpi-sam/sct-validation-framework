@@ -1,24 +1,40 @@
 package de.hpi.mod.sim.worlds.flasher;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
+import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.flasher.FlasherStatemachine;
 import de.hpi.mod.sim.flasher.FlasherStatemachine.State;
 
-public class Bulb extends StateChartWrapper<FlasherStatemachine.State> implements StateChartEntity, EntitySpecification<Bulb> {
+public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
+		implements StateChartEntity, EntitySpecification<Bulb>, IHighlightable {
 
 	private BufferedImage bulbOn, bulbOff;
-	private boolean bulbIsLightning = false;
+	private boolean isOn = false;
+	private int timesToBlink = 0;
+
+	private int remainingBlinks = -1;
+	
+	private boolean hasToBeOffForTests = false;
+	private boolean checkOnTimeForTests = false;
+	private boolean checkOffTimeForTests = false;
+	private boolean onlyCorrectOnTimes = true;
+	private boolean onlyCorrectOffTimes = true;
+
+	private long lastOn, lastOff;
 
 	public Bulb() {
 		super();
@@ -27,8 +43,13 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State> implement
 	}
 
 	public void bulbRender(Graphics graphics, int width, int height) {
-		BufferedImage img = bulbIsLightning ? bulbOn : bulbOff;
-		graphics.drawImage(img, (width - img.getWidth()) / 2, (height-img.getHeight()) / 2, null);
+		
+		BufferedImage img = isOn ? bulbOn : bulbOff;
+		graphics.drawImage(img, (width - img.getWidth()) / 2, (height - img.getHeight()) / 2, null);
+		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/20));
+		graphics.setColor(Color.BLACK);
+
+		graphics.drawString(String.valueOf(timesToBlink), width/20, height/2);
 	}
 
 	private void loadImages() {
@@ -56,11 +77,24 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State> implement
 	}
 
 	public void turnOn() {
-		bulbIsLightning = true;
+		if (isOn)
+			return;
+		remainingBlinks--;
+		isOn = true;
+		lastOn = System.currentTimeMillis();
+		long offtime = lastOn - lastOff;
+		if (remainingBlinks > 0 && (offtime < 450 || offtime > 700))
+			onlyCorrectOffTimes = false;
 	}
 
 	public void turnOff() {
-		bulbIsLightning = false;
+		if (!isOn)
+			return;
+		isOn = false;
+		lastOff = System.currentTimeMillis();
+		long ontime = lastOff - lastOn; 
+		if (ontime < 450 || ontime > 700)
+			onlyCorrectOnTimes = false;
 	}
 
 	@Override
@@ -85,6 +119,8 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State> implement
 
 	public void start(int n) {
 		getStatemachine().raiseStart(n);
+		timesToBlink = n;
+		remainingBlinks = n;
 		update();
 	}
 
@@ -101,5 +137,38 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State> implement
 	@Override
 	public Bulb get() {
 		return this;
+	}
+
+	@Override
+	public List<String> getHighlightInfo() {
+		return Arrays.asList("Times to blink: " + timesToBlink, "Lamp is on: " + isOn());
+	}
+
+	@Override
+	public boolean hasPassedAllTestCriteria() {
+		return remainingBlinks == 0 && 
+			   (!hasToBeOffForTests || !isOn) &&
+			   (!checkOffTimeForTests || onlyCorrectOffTimes) &&
+			   (!checkOnTimeForTests || onlyCorrectOnTimes);
+	}
+
+	public boolean isOn() {
+		return isOn;
+	}
+
+	public int getTimesToBlink() {
+		return timesToBlink;
+	}
+
+	public void setHasToBeOffForTests(boolean b) {
+		this.hasToBeOffForTests = b;
+	}
+	
+	public void setCheckOffTimeForTests(boolean b) {
+		this.checkOffTimeForTests = b;
+	}
+
+	public void setCheckOnTimeForTests(boolean b) {
+		this.checkOnTimeForTests = b;
 	}
 }

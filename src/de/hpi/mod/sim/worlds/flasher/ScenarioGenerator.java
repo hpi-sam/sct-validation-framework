@@ -25,17 +25,7 @@ public class ScenarioGenerator {
         public List<EntitySpecification<? extends Entity>> initializeScenario() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             Bulb bulb = new Bulb();
-            Starter starter = new Starter(bulb) {
-                @Override
-                protected List<Integer> getBlinkCounts() {
-                    return Arrays.asList(1);
-                }
-
-                @Override
-                protected List<Float> getWaitingTimes() {
-                    return Arrays.asList(3000f);
-                }
-            };
+            Starter starter = new Starter(bulb, Arrays.asList(1), Arrays.asList(3000f), true);
 
             world.setBulb(bulb);
             world.setStarter(starter);
@@ -46,26 +36,16 @@ public class ScenarioGenerator {
         }
     }
 
-    private class OneBlinkScenario extends Scenario {
-        public OneBlinkScenario() {
-            name = "One Blink";
+    private class TwoBlinkScenario extends Scenario {
+        public TwoBlinkScenario() {
+            name = "Two Blinks";
         }
 
         @Override
         public List<EntitySpecification<? extends Entity>> initializeScenario() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             Bulb bulb = new Bulb();
-            Starter starter = new Starter(bulb) {
-                @Override
-                protected List<Integer> getBlinkCounts() {
-                    return Arrays.asList(1);
-                }
-
-                @Override
-                protected List<Float> getWaitingTimes() {
-                    return Arrays.asList(3000f);
-                }
-            };
+            Starter starter = new Starter(bulb, Arrays.asList(2), Arrays.asList(3000f), true);
 
             world.setBulb(bulb);
             world.setStarter(starter);
@@ -76,26 +56,24 @@ public class ScenarioGenerator {
         }
     }
     
-    private class FibonacciScenario extends Scenario {
-        public OneBlinkScenario() {
-            name = "One Blink";
+    private class FibonacciBlinkScenario extends Scenario {
+
+        public FibonacciBlinkScenario() {
+            name = "Fibonacci Blinks";
         }
 
         @Override
         public List<EntitySpecification<? extends Entity>> initializeScenario() {
+
+            List<Integer> fibonacci = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55);
+            List<Float> waitTimes = new ArrayList<>(fibonacci.size());
+            for (int f : fibonacci) {
+                waitTimes.add(f * 1000f + 3500f);
+            }
+
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             Bulb bulb = new Bulb();
-            Starter starter = new Starter(bulb) {
-                @Override
-                protected List<Integer> getBlinkCounts() {
-                    return Arrays.asList(1);
-                }
-
-                @Override
-                protected List<Float> getWaitingTimes() {
-                    return Arrays.asList(3000f);
-                }
-            };
+            Starter starter = new Starter(bulb, fibonacci, waitTimes, true);
 
             world.setBulb(bulb);
             world.setStarter(starter);
@@ -109,6 +87,8 @@ public class ScenarioGenerator {
     public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList<>();
         scenarios.add(new OneBlinkScenario());
+        scenarios.add(new TwoBlinkScenario());
+        scenarios.add(new FibonacciBlinkScenario());
         return scenarios;
     }
 }
