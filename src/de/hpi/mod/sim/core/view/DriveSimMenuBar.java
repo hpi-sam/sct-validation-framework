@@ -52,7 +52,7 @@ public class DriveSimMenuBar extends JMenuBar implements ITimeListener {
 
         Scenario resetSimulationScenario = new Scenario() {
             @Override
-            protected List<EntitySpecification<? extends Entity>> initializeScenario() {
+            protected List<EntitySpecification<? extends Entity>> getScenarioEntities() {
                 return new ArrayList<>();
             }
         };

@@ -80,6 +80,11 @@ public abstract class RobotWorld extends GridWorld {
     }
     
     @Override
+    public void clearEntities() {
+        getEntities().clear();
+    }
+    
+    @Override
     public IHighlightable getHighlightAtPosition(int x, int y) {
         Position pos = getSimulationBlockView().toGridPosition(x, y);
         for (Robot robot : getRobots()) {

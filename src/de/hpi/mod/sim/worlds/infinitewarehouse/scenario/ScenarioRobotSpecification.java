@@ -25,14 +25,10 @@ public class ScenarioRobotSpecification extends RobotSpecification {
 	}
 
 	@Override
-	public WarehouseRobot getRobot(WarehouseManager robots) {
+	public WarehouseRobot createRobot(WarehouseManager robots) {
 		WarehouseRobot robot = robots.addRobotInScenario(position, facing, delay);
 		robot.setIsAlone(isAlone);
 		return robot;
-	}
-
-	@Override
-	public void refreshEntity() {
 	}
 
 	public void setIsAlone(boolean b) {

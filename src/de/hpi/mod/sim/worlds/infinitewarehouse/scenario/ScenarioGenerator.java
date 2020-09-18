@@ -26,7 +26,7 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             int maxStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
             int station_number;
             int[] robotsAtStations = new int[maxStations];
@@ -53,7 +53,7 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             int maxStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
             int station_number;
             int[] robotsAtStations = new int[maxStations];
@@ -82,7 +82,7 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             int maxStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
             int station_number;
             int[] robotsAtStations = new int[maxStations];
@@ -112,7 +112,7 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             int maxStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
             int station_number;
             int[] robotsAtStations = new int[maxStations];
@@ -142,7 +142,7 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             int maxStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
             int station_number;
             int[] robotsAtStations = new int[maxStations];

@@ -33,14 +33,14 @@ public abstract class Scenario {
     	return description;
     }
 
-    protected abstract List<EntitySpecification<?>> initializeScenario();
+    protected abstract List<EntitySpecification<?>> getScenarioEntities();
 
     public void loadScenario(World world) { 
         entities.clear();
-        List<EntitySpecification<?>> specs = initializeScenario();
+        List<EntitySpecification<?>> specs = getScenarioEntities();
         
         specs.forEach(spec -> world.getSimulationRunner().addEntityRunner(() -> {
-            Entity e = spec.get();
+            Entity e = spec.createEntity();
             entities.add(e);
             return e;
         }));

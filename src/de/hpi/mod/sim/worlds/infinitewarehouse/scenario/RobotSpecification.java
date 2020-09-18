@@ -12,10 +12,10 @@ public abstract class RobotSpecification implements EntitySpecification<Warehous
         this.robots = robots;
     }
 
-    public abstract WarehouseRobot getRobot(WarehouseManager robots);
+    public abstract WarehouseRobot createRobot(WarehouseManager robots);
 
     @Override 
-    public WarehouseRobot get() {
-        return getRobot(robots);
+    public WarehouseRobot createEntity() {
+        return createRobot(robots);
     }
 }

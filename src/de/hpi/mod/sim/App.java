@@ -17,7 +17,9 @@ import de.hpi.mod.sim.core.view.SimulatorFrame;
 public class App {
 
     private static final String[] POSSIBLE_WORLDS = {
-            "de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse"
+            "de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse",
+            "de.hpi.mod.sim.worlds.flasher.FlashWorld"
+    		
      };
 
      private static World selectWorld() {

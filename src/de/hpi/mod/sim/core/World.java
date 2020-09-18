@@ -53,9 +53,7 @@ public abstract class World {
 
     protected abstract void initialize();
 
-    public void clearEntities() {
-        getEntities().clear();
-    }
+    public abstract void clearEntities();
 
     public abstract void updateEntities(float delta);
 

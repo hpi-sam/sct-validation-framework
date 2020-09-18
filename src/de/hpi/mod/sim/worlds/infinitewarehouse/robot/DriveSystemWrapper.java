@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.worlds.infinitewarehouse.robot;
 
-import de.hpi.mod.sim.drivesystem.DrivesystemStateChart;
-import de.hpi.mod.sim.drivesystem.IDrivesystemStateChart;
+import de.hpi.mod.sim.drivesystem.DrivesystemStatemachine;
+import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.PositionType;
@@ -9,14 +9,14 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IDriveSystem;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IProcessor;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotActors;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.ISensor;
-import de.hpi.mod.sim.IStatechart;
+import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 
 /**
  * Handles calls to the statechard.
  * This should be the only file with logic depending on the statechard implementation.
  */
-public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.State> implements IDrivesystemStateChart.SCIDataOperationCallback, IDrivesystemStateChart.SCIRawDataOperationCallback, IDriveSystem {
+public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStatemachine.State> implements IDrivesystemStatemachine.SCIDataOperationCallback, IDrivesystemStatemachine.SCIRawDataOperationCallback, IDriveSystem {
 
     private ISensor data;
     private IRobotActors actors;
@@ -31,9 +31,9 @@ public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.
     }
 
     /**
-     * Does contain {@link IDrivesystemStateChart} so tests can set mockups
+     * Does contain {@link IDrivesystemStatemachine} so tests can set mockups
      */
-    public DriveSystemWrapper(IDrivesystemStateChart chart, ISensor data, IRobotActors actors, IProcessor processor) {
+    public DriveSystemWrapper(IDrivesystemStatemachine chart, ISensor data, IRobotActors actors, IProcessor processor) {
         this.data = data;
         this.actors = actors;
         this.processor = processor;
@@ -42,19 +42,19 @@ public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.
     }
 
     @Override
-    public IStatechart createStateChart() {
-        return new DrivesystemStateChart();
+    public IStatemachine createStateMachine() {
+        return new DrivesystemStatemachine();
     }
 
     @Override
     public void start() {
-        getStateChart().getSCIData().setSCIDataOperationCallback(this);
-        getStateChart().getSCIRawData().setSCIRawDataOperationCallback(this);
+        getStatemachine().getSCIData().setSCIDataOperationCallback(this);
+        getStatemachine().getSCIRawData().setSCIRawDataOperationCallback(this);
         super.start();
     }
 
-    private DrivesystemStateChart getStateChart() {
-        return (DrivesystemStateChart) chart;
+    private DrivesystemStatemachine getStatemachine() {
+        return (DrivesystemStatemachine) chart;
     }
 
     /**
@@ -62,47 +62,47 @@ public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.
      */
     @Override
     public void update() {
-        if (getStateChart().getSCIActors().isRaisedDriveForward())
+        if (getStatemachine().getSCIActors().isRaisedDriveForward())
             actors.driveForward();
-        if (getStateChart().getSCIActors().isRaisedDriveBackward())
+        if (getStatemachine().getSCIActors().isRaisedDriveBackward())
         	actors.driveBackward();
-        if (getStateChart().getSCIActors().isRaisedStartUnload())
+        if (getStatemachine().getSCIActors().isRaisedStartUnload())
             actors.startUnloading();
-        if (getStateChart().getSCIActors().isRaisedTurnLeft())
+        if (getStatemachine().getSCIActors().isRaisedTurnLeft())
             actors.turnLeft();
-        if (getStateChart().getSCIActors().isRaisedTurnRight())
+        if (getStatemachine().getSCIActors().isRaisedTurnRight())
             actors.turnRight();
-        if (getStateChart().getSCIProcessor().isRaisedArrived())
+        if (getStatemachine().getSCIProcessor().isRaisedArrived())
             processor.arrived();
     }
     
     @Override
     public void dataRefresh() {
-        getStateChart().getSCInterface().raiseDataRefresh();
+        getStatemachine().getSCInterface().raiseDataRefresh();
         update();
     }
     
     @Override
     public void newTarget() {
-        getStateChart().getSCInterface().raiseNewTarget();
+        getStatemachine().getSCInterface().raiseNewTarget();
         update();
     }
     
     @Override
     public void newUnloadingTarget() {
-    	getStateChart().getSCInterface().raiseNewUnloadingTarget();
+    	getStatemachine().getSCInterface().raiseNewUnloadingTarget();
     	update();
     }
     
     @Override
     public void newChargingTarget() {
-    	getStateChart().getSCInterface().raiseNewChargingTarget();
+    	getStatemachine().getSCInterface().raiseNewChargingTarget();
     	update();
     }
 
     @Override
     public void actionCompleted() {
-        getStateChart().getSCInterface().raiseActionCompleted();
+        getStatemachine().getSCInterface().raiseActionCompleted();
         update();
     }
 
@@ -144,11 +144,11 @@ public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.
     private long toSCIPositionType(PositionType type) {
         switch (type) {
             case WAYPOINT:
-                return getStateChart().getSCIPositionType().getWAYPOINT();
+                return getStatemachine().getSCIPositionType().getWAYPOINT();
             case STATION:
-                return getStateChart().getSCIPositionType().getSTATION();
+                return getStatemachine().getSCIPositionType().getSTATION();
             case CROSSROAD:
-                return getStateChart().getSCIPositionType().getCROSSROAD();
+                return getStatemachine().getSCIPositionType().getCROSSROAD();
             default:
                 throw new IllegalArgumentException();
         }
@@ -157,13 +157,13 @@ public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.
     private long toSCIOrientation(Orientation orient) {
         switch (orient) {
             case NORTH:
-                return getStateChart().getSCIOrientation().getNORTH();
+                return getStatemachine().getSCIOrientation().getNORTH();
             case EAST:
-                return getStateChart().getSCIOrientation().getEAST();
+                return getStatemachine().getSCIOrientation().getEAST();
             case SOUTH:
-                return getStateChart().getSCIOrientation().getSOUTH();
+                return getStatemachine().getSCIOrientation().getSOUTH();
             case WEST:
-                return getStateChart().getSCIOrientation().getWEST();
+                return getStatemachine().getSCIOrientation().getWEST();
             default:
                 throw new IllegalArgumentException();
         }
@@ -172,13 +172,13 @@ public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.
     private long toSCIDirection(Direction dir) {
         switch (dir) {
             case LEFT:
-                return getStateChart().getSCIDirection().getLEFT();
+                return getStatemachine().getSCIDirection().getLEFT();
             case AHEAD:
-                return getStateChart().getSCIDirection().getAHEAD();
+                return getStatemachine().getSCIDirection().getAHEAD();
             case RIGHT:
-                return getStateChart().getSCIDirection().getRIGHT();
+                return getStatemachine().getSCIDirection().getRIGHT();
             case BEHIND:
-                return getStateChart().getSCIDirection().getBEHIND();
+                return getStatemachine().getSCIDirection().getBEHIND();
             default:
                 throw new IllegalArgumentException();
         }
@@ -241,17 +241,17 @@ public class DriveSystemWrapper extends StateChartWrapper<DrivesystemStateChart.
     }
     
     @Override
-    public boolean isActive(DrivesystemStateChart.State state) {
+    public boolean isActive(DrivesystemStatemachine.State state) {
         /*
         * This is not intended by the YAKINDU implementation and source generation. 
         * Officially, the YAKINDU interface does not support this, which is why we have 
         * to cast to the actual DrivesystemStateChart object.
         */
-        return ((DrivesystemStateChart) chart).isStateActive(state);
+        return ((DrivesystemStatemachine) chart).isStateActive(state);
     }
 
     @Override
-    public DrivesystemStateChart.State[] getStates() {
-        return DrivesystemStateChart.State.values();
+    public DrivesystemStatemachine.State[] getStates() {
+        return DrivesystemStatemachine.State.values();
     }
 }
