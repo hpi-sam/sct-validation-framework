@@ -12,7 +12,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.IStatemachine;
-import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
@@ -20,7 +19,7 @@ import de.hpi.mod.sim.flasher.FlasherStatemachine;
 import de.hpi.mod.sim.flasher.FlasherStatemachine.State;
 
 public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
-		implements StateChartEntity, EntitySpecification<Bulb>, IHighlightable {
+		implements StateChartEntity, IHighlightable {
 
 	private BufferedImage bulbOn, bulbOff;
 	private boolean isOn = false;
@@ -34,7 +33,7 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 	private boolean onlyCorrectOnTimes = true;
 	private boolean onlyCorrectOffTimes = true;
 
-	private long lastOn, lastOff;
+	private Long lastOn, lastOff;
 
 	public Bulb() {
 		super();
@@ -82,9 +81,12 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 		remainingBlinks--;
 		isOn = true;
 		lastOn = System.currentTimeMillis();
+		if(lastOff == null)
+			return;
 		long offtime = lastOn - lastOff;
-		if (remainingBlinks > 0 && (offtime < 450 || offtime > 700))
+		if (remainingBlinks > 0 && (offtime < 450 || offtime > 700)) {
 			onlyCorrectOffTimes = false;
+		}
 	}
 
 	public void turnOff() {
@@ -92,6 +94,8 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 			return;
 		isOn = false;
 		lastOff = System.currentTimeMillis();
+		if (lastOn == null)
+			return;
 		long ontime = lastOff - lastOn; 
 		if (ontime < 450 || ontime > 700)
 			onlyCorrectOnTimes = false;
@@ -132,11 +136,6 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 	@Override
 	public String getTopStateName() {
 		return "flasher";
-	}
-
-	@Override
-	public Bulb get() {
-		return this;
 	}
 
 	@Override

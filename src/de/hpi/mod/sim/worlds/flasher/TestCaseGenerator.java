@@ -26,50 +26,44 @@ public class TestCaseGenerator {
         // Start list of test scenarios
         List<TestScenario> testScenarios = new ArrayList<>();
 
-        Bulb bulb = new Bulb();
-        Starter starter = new Starter(bulb, Arrays.asList(0), Arrays.asList(10000f));
+        BulbSpecification bulb = new BulbSpecification(true, false, false, world);
+        StarterSpecification starter = new StarterSpecification(Arrays.asList(0), Arrays.asList(10000f), false, world);
         testScenarios.add(new ConcreteTestScenario("Energy saving", "The bulb is initially off and doesn't light if called with start(0).", 
                 bulb, starter));
 
-        Bulb bulb2 = new Bulb();
-        Starter starter2 = new Starter(bulb2, Arrays.asList(1), Arrays.asList(10000f));
+        BulbSpecification bulb2 = new BulbSpecification(false, false, false, world);
+        StarterSpecification starter2 = new StarterSpecification(Arrays.asList(1), Arrays.asList(10000f), false, world);
         testScenarios.add(new ConcreteTestScenario("Can be turned on", "The bulb turns on if called with start(1)",
                 bulb2, starter2));
 
-        Bulb bulb3 = new Bulb();
-        bulb3.setHasToBeOffForTests(true);
-        Starter starter3 = new Starter(bulb3, Arrays.asList(1), Arrays.asList(10000f));
+        BulbSpecification bulb3 = new BulbSpecification(true, false, false, world);
+        StarterSpecification starter3 = new StarterSpecification(Arrays.asList(1), Arrays.asList(10000f), false, world);
         testScenarios.add(new ConcreteTestScenario("Turns off again", "The bulb turns off after flashing.",
                 bulb3, starter3));
 
-
-        Bulb bulb4 = new Bulb();
-        bulb4.setHasToBeOffForTests(true);
-        Starter starter4 = new Starter(bulb4, Arrays.asList(2), Arrays.asList(10000f));
+        BulbSpecification bulb4 = new BulbSpecification(true, false, false, world);
+        StarterSpecification starter4 = new StarterSpecification(Arrays.asList(2), Arrays.asList(10000f), false, world);
         testScenarios.add(
                 new ConcreteTestScenario("Two flashes", "The bulb flashes two times after called with start(2).", bulb4, starter4));
 
-        Bulb bulb5 = new Bulb();
-        bulb5.setHasToBeOffForTests(true);
-        Starter starter5 = new Starter(bulb5, Arrays.asList(5), Arrays.asList(10000f));
+        BulbSpecification bulb5 = new BulbSpecification(true, false, false, world);
+        StarterSpecification starter5 = new StarterSpecification(Arrays.asList(5), Arrays.asList(10000f), false, world);
         testScenarios.add(new ConcreteTestScenario("Five flashes",
                 "The bulb flashes five times after called with start(5).", bulb5, starter5));
                 
-        Bulb bulb6 = new Bulb();
-        bulb6.setHasToBeOffForTests(true);
-        bulb6.setCheckOnTimeForTests(true);
-        Starter starter6 = new Starter(bulb6, Arrays.asList(2), Arrays.asList(10000f));
+        BulbSpecification bulb6 = new BulbSpecification(true, true, false, world);
+        StarterSpecification starter6 = new StarterSpecification(Arrays.asList(2), Arrays.asList(10000f), false, world);
         testScenarios.add(new ConcreteTestScenario("Correct flashing time",
                 "The bulb flashes have a duration of 500ms.", bulb6, starter6));
 
-        Bulb bulb7 = new Bulb();
-        bulb7.setCheckOffTimeForTests(true);
-        Starter starter7 = new Starter(bulb6, Arrays.asList(3), Arrays.asList(10000f));
+        BulbSpecification bulb7 = new BulbSpecification(false, false, true, world);
+        StarterSpecification starter7 = new StarterSpecification(Arrays.asList(3), Arrays.asList(10000f), false, world);
         testScenarios.add(new ConcreteTestScenario("Correct pausing time",
                 "The pauses between the flashes have a duration of 500ms.", bulb7, starter7));
                 
-        Bulb bulb8 = new Bulb();
-        Starter starter8 = new Starter(bulb6, Arrays.asList(2, 4, 1), Arrays.asList(5000f, 7000f, 10000f));
+        BulbSpecification bulb8 = new BulbSpecification(false, false, false, world);
+        StarterSpecification starter8 = new StarterSpecification(Arrays.asList(2,4,1), Arrays.asList(5000f, 7000f,
+                        10000f), false, world);
         testScenarios.add(new ConcreteTestScenario("Multiple start calls",
                 "The bulb can react to multiple, sequential start calls (start(2), start(4), start(1))", bulb8, starter8));
         return testScenarios;
@@ -77,10 +71,10 @@ public class TestCaseGenerator {
 
     private static class ConcreteTestScenario extends TestScenario {
         List<EntitySpecification<?>> newEntities = new ArrayList<>();
-        Bulb bulb;
-        Starter starter;
+        BulbSpecification bulb;
+        StarterSpecification starter;
 
-        public ConcreteTestScenario(String name, String description, Bulb bulb, Starter starter) {
+        public ConcreteTestScenario(String name, String description, BulbSpecification bulb, StarterSpecification starter) {
             this.name = name;
             this.description = description;
             this.newEntities = Arrays.asList(bulb, starter);
@@ -89,9 +83,7 @@ public class TestCaseGenerator {
         }
 
         @Override
-        public List<EntitySpecification<?>> initializeScenario() {
-            world.setBulb(bulb);
-            world.setStarter(starter);
+        public List<EntitySpecification<?>> getScenarioEntities() {
             return newEntities;
         }
     }

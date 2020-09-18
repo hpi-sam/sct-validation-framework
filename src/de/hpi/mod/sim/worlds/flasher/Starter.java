@@ -3,12 +3,11 @@ package de.hpi.mod.sim.worlds.flasher;
 import java.util.List;
 
 import de.hpi.mod.sim.core.Configuration;
-import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.simulation.Entity;
 
-public class Starter implements Entity, EntitySpecification<Starter> {
+public class Starter implements Entity {
     
-    private Bulb bulb;
+    private FlashWorld world;
     private int posBlink = 0, posWaiting = 0;
     private double timeToWait;
 
@@ -17,23 +16,19 @@ public class Starter implements Entity, EntitySpecification<Starter> {
     private boolean onRepeat;
     private boolean running = true;
 
-    public Starter(Bulb bulb, List<Integer> blinkCounts, List<Float> waitingTimes, boolean onRepeat) {
-        this.bulb = bulb;
+    public Starter(List<Integer> blinkCounts, List<Float> waitingTimes, boolean onRepeat, FlashWorld world) {
+        this.world = world;
         this.blinkCounts = blinkCounts;
         this.waitingTimes = waitingTimes;
         timeToWait = 0;
         this.onRepeat = onRepeat;
     }
 
-    public Starter(Bulb bulb, List<Integer> blinkCounts, List<Float> waitingTimes) {
-        this(bulb, blinkCounts, waitingTimes, false);
-    }
-
     public void update(float delta) {
         if (running) {
             timeToWait -= delta;
             if (timeToWait <= 0) {
-                bulb.start(getNextBlinkCount());
+                world.startBulb(getNextBlinkCount());
                 timeToWait = getNextWaitingTime();
             }
         }
@@ -56,9 +51,9 @@ public class Starter implements Entity, EntitySpecification<Starter> {
         return blinkCounts.get(posBlink++);
     }
 
-    @Override
-    public Starter get() {
-        return this;
-    }
+   @Override
+   public boolean hasPassedAllTestCriteria() {
+       return onRepeat || posBlink == blinkCounts.size();
+   }
 
 }

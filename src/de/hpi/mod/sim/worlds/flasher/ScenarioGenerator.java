@@ -22,13 +22,10 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            Bulb bulb = new Bulb();
-            Starter starter = new Starter(bulb, Arrays.asList(1), Arrays.asList(3000f), true);
-
-            world.setBulb(bulb);
-            world.setStarter(starter);
+            BulbSpecification bulb = new BulbSpecification(false, false, false, world);
+            StarterSpecification starter = new StarterSpecification(Arrays.asList(1), Arrays.asList(3000f), true, world);
 
             list.add(bulb);
             list.add(starter);
@@ -42,13 +39,11 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            Bulb bulb = new Bulb();
-            Starter starter = new Starter(bulb, Arrays.asList(2), Arrays.asList(3000f), true);
-
-            world.setBulb(bulb);
-            world.setStarter(starter);
+            BulbSpecification bulb = new BulbSpecification(false, false, false, world);
+            StarterSpecification starter = new StarterSpecification(Arrays.asList(2), Arrays.asList(3000f), true,
+                    world);
 
             list.add(bulb);
             list.add(starter);
@@ -63,7 +58,7 @@ public class ScenarioGenerator {
         }
 
         @Override
-        public List<EntitySpecification<? extends Entity>> initializeScenario() {
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 
             List<Integer> fibonacci = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55);
             List<Float> waitTimes = new ArrayList<>(fibonacci.size());
@@ -72,11 +67,8 @@ public class ScenarioGenerator {
             }
 
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            Bulb bulb = new Bulb();
-            Starter starter = new Starter(bulb, fibonacci, waitTimes, true);
-
-            world.setBulb(bulb);
-            world.setStarter(starter);
+            BulbSpecification bulb = new BulbSpecification(false, false, false, world);
+            StarterSpecification starter = new StarterSpecification(fibonacci, waitTimes, true, world);
 
             list.add(bulb);
             list.add(starter);

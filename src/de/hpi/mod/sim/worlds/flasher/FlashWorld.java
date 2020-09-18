@@ -27,8 +27,9 @@ public class FlashWorld extends World {
 
 			@Override
 			public void update(List<? extends Entity> entities) {
-				if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0)
-					 report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
+				if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0) {
+					report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
+				}
 			}
 
 			@Override
@@ -134,6 +135,11 @@ public class FlashWorld extends World {
 	public void clearEntities() {
 		bulb = null;
 		starter = null;
+	}
+
+	public void startBulb(int n) {
+		if (bulb != null)
+			bulb.start(n);
 	}
 	
 	
