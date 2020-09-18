@@ -18,8 +18,8 @@ public class App {
 
     private static final String[] POSSIBLE_WORLDS = {
             "de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse",
-            "de.hpi.mod.sim.worlds.flasher.FlashWorld"
-    		
+            "de.hpi.mod.sim.worlds.flasher.FlashWorld",
+            "de.hpi.mod.sim.worlds.pong.PongWorld"
      };
 
      private static World selectWorld() {

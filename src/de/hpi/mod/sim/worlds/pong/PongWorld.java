@@ -1,8 +1,9 @@
-package de.hpi.mod.sim.worlds.flasher;
+package de.hpi.mod.sim.worlds.pong;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -13,28 +14,29 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
+public class PongWorld extends World {
 
-public class FlashWorld extends World {
-
-	private Bulb bulb;
-	private Starter starter;
 	private int width, height;
+
+	private Paddle paddle1;
 	 
 	@Override
 	public List<Detector> createDetectors() {
-		Detector det = new Detector(this) {
+		// TODO
+		// Detector det = new Detector(this) {
 
-			@Override
-			public void update(List<? extends Entity> entities) {
-				if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0) {
-					report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
-				}
-			}
+		// 	@Override
+		// 	public void update(List<? extends Entity> entities) {
+		// 		if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0) {
+		// 			report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
+		// 		}
+		// 	}
 
-			@Override
-			public void reset() {}
-		};
-		return Arrays.asList(det);
+		// 	@Override
+		// 	public void reset() {}
+		// };
+		// return Arrays.asList(det);
+		return new ArrayList<>();
 	}
 
 	
@@ -45,8 +47,9 @@ public class FlashWorld extends World {
 
 	@Override
 	public void updateEntities(float delta) {
-		if (starter != null)
-			starter.update(delta);		
+		// TODO
+		// if (starter != null)
+		// 	starter.update(delta);		
 	}
 
 	@Override
@@ -57,15 +60,13 @@ public class FlashWorld extends World {
 	@Override
 	public List<? extends Entity> getEntities() {
 		List<Entity> list = new ArrayList<>(1);
-		list.add(bulb);
-		list.add(starter);
+		list.add(paddle1);
 		return list;
 	}
 
 	@Override
 	public void refreshEntities() {
-		if (bulb != null)
-			bulb.updateTimer();
+		//TODO 
 	}
 
 	@Override
@@ -75,13 +76,21 @@ public class FlashWorld extends World {
 
 	@Override
 	public Map<String, List<TestScenario>> getTestGroups() {
-		return TestCaseGenerator.getAllTestCases(this);
+		return new Hashtable<>(); //TODO
 	}
 
 	@Override
 	public void render(Graphics graphics) {
-		if (bulb != null)
-			bulb.bulbRender(graphics, width, height);
+		drawBackground(graphics);
+		if (paddle1 != null)
+			paddle1.render(graphics, width, height);
+	}
+
+	private void drawBackground(Graphics graphics) {
+		graphics.setColor(Color.DARK_GRAY);
+		int x = toPixel(-0.9, width);
+		int y = toPixel(-0.9, height);
+		graphics.drawRect(x, y, (int) (width * 0.9), (int) (height * 0.9));
 	}
 
 	@Override
@@ -97,26 +106,21 @@ public class FlashWorld extends World {
 
 	@Override
 	public void close() {
-		bulb.close();
-	}
-
-	public void setBulb(Bulb bulb) {
-		this.bulb = bulb;
-	}
-
-	public void setStarter(Starter starter) {
-		this.starter = starter;
+		paddle1.close();
 	}
 
 	@Override
 	public void clearEntities() {
-		bulb = null;
-		starter = null;
+		paddle1 = null;
 	}
 
-	public void startBulb(int n) {
-		if (bulb != null)
-			bulb.start(n);
+
+	public void setPaddle1(Paddle paddle) {
+		this.paddle1 = paddle;
+	}
+	
+	public static int toPixel(double relative, int total) {
+		return (int) ((relative + 1) * total / 2);
 	}
 	
 	
