@@ -154,7 +154,7 @@ this.position = position;
     }
 
     @Override
-    public WarehouseRobot getRobot(WarehouseManager robots) {
+    public WarehouseRobot createRobot(WarehouseManager robots) {
         return robots.addRobotAtPosition(position, state, facing, targets, robotSpecificDelay, initialDelay, fuzzyEnd,
                 requireUnload, hasReservedCharger, hardArrivedConstraint);
     }

@@ -174,7 +174,7 @@ public class ScenarioManager {
         }
 
         @Override
-        public List<EntitySpecification<?>> initializeScenario() {
+        public List<EntitySpecification<?>> getScenarioEntities() {
             return new ArrayList<>();
         }
     }

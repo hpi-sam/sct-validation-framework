@@ -91,7 +91,7 @@ public class InfiniteWarehouse extends RobotWorld {
     }
 
     public WarehouseRobot getRobotFromSpecification(RobotSpecification specification) {
-        return specification.getRobot(getWarehouseManager());
+        return specification.createRobot(getWarehouseManager());
     }
     
     @Override

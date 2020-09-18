@@ -688,7 +688,7 @@ public class TestCaseGenerator {
         }
 
         @Override
-        public List<EntitySpecification<?>> initializeScenario() {
+        public List<EntitySpecification<?>> getScenarioEntities() {
             return newEntities;
         }
     }
