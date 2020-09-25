@@ -51,6 +51,7 @@ A `world` is the definition of the environment for a specific application. To se
      - `refreshSimulationProperties(int currentHeight, int currentWidth)` called when the size of the frame changes. React to change or leave blank.
      - `getHighlightAtPosition(int x, int y)` is called after a click on the coordinates in the parameters. If something implementing `IHighlightable` is clicked, this should be returned to display its information. If `null` is returned, the current selection is kept.
      - `close()` is called when the simulator is closed. Clean up everything that needs to be cleaned up.
+   - To make your world accessible in the simulator, add the whole package-path of the class extending `core.World` to the list `POSSIBLE_WORLDS` in `App.java`. Then your world will appear in the list when starting the simulator. If there is only one world in the list, the simulator will choose this world automatically.   
 
 ## Setup
 
