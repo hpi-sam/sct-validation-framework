@@ -66,8 +66,12 @@ public class PongWorld extends World {
 
 	@Override
 	public void refreshEntities() {
-		double ballPosition = ball.refresh();
-		paddle1.refresh(ballPosition);
+		double ballPosition = 0;
+		if(ball != null) {
+			ballPosition = ball.refresh();
+			}
+		if (paddle1 != null)
+			paddle1.refresh(ballPosition);
 	}
 
 	@Override
@@ -129,10 +133,12 @@ public class PongWorld extends World {
 	
 	public void collision(){
 		//hits against Paddle1
-        if((paddle1.getYPos() + paddle1.getHeight() < ball.getYPos() - ball.getDiameter() )
-        && (paddle1.getYPos() - paddle1.getHeight() > ball.getYPos() + ball.getDiameter() )) {
-        	ball.setXDirection();
-        	ball.setYDirection();
+        if(ball.getXPos() < -0.999) {
+        	if((paddle1.getYPos() + paddle1.getHeight()/2 < ball.getYPos() + ball.getDiameter()/2 )
+        	&& (paddle1.getYPos() - paddle1.getHeight()/2 > ball.getYPos() - ball.getDiameter()/2 )) {
+        		ball.setXDirection();
+        		ball.setYDirection();
+        	}
         }
        
 	}	

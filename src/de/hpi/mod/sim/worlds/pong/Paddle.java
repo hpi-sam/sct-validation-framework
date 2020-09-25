@@ -4,9 +4,8 @@ import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.flasher.FlasherStatemachine;
+import de.hpi.mod.sim.pong.IPongStatemachine;
 import de.hpi.mod.sim.pong.PongStatemachine;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,18 +13,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Paddle extends StateChartWrapper<PongStatemachine.State> 
-		implements StateChartEntity, IHighlightable {
+		implements StateChartEntity, IHighlightable, IPongStatemachine.SCInterfaceOperationCallback{
+ 
 
     private final double x;
-    private double y;
+    private double y = 0 ;
 
     private static final double width = 0.04, height = 0.2;
-
+    private static final int stateMachineFactor = 1000;
+ 
     public Paddle(double d) {
-    	super.start();
+    	start();
         this.x = d;
         y = 0;
-        update();
     }
 
     
@@ -50,7 +50,6 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
     	/**
     	 * Runs a cycle of the statechart and checks if any functions got fired
     	 */
-    	getStatemachine().raiseMyPos((int) y * 1000);
     	
     	if (getStatemachine().isRaisedUp())
     		goUp();
@@ -119,16 +118,28 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("y-Position:  " + y, "cuurent state in the Statemachine: ", getMachineState());
+		return Arrays.asList("y-Position:  " + stateMachineFactor * y);
 	}
 
 
 	public void refresh(double ballPosition) {
-		//multiplied because we are in range -1 to 1, but Yakindu can't do doubles
-		getStatemachine().raiseMyPos((long) (1000 * y));
-		getStatemachine().raiseBallPos((long) (1000 * ballPosition));
+		//multiplied because we are in range -1 to 1, but Yakindu can't do doubles, so the range is from -1000 to 1000
+		getStatemachine().raiseBallPos((long) (stateMachineFactor * ballPosition));
 		super.updateTimer();
 		
 	}
+
+
+	@Override
+	public long myPos() {
+		return (long) (stateMachineFactor * y);
+	}
+
+
+    @Override
+    public void start() {
+        getStatemachine().getSCInterface().setSCInterfaceOperationCallback(this);
+        super.start();
+    }
 
 }

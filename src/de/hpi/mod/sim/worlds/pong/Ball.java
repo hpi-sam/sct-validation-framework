@@ -13,12 +13,14 @@ import de.hpi.mod.sim.worlds.pong.PongWorld;
 
 public class Ball implements Entity, IHighlightable{
 
-    private double x , y;
+    private double x, y;
     private PongWorld world;
     private final double rangePerUpdate = 0.002;
     private double yDirection, xDirection = rangePerUpdate *-1;
     private static final double diameter = 0.04;
     private boolean outOfBounds; 
+    private static final int stateMachineFactor = 1000 ;
+
    
     
     public Ball(double yPos, double yDirection, PongWorld world) {
@@ -32,7 +34,7 @@ public class Ball implements Entity, IHighlightable{
     public void render(Graphics graphics, int totalWidth, int totalHeight) {
 
     	int drawX = (int) (PongWorld.toPixel(x, totalWidth ) - totalWidth* diameter/ 2);
-        int drawY = (int) (PongWorld.toPixel(-y, totalHeight) - totalHeight * diameter / 2);
+        int drawY = (int) (PongWorld.toPixel(-y, totalHeight));
         graphics.setColor(new Color(0, 80, 250));
         graphics.fillOval(drawX, drawY, (int) (diameter* totalWidth), (int) (diameter * totalHeight));
         ((Graphics2D) graphics).setStroke(new java.awt.BasicStroke(2));
@@ -57,7 +59,7 @@ public class Ball implements Entity, IHighlightable{
         	outOfBounds = true;	
     	}
         
-    	if (y - diameter < -0.9  || y + diameter > 0.9) {
+    	if (y + diameter < -0.9  || y - diameter > 0.9) {
     			setYDirection();
     		}
     		
@@ -81,6 +83,10 @@ public class Ball implements Entity, IHighlightable{
 		return y;
 	}
 
+	public double getXPos() {
+		return x;
+	}
+
 	public double getDiameter() {
 		return diameter;
 	}
@@ -93,7 +99,7 @@ public class Ball implements Entity, IHighlightable{
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("x- Position:" + x, "y-Position "+ y, "y-Direction: " + yDirection, "x-Direction: "+xDirection);
+		return Arrays.asList("x- Position:" + (int) stateMachineFactor * x, "y-Position "+ (int) stateMachineFactor * y, "y-Direction: " + (int) stateMachineFactor * yDirection, "x-Direction: "+ (int) stateMachineFactor * xDirection);
 	}
 
 
@@ -101,6 +107,8 @@ public class Ball implements Entity, IHighlightable{
 	public double refresh() {
 		return y;
 	}
+
+
 
 		
 

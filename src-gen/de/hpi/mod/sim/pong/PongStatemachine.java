@@ -5,22 +5,12 @@ package de.hpi.mod.sim.pong;
 public class PongStatemachine implements IPongStatemachine {
 	protected class SCInterfaceImpl implements SCInterface {
 	
-		private boolean myPos;
+		private SCInterfaceOperationCallback operationCallback;
 		
-		private long myPosValue;
-		
-		
-		public void raiseMyPos(final long value) {
-			myPosValue = value;
-			myPos = true;
-			runCycle();
+		public void setSCInterfaceOperationCallback(
+				SCInterfaceOperationCallback operationCallback) {
+			this.operationCallback = operationCallback;
 		}
-		protected long getMyPosValue() {
-			if (! myPos ) 
-				throw new IllegalStateException("Illegal event value access. Event MyPos is not raised!");
-			return myPosValue;
-		}
-		
 		private boolean ballPos;
 		
 		private long ballPosValue;
@@ -68,7 +58,6 @@ public class PongStatemachine implements IPongStatemachine {
 		}
 		
 		protected void clearEvents() {
-			myPos = false;
 			ballPos = false;
 		}
 		protected void clearOutEvents() {
@@ -101,6 +90,10 @@ public class PongStatemachine implements IPongStatemachine {
 	
 	public void init() {
 		this.initialized = true;
+		if (this.sCInterface.operationCallback == null) {
+			throw new IllegalStateException("Operation callback for interface sCInterface must be set.");
+		}
+		
 		for (int i = 0; i < 1; i++) {
 			stateVector[i] = State.$NullState$;
 		}
@@ -193,10 +186,6 @@ public class PongStatemachine implements IPongStatemachine {
 		return sCInterface;
 	}
 	
-	public void raiseMyPos(long value) {
-		sCInterface.raiseMyPos(value);
-	}
-	
 	public void raiseBallPos(long value) {
 		sCInterface.raiseBallPos(value);
 	}
@@ -218,11 +207,11 @@ public class PongStatemachine implements IPongStatemachine {
 	}
 	
 	private boolean check_pong__choice_0_tr0_tr0() {
-		return (sCInterface.getBallPosValue()<sCInterface.getMyPosValue() && sCInterface.getMyPosValue()<sCInterface.getMinPos());
+		return (sCInterface.getBallPosValue()<sCInterface.operationCallback.myPos() && sCInterface.operationCallback.myPos()<sCInterface.getMinPos());
 	}
 	
 	private boolean check_pong__choice_0_tr2_tr2() {
-		return (sCInterface.getBallPosValue()>sCInterface.getMyPosValue() && sCInterface.getMyPosValue()>sCInterface.getMaxPos());
+		return (sCInterface.getBallPosValue()>sCInterface.operationCallback.myPos() && sCInterface.operationCallback.myPos()>sCInterface.getMaxPos());
 	}
 	
 	private void effect_pong__choice_0_tr0() {
@@ -350,7 +339,7 @@ public class PongStatemachine implements IPongStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.getMyPosValue()>=sCInterface.getMaxPos() || sCInterface.getBallPosValue()<sCInterface.getMyPosValue())) {
+			if ((sCInterface.operationCallback.myPos()>=sCInterface.getMaxPos() || sCInterface.getBallPosValue()<sCInterface.operationCallback.myPos())) {
 				exitSequence_pong_Moving_Up();
 				enterSequence_pong_Idle_Stop_default();
 				react();
@@ -368,7 +357,7 @@ public class PongStatemachine implements IPongStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.getMyPosValue()<=sCInterface.getMinPos() || sCInterface.getBallPosValue()>sCInterface.getMyPosValue())) {
+			if ((sCInterface.operationCallback.myPos()<=sCInterface.getMinPos() || sCInterface.getBallPosValue()>sCInterface.operationCallback.myPos())) {
 				exitSequence_pong_Movin_Down();
 				enterSequence_pong_Idle_Stop_default();
 				react();
