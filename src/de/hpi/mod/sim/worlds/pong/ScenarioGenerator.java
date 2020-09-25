@@ -24,7 +24,9 @@ public class ScenarioGenerator {
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             PaddleSpecification paddle = new PaddleSpecification(world);
+            BallSpecification ball = new BallSpecification(0.1, 0.004, world);
             list.add(paddle);
+            list.add(ball);
             return list;
         }
     }
