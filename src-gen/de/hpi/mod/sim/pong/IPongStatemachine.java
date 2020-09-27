@@ -6,9 +6,9 @@ import de.hpi.mod.sim.IStatemachine;
 public interface IPongStatemachine extends IStatemachine {
 	public interface SCInterface {
 	
-	public static final long maxPos = 1000;
+	public static final long maxPos = 900;
 	
-	public static final long minPos = -1000;
+	public static final long minPos = -900;
 	
 		public void raiseBallPos(long value);
 		

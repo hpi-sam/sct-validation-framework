@@ -207,23 +207,47 @@ public class PongStatemachine implements IPongStatemachine {
 	}
 	
 	private boolean check_pong__choice_0_tr0_tr0() {
-		return (sCInterface.getBallPosValue()<sCInterface.operationCallback.myPos() && sCInterface.operationCallback.myPos()<sCInterface.getMinPos());
+		return (sCInterface.operationCallback.myPos()>sCInterface.getBallPosValue() && sCInterface.operationCallback.myPos()>sCInterface.getMinPos());
 	}
 	
-	private boolean check_pong__choice_0_tr2_tr2() {
-		return (sCInterface.getBallPosValue()>sCInterface.operationCallback.myPos() && sCInterface.operationCallback.myPos()>sCInterface.getMaxPos());
+	private boolean check_pong__choice_0_tr1_tr1() {
+		return (sCInterface.operationCallback.myPos()<sCInterface.getBallPosValue() && sCInterface.operationCallback.myPos()<sCInterface.getMaxPos());
+	}
+	
+	private boolean check_pong__choice_1_tr0_tr0() {
+		return (sCInterface.operationCallback.myPos()>=sCInterface.getMaxPos() || (sCInterface.operationCallback.myPos() + 50)>sCInterface.getBallPosValue());
+	}
+	
+	private boolean check_pong__choice_2_tr0_tr0() {
+		return (sCInterface.operationCallback.myPos()<=sCInterface.getMinPos() || sCInterface.getBallPosValue()>sCInterface.operationCallback.myPos());
 	}
 	
 	private void effect_pong__choice_0_tr0() {
 		enterSequence_pong_Movin_Down_default();
 	}
 	
-	private void effect_pong__choice_0_tr2() {
+	private void effect_pong__choice_0_tr1() {
 		enterSequence_pong_Moving_Up_default();
 	}
 	
-	private void effect_pong__choice_0_tr1() {
+	private void effect_pong__choice_0_tr2() {
 		enterSequence_pong_Idle_Stop_default();
+	}
+	
+	private void effect_pong__choice_1_tr0() {
+		enterSequence_pong_Idle_Stop_default();
+	}
+	
+	private void effect_pong__choice_1_tr1() {
+		enterSequence_pong_Moving_Up_default();
+	}
+	
+	private void effect_pong__choice_2_tr0() {
+		enterSequence_pong_Idle_Stop_default();
+	}
+	
+	private void effect_pong__choice_2_tr1() {
+		enterSequence_pong_Movin_Down_default();
 	}
 	
 	/* Entry action for state 'Moving Up'. */
@@ -301,11 +325,29 @@ public class PongStatemachine implements IPongStatemachine {
 		if (check_pong__choice_0_tr0_tr0()) {
 			effect_pong__choice_0_tr0();
 		} else {
-			if (check_pong__choice_0_tr2_tr2()) {
-				effect_pong__choice_0_tr2();
-			} else {
+			if (check_pong__choice_0_tr1_tr1()) {
 				effect_pong__choice_0_tr1();
+			} else {
+				effect_pong__choice_0_tr2();
 			}
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_pong__choice_1() {
+		if (check_pong__choice_1_tr0_tr0()) {
+			effect_pong__choice_1_tr0();
+		} else {
+			effect_pong__choice_1_tr1();
+		}
+	}
+	
+	/* The reactions of state null. */
+	private void react_pong__choice_2() {
+		if (check_pong__choice_2_tr0_tr0()) {
+			effect_pong__choice_2_tr0();
+		} else {
+			effect_pong__choice_2_tr1();
 		}
 	}
 	
@@ -339,10 +381,9 @@ public class PongStatemachine implements IPongStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.operationCallback.myPos()>=sCInterface.getMaxPos() || sCInterface.getBallPosValue()<sCInterface.operationCallback.myPos())) {
+			if (sCInterface.ballPos) {
 				exitSequence_pong_Moving_Up();
-				enterSequence_pong_Idle_Stop_default();
-				react();
+				react_pong__choice_1();
 			} else {
 				did_transition = false;
 			}
@@ -357,10 +398,9 @@ public class PongStatemachine implements IPongStatemachine {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
-			if ((sCInterface.operationCallback.myPos()<=sCInterface.getMinPos() || sCInterface.getBallPosValue()>sCInterface.operationCallback.myPos())) {
+			if (sCInterface.ballPos) {
 				exitSequence_pong_Movin_Down();
-				enterSequence_pong_Idle_Stop_default();
-				react();
+				react_pong__choice_2();
 			} else {
 				did_transition = false;
 			}
