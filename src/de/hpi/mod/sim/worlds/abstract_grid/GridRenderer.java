@@ -34,11 +34,11 @@ public class GridRenderer {
         int heightInBlocks = (int) (simView.getHeight() / blockSize + 2);
 
         int lowestY = GridConfiguration.getOriginOffsetY() + 1;
-        int leftertX = GridConfiguration.getOriginOffsetX() + 1;
+        int leftestX = GridConfiguration.getOriginOffsetX() + 1;
 
         //Draw cells
         for (int y = -lowestY + (int) blocksOffsetY; y < heightInBlocks - lowestY + blocksOffsetY; y++) {
-            for (int x = -leftertX + (int) blocksOffsetX - widthInBlocks / 2; x < widthInBlocks / 2
+            for (int x = -leftestX + (int) blocksOffsetX - widthInBlocks / 2; x < widthInBlocks / 2
                     + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
                 ICellType cellType = grid.cellType(current);
@@ -59,7 +59,7 @@ public class GridRenderer {
         }
         //Draw borders
         for (int y = -lowestY + (int) blocksOffsetY; y < heightInBlocks - lowestY + blocksOffsetY; y++) {
-            for (int x = -leftertX + (int) blocksOffsetX - widthInBlocks / 2; x < widthInBlocks / 2
+            for (int x = -leftestX + (int) blocksOffsetX - widthInBlocks / 2; x < widthInBlocks / 2
                     + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
                 ICellType cellType = grid.cellType(current);
