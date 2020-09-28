@@ -51,8 +51,6 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 	private int currentWidth;
 	private World world;
 
-
-
 	public AnimationPanel(World world) {
 		this.world = world;
 		
@@ -117,7 +115,6 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 
 		// Refresh simulation properties
 		refreshSimulationSize();
-		world.refreshSimulationProperties(currentHeight, currentWidth);
 	}
 
 	@Override
@@ -163,8 +160,11 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 
 	private void refreshSimulationSize() {
 		Rectangle rectangle = this.getBounds();
+		boolean change = rectangle.width != currentWidth || rectangle.height != currentHeight;
 		currentHeight = rectangle.height;
 		currentWidth = rectangle.width;
+		if (change)
+			world.refreshSimulationProperties(currentHeight, currentWidth);
 	}
 
 	public void reset() {
