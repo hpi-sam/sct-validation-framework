@@ -11,8 +11,8 @@ public class GridConfiguration extends Configuration {
     public static final int ORIGIN_OFFSET_X = 0;
     public static final int ORIGIN_OFFSET_Y = 0;
 
-    public static final int DEFAULT_MAP_HEIGHT = 10;
-    public static final int NOT_USED_ROWS = 3;
+    public static final int DEFAULT_MAP_HEIGHT = 10; //TODO move?
+    public static final int NOT_USED_ROWS = 3;// TODO move?
 
     private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
     private static float minBlockSize = MIN_BLOCK_SIZE;
