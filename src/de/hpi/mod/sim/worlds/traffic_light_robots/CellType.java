@@ -5,7 +5,7 @@ import java.awt.Color;
 import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
 
 public enum CellType implements ICellType {
-    WAYPOINT, CROSSROAD, BLOCK;
+    WAYPOINT, CROSSROAD, BLOCK, TARGETBOX;
 
     Color color = Color.DARK_GRAY;
 
