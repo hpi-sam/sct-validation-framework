@@ -93,19 +93,9 @@ public class InfiniteWarehouse extends RobotWorld {
     public WarehouseRobot getRobotFromSpecification(RobotSpecification specification) {
         return specification.createRobot(getWarehouseManager());
     }
-    
-    @Override
-    public void refreshEntities() {
-        getWarehouseManager().refresh();
-    }
 
     @Override
     public void resetScenario() {
         getWarehouseManager().releaseAllLocks();
-    }
-
-    @Override
-    public void close() {
-        getWarehouseManager().close();
     }
 }
