@@ -3,8 +3,6 @@ package de.hpi.mod.sim.worlds.traffic_light_robots;
 import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.trafficlight.ITrafficlightStatemachine;
-import de.hpi.mod.sim.trafficlight.ITrafficlightStatemachine.SCInterfaceOperationCallback;
 import de.hpi.mod.sim.trafficlight.TrafficlightStatemachine;
 import de.hpi.mod.sim.trafficlight.TrafficlightStatemachine.State;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
@@ -13,18 +11,20 @@ import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.State> implements StateChartEntity,
-        ITrafficlightStatemachine.SCInterfaceOperationCallback {
+public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.State> implements StateChartEntity {
     /**
      * The northern, eastern, southern and western positions
      */
     private Position[] positions = new Position[4];
+    private static final float size = 0.3f; 
     /**
      * The traffic lights are not drawn in the center of the field but with some
      * offset depending on whether it is the northern, eastern, ... part
      */
-    private static final int[] X_OFFSETS = { -1, -1, 1, 1 };
-    private static final int[] Y_OFFSETS = { -1, 1, 1, -1 };
+    // private static final int[] X_OFFSETS = { -1, -1, 1, 1 };
+    // private static final int[] Y_OFFSETS = { -1, 1, 1, -1 };
+    private static final float[] X_OFFSETS = { 0, 0, 1-size, 1-size };
+    private static final float[] Y_OFFSETS = { 1 - size , 0, 0, 1-size };
     private boolean[] lightStates = { false, false, false, false }; // Which positions show green
 
     /**
@@ -61,14 +61,22 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
         /**
          * Runs a cycle of the statechart and checks if any functions got fired
          */
-        if (getStatemachine().isRaisedSwitchNorth())
-            lightStates[0] = !lightStates[0];
-        if (getStatemachine().isRaisedSwitchEast())
-            lightStates[1] = !lightStates[1];
-        if (getStatemachine().isRaisedSwitchSouth())
-            lightStates[2] = !lightStates[2];
-        if (getStatemachine().isRaisedSwitchWest())
-            lightStates[3] = !lightStates[3];
+        if (getStatemachine().getSCINorth().isRaisedOn())
+            lightStates[0] = true;
+        if (getStatemachine().getSCINorth().isRaisedOff())
+            lightStates[0] = false;
+        if (getStatemachine().getSCIEast().isRaisedOn())
+            lightStates[1] = true;
+        if (getStatemachine().getSCIEast().isRaisedOff())
+            lightStates[1] = false;
+        if (getStatemachine().getSCISouth().isRaisedOn())
+            lightStates[2] = true;
+        if (getStatemachine().getSCISouth().isRaisedOff())
+            lightStates[2] = false;
+        if (getStatemachine().getSCIWest().isRaisedOn())
+            lightStates[3] = true;
+        if (getStatemachine().getSCIWest().isRaisedOff())
+            lightStates[3] = false;
     }
 
     @Override
@@ -98,32 +106,11 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
             graphics.setColor(color);
             java.awt.geom.Point2D point = panel.toDrawPosition(pos);
             float blockSize = panel.getBlockSize();
-            graphics.fillOval((int) (point.getX() + X_OFFSETS[i] * blockSize / 3),
-                    (int) (point.getY() + Y_OFFSETS[i] * blockSize / 3), (int) (blockSize / 6), (int) (blockSize / 6));
+            // graphics.fillOval((int) (point.getX()), (int) (point.getY()), (int) (blockSize * size), (int) (blockSize * size));
+            graphics.fillOval((int) (point.getX() + X_OFFSETS[i] * blockSize),
+                    (int) (point.getY() + Y_OFFSETS[i] * blockSize), (int) (blockSize * size),
+                    (int) (blockSize * size));
         }
     }
 
-    @Override
-    public boolean robotNorth() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean robotWest() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean robotSouth() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean robotEast() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 }

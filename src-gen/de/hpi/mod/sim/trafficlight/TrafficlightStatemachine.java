@@ -4,72 +4,153 @@ package de.hpi.mod.sim.trafficlight;
 import de.hpi.mod.sim.ITimer;
 
 public class TrafficlightStatemachine implements ITrafficlightStatemachine {
-	protected class SCInterfaceImpl implements SCInterface {
+	protected class SCINorthImpl implements SCINorth {
 	
-		private SCInterfaceOperationCallback operationCallback;
-		
-		public void setSCInterfaceOperationCallback(
-				SCInterfaceOperationCallback operationCallback) {
-			this.operationCallback = operationCallback;
-		}
-		private boolean switchNorth;
+		private boolean on;
 		
 		
-		public boolean isRaisedSwitchNorth() {
-			return switchNorth;
+		public boolean isRaisedOn() {
+			return on;
 		}
 		
-		protected void raiseSwitchNorth() {
-			switchNorth = true;
+		protected void raiseOn() {
+			on = true;
 		}
 		
-		private boolean switchWest;
+		private boolean off;
 		
 		
-		public boolean isRaisedSwitchWest() {
-			return switchWest;
+		public boolean isRaisedOff() {
+			return off;
 		}
 		
-		protected void raiseSwitchWest() {
-			switchWest = true;
-		}
-		
-		private boolean switchSouth;
-		
-		
-		public boolean isRaisedSwitchSouth() {
-			return switchSouth;
-		}
-		
-		protected void raiseSwitchSouth() {
-			switchSouth = true;
-		}
-		
-		private boolean switchEast;
-		
-		
-		public boolean isRaisedSwitchEast() {
-			return switchEast;
-		}
-		
-		protected void raiseSwitchEast() {
-			switchEast = true;
+		protected void raiseOff() {
+			off = true;
 		}
 		
 		protected void clearEvents() {
 		}
 		protected void clearOutEvents() {
 		
-		switchNorth = false;
-		switchWest = false;
-		switchSouth = false;
-		switchEast = false;
+		on = false;
+		off = false;
 		}
 		
 	}
 	
 	
-	protected SCInterfaceImpl sCInterface;
+	protected class SCIEastImpl implements SCIEast {
+	
+		private boolean on;
+		
+		
+		public boolean isRaisedOn() {
+			return on;
+		}
+		
+		protected void raiseOn() {
+			on = true;
+		}
+		
+		private boolean off;
+		
+		
+		public boolean isRaisedOff() {
+			return off;
+		}
+		
+		protected void raiseOff() {
+			off = true;
+		}
+		
+		protected void clearEvents() {
+		}
+		protected void clearOutEvents() {
+		
+		on = false;
+		off = false;
+		}
+		
+	}
+	
+	
+	protected class SCISouthImpl implements SCISouth {
+	
+		private boolean on;
+		
+		
+		public boolean isRaisedOn() {
+			return on;
+		}
+		
+		protected void raiseOn() {
+			on = true;
+		}
+		
+		private boolean off;
+		
+		
+		public boolean isRaisedOff() {
+			return off;
+		}
+		
+		protected void raiseOff() {
+			off = true;
+		}
+		
+		protected void clearEvents() {
+		}
+		protected void clearOutEvents() {
+		
+		on = false;
+		off = false;
+		}
+		
+	}
+	
+	
+	protected class SCIWestImpl implements SCIWest {
+	
+		private boolean on;
+		
+		
+		public boolean isRaisedOn() {
+			return on;
+		}
+		
+		protected void raiseOn() {
+			on = true;
+		}
+		
+		private boolean off;
+		
+		
+		public boolean isRaisedOff() {
+			return off;
+		}
+		
+		protected void raiseOff() {
+			off = true;
+		}
+		
+		protected void clearEvents() {
+		}
+		protected void clearOutEvents() {
+		
+		on = false;
+		off = false;
+		}
+		
+	}
+	
+	
+	protected SCINorthImpl sCINorth;
+	
+	protected SCIEastImpl sCIEast;
+	
+	protected SCISouthImpl sCISouth;
+	
+	protected SCIWestImpl sCIWest;
 	
 	private boolean initialized = false;
 	
@@ -95,7 +176,10 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 	private final boolean[] timeEvents = new boolean[9];
 	
 	public TrafficlightStatemachine() {
-		sCInterface = new SCInterfaceImpl();
+		sCINorth = new SCINorthImpl();
+		sCIEast = new SCIEastImpl();
+		sCISouth = new SCISouthImpl();
+		sCIWest = new SCIWestImpl();
 	}
 	
 	public void init() {
@@ -103,10 +187,6 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 		if (timer == null) {
 			throw new IllegalStateException("timer not set.");
 		}
-		if (this.sCInterface.operationCallback == null) {
-			throw new IllegalStateException("Operation callback for interface sCInterface must be set.");
-		}
-		
 		for (int i = 0; i < 1; i++) {
 			stateVector[i] = State.$NullState$;
 		}
@@ -189,7 +269,10 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 	* This method resets the incoming events (time events included).
 	*/
 	protected void clearEvents() {
-		sCInterface.clearEvents();
+		sCINorth.clearEvents();
+		sCIEast.clearEvents();
+		sCISouth.clearEvents();
+		sCIWest.clearEvents();
 		for (int i=0; i<timeEvents.length; i++) {
 			timeEvents[i] = false;
 		}
@@ -199,7 +282,10 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 	* This method resets the outgoing events.
 	*/
 	protected void clearOutEvents() {
-		sCInterface.clearOutEvents();
+		sCINorth.clearOutEvents();
+		sCIEast.clearOutEvents();
+		sCISouth.clearOutEvents();
+		sCIWest.clearOutEvents();
 	}
 	
 	/**
@@ -256,24 +342,20 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 		runCycle();
 	}
 	
-	public SCInterface getSCInterface() {
-		return sCInterface;
+	public SCINorth getSCINorth() {
+		return sCINorth;
 	}
 	
-	public boolean isRaisedSwitchNorth() {
-		return sCInterface.isRaisedSwitchNorth();
+	public SCIEast getSCIEast() {
+		return sCIEast;
 	}
 	
-	public boolean isRaisedSwitchWest() {
-		return sCInterface.isRaisedSwitchWest();
+	public SCISouth getSCISouth() {
+		return sCISouth;
 	}
 	
-	public boolean isRaisedSwitchSouth() {
-		return sCInterface.isRaisedSwitchSouth();
-	}
-	
-	public boolean isRaisedSwitchEast() {
-		return sCInterface.isRaisedSwitchEast();
+	public SCIWest getSCIWest() {
+		return sCIWest;
 	}
 	
 	/* Entry action for state 'Off'. */
@@ -285,21 +367,21 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 	private void entryAction_trafficlight_North() {
 		timer.setTimer(this, 1, (3 * 1000), false);
 		
-		sCInterface.raiseSwitchNorth();
+		sCINorth.raiseOn();
 	}
 	
 	/* Entry action for state 'East'. */
 	private void entryAction_trafficlight_East() {
 		timer.setTimer(this, 2, (3 * 1000), false);
 		
-		sCInterface.raiseSwitchEast();
+		sCIEast.raiseOn();
 	}
 	
 	/* Entry action for state 'West'. */
 	private void entryAction_trafficlight_West() {
 		timer.setTimer(this, 3, (3 * 1000), false);
 		
-		sCInterface.raiseSwitchWest();
+		sCIWest.raiseOn();
 	}
 	
 	/* Entry action for state 'WaitEast'. */
@@ -326,7 +408,7 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 	private void entryAction_trafficlight_South() {
 		timer.setTimer(this, 8, (3 * 1000), false);
 		
-		sCInterface.raiseSwitchSouth();
+		sCISouth.raiseOn();
 	}
 	
 	/* Exit action for state 'Off'. */
@@ -338,21 +420,21 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 	private void exitAction_trafficlight_North() {
 		timer.unsetTimer(this, 1);
 		
-		sCInterface.raiseSwitchNorth();
+		sCINorth.raiseOff();
 	}
 	
 	/* Exit action for state 'East'. */
 	private void exitAction_trafficlight_East() {
 		timer.unsetTimer(this, 2);
 		
-		sCInterface.raiseSwitchEast();
+		sCIEast.raiseOff();
 	}
 	
 	/* Exit action for state 'West'. */
 	private void exitAction_trafficlight_West() {
 		timer.unsetTimer(this, 3);
 		
-		sCInterface.raiseSwitchWest();
+		sCIWest.raiseOff();
 	}
 	
 	/* Exit action for state 'WaitEast'. */
@@ -379,7 +461,7 @@ public class TrafficlightStatemachine implements ITrafficlightStatemachine {
 	private void exitAction_trafficlight_South() {
 		timer.unsetTimer(this, 8);
 		
-		sCInterface.raiseSwitchSouth();
+		sCISouth.raiseOff();
 	}
 	
 	/* 'default' enter sequence for state Off */

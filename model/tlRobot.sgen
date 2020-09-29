@@ -1,6 +1,6 @@
 GeneratorModel for yakindu::java {
 
-	statechart robot_for_trafficlight {
+	statechart tlRobot {
 
 		feature Outlet {
 			targetProject = "drivesystem"

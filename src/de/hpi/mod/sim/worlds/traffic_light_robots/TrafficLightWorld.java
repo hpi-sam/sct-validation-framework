@@ -37,8 +37,7 @@ public class TrafficLightWorld extends RobotWorld {
 
     @Override
     public List<Scenario> getScenarios() {
-        // TODO Auto-generated method stub
-        return new java.util.ArrayList<>();
+        return new ScenarioGenerator(this).getScenarios();
     }
 
     @Override
@@ -57,7 +56,7 @@ public class TrafficLightWorld extends RobotWorld {
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
         float blockSize = ((SimulationBlockView) getAnimationPanel()).getBlockSize();
-        int width = (int) ((currentWidth / blockSize) / 3) * 3 - 6;
+        int width = (int) ((currentWidth / blockSize) / 3) * 3 - 5;
         int height = (int) (((currentHeight / blockSize) - TrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
                 + 1;
         TrafficLightsConfiguration.setFieldDimensions(width, height);

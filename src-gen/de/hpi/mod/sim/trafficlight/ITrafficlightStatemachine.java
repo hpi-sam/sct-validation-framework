@@ -5,32 +5,44 @@ import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.ITimerCallback;
 
 public interface ITrafficlightStatemachine extends ITimerCallback,IStatemachine {
-	public interface SCInterface {
+	public interface SCINorth {
 	
-		public boolean isRaisedSwitchNorth();
+		public boolean isRaisedOn();
 		
-		public boolean isRaisedSwitchWest();
-		
-		public boolean isRaisedSwitchSouth();
-		
-		public boolean isRaisedSwitchEast();
-		
-		public void setSCInterfaceOperationCallback(SCInterfaceOperationCallback operationCallback);
-	
-	}
-	
-	public interface SCInterfaceOperationCallback {
-	
-		public boolean robotNorth();
-		
-		public boolean robotWest();
-		
-		public boolean robotSouth();
-		
-		public boolean robotEast();
+		public boolean isRaisedOff();
 		
 	}
 	
-	public SCInterface getSCInterface();
+	public SCINorth getSCINorth();
+	
+	public interface SCIEast {
+	
+		public boolean isRaisedOn();
+		
+		public boolean isRaisedOff();
+		
+	}
+	
+	public SCIEast getSCIEast();
+	
+	public interface SCISouth {
+	
+		public boolean isRaisedOn();
+		
+		public boolean isRaisedOff();
+		
+	}
+	
+	public SCISouth getSCISouth();
+	
+	public interface SCIWest {
+	
+		public boolean isRaisedOn();
+		
+		public boolean isRaisedOff();
+		
+	}
+	
+	public SCIWest getSCIWest();
 	
 }

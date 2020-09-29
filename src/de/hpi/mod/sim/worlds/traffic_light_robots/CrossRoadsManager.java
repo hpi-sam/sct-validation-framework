@@ -30,11 +30,12 @@ public class CrossRoadsManager extends RobotGridManager {
         lightsPerRow = width / 3;
         lightsPerCol = height / 3;
         lights = new ArrayList<>(lightsPerCol * lightsPerRow);
-        for (int y = 0; y < lightsPerCol; y++)
+        for (int y = 0; y < lightsPerCol; y++) {
             for (int x = 0; x < lightsPerRow; x++) {
                 TrafficLight light = new TrafficLight(new Position(x * 3 + 2, y * 3));
                 lights.add(light);
             }
+        }
     }
     
     private TrafficLight getLightForCrossroad(int x, int y) {
