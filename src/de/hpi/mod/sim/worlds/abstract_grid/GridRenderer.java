@@ -2,7 +2,6 @@ package de.hpi.mod.sim.worlds.abstract_grid;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-
 /**
  * Renders the Grid of the Simulation
  */
@@ -59,7 +58,7 @@ public class GridRenderer {
         }
         //Draw borders
         for (int y = -lowestY + (int) blocksOffsetY; y < heightInBlocks - lowestY + blocksOffsetY; y++) {
-            for (int x = -leftestX + (int) blocksOffsetX - widthInBlocks / 2; x < widthInBlocks / 2
+            for (int x = -leftestX + (int) blocksOffsetX - widthInBlocks / 2; x < widthInBlocks / 2 - leftestX
                     + blocksOffsetX; x++) {
                 Position current = new Position(x, y);
                 ICellType cellType = grid.cellType(current);
@@ -80,7 +79,7 @@ public class GridRenderer {
  	 * @param blockedBy1 is this block blocked by the first highlighted entity?
  	 * @param blockedBy2 is this block blocked by the second highlighted entity?
      */
-    private void drawBlock(Graphics graphic, ICellType cell, Point2D drawPosition, boolean highlight,
+    protected void drawBlock(Graphics graphic, ICellType cell, Point2D drawPosition, boolean highlight,
             boolean isZeroZero, boolean blockedBy1, boolean blockedBy2) {
         float blockSize = simView.getBlockSize();
 
@@ -117,19 +116,38 @@ public class GridRenderer {
     }
     
     private void drawBorders(Graphics graphic, ICellType cell, Point2D drawPosition) {
+        for (Orientation orientation : Orientation.values()) {
+            if (cell.hasBorder(orientation))
+                drawBorder(graphic, cell, orientation, drawPosition);
+        }            
+    }
+    
+    private void drawBorder(Graphics graphic, ICellType cell, Orientation orientation, Point2D drawPosition) {
+        graphic.setColor(cell.borderColor(orientation));
+        Graphics2D graphics2D = (Graphics2D) graphic;
+        graphics2D.setStroke(new BasicStroke(cell.borderWidth(orientation)));
+        
         float blockSize = simView.getBlockSize();
         int x = (int) drawPosition.getX();
         int y = (int) drawPosition.getY();
-
-        graphic.setColor(Color.DARK_GRAY);
-        if (cell.borderLeft())
-            graphic.drawLine(x, y, x, y + (int) blockSize);
-        if (cell.borderRight())
-            graphic.drawLine(x + (int) blockSize, y, x + (int) blockSize, y + (int) blockSize);
-        if (cell.borderTop())
-            graphic.drawLine(x, y, x + (int) blockSize, y);
-        if (cell.borderBottom())
+        
+        switch (orientation) {
+            case EAST:
+                graphic.drawLine(x + (int) blockSize, y, x + (int) blockSize, y + (int) blockSize);
+                break;
+            case NORTH:
+                graphic.drawLine(x, y, x + (int) blockSize, y);
+                break;
+            case SOUTH:
             graphic.drawLine(x, y + (int) blockSize, x + (int) blockSize, y + (int) blockSize);
+                break;
+            case WEST:
+                graphics2D.drawLine(x, y, x, y + (int) blockSize);
+                break;
+            default:
+                throw new IllegalArgumentException();
+            
+        }
     }
     
     /*

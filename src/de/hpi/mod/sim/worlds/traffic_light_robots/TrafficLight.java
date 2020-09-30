@@ -6,26 +6,13 @@ import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.trafficlight.TrafficlightStatemachine;
 import de.hpi.mod.sim.trafficlight.TrafficlightStatemachine.State;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
-
-import java.awt.Color;
-import java.awt.Graphics;
 
 public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.State> implements StateChartEntity {
     /**
      * The northern, eastern, southern and western positions
      */
     private Position[] positions = new Position[4];
-    private static final float size = 0.3f; 
-    /**
-     * The traffic lights are not drawn in the center of the field but with some
-     * offset depending on whether it is the northern, eastern, ... part
-     */
-    // private static final int[] X_OFFSETS = { -1, -1, 1, 1 };
-    // private static final int[] Y_OFFSETS = { -1, 1, 1, -1 };
-    private static final float[] X_OFFSETS = { 0, 0, 1-size, 1-size };
-    private static final float[] Y_OFFSETS = { 1 - size , 0, 0, 1-size };
-    private boolean[] lightStates = { false, false, false, false }; // Which positions show green
+    private boolean[] lightStates = { false, false, false, false }; // Which positions show green. Order: South, West, East, North (by y-value)
 
     /**
      * Creates a traffic light. Each traffic light is responsible for a whole
@@ -35,11 +22,15 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
      *            calculated from this one.
      */
     public TrafficLight(Position pos) {
-        positions[0] = new Position(pos.getX() - 1, pos.getY() + 3);
-        positions[1] = new Position(pos.getX() + 1, pos.getY() + 2);
-        positions[2] = pos;
-        positions[3] = new Position(pos.getX() - 2, pos.getY() + 1);
+        positions[0] = pos;
+        positions[1] = new Position(pos.getX() - 2, pos.getY() + 1);
+        positions[2] = new Position(pos.getX() + 1, pos.getY() + 2);
+        positions[3] = new Position(pos.getX() - 1, pos.getY() + 3);
         start();
+    }
+
+    public Position getSouthPosition() {
+        return positions[0];
     }
 
     @Override
@@ -62,21 +53,21 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
          * Runs a cycle of the statechart and checks if any functions got fired
          */
         if (getStatemachine().getSCINorth().isRaisedOn())
-            lightStates[0] = true;
-        if (getStatemachine().getSCINorth().isRaisedOff())
-            lightStates[0] = false;
-        if (getStatemachine().getSCIEast().isRaisedOn())
-            lightStates[1] = true;
-        if (getStatemachine().getSCIEast().isRaisedOff())
-            lightStates[1] = false;
-        if (getStatemachine().getSCISouth().isRaisedOn())
-            lightStates[2] = true;
-        if (getStatemachine().getSCISouth().isRaisedOff())
-            lightStates[2] = false;
-        if (getStatemachine().getSCIWest().isRaisedOn())
             lightStates[3] = true;
-        if (getStatemachine().getSCIWest().isRaisedOff())
+        if (getStatemachine().getSCINorth().isRaisedOff())
             lightStates[3] = false;
+        if (getStatemachine().getSCIEast().isRaisedOn())
+            lightStates[2] = true;
+        if (getStatemachine().getSCIEast().isRaisedOff())
+            lightStates[2] = false;
+        if (getStatemachine().getSCISouth().isRaisedOn())
+            lightStates[0] = true;
+        if (getStatemachine().getSCISouth().isRaisedOff())
+            lightStates[0] = false;
+        if (getStatemachine().getSCIWest().isRaisedOn())
+            lightStates[1] = true;
+        if (getStatemachine().getSCIWest().isRaisedOff())
+            lightStates[1] = false;
     }
 
     @Override
@@ -99,18 +90,20 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
         return ((TrafficlightStatemachine) chart).isStateActive(state);
     }
 
-    public void render(Graphics graphics, SimulationBlockView panel) {
-        for (int i = 0; i < positions.length; i++) {
-            Position pos = positions[i];
-            Color color = lightStates[i] ? Color.GREEN : Color.RED;
-            graphics.setColor(color);
-            java.awt.geom.Point2D point = panel.toDrawPosition(pos);
-            float blockSize = panel.getBlockSize();
-            // graphics.fillOval((int) (point.getX()), (int) (point.getY()), (int) (blockSize * size), (int) (blockSize * size));
-            graphics.fillOval((int) (point.getX() + X_OFFSETS[i] * blockSize),
-                    (int) (point.getY() + Y_OFFSETS[i] * blockSize), (int) (blockSize * size),
-                    (int) (blockSize * size));
-        }
+    public boolean isGreenNorth() {
+        return lightStates[3];
+    }
+    
+    public boolean isGreenEast() {
+        return lightStates[2];
+    }
+    
+    public boolean isGreenWest() {
+        return lightStates[1];
+    }
+    
+    public boolean isGreenSouth() {
+        return lightStates[0];
     }
 
 }

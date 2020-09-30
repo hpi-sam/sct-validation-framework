@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces;
+package de.hpi.mod.sim.worlds.abstract_robots;
 
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.DriveSystemWrapper;
 

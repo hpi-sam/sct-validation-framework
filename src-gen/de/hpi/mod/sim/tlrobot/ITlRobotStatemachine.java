@@ -44,7 +44,7 @@ public interface ITlRobotStatemachine extends IStatemachine {
 	
 	public interface SCIDataOperationCallback {
 	
-		public long posType();
+		public long cellType();
 		
 		public long targetDirection();
 		
@@ -60,7 +60,7 @@ public interface ITlRobotStatemachine extends IStatemachine {
 	
 	public SCIData getSCIData();
 	
-	public interface SCIPositionType {
+	public interface SCICellType {
 	
 		public long getTRAFFICLIGHT_RED();
 		
@@ -78,9 +78,13 @@ public interface ITlRobotStatemachine extends IStatemachine {
 		
 		public void setBLOCKED(long value);
 		
+		public long getARRIVAL_POINT();
+		
+		public void setARRIVAL_POINT(long value);
+		
 	}
 	
-	public SCIPositionType getSCIPositionType();
+	public SCICellType getSCICellType();
 	
 	public interface SCIDirection {
 	

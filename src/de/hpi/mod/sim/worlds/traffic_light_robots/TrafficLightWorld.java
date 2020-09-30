@@ -3,7 +3,6 @@ package de.hpi.mod.sim.worlds.traffic_light_robots;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.awt.Graphics;
 
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
@@ -20,19 +19,6 @@ public class TrafficLightWorld extends RobotWorld {
     }
 
     @Override
-    public void updateEntities(float delta) {
-        // for (Robot generalRobot : getRobots()) {
-        //     TrafficLightRobot robot = (TrafficLightRobot) generalRobot;
-        //     if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
-        //         robot.getDriveManager().update(delta);
-        //     } else {
-        //         robot.getDriveManager().update(delta, robot.getRobotSpecificDelay());
-        //     }
-        // }
-            //TODO 
-    }
-
-    @Override
     public void resetScenario() {}
 
     @Override
@@ -42,15 +28,8 @@ public class TrafficLightWorld extends RobotWorld {
 
     @Override
     public Map<String, List<TestScenario>> getTestGroups() {
-        // TODO Auto-generated method stub
+        // TODO Add tests
         return new java.util.Hashtable<>();
-    }
-
-    @Override
-    public void render(Graphics graphics) {
-        super.render(graphics);
-        for (TrafficLight light : getCrossRoadManager().getTrafficLights())
-            light.render(graphics, (SimulationBlockView) getAnimationPanel());
     }
 
     @Override
@@ -69,6 +48,12 @@ public class TrafficLightWorld extends RobotWorld {
         for (TrafficLight light : getCrossRoadManager().getTrafficLights()) {
             light.updateTimer();
         }
+    }
+
+    @Override
+    public void clearEntities() {
+        super.clearEntities();
+        getCrossRoadManager().getTrafficLights().clear();
     }
     
     @Override

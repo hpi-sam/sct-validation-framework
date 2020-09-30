@@ -24,9 +24,10 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.*;
  * It relays sensor-information from a {@link ISensorDataProvider} to the Drive-System.
  * It uses a {@link IRobotStationDispatcher} to drive in a station and {@link ILocation} to get new Targets.
  */
+
+ //TODO adjust comment
 public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDriveListener, StateChartEntity {
 
-    private DriveManager manager;
     private IDriveSystem drive;
     // private ISensorDataProvider sensorData;
     private IRobotStationDispatcher robotDispatch;
@@ -50,8 +51,6 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     private Position invalidUnloadingPosition = null;
 
     private int chargerID;
-
-    private boolean requireUnloadingForTestCompletion = false;
     
     public WarehouseRobot(int robotID, int stationID, WarehouseManager grid, IRobotStationDispatcher robots, Position startPosition, Orientation startFacing) {
         super(robotID, grid, startPosition, startFacing);
@@ -60,8 +59,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         this.robotDispatch = robots;
         this.location = grid;
         this.scanner = grid;
-        manager = new DriveManager(this);
-        DriveSystemWrapper drive = new DriveSystemWrapper(this, manager, this);
+        DriveSystemWrapper drive = new DriveSystemWrapper(this, getDriveManager(), this);
         this.drive = drive;
         this.chart = drive;
     }
@@ -86,8 +84,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         this.robotDispatch = robotDispatch;
         this.location = grid;
         this.scanner = grid;
-        manager = new DriveManager(this);
-        DriveSystemWrapper drive = new DriveSystemWrapper(this, manager, this);
+        DriveSystemWrapper drive = new DriveSystemWrapper(this, getDriveManager(), this);
         this.drive = drive;
         this.chart = drive;
 
@@ -99,7 +96,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     public WarehouseRobot(int robotID, int stationID, 
             WarehouseManager grid, IRobotStationDispatcher stations, Position position, Orientation facing, int delay) {
 		this(robotID, stationID, grid, stations, position, facing);
-		manager.setMaxDelay(delay);
+		getDriveManager().setMaxDelay(delay);
 	}
 
 	/**
@@ -111,11 +108,11 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         chart.updateTimer();
     	if (!robotHasDriveTarget) {
             if(!isInTest() || !getTestTargets().isEmpty()) {
-                if (state == RobotState.TO_CHARGER && manager.isBatteryFull()) {
+                if (state == RobotState.TO_CHARGER && getDriveManager().isBatteryFull()) {
                     handleFinishedCharging();
                 } else if (state == RobotState.TO_LOADING && scanner.hasPackage(stationID)) {
                     handleFinishedLoading();
-                } else if (state == RobotState.TO_UNLOADING && !manager.hasPackage()) {
+                } else if (state == RobotState.TO_UNLOADING && !getDriveManager().hasPackage()) {
                     handleFinishedUnloading();
                 } else if (state == RobotState.TO_STATION) {
                     handleArriveAtStation();
@@ -178,7 +175,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     private void handleArriveAtCharger() {
         if(facing() == Orientation.EAST) {
         	robotDispatch.reportChargingAtStation(getID(), stationID, chargerID);
-        	manager.setLoading(true);
+        	getDriveManager().setLoading(true);
         }
     }
 
@@ -187,7 +184,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
      * If not allowed it does nothing and has to be called again at a later time
      */
     private void handleFinishedCharging() {
-        manager.setLoading(false);
+        getDriveManager().setLoading(false);
 
         if (robotDispatch.requestLeavingCharger(getID(), stationID, chargerID)) {
         	drive.newTarget();
@@ -201,14 +198,13 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         robotDispatch.reportEnteringQueueAtStation(getID(), stationID);
         drive.newTarget();
         if (!isInTest()) {
-        	setTarget(location.getLoadingPositionAtStation(stationID));
+            setTarget(location.getLoadingPositionAtStation(stationID));
         } else {
-            if ((pos().equals(getTarget()) || oldPos().equals(getTarget()))
-                    && arrivementFullfilled()) {
-        		setTarget(getTestTargets().get(0));
+            if ((pos().equals(getTarget()) || oldPos().equals(getTarget())) && arrivementFullfilled()) {
+                setTarget(getTestTargets().get(0));
                 getTestTargets().remove(0);
                 setArrivedEventWasCalled(false);
-        	}
+            }
         }
         state = RobotState.TO_LOADING;
         startDriving();
@@ -229,7 +225,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     	if(now < System.currentTimeMillis() - delay || isInTest())
         {
     		packageID = scanner.getPackageID(stationID, this.pos());
-    		manager.setPackage(true);
+    		getDriveManager().setPackage(true);
     		if(!isInTest()) {
     			startDrivingToUnload();
     			setTarget(location.getUnloadingPositionFromID(packageID));
@@ -255,24 +251,24 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 	}
 
 	private void handleArriveAtUnloading() {
-    	// if(!manager.isInPositionToUnloadIntoShaft() && manager.hasPackage()) {
-        if(isInTest() && !manager.isInPositionToUnloadIntoShaft()) {
+    	// if(!getDriveManager().isInPositionToUnloadIntoShaft() && getDriveManager().hasPackage()) {
+        if(isInTest() && !getDriveManager().isInPositionToUnloadIntoShaft()) {
     		invalidUnloadingPosition  = pos();
     	}
     }
 
 	private void handleFinishedUnloading() {
-		if(!manager.isInPositionToUnloadIntoShaft()) {
+		if(!getDriveManager().isInPositionToUnloadIntoShaft()) {
     		invalidUnloadingPosition  = pos();
     	}
 		
-        boolean needsLoading = manager.getBattery() < InfiniteWarehouseConfiguration.BATTERY_LOW;
+        boolean needsLoading = getDriveManager().getBattery() < InfiniteWarehouseConfiguration.BATTERY_LOW;
         stationID = robotDispatch.getReservationNextForStation(getID(), needsLoading);
         drive.newTarget();
         if(!isInTest()) {
         	setTarget(location.getArrivalPositionAtStation(stationID));
         } else {
-        	if(((pos().fuzzyEquals(getTarget()) || oldPos().fuzzyEquals(getTarget())) && !manager.hasPackage()) && arrivementFullfilled()) {
+        	if(((pos().fuzzyEquals(getTarget()) || oldPos().fuzzyEquals(getTarget())) && !getDriveManager().hasPackage()) && arrivementFullfilled()) {
         		setTarget(getTestTargets().get(0));
         		getTestTargets().remove(0);
         		stationID = robotDispatch.getStationIDFromPosition(getTarget());
@@ -329,12 +325,6 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
                 && grid.cellType(getTarget()) == CellType.CHARGER
                 && pos().equals(getTarget().getModified(1, 0));
     }
-    
-    @Override
-    public boolean hasPassedAllTestCriteria() {
-    	return super.hasPassedAllTestCriteria()  
-    			&& (!requireUnloadingForTestCompletion || manager.hasUnloadedSomething());
-    }
 
     @Override
     public boolean blockedWaypointAhead() {
@@ -366,22 +356,8 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     }
 
     @Override
-    public void actionCompleted() {
-        drive.actionCompleted();
-    }
-
-    @Override
     public void close() {
         chart.close();
-    }
-
-    public DriveManager getDriveManager() {
-        return manager;
-    }
-
-    @Override
-    public float getBattery() {
-        return manager.getBattery();
     }
 
     public int getStationID() {
@@ -390,11 +366,6 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     public int getPackageID() {
         return packageID;
-    }
-
-    @Override
-    public boolean hasPackage() {
-        return manager.hasPackage();
     }
 
     public String getMachineState() {
@@ -431,5 +402,11 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     private WarehouseManager getWarehouseManager() {
         return (WarehouseManager) grid;
+    }
+
+    @Override
+    public void actionCompleted() {
+        super.actionCompleted();
+        drive.actionCompleted();
     }
 }

@@ -118,7 +118,7 @@ public class TlRobotStatemachine implements ITlRobotStatemachine {
 	}
 	
 	
-	protected class SCIPositionTypeImpl implements SCIPositionType {
+	protected class SCICellTypeImpl implements SCICellType {
 	
 		private long tRAFFICLIGHT_RED;
 		
@@ -158,6 +158,16 @@ public class TlRobotStatemachine implements ITlRobotStatemachine {
 		
 		public void setBLOCKED(long value) {
 			this.bLOCKED = value;
+		}
+		
+		private long aRRIVAL_POINT;
+		
+		public long getARRIVAL_POINT() {
+			return aRRIVAL_POINT;
+		}
+		
+		public void setARRIVAL_POINT(long value) {
+			this.aRRIVAL_POINT = value;
 		}
 		
 	}
@@ -216,7 +226,7 @@ public class TlRobotStatemachine implements ITlRobotStatemachine {
 	
 	protected SCIDataImpl sCIData;
 	
-	protected SCIPositionTypeImpl sCIPositionType;
+	protected SCICellTypeImpl sCICellType;
 	
 	protected SCIDirectionImpl sCIDirection;
 	
@@ -250,7 +260,7 @@ public class TlRobotStatemachine implements ITlRobotStatemachine {
 		sCIProcessor = new SCIProcessorImpl();
 		sCIActors = new SCIActorsImpl();
 		sCIData = new SCIDataImpl();
-		sCIPositionType = new SCIPositionTypeImpl();
+		sCICellType = new SCICellTypeImpl();
 		sCIDirection = new SCIDirectionImpl();
 	}
 	
@@ -265,13 +275,15 @@ public class TlRobotStatemachine implements ITlRobotStatemachine {
 		}
 		clearEvents();
 		clearOutEvents();
-		sCIPositionType.setTRAFFICLIGHT_RED(0);
+		sCICellType.setTRAFFICLIGHT_RED(0);
 		
-		sCIPositionType.setTRAFFICLIGHT_GREEN(1);
+		sCICellType.setTRAFFICLIGHT_GREEN(1);
 		
-		sCIPositionType.setCROSSROAD(2);
+		sCICellType.setCROSSROAD(2);
 		
-		sCIPositionType.setBLOCKED(3);
+		sCICellType.setBLOCKED(3);
+		
+		sCICellType.setARRIVAL_POINT(4);
 		
 		sCIDirection.setLEFT(0);
 		
@@ -434,8 +446,8 @@ public class TlRobotStatemachine implements ITlRobotStatemachine {
 		return sCIData;
 	}
 	
-	public SCIPositionType getSCIPositionType() {
-		return sCIPositionType;
+	public SCICellType getSCICellType() {
+		return sCICellType;
 	}
 	
 	public SCIDirection getSCIDirection() {
@@ -471,7 +483,7 @@ public class TlRobotStatemachine implements ITlRobotStatemachine {
 	}
 	
 	private boolean check_tlRobot_driving__driving__choice_2_tr1_tr1() {
-		return sCIData.operationCallback.posType()==sCIPositionType.getTRAFFICLIGHT_GREEN();
+		return sCIData.operationCallback.cellType()==sCICellType.getTRAFFICLIGHT_GREEN();
 	}
 	
 	private boolean check_tlRobot_driving__driving__choice_3_tr0_tr0() {

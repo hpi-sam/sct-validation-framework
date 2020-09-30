@@ -7,7 +7,6 @@ import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
-import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.infinitewarehouse.detectors.*;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.StationManager;
@@ -37,19 +36,6 @@ public class InfiniteWarehouse extends RobotWorld {
 
     public WarehouseManager getWarehouseManager() {
         return (WarehouseManager) getGridManager();
-    }
-
-    @Override
-    public void updateEntities(float delta) {
-        for (Robot generalRobot : getRobots()) {
-            WarehouseRobot robot = (WarehouseRobot) generalRobot;
-            if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
-                robot.getDriveManager().update(delta);
-            } else {
-                robot.getDriveManager().update(delta, robot.getRobotSpecificDelay());
-            }
-
-        }
     }
 
     @Override

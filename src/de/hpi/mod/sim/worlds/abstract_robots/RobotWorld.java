@@ -107,4 +107,15 @@ public abstract class RobotWorld extends GridWorld {
     public void close() {
         getRobotGridManager().close();
     }
+    
+    @Override
+    public void updateEntities(float delta) {
+        for (Robot robot : getRobots()) {
+            if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
+                robot.getDriveManager().update(delta);
+            } else {
+                robot.getDriveManager().update(delta, robot.getRobotSpecificDelay());
+            }
+        }
+    }
 }

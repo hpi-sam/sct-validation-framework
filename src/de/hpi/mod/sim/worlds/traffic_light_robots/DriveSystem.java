@@ -2,11 +2,21 @@ package de.hpi.mod.sim.worlds.traffic_light_robots;
 
 import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.drivesystem.IDrivesystemStatemachine;
 import de.hpi.mod.sim.tlrobot.ITlRobotStatemachine;
 import de.hpi.mod.sim.tlrobot.TlRobotStatemachine;
+import de.hpi.mod.sim.worlds.abstract_robots.IRobotActors;
 
-public class DriveSystem extends StateChartWrapper<TlRobotStatemachine.State> implements ITlRobotStatemachine.SCIDataOperationCallback, ITlRobotStatemachine. {
+public class DriveSystem extends StateChartWrapper<TlRobotStatemachine.State> implements ITlRobotStatemachine.SCIDataOperationCallback {
+
+    private IRobotActors actors;
+    private IProcessor processor;
+    private IRobotData data;
+
+    public DriveSystem(IRobotActors actors, IProcessor processor, IRobotData data) {
+        this.actors = actors;
+        this.processor = processor;
+        this.data = data;
+    }
 
     @Override
     public void start() {
@@ -24,13 +34,13 @@ public class DriveSystem extends StateChartWrapper<TlRobotStatemachine.State> im
          * Runs a cycle of the statechart and checks if any functions got fired
          */
         if (getStatemachine().getSCIActors().isRaisedDriveForward())
-            // TODO
+            actors.driveForward();
         if (getStatemachine().getSCIActors().isRaisedTurnLeft())
-            // TODO
+            actors.turnLeft();
         if (getStatemachine().getSCIActors().isRaisedTurnRight())
-            // TODO
+            actors.turnRight();
         if (getStatemachine().getSCIProcessor().isRaisedArrived())
-            // TODO
+            processor.arrived();
     }
 
     @Override
@@ -53,43 +63,56 @@ public class DriveSystem extends StateChartWrapper<TlRobotStatemachine.State> im
         return ((TlRobotStatemachine) chart).isStateActive(state);}
 
     @Override
-    public long posType() {
-        // TODO Auto-generated method stub
-        return 0;
+    public long cellType() {
+        switch (data.cellType()) {
+            case TRAFFIC_LIGHT_GREEN:
+                return getStatemachine().getSCICellType().getTRAFFICLIGHT_GREEN();
+            case TRAFFIC_LIGHT_RED:
+                return getStatemachine().getSCICellType().getTRAFFICLIGHT_GREEN();
+            case CROSSROAD:
+                return getStatemachine().getSCICellType().getCROSSROAD();
+            default:
+                return getStatemachine().getSCICellType().getBLOCKED();  
+        }
     }
 
     @Override
     public long targetDirection() {
-        // TODO Auto-generated method stub
-        return 0;
+        switch (data.targetDirection()) {
+            case AHEAD:
+                return getStatemachine().getSCIDirection().getAHEAD();
+            case LEFT:
+                return getStatemachine().getSCIDirection().getLEFT();
+            case RIGHT:
+                return getStatemachine().getSCIDirection().getRIGHT();
+            default:
+                return getStatemachine().getSCIDirection().getBEHIND();
+        }
     }
 
     @Override
     public boolean isOnTarget() {
-        // TODO Auto-generated method stub
-        return false;
+        return data.isOnTarget();
     }
 
     @Override
     public boolean blockedArrivalpointAhead() {
-        // TODO Auto-generated method stub
-        return false;
+        return data.blockedWaypointAhead();
     }
 
     @Override
     public boolean blockedArrivalpointLeft() {
-        // TODO Auto-generated method stub
-        return false;
+        return data.blockedWaypointLeft();
     }
 
     @Override
     public boolean blockedArrivalpointRight() {
-        // TODO Auto-generated method stub
-        return false;
+        return data.blockedWaypointRight();
     }
     
-    public void dataRefresh() {
+    public void onRefresh() {
         getStatemachine().raiseDataRefresh();
+        updateTimer();
     }
     
     public void newTarget() {

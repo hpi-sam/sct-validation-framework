@@ -19,6 +19,8 @@ public abstract class Robot implements Entity, IHighlightable {
     private static int idCount = 0;
 
     protected RobotGridManager grid;
+    
+    private DriveManager manager;
 
     private Position target = null;
     private List<Position> testTargets = null;
@@ -42,11 +44,11 @@ public abstract class Robot implements Entity, IHighlightable {
 
     private Orientation facing, targetFacing;
 
-    private float battery;
-
     private float x, y, angle;
 
     private Position position, oldPosition;
+    
+    protected boolean requireUnloadingForTestCompletion = false;
 
     public Robot(int robotID, RobotGridManager grid, Position startPosition, Orientation startFacing) {
         this.robotID = robotID; //TODO handle case of already given robotID
@@ -56,6 +58,7 @@ public abstract class Robot implements Entity, IHighlightable {
         target = startPosition;
         turnRobotTo(startFacing);
         setTargetFacing(startFacing);
+        manager = new DriveManager(this);
     }
 
     public Robot(RobotGridManager grid, Position startPosition, Orientation startFacing) {
@@ -78,6 +81,7 @@ public abstract class Robot implements Entity, IHighlightable {
         this.initialNow = System.currentTimeMillis();
         this.fuzzyTestCompletion = fuzzyEnd;
         this.requireArrivedForTestCompletion = hardArrivedConstraint;
+        manager = new DriveManager(this);
     }
     
     private void setRobotTo(Position pos) {
@@ -213,7 +217,10 @@ public abstract class Robot implements Entity, IHighlightable {
     
     @Override
     public boolean hasPassedAllTestCriteria() {
-        return testTargets.isEmpty() && this.isOnTarget() && arrivementFullfilled();
+        return testTargets.isEmpty() 
+            && this.isOnTarget()
+            && arrivementFullfilled()
+            && (!requireUnloadingForTestCompletion || getDriveManager().hasUnloadedSomething());
     }
     
     public boolean arrivementFullfilled() {
@@ -254,10 +261,6 @@ public abstract class Robot implements Entity, IHighlightable {
 
     public void setTarget(Position target) {
         this.target = target;
-    }
-
-    public float getBattery() {
-        return battery;
     }
 
     public Position getTarget() {
@@ -310,8 +313,22 @@ public abstract class Robot implements Entity, IHighlightable {
     public void setArrivedEventWasCalled(boolean b) {
         this.arrivedEventWasCalled = b;
     }
+    
+    /**
+     * Called once after the actors have performed a movement (turning, driving, unloading)
+     */
+    public void actionCompleted() {
+    }
 
-	public boolean hasPackage() {
-		return false;
-	}
+    public DriveManager getDriveManager() {
+        return manager;
+    }
+    
+    public float getBattery() {
+        return getDriveManager().getBattery();
+    }
+
+    public boolean hasPackage() {
+        return getDriveManager().hasPackage();
+    }
 }
