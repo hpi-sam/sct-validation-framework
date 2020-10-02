@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots;
+package de.hpi.mod.sim.worlds.traffic_light_robots.robot;
 
 import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;

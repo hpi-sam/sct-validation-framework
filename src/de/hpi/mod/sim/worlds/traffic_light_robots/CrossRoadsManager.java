@@ -553,8 +553,18 @@ public class CrossRoadsManager extends RobotGridManager {
         int x = (pos.getX() - 2) / 3;
         int y = pos.getY() / 3;
         lights.add(y * lightsPerRow + x, trafficLight);
-		return trafficLight;
-	}
+        return trafficLight;
+    }
+    
+    public static Orientation getSuitableRobotOrientationForPosition(Position pos) {
+        if (pos.getX() == 0)
+            return Orientation.EAST;
+        if (pos.getY() == 0)
+            return Orientation.NORTH;
+        if (pos.getX() == TrafficLightsConfiguration.getFieldWidth())
+            return Orientation.WEST;
+        return Orientation.SOUTH;
+    }
 
     /**
      * Creates and adds new Robot at given Position if it is a Waypoint, with given

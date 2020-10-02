@@ -11,7 +11,6 @@ import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.infinitewarehouse.detectors.*;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.StationManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
-import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.RobotSpecification;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.TestCaseGenerator;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
@@ -75,11 +74,6 @@ public class InfiniteWarehouse extends RobotWorld {
     public void reportInvalidUnloading(WarehouseRobot robot, String reason) {
         getFrame().displayWarningMessage(reason);
     }
-
-    public WarehouseRobot getRobotFromSpecification(RobotSpecification specification) {
-        return specification.createRobot(getWarehouseManager());
-    }
-
     @Override
     public void resetScenario() {
         getWarehouseManager().releaseAllLocks();

@@ -1,7 +1,9 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots;
+package de.hpi.mod.sim.worlds.traffic_light_robots.scenario;
 
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLight;
+import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWorld;
 
 public class TrafficLightSpecification implements EntitySpecification<TrafficLight> {
 

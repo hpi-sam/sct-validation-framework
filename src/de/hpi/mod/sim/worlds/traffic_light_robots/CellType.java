@@ -7,7 +7,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 
 public class CellType implements ICellType {
 
-    static enum Type {
+    public static enum Type {
         CROSSROAD, BLOCK, TRAFFIC_LIGHT_RED, TRAFFIC_LIGHT_GREEN, ARRIVAL_POINT, PURE_WAYPOINT
     }
 

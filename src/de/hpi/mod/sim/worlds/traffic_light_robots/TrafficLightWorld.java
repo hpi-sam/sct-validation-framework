@@ -9,6 +9,7 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
+import de.hpi.mod.sim.worlds.traffic_light_robots.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class TrafficLightWorld extends RobotWorld {

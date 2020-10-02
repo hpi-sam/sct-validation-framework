@@ -1,6 +1,7 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots;
+package de.hpi.mod.sim.worlds.traffic_light_robots.robot;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
+import de.hpi.mod.sim.worlds.traffic_light_robots.CellType;
 
 public interface IRobotData {
 
