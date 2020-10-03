@@ -60,12 +60,11 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
     
     
     private void goDown() {
-    	y =  y - 0.001; 
-    	// TODO Add method getPos for statemachine 
+    	y =  y - 0.003; 
     }
     
     private void goUp() {
-    	y = y + 0.001;
+    	y = y + 0.003;
     }
     
     
@@ -141,5 +140,15 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
         getStatemachine().getSCInterface().setSCInterfaceOperationCallback(this);
         super.start();
     }
+
+
+	public double getXPos() {
+		return x;
+	}
+
+
+	public double getWidth() {
+		return width;
+	}
 
 }

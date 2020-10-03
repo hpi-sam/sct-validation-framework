@@ -133,15 +133,28 @@ public class PongWorld extends World {
 	
 	public void collision(){
 		//hits against Paddle1
-        if(ball.getXPos() < -0.999) {
-        	if((paddle1.getYPos() + paddle1.getHeight()/2 < ball.getYPos() + ball.getDiameter()/2 )
-        	&& (paddle1.getYPos() - paddle1.getHeight()/2 > ball.getYPos() - ball.getDiameter()/2 )) {
-        		ball.setXDirection();
-        		ball.setYDirection();
+        if(ball.getXPos() < paddle1XPos()){
+        	
+    		System.out.println("paddle " + paddle1XPos());
+    		System.out.println("ball x " + ball.getXPos());
+    		System.out.println("obere Ecke "+ (paddle1.getYPos() + paddle1.getHeight()/2));
+    		System.out.println("ball y  "+ (ball.getYPos() + ball.getDiameter()/2) );
+    		
+    		//when ball is between upper and lower bound of paddle 
+        	if(((paddle1.getYPos() + paddle1.getHeight()/2) < (ball.getYPos() + ball.getDiameter()/2 ))
+        	&& ((paddle1.getYPos() - paddle1.getHeight()/2 )> (ball.getYPos() - ball.getDiameter()/2 ))){
+        		ball.switchXDirection();
+        		ball.switchYDirection();
         	}
         }
        
 	}	
+	
+	
+	private double paddle1XPos() {
+		return (paddle1.getXPos() + (paddle1.getWidth() / 2));
+		
+	}
 	
 	
 	public Paddle getPaddle1 () {

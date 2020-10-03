@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.worlds.flasher;
 
 import java.awt.Color;
+
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -10,6 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
@@ -33,22 +39,30 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 	private boolean onlyCorrectOnTimes = true;
 	private boolean onlyCorrectOffTimes = true;
 
+	
+	
 	private Long lastOn, lastOff;
 
 	public Bulb() {
 		super();
 		loadImages();
 		start();
+ 
 	}
 
+
+			
+	
+	
+	
+	
 	public void bulbRender(Graphics graphics, int width, int height) {
 		
 		BufferedImage img = isOn ? bulbOn : bulbOff;
 		graphics.drawImage(img, (width - img.getWidth()) / 2, (height - img.getHeight()) / 2, null);
-		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/20));
+		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
 		graphics.setColor(Color.BLACK);
-
-		graphics.drawString(String.valueOf(timesToBlink), width/20, height/2);
+		graphics.drawString("Task / Remaining: (" + timesToBlink +" / "+ remainingBlinks + " )", width/20, height- height/20);
 	}
 
 	private void loadImages() {
@@ -140,7 +154,7 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("Times to blink: " + timesToBlink, "Lamp is on: " + isOn());
+		return Arrays.asList("Times to blink " + timesToBlink, "Remaining blinks: "  + remainingBlinks, "Lamp is on: " + isOn());
 	}
 
 	@Override

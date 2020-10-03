@@ -15,17 +15,17 @@ public class Ball implements Entity, IHighlightable{
 
     private double x, y;
     private PongWorld world;
-    private final double rangePerUpdate = 0.002;
-    private double yDirection, xDirection = rangePerUpdate *-1;
+    private double yDirection, xDirection = -0.002;
     private static final double diameter = 0.04;
     private boolean outOfBounds; 
     private static final int stateMachineFactor = 1000 ;
 
    
     
-    public Ball(double yPos, double yDirection, PongWorld world) {
+    public Ball(double yPos, double yDirection, double xDirection, PongWorld world) {
     	this.x = 0.9;
     	this.y = yPos;
+    	this.xDirection = xDirection;
     	this.yDirection = yDirection;
     	this.world = world;
     }
@@ -33,8 +33,8 @@ public class Ball implements Entity, IHighlightable{
     
     public void render(Graphics graphics, int totalWidth, int totalHeight) {
 
-    	int drawX = (int) (PongWorld.toPixel(x, totalWidth ) - totalWidth* diameter/ 2);
-        int drawY = (int) (PongWorld.toPixel(-y, totalHeight));
+    	int drawX = (int) (PongWorld.toPixel(x, totalWidth) - totalWidth * diameter / 2 );
+        int drawY = (int) (PongWorld.toPixel(-y, totalHeight)- totalHeight * diameter / 2);
         graphics.setColor(new Color(0, 80, 250));
         graphics.fillOval(drawX, drawY, (int) (diameter* totalWidth), (int) (diameter * totalHeight));
         ((Graphics2D) graphics).setStroke(new java.awt.BasicStroke(2));
@@ -51,7 +51,7 @@ public class Ball implements Entity, IHighlightable{
     	
     	//bounce the ball when it hits the edge of the screen
     	if (x >= 1) {
-    		setXDirection();  		
+    		switchXDirection();  		
     	}
 
     	if (x + diameter <= -1 ) {
@@ -59,17 +59,19 @@ public class Ball implements Entity, IHighlightable{
         	outOfBounds = true;	
     	}
         
-    	if (y + diameter < -0.9  || y - diameter > 0.9) {
-    			setYDirection();
+    	if (y - diameter/2 < -0.9  || y + diameter/2  > 0.9) {
+    			System.out.println("y: "+ y);
+    			System.out.println("x: "+ x);
+
+    			switchYDirection();
     		}
     		
         x += xDirection;
         y += yDirection;
     }
 
-    public void setYDirection() {
+    public void switchYDirection() {
 		yDirection *= -1;
-		
 	}
 
     
@@ -91,7 +93,7 @@ public class Ball implements Entity, IHighlightable{
 		return diameter;
 	}
 
-	public void setXDirection() {
+	public void switchXDirection() {
 		this.x = x*-1;
 		
 	}
@@ -107,6 +109,7 @@ public class Ball implements Entity, IHighlightable{
 	public double refresh() {
 		return y;
 	}
+
 
 
 

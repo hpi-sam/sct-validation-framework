@@ -215,7 +215,7 @@ public class PongStatemachine implements IPongStatemachine {
 	}
 	
 	private boolean check_pong__choice_1_tr0_tr0() {
-		return (sCInterface.operationCallback.myPos()>=sCInterface.getMaxPos() || (sCInterface.operationCallback.myPos() + 50)>sCInterface.getBallPosValue());
+		return (sCInterface.operationCallback.myPos()>=sCInterface.getMaxPos() || sCInterface.operationCallback.myPos()>sCInterface.getBallPosValue());
 	}
 	
 	private boolean check_pong__choice_2_tr0_tr0() {
