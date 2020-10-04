@@ -33,13 +33,15 @@ public class Ball implements Entity, IHighlightable{
     
     public void render(Graphics graphics, int totalWidth, int totalHeight) {
 
-    	int drawX = (int) (PongWorld.toPixel(x, totalWidth) - totalWidth * diameter / 2 );
-        int drawY = (int) (PongWorld.toPixel(-y, totalHeight)- totalHeight * diameter / 2);
-        graphics.setColor(new Color(0, 80, 250));
-        graphics.fillOval(drawX, drawY, (int) (diameter* totalWidth), (int) (diameter * totalHeight));
+    	int drawX = (int) (PongWorld.toPixel(x - diameter/2, totalWidth));
+        int drawY = (int) (PongWorld.toPixel(-(y + diameter/2) , totalHeight));
+        
+        
+        graphics.setColor(new Color(102,205,0));
+        graphics.fillOval(drawX, drawY, (int) (diameter* totalWidth/2), (int) (diameter * totalHeight/2));
         ((Graphics2D) graphics).setStroke(new java.awt.BasicStroke(2));
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawOval(drawX, drawY, (int) (diameter * totalWidth), (int) (diameter * totalHeight));
+        graphics.drawOval(drawX, drawY, (int) (diameter * totalWidth/2), (int) (diameter * totalHeight/2));
     	
     	
     }
@@ -50,19 +52,16 @@ public class Ball implements Entity, IHighlightable{
     	world.collision();
     	
     	//bounce the ball when it hits the edge of the screen
-    	if (x >= 1) {
-    		switchXDirection();  		
+    	if (x > 1) {
+    		switchXDirection();  	
     	}
 
-    	if (x + diameter <= -1 ) {
+    	if (getLeftEnd()< -1 ) {
         	x = 1;
         	outOfBounds = true;	
     	}
         
-    	if (y - diameter/2 < -0.9  || y + diameter/2  > 0.9) {
-    			System.out.println("y: "+ y);
-    			System.out.println("x: "+ x);
-
+    	if (getLowerEnd() <= -0.9  || getUpperEnd() >= 0.9) {
     			switchYDirection();
     		}
     		
@@ -76,10 +75,10 @@ public class Ball implements Entity, IHighlightable{
 
     
 
-   @Override
-   public boolean hasPassedAllTestCriteria() {
-	   return !outOfBounds;
-   }
+   //@Override
+   //public boolean hasPassedAllTestCriteria() {
+   //	   return !outOfBounds;
+   //}
 
 	public double getYPos() {
 		return y;
@@ -94,8 +93,7 @@ public class Ball implements Entity, IHighlightable{
 	}
 
 	public void switchXDirection() {
-		this.x = x*-1;
-		
+		xDirection *= -1;
 	}
 
 
@@ -110,8 +108,28 @@ public class Ball implements Entity, IHighlightable{
 		return y;
 	}
 
+	
+	public double getUpperEnd() {
+		return y + diameter/2;
+	}
+
+	public double getLowerEnd() {
+		return y - diameter/2;
+	}
+	public double getLeftEnd() {
+		return x - diameter/2;
+	}
+	public double getRightEnd() {
+		return x + diameter/2;
+	}
 
 
+	public boolean isOutOfBounds() {
+		return outOfBounds;
+	}
+	
+	
+	
 
 		
 

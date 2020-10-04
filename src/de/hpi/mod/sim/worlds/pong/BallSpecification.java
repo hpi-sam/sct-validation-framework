@@ -12,11 +12,11 @@ public class BallSpecification implements EntitySpecification<Ball>  {
 	 private double xDirection;
 
 	 
-	 public BallSpecification(double yPos, double yDirection, double xDirection, PongWorld world) {
+	 public BallSpecification(double yPos, double xDirection, double yDirection, PongWorld world) {
 		 this.yPos = yPos;
+		 this.xDirection = xDirection;
 	     this.yDirection = yDirection;
 	     this.world = world;
-	     this.xDirection = xDirection;
 	 }
 
 	 

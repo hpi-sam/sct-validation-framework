@@ -19,8 +19,9 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
     private final double x;
     private double y = 0 ;
 
-    private static final double width = 0.04, height = 0.2;
+    private static final double width = 0.08, height = 0.4;
     private static final int stateMachineFactor = 1000;
+    private boolean reboundBall = false; 
  
     public Paddle(double d) {
     	start();
@@ -31,13 +32,13 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
     
     public void render(Graphics graphics, int totalWidth, int totalHeight) {
     	
-    	int drawX = (int) (PongWorld.toPixel(x, totalWidth) - totalWidth * width / 2);
-    	int drawY = (int) (PongWorld.toPixel(-y, totalHeight) - totalHeight * height / 2);
-    	graphics.setColor(new Color(0, 20, 198));
-    	graphics.fillRect(drawX, drawY, (int) (width * totalWidth), (int) (height * totalHeight));
+    	int drawX = (int) (PongWorld.toPixel(getLeftEnd(), totalWidth) );
+    	int drawY = (int) (PongWorld.toPixel(-(getUpperEnd()), totalHeight));
+    	graphics.setColor(new Color(192,255,62));
+    	graphics.fillRect(drawX, drawY, (int) (width * totalWidth/2), (int) (height * totalHeight/2));
     	((Graphics2D) graphics).setStroke(new java.awt.BasicStroke(2));
-    	graphics.setColor(Color.DARK_GRAY);
-    	graphics.drawRect(drawX, drawY, (int) (width * totalWidth), (int) (height * totalHeight));
+    	graphics.setColor(new Color(102,205,0));
+    	graphics.drawRect(drawX, drawY, (int) (width * totalWidth/2), (int) (height * totalHeight/2));
     }
     
     
@@ -111,8 +112,24 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
 		return height;
 	}	
 	
+	public double getUpperEnd() {
+		return y + height/2;
+	}
+	
+	
+	public double getLowerEnd() {
+		return y - height/2;
+	}
+	
 	public double getYPos() {
 		return y;
+	}
+	
+	public double getRightEnd() {
+		return x + width/2;
+	}
+	public double getLeftEnd() {
+		return x - width/2;
 	}
 
 	@Override
@@ -126,6 +143,11 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
 		getStatemachine().raiseBallPos((long) (stateMachineFactor * ballPosition));
 		super.updateTimer();
 		
+	}
+	
+	@Override
+	public boolean hasPassedAllTestCriteria() {
+		return reboundBall;
 	}
 
 
@@ -150,5 +172,11 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
 	public double getWidth() {
 		return width;
 	}
+
+
+	public void reboundBall() {
+		reboundBall = true;
+	}
+
 
 }

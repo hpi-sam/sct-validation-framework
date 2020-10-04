@@ -3,7 +3,7 @@ package de.hpi.mod.sim.worlds.pong;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +14,7 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
+import de.hpi.mod.sim.worlds.pong.TestCaseGenerator;
 public class PongWorld extends World {
 
 	private int width, height;
@@ -22,21 +23,19 @@ public class PongWorld extends World {
 	 
 	@Override
 	public List<Detector> createDetectors() {
-		// TODO
-		// Detector det = new Detector(this) {
+		Detector det = new Detector(this) {
 
-		// 	@Override
-		// 	public void update(List<? extends Entity> entities) {
-		// 		if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0) {
-		// 			report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
-		// 		}
-		// 	}
+		@Override
+		public void update(List<? extends Entity> entities) {
+			if (ball != null && ball.isOutOfBounds()) {
+		 			report("The ball is out of bounds (the paddle didn't caught the ball).");
+		 		}
+		 	}
 
-		// 	@Override
-		// 	public void reset() {}
-		// };
-		// return Arrays.asList(det);
-		return new ArrayList<>();
+		 	@Override
+		 	public void reset() {}
+		};
+		return Arrays.asList(det);
 	}
 
 	
@@ -81,7 +80,7 @@ public class PongWorld extends World {
 
 	@Override
 	public Map<String, List<TestScenario>> getTestGroups() {
-		return new Hashtable<>(); //TODO
+		return TestCaseGenerator.getAllTestCases(this);
 	}
 
 	@Override
@@ -94,16 +93,16 @@ public class PongWorld extends World {
 	}
 
 	private void drawBackground(Graphics graphics) {
-		graphics.setColor(Color.DARK_GRAY);
 		int x = toPixel(-0.9, width);
 		int y = toPixel(-0.9, height);
-		graphics.drawRect(x, y, (int) width, (int) height );
+		graphics.setColor(Color.DARK_GRAY);		
+		graphics.drawRect(x, y, (int) (0.9 * width), (int) (0.9* height) );
 	}
 
 	@Override
 	public void refreshSimulationProperties(int currentHeight, int currentWidth) {
-		this.width = (int) (currentWidth * 0.9);
-		this.height = (int) (currentHeight * 0.9);
+		this.width = (int) currentWidth;
+		this.height = (int) currentHeight;
 	}
 
 	@Override
@@ -132,29 +131,21 @@ public class PongWorld extends World {
 	}
 	
 	public void collision(){
-		//hits against Paddle1
-        if(ball.getXPos() < paddle1XPos()){
-        	
-    		System.out.println("paddle " + paddle1XPos());
-    		System.out.println("ball x " + ball.getXPos());
-    		System.out.println("obere Ecke "+ (paddle1.getYPos() + paddle1.getHeight()/2));
-    		System.out.println("ball y  "+ (ball.getYPos() + ball.getDiameter()/2) );
-    		
-    		//when ball is between upper and lower bound of paddle 
-        	if(((paddle1.getYPos() + paddle1.getHeight()/2) < (ball.getYPos() + ball.getDiameter()/2 ))
-        	&& ((paddle1.getYPos() - paddle1.getHeight()/2 )> (ball.getYPos() - ball.getDiameter()/2 ))){
+		//ball collides against Paddle1
+		
+        if(ball.getLeftEnd() <= paddle1.getRightEnd()
+        && ball.getLeftEnd() >= paddle1.getLeftEnd()
+        && paddle1.getUpperEnd() > ball.getUpperEnd()
+        && paddle1.getLowerEnd() < ball.getLowerEnd()){
+        		
         		ball.switchXDirection();
         		ball.switchYDirection();
-        	}
+        		paddle1.reboundBall();
         }
-       
 	}	
 	
 	
-	private double paddle1XPos() {
-		return (paddle1.getXPos() + (paddle1.getWidth() / 2));
-		
-	}
+	
 	
 	
 	public Paddle getPaddle1 () {
