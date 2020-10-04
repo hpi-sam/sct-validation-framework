@@ -13,6 +13,7 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
+import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 public class FlashWorld extends World {
 
@@ -117,6 +118,14 @@ public class FlashWorld extends World {
 	public void startBulb(int n) {
 		if (bulb != null)
 			bulb.start(n);
+	}
+
+
+
+	@Override
+	public AnimationPanel getAnimationPanel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
