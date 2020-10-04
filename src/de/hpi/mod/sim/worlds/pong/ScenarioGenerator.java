@@ -15,6 +15,24 @@ public class ScenarioGenerator {
         this.world = world;
     }
 
+
+    private class StraightScenario extends Scenario {
+    	public StraightScenario() {
+    		name = "Straight";
+    	}
+    	
+    	@Override
+    	public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
+    		List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
+    		PaddleSpecification paddle = new PaddleSpecification(world);
+    		BallSpecification ball = new BallSpecification(0, -0.008 , 0, world);
+    		list.add(paddle);
+    		list.add(ball);
+    		return list;
+    	}
+    }
+    
+    
     private class EasyScenario extends Scenario {
         public EasyScenario() {
             name = "EASY";
@@ -24,7 +42,7 @@ public class ScenarioGenerator {
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             PaddleSpecification paddle = new PaddleSpecification(world);
-            BallSpecification ball = new BallSpecification(0.1, 0.004,-0.001, world);
+            BallSpecification ball = new BallSpecification(0, -0.001, 0.003, world);
             list.add(paddle);
             list.add(ball);
             return list;
@@ -40,12 +58,15 @@ public class ScenarioGenerator {
 	    public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 	        List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
 	        PaddleSpecification paddle = new PaddleSpecification(world);
-	        BallSpecification ball = new BallSpecification(0.1, -0.006, -0.002, world);
+	        BallSpecification ball = new BallSpecification(0.1, -0.002, -0.005, world);
 	        list.add(paddle);
 	        list.add(ball);
 	        return list;
 	    }
 	}
+    
+    
+    
     
     private class HardScenario extends Scenario {
 	    public HardScenario() {
@@ -56,7 +77,7 @@ public class ScenarioGenerator {
 	    public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 	        List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
 	        PaddleSpecification paddle = new PaddleSpecification(world);
-	        BallSpecification ball = new BallSpecification(0.1, 0.013, -0.003, world);
+	        BallSpecification ball = new BallSpecification(0.1, -0.005, 0.007, world);
 	        list.add(paddle);
 	        list.add(ball);
 	        return list;
@@ -68,6 +89,7 @@ public class ScenarioGenerator {
    
     public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList<>();
+        scenarios.add(new StraightScenario());
         scenarios.add(new EasyScenario());
         scenarios.add(new MiddleScenario());
         scenarios.add(new HardScenario());
