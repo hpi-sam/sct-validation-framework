@@ -134,7 +134,7 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("y-Position:  " + stateMachineFactor * y);
+		return Arrays.asList("y-Position:  " + myPos());
 	}
 
 
