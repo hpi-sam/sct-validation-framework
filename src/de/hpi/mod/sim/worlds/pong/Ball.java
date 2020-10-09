@@ -27,7 +27,7 @@ public class Ball implements Entity, IHighlightable{
     	this.y = yPos;
     	this.xDirection = xDirection;
     	this.yDirection = yDirection;
-    	this.world = world;
+		this.world = world;
     }
 
     
