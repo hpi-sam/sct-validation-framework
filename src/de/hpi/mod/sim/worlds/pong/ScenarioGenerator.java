@@ -18,7 +18,7 @@ public class ScenarioGenerator {
 
     private class StraightScenario extends Scenario {
     	public StraightScenario() {
-    		name = "Straight";
+    		name = "STRAIGHT";
     	}
     	
     	@Override
