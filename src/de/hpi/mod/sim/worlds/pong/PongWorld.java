@@ -20,6 +20,8 @@ public class PongWorld extends World {
 	private int width, height;
 	private Paddle paddle1;
 	private Ball ball;
+	private static final double buffer = 0.002;
+	
 	 
 	@Override
 	public List<Detector> createDetectors() {
@@ -28,10 +30,15 @@ public class PongWorld extends World {
 		@Override
 		public void update(List<? extends Entity> entities) {
 			if (ball != null && ball.isOutOfBounds()) {
-		 			report("The ball is out of bounds (the paddle didn't caught the ball).");
+		 		report("The ball is out of bounds (the paddle didn't caught the ball).");
 		 		}
+			if (paddle1 != null && paddle1.getHeight() + buffer > paddle1.maxPos) {
+				report("The paddle is above maxPos.");
+			}
+			if (paddle1 != null && paddle1.getHeight() - buffer < paddle1.minPos) {
+				report("The paddle is beneath minPos.");
 		 	}
-
+		}
 		 	@Override
 		 	public void reset() {}
 		};
@@ -139,13 +146,9 @@ public class PongWorld extends World {
         && paddle1.getLowerEnd() < ball.getLowerEnd()){
         		
         		ball.switchXDirection();
-        		ball.switchYDirection();
         		paddle1.reboundBall();
         }
 	}	
-	
-	
-	
 	
 	
 	public Paddle getPaddle1 () {

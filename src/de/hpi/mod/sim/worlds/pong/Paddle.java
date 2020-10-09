@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.worlds.pong;
 
 import de.hpi.mod.sim.IStatemachine;
+import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
@@ -21,7 +22,10 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
 
     private static final double width = 0.08, height = 0.4;
     private static final int stateMachineFactor = 1000;
+    public final double maxPos = 0.9 - height/2; 	//maxPos in the statechart should be maxPos *1000
+    public final double minPos = -700;				//minPos in the statechart should be minPos *1000
     private boolean reboundBall = false; 
+    private static final double stepsPerCall = 0.003;
  
     public Paddle(double d) {
     	start();
@@ -61,11 +65,11 @@ public class Paddle extends StateChartWrapper<PongStatemachine.State>
     
     
     private void goDown() {
-    	y =  y - 0.003; 
+    	y -= stepsPerCall * Configuration.getEntitySpeedFactor(); 
     }
     
     private void goUp() {
-    	y = y + 0.003;
+    	y += stepsPerCall * Configuration.getEntitySpeedFactor();
     }
     
     

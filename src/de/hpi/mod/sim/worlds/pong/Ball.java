@@ -31,6 +31,7 @@ public class Ball implements Entity, IHighlightable{
     }
 
     
+   
     public void render(Graphics graphics, int totalWidth, int totalHeight) {
 
     	int drawX = (int) (PongWorld.toPixel(x - diameter/2, totalWidth));
@@ -65,9 +66,20 @@ public class Ball implements Entity, IHighlightable{
     			switchYDirection();
     		}
     		
-        x += xDirection;
-        y += yDirection;
+        x += getXDirection();
+        y += getYDirection();
     }
+    
+    
+     private double getXDirection(){
+    	 return xDirection * Configuration.getEntitySpeedFactor();
+     }
+     
+     private double getYDirection(){
+    	 return yDirection * Configuration.getEntitySpeedFactor();
+     }
+    
+    
 
     public void switchYDirection() {
 		yDirection *= -1;
@@ -99,7 +111,10 @@ public class Ball implements Entity, IHighlightable{
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("x- Position:" + (int) stateMachineFactor * x, "y-Position "+ (int) stateMachineFactor * y, "y-Direction: " + (int) stateMachineFactor * yDirection, "x-Direction: "+ (int) stateMachineFactor * xDirection);
+		return Arrays.asList("x- Position:" + (int) (stateMachineFactor * x),
+				"y-Position "+ (int) (stateMachineFactor * y),
+				"y-Direction: " + (int) (stateMachineFactor * yDirection),
+				"x-Direction: "+ (int) (stateMachineFactor * xDirection));
 	}
 
 
