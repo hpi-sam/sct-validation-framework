@@ -54,7 +54,6 @@ public abstract class Robot implements Entity, IHighlightable {
         this.robotID = robotID; //TODO handle case of already given robotID
         this.grid = grid;
         setRobotTo(startPosition);
-        oldPosition = startPosition;
         target = startPosition;
         turnRobotTo(startFacing);
         setTargetFacing(startFacing);
@@ -84,10 +83,18 @@ public abstract class Robot implements Entity, IHighlightable {
         manager = new DriveManager(this);
     }
     
-    private void setRobotTo(Position pos) {
+    /**
+     * While {@link #setPos(Position)} is a simple setter for the field position,
+     * this method also updates {@link #oldPosition}, {@link #x} and {@link #y} which
+     * is necessary when the position is not changed because of normal driving but by placing the robot arbitrarily.
+     * 
+     * @param pos The position to set the robot to
+     */
+    public void setRobotTo(Position pos) {
         this.x = pos.getX();
         this.y = pos.getY();
         this.position = pos;
+        this.oldPosition = pos;
     }
 
 	/**
@@ -196,6 +203,16 @@ public abstract class Robot implements Entity, IHighlightable {
 
     public void setFacing(Orientation facing) {
         this.facing = facing;
+    }
+
+    /**
+     * Sets the robots facing just like {@link #setFacing(Orientation)} but additionally updates the angle.
+     * This is necessary when the facing is not changed by rotation but set arbitrarily.
+     * @param facing The new orientation
+     */
+    public void setFacingTo(Orientation facing) {
+        setFacing(facing);
+        setAngle(facing.getAngle());
     }
 
     public boolean isOnTarget() {

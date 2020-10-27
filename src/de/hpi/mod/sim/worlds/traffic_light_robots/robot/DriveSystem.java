@@ -16,6 +16,7 @@ public class DriveSystem extends StateChartWrapper<TlRobotStatemachine.State> im
         this.actors = actors;
         this.processor = processor;
         this.data = data;
+        start();
     }
 
     @Override
@@ -68,7 +69,7 @@ public class DriveSystem extends StateChartWrapper<TlRobotStatemachine.State> im
             case TRAFFIC_LIGHT_GREEN:
                 return getStatemachine().getSCICellType().getTRAFFICLIGHT_GREEN();
             case TRAFFIC_LIGHT_RED:
-                return getStatemachine().getSCICellType().getTRAFFICLIGHT_GREEN();
+                return getStatemachine().getSCICellType().getTRAFFICLIGHT_RED();
             case CROSSROAD:
                 return getStatemachine().getSCICellType().getCROSSROAD();
             default:
@@ -111,7 +112,6 @@ public class DriveSystem extends StateChartWrapper<TlRobotStatemachine.State> im
     }
     
     public void onRefresh() {
-        getStatemachine().raiseDataRefresh();
         updateTimer();
     }
     

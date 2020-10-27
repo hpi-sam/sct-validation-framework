@@ -12,17 +12,19 @@ public class TrafficLightRobotSpecification extends RobotSpecification<TrafficLi
 
     private Position pos;
     private Orientation facing;
+    private Position destination;
 
-    public TrafficLightRobotSpecification(TrafficLightWorld world, Position pos, Orientation facing) {
+    public TrafficLightRobotSpecification(TrafficLightWorld world, Position pos, Orientation facing, Position destination) {
         super(world.getCrossRoadManager());
         this.pos = pos;
         this.facing = facing;
+        this.destination = destination;
     }
 
 
     @Override
     public TrafficLightRobot createRobot(CrossRoadsManager robots) {
-        return new TrafficLightRobot(Robot.incrementID(), robots, pos, facing);
+        return new TrafficLightRobot(Robot.incrementID(), robots, pos, facing, destination);
     }
     
 }

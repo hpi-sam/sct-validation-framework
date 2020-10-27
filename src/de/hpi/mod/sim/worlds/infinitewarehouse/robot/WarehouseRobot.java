@@ -11,25 +11,14 @@ import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.CellType;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.ILocation;
-import de.hpi.mod.sim.worlds.infinitewarehouse.environment.ISensorDataProvider;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.PositionType;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.*;
 
-/**
- * Controller for a Robot.
- * Is drawn by the view and managed by a Simulation.
- * A {@link IDriveSystem} is used through a Wrapper to access the State-Machine and
- * a {@link DriveManager} to calculate the real position.
- * It relays sensor-information from a {@link ISensorDataProvider} to the Drive-System.
- * It uses a {@link IRobotStationDispatcher} to drive in a station and {@link ILocation} to get new Targets.
- */
 
- //TODO adjust comment
 public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDriveListener, StateChartEntity {
 
     private IDriveSystem drive;
-    // private ISensorDataProvider sensorData;
     private IRobotStationDispatcher robotDispatch;
     private ILocation location;
     private IScanner scanner;

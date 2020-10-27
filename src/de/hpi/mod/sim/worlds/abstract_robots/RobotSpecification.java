@@ -10,7 +10,7 @@ public abstract class RobotSpecification <R extends Robot, M extends RobotGridMa
         this.robots = robots;
     }
 
-    public abstract R createRobot(M robots);
+    protected abstract R createRobot(M robots);
 
     @Override 
     public R createEntity() {

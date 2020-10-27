@@ -7,7 +7,9 @@ import java.util.Map;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Entity;
+import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
+import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.traffic_light_robots.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
@@ -36,7 +38,8 @@ public class TrafficLightWorld extends RobotWorld {
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
         float blockSize = ((SimulationBlockView) getAnimationPanel()).getBlockSize();
-        int width = (int) ((currentWidth / blockSize) / 3) * 3 - 5;
+        int width = (int) ((currentWidth / blockSize) + TrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
+                + 1;
         int height = (int) (((currentHeight / blockSize) - TrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
                 + 1;
         TrafficLightsConfiguration.setFieldDimensions(width, height);
@@ -69,5 +72,16 @@ public class TrafficLightWorld extends RobotWorld {
 
     public CrossRoadsManager getCrossRoadManager() {
         return (CrossRoadsManager) getGridManager();
+    }
+
+    @Override
+    public IHighlightable getHighlightAtPosition(int x, int y) {
+        IHighlightable highlight = super.getHighlightAtPosition(x, y);
+        if (highlight != null)
+            return highlight;
+        
+        Position pos = getSimulationBlockView().toGridPosition(x, y);
+        return getCrossRoadManager().getLightForCrossroad(pos.getX() / 3, pos.getY() / 3);
+        
     }
 }

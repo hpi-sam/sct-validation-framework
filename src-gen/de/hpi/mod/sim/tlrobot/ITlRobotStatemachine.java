@@ -2,12 +2,11 @@
 package de.hpi.mod.sim.tlrobot;
 
 import de.hpi.mod.sim.IStatemachine;
+import de.hpi.mod.sim.ITimerCallback;
 
-public interface ITlRobotStatemachine extends IStatemachine {
+public interface ITlRobotStatemachine extends ITimerCallback,IStatemachine {
 	public interface SCInterface {
 	
-		public void raiseDataRefresh();
-		
 		public void raiseNewTarget();
 		
 		public void raiseActionCompleted();

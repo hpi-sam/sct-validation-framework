@@ -109,7 +109,7 @@ public class ScenarioGenerator {
     }
 
     private List<TrafficLightRobotSpecification> getRandomRobots(int count) {
-        List<Position> positions = getAllPossiblePositions();
+        List<Position> positions = CrossRoadsManager.getAllPossiblePositions();
         List<TrafficLightRobotSpecification> robots = new ArrayList<>(count);
 
         if (count > positions.size())  
@@ -120,7 +120,7 @@ public class ScenarioGenerator {
             Position pos = positions.get(index);
             positions.remove(index);
             robots.add(new TrafficLightRobotSpecification(world, pos,
-                    CrossRoadsManager.getSuitableRobotOrientationForPosition(pos)));
+                    CrossRoadsManager.getSuitableRobotOrientationForPosition(pos), CrossRoadsManager.getRandomDestination()));
         }
         return robots;
     }
@@ -128,24 +128,6 @@ public class ScenarioGenerator {
     private int getMaximumPossibleRobots() {
         return 2 * ((TrafficLightsConfiguration.getFieldWidth() - 1) / 3 + 
         (TrafficLightsConfiguration.getFieldHeight() -1 ) / 3);
-    }
-
-    private List<Position> getAllPossiblePositions() {
-        int width = TrafficLightsConfiguration.getFieldWidth();
-        int height = TrafficLightsConfiguration.getFieldHeight();
-        int positionsHorizontal = (width - 1) / 3;
-        int positionsVertical = (height - 1) / 3;
-
-        List<Position> list = new ArrayList<>(2 * (positionsHorizontal + positionsVertical));
-        for (int x = 0; x < width; x++) {
-            list.add(new Position(3*x + 2, 0));
-            list.add(new Position(3*x + 1, height - 1));
-        }
-        for (int y = 0; y < height; y++) {
-            list.add(new Position(0, 3*y + 1));
-            list.add(new Position(width - 1, 3*y + 2));
-        }
-        return list;
     }
 
 
