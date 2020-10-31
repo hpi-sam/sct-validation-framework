@@ -62,7 +62,16 @@ public class TestCaseGenerator {
         testScenarios.add(new ConcreteTestScenario("Ball hits upper boundary", "The ball changes his direction", 
                 paddle, ball4));
         
+        BallSpecification ball7 = new BallSpecification(0, -0.001, 0.003, world);
+        testScenarios.add(new ConcreteTestScenario("Maximal Height", "Don't go above the maximal Height!",
+        		paddle, ball7));
+
+        BallSpecification ball8 = new BallSpecification(0, -0.001, -0.003, world);
+        testScenarios.add(new ConcreteTestScenario("Minimal Height", "Don't go beneath the minimal Height!",
+        		paddle, ball8));
+        
         return testScenarios;
+        
     }
 
     private static class ConcreteTestScenario extends TestScenario {

@@ -22,6 +22,7 @@ public class Paddle1 extends StateChartWrapper<Paddle1Statemachine.State>
     private double y;
     private boolean reboundBall = false;
     private int points = 0;
+    public int score = 0;
     
  
     public Paddle1() {

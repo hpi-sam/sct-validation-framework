@@ -1,7 +1,9 @@
 package de.hpi.mod.sim.worlds.pong;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,9 +20,11 @@ import de.hpi.mod.sim.worlds.pong.TestCaseGenerator;
 public class PongWorld extends World {
 
 	private int width, height;
-	private Paddle paddle1;
+	private Paddle1 paddle1;
+	Paddle2 paddle2;
+	private int paddle1Score = 0, paddle2Score = 0;
 	private Ball ball;
-	private static final double buffer = 0.002;
+	
 	
 	 
 	@Override
@@ -29,13 +33,13 @@ public class PongWorld extends World {
 
 		@Override
 		public void update(List<? extends Entity> entities) {
-			if (ball != null && ball.isOutOfBounds()) {
+			if (ball != null && paddle2 == null && ball.isOutOfBounds()) {
 		 		report("The ball is out of bounds (the paddle didn't caught the ball).");
 		 		}
-			if (paddle1 != null && paddle1.getHeight() + buffer > paddle1.maxPos) {
+			if (paddle1 != null && paddle1.getHeight() + PongConfiguration.buffer > PongConfiguration.maxPos) {
 				report("The paddle is above maxPos.");
 			}
-			if (paddle1 != null && paddle1.getHeight() - buffer < paddle1.minPos) {
+			if (paddle1 != null && paddle1.getHeight() - PongConfiguration.buffer < PongConfiguration.minPos) {
 				report("The paddle is beneath minPos.");
 		 	}
 		}
@@ -64,9 +68,10 @@ public class PongWorld extends World {
 
 	@Override
 	public List<? extends Entity> getEntities() {
-		List<Entity> list = new ArrayList<>(1);
+		List<Entity> list = new ArrayList<>(2);
 		list.add(paddle1);
 		list.add(ball);
+		list.add(paddle2);
 		return list;
 	}
 
@@ -76,9 +81,14 @@ public class PongWorld extends World {
 		if(ball != null) {
 			ballPosition = ball.refresh();
 			}
-		if (paddle1 != null)
-			paddle1.refresh(ballPosition);
-	}
+		if (paddle1 != null) {
+			paddle1.refresh(ballPosition);			
+		}
+		if (paddle2 != null) {
+			paddle2.refresh(ballPosition);
+		}
+		}
+		
 
 	@Override
 	public List<Scenario> getScenarios() {
@@ -95,15 +105,28 @@ public class PongWorld extends World {
 		drawBackground(graphics);
 		if (paddle1 != null)
 			paddle1.render(graphics, width, height);
+		if (paddle2 != null) {
+			paddle2.render(graphics, width, height);
+			drawCounter(graphics);
+		}
 		if (ball != null)
 			ball.render(graphics, width, height);
 	}
+	
+	
+	private void drawCounter(Graphics graphics){
+	    graphics.setFont(new Font("Candara", Font.BOLD, height/50));
+	    graphics.setColor(Color.black);
+		graphics.drawString("PLAYER1: " + paddle1Score, width/20, height- height/40);
+		graphics.drawString("PLAYER2: " + paddle2Score, width- width/5, height- height/40);
+	}
 
 	private void drawBackground(Graphics graphics) {
-		int x = toPixel(-0.9, width);
-		int y = toPixel(-0.9, height);
+		int x = toPixel(PongConfiguration.lowerBoundary, width);
+		int y = toPixel(PongConfiguration.lowerBoundary, height);
 		graphics.setColor(Color.DARK_GRAY);		
-		graphics.drawRect(x, y, (int) (0.9 * width), (int) (0.9* height) );
+		graphics.drawRect(x, y, (int) (PongConfiguration.upperBoundary * width), (int) (PongConfiguration.upperBoundary * height) );
+		
 	}
 
 	@Override
@@ -120,16 +143,18 @@ public class PongWorld extends World {
 	@Override
 	public void close() {
 		paddle1.close();
+		paddle2.close();
 	}
 
 	@Override
 	public void clearEntities() {
 		paddle1 = null;
+		paddle2 = null;
 		ball = null;
 	}
 
 
-	public void setPaddle1(Paddle paddle) {
+	public void setPaddleLeft(Paddle1 paddle) {
 		this.paddle1 = paddle;
 	}
 	
@@ -138,8 +163,39 @@ public class PongWorld extends World {
 	}
 	
 	public void collision(){
-		//ball collides against Paddle1
 		
+		if (paddle2 != null) {
+			this.collisionWith2Paddles();
+		}
+		
+		else {
+			//ball collides against Paddle1
+	        if(ball.getLeftEnd() <= paddle1.getRightEnd()
+	        && ball.getLeftEnd() >= paddle1.getLeftEnd()
+	        && paddle1.getUpperEnd() > ball.getUpperEnd()
+	        && paddle1.getLowerEnd() < ball.getLowerEnd()){
+	        		
+	        		ball.switchXDirection();
+	        		paddle1.reboundBall();
+	        }
+	      //bounce the ball when it hits the edge of the screen
+	    	if (ball.getXPos() > 1) {
+	    		ball.switchXDirection();  	
+	    	}
+	
+	    	if (ball.getLeftEnd()< -1 ) {
+	        	ball.setXPos(1);
+	        	ball.setOutOfBounds();	
+	    	}
+		}
+		
+        
+	}	
+
+	
+	public void collisionWith2Paddles() {
+		
+		//ball collides against Paddle1
         if(ball.getLeftEnd() <= paddle1.getRightEnd()
         && ball.getLeftEnd() >= paddle1.getLeftEnd()
         && paddle1.getUpperEnd() > ball.getUpperEnd()
@@ -148,17 +204,44 @@ public class PongWorld extends World {
         		ball.switchXDirection();
         		paddle1.reboundBall();
         }
-	}	
-	
-	
-	public Paddle getPaddle1 () {
-		return paddle1;
+		
+		//ball collides against paddle2(right paddle)
+		if(paddle2 != null) {
+			
+			if(ball.getRightEnd() >= paddle2.getLeftEnd()
+					&& ball.getRightEnd() <= paddle2.getRightEnd()
+					&& paddle2.getUpperEnd() > ball.getUpperEnd()
+					&& paddle2.getLowerEnd() < ball.getLowerEnd()) {
+				
+				ball.increaseXDirection();
+				ball.increaseYDirection();
+				ball.switchXDirection();
+			}
+		}
+		
+	    //increases the counter and starts with the ball in the middle with start speed 
+	    	if (ball.getXPos() > 1) {
+	    		paddle1Score++; 
+	    		ball.setXPos(0);
+	    		ball.setNewStartSpeed();
+	    	}
+
+	    	if (ball.getLeftEnd()< -1 ) {
+	    		paddle2Score++; 
+	        	ball.setXPos(0);
+	        	ball.setNewStartSpeed();	
+	    	}
+	}
+
+	public void setBall(Ball ball) {
+		this.ball = ball;
+		
 	}
 
 
 
-	public void setBall(Ball ball) {
-		this.ball = ball;
+	public void setPaddleRight(Paddle2 paddle) {
+		this.paddle2 = paddle;
 		
 	}
 	

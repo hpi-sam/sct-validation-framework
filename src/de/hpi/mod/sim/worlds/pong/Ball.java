@@ -16,33 +16,43 @@ public class Ball implements Entity, IHighlightable{
     private double x, y;
     private PongWorld world;
     private double yDirection, xDirection = -0.002;
-    private static final double diameter = 0.04;
-    private boolean outOfBounds; 
-    private static final int stateMachineFactor = 1000 ;
+    private boolean outOfBounds;
+    private double yDirectionFactor = 0.003 , xDirectionFactor = 0.001;
+    private double yDirectionDuell, xDirectionDuell;
 
    
     
     public Ball(double yPos, double yDirection, double xDirection, PongWorld world) {
-    	this.x = 0.9;
+    	this.x = PongConfiguration.upperBoundary;
     	this.y = yPos;
     	this.xDirection = xDirection;
     	this.yDirection = yDirection;
 		this.world = world;
     }
 
-    
-   
-    public void render(Graphics graphics, int totalWidth, int totalHeight) {
+   //constructor for a ball in a world with 2 paddles
+    public Ball(double xPos, double yPos, double yDirection, double xDirection, PongWorld world) {
+    	this.x = xPos;
+    	this.y = yPos;
+    	this.xDirection = xDirection;
+    	this.yDirection = yDirection;
+    	this.xDirectionDuell = xDirection;
+    	this.yDirectionDuell = yDirection;
+		this.world = world;	
+	}
 
-    	int drawX = (int) (PongWorld.toPixel(x - diameter/2, totalWidth));
-        int drawY = (int) (PongWorld.toPixel(-(y + diameter/2) , totalHeight));
+
+	public void render(Graphics graphics, int totalWidth, int totalHeight) {
+
+    	int drawX = (int) (PongWorld.toPixel(x - getDiameter()/2, totalWidth));
+        int drawY = (int) (PongWorld.toPixel(-(y + getDiameter()/2) , totalHeight));
         
         
         graphics.setColor(new Color(102,205,0));
-        graphics.fillOval(drawX, drawY, (int) (diameter* totalWidth/2), (int) (diameter * totalHeight/2));
+        graphics.fillOval(drawX, drawY, (int) (getDiameter()* totalWidth/2), (int) (getDiameter() * totalHeight/2));
         ((Graphics2D) graphics).setStroke(new java.awt.BasicStroke(2));
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawOval(drawX, drawY, (int) (diameter * totalWidth/2), (int) (diameter * totalHeight/2));
+        graphics.drawOval(drawX, drawY, (int) (getDiameter() * totalWidth/2), (int) (getDiameter() * totalHeight/2));
     	
     	
     }
@@ -52,17 +62,9 @@ public class Ball implements Entity, IHighlightable{
     public void update(float delta) {
     	world.collision();
     	
-    	//bounce the ball when it hits the edge of the screen
-    	if (x > 1) {
-    		switchXDirection();  	
-    	}
-
-    	if (getLeftEnd()< -1 ) {
-        	x = 1;
-        	outOfBounds = true;	
-    	}
+    	
         
-    	if (getLowerEnd() <= -0.9  || getUpperEnd() >= 0.9) {
+    	if (getLowerEnd() <= PongConfiguration.lowerBoundary  || getUpperEnd() >= PongConfiguration.upperBoundary) {
     			switchYDirection();
     		}
     		
@@ -99,9 +101,10 @@ public class Ball implements Entity, IHighlightable{
 	public double getXPos() {
 		return x;
 	}
+	
 
 	public double getDiameter() {
-		return diameter;
+		return PongConfiguration.diameter;
 	}
 
 	public void switchXDirection() {
@@ -111,10 +114,10 @@ public class Ball implements Entity, IHighlightable{
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("x- Position:" + (int) (stateMachineFactor * x),
-				"y-Position "+ (int) (stateMachineFactor * y),
-				"y-Direction: " + (int) (stateMachineFactor * yDirection),
-				"x-Direction: "+ (int) (stateMachineFactor * xDirection));
+		return Arrays.asList("x- Position:" + (int) (PongConfiguration.stateMachineFactor * x),
+				"y-Position "+ (int) (PongConfiguration.stateMachineFactor * y),
+				"y-Direction: " + (int) (PongConfiguration.stateMachineFactor * yDirection),
+				"x-Direction: "+ (int) (PongConfiguration.stateMachineFactor * xDirection));
 	}
 
 
@@ -125,17 +128,17 @@ public class Ball implements Entity, IHighlightable{
 
 	
 	public double getUpperEnd() {
-		return y + diameter/2;
+		return y + getDiameter()/2;
 	}
 
 	public double getLowerEnd() {
-		return y - diameter/2;
+		return y - getDiameter()/2;
 	}
 	public double getLeftEnd() {
-		return x - diameter/2;
+		return x - getDiameter()/2;
 	}
 	public double getRightEnd() {
-		return x + diameter/2;
+		return x + getDiameter()/2;
 	}
 
 
@@ -143,10 +146,34 @@ public class Ball implements Entity, IHighlightable{
 		return outOfBounds;
 	}
 	
-	
-	
+	public void increaseXDirection(){
+		this.xDirection += xDirectionFactor;
+	}
 
+
+	public void increaseYDirection() {
+		if(yDirection < 0) {
+			yDirection -= yDirectionFactor;
+		}
+		else{
+			this.yDirection += yDirectionFactor;
+		}
 		
+	}
 
+	public void setXPos(int newX) {
+		this.x = newX;
+		
+	}
 
+	public void setOutOfBounds() {
+		this.outOfBounds = true;
+		
+	}
+	
+	public void setNewStartSpeed() {
+		//the speed is set back to 8 speedFactors before the point was made 
+		xDirection = xDirectionDuell;
+		yDirection = yDirectionDuell;
+		}
 }
