@@ -21,10 +21,8 @@ public class PongWorld extends World {
 
 	private int width, height;
 	private Paddle1 paddle1;
-	Paddle2 paddle2;
-	private int paddle1Score = 0, paddle2Score = 0;
+	private Paddle2 paddle2;
 	private Ball ball;
-	
 	
 	 
 	@Override
@@ -33,7 +31,7 @@ public class PongWorld extends World {
 
 		@Override
 		public void update(List<? extends Entity> entities) {
-			if (ball != null && paddle2 == null && ball.isOutOfBounds()) {
+			if (ball != null && paddle2 == null && ball.isOutOfBounds() && ball.getIsInTests()) {
 		 		report("The ball is out of bounds (the paddle didn't caught the ball).");
 		 		}
 			if (paddle1 != null && paddle1.getHeight() + PongConfiguration.buffer > PongConfiguration.maxPos) {
@@ -105,20 +103,28 @@ public class PongWorld extends World {
 		drawBackground(graphics);
 		if (paddle1 != null)
 			paddle1.render(graphics, width, height);
+		
 		if (paddle2 != null) {
 			paddle2.render(graphics, width, height);
 			drawCounter(graphics);
 		}
-		if (ball != null)
+		if (ball != null){
 			ball.render(graphics, width, height);
+	
+			if (!ball.isInTests)
+				drawCounterForPadlle1(graphics);
+			}
 	}
 	
-	
-	private void drawCounter(Graphics graphics){
+	private void drawCounterForPadlle1(Graphics graphics){
 	    graphics.setFont(new Font("Candara", Font.BOLD, height/50));
 	    graphics.setColor(Color.black);
-		graphics.drawString("PLAYER1: " + paddle1Score, width/20, height- height/40);
-		graphics.drawString("PLAYER2: " + paddle2Score, width- width/5, height- height/40);
+		graphics.drawString("PLAYER1: " + paddle1.getScore(), width/20, height- height/40);
+	}
+	
+	private void drawCounter(Graphics graphics){
+		drawCounterForPadlle1(graphics);
+		graphics.drawString("PLAYER2: " + paddle2.getScore(), width- width/5, height- height/40);
 	}
 
 	private void drawBackground(Graphics graphics) {
@@ -137,7 +143,30 @@ public class PongWorld extends World {
 
 	@Override
 	public IHighlightable getHighlightAtPosition(int x, int y) {
-		return null;
+	
+	//click in Paddle1
+	if(x <= toPixel(paddle1.getRightEnd(), width)
+	 && x >= toPixel(paddle1.getLeftEnd(), width)
+	 && y > (height- (toPixel(paddle1.getUpperEnd(), height)))
+	 && y < (height - (toPixel(paddle1.getLowerEnd(), height)))){
+	 	return paddle1;
+	 }
+	 //click in paddle2
+	 if(x <= toPixel(paddle2.getRightEnd(), width)
+	 && x >= toPixel(paddle2.getLeftEnd(), width)
+	 && y > (height- (toPixel(paddle2.getUpperEnd(), height)))
+	 && y < (height - (toPixel(paddle2.getLowerEnd(), height)))){
+	 	return paddle2;
+	 }
+	 //click in ball
+	 if(x <= toPixel(ball.getRightEnd() + PongConfiguration.bufferForMouseClick, width)
+	 && x >= toPixel(ball.getLeftEnd()- PongConfiguration.bufferForMouseClick, width)
+	 && y > (height- (toPixel(ball.getUpperEnd()+ PongConfiguration.bufferForMouseClick, height)))
+	 && y < (height - (toPixel(ball.getLowerEnd()- PongConfiguration.bufferForMouseClick, height)))){
+	 	return ball;
+	 }
+	 
+    return null;
 	}
 
 	@Override
@@ -176,6 +205,7 @@ public class PongWorld extends World {
 	        && paddle1.getLowerEnd() < ball.getLowerEnd()){
 	        		
 	        		ball.switchXDirection();
+	        		paddle1.increaseScore();
 	        		paddle1.reboundBall();
 	        }
 	      //bounce the ball when it hits the edge of the screen
@@ -185,6 +215,7 @@ public class PongWorld extends World {
 	
 	    	if (ball.getLeftEnd()< -1 ) {
 	        	ball.setXPos(1);
+	        	paddle1.resetScore();
 	        	ball.setOutOfBounds();	
 	    	}
 		}
@@ -221,13 +252,13 @@ public class PongWorld extends World {
 		
 	    //increases the counter and starts with the ball in the middle with start speed 
 	    	if (ball.getXPos() > 1) {
-	    		paddle1Score++; 
+	    		paddle1.increaseScore(); 
 	    		ball.setXPos(0);
 	    		ball.setNewStartSpeed();
 	    	}
 
 	    	if (ball.getLeftEnd()< -1 ) {
-	    		paddle2Score++; 
+	    		paddle2.increaseScore(); 
 	        	ball.setXPos(0);
 	        	ball.setNewStartSpeed();	
 	    	}

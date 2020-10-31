@@ -17,18 +17,22 @@ public class Ball implements Entity, IHighlightable{
     private PongWorld world;
     private double yDirection, xDirection = -0.002;
     private boolean outOfBounds;
+    boolean isInTests;
     private double yDirectionFactor = 0.003 , xDirectionFactor = 0.001;
     private double yDirectionDuell, xDirectionDuell;
 
    
     
-    public Ball(double yPos, double yDirection, double xDirection, PongWorld world) {
-    	this.x = PongConfiguration.upperBoundary;
-    	this.y = yPos;
-    	this.xDirection = xDirection;
-    	this.yDirection = yDirection;
-		this.world = world;
-    }
+
+	 public Ball(double yPos, double yDirection, double xDirection, PongWorld world, boolean isInTests) {
+	    	this.x = PongConfiguration.upperBoundary;
+	    	this.y = yPos;
+	    	this.xDirection = xDirection;
+	    	this.yDirection = yDirection;
+			this.world = world;
+			this.isInTests = isInTests;
+	    }
+    
 
    //constructor for a ball in a world with 2 paddles
     public Ball(double xPos, double yPos, double yDirection, double xDirection, PongWorld world) {
@@ -48,7 +52,7 @@ public class Ball implements Entity, IHighlightable{
         int drawY = (int) (PongWorld.toPixel(-(y + getDiameter()/2) , totalHeight));
         
         
-        graphics.setColor(new Color(102,205,0));
+        graphics.setColor(PongConfiguration.ballColor);
         graphics.fillOval(drawX, drawY, (int) (getDiameter()* totalWidth/2), (int) (getDiameter() * totalHeight/2));
         ((Graphics2D) graphics).setStroke(new java.awt.BasicStroke(2));
         graphics.setColor(Color.DARK_GRAY);
@@ -89,10 +93,10 @@ public class Ball implements Entity, IHighlightable{
 
     
 
-   //@Override
-   //public boolean hasPassedAllTestCriteria() {
-   //	   return !outOfBounds;
-   //}
+   @Override
+   public boolean hasPassedAllTestCriteria() {
+   	   return !outOfBounds;
+   }
 
 	public double getYPos() {
 		return y;
@@ -176,4 +180,9 @@ public class Ball implements Entity, IHighlightable{
 		xDirection = xDirectionDuell;
 		yDirection = yDirectionDuell;
 		}
+
+
+	public boolean getIsInTests() {
+		return isInTests;
+	}
 }

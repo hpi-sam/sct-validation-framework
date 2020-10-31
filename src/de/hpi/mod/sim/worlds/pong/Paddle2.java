@@ -20,7 +20,7 @@ public class Paddle2 extends StateChartWrapper<Paddle2Statemachine.State>
     private final double x;
     private double y;
     private boolean reboundBall = false;
-    private int points = 0;
+    private int score = 0;
     
  
     public Paddle2() {
@@ -38,7 +38,7 @@ public class Paddle2 extends StateChartWrapper<Paddle2Statemachine.State>
     	graphics.setColor(new Color(192,255,62));
     	graphics.fillRect(drawX, drawY, (int) (PongConfiguration.paddleWidth * totalWidth/2), (int) (PongConfiguration.paddleHeight * totalHeight/2));
     	((Graphics2D) graphics).setStroke(new java.awt.BasicStroke(2));
-    	graphics.setColor(new Color(102,205,0));
+    	graphics.setColor(PongConfiguration.paddleColor);
     	graphics.drawRect(drawX, drawY, (int) (PongConfiguration.paddleWidth * totalWidth/2), (int) (PongConfiguration.paddleHeight * totalHeight/2));
     }
     
@@ -177,14 +177,17 @@ public class Paddle2 extends StateChartWrapper<Paddle2Statemachine.State>
 	}
 
 
-	public int getPoints() {
-		return points;
+
+	public int getScore() {
+		return score;
 	}
 
 
-	public void setPoints(int points) {
-		this.points = points;
+
+	public void increaseScore() {
+		this.score++;
 	}
+
 
 
 }

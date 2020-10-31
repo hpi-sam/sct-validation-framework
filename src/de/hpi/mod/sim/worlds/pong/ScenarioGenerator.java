@@ -10,9 +10,10 @@ import de.hpi.mod.sim.core.simulation.Entity;
 public class ScenarioGenerator {
 
     private PongWorld world;
-
+    
     public ScenarioGenerator(PongWorld world) {
         this.world = world;
+       
     }
 
 
@@ -25,7 +26,7 @@ public class ScenarioGenerator {
     	public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
     		List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
     		PaddleSpecification paddle = new PaddleSpecification(world);
-    		BallSpecification ball = new BallSpecification(0, -0.008 , 0, world);
+    		BallSpecification ball = new BallSpecification(0, -0.008 , 0, world, false);
     		list.add(paddle);
     		list.add(ball);
     		return list;
@@ -42,7 +43,7 @@ public class ScenarioGenerator {
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             PaddleSpecification paddle = new PaddleSpecification(world);
-            BallSpecification ball = new BallSpecification(0, -0.001, 0.003, world);
+            BallSpecification ball = new BallSpecification(0, -0.001, 0.003, world, false);
             list.add(paddle);
             list.add(ball);
             return list;
@@ -58,7 +59,7 @@ public class ScenarioGenerator {
 	    public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 	        List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
 	        PaddleSpecification paddle = new PaddleSpecification(world);
-	        BallSpecification ball = new BallSpecification(0.1, -0.002, -0.003, world);
+	        BallSpecification ball = new BallSpecification(0.1, -0.002, -0.003, world, false);
 	        list.add(paddle);
 	        list.add(ball);
 	        return list;
@@ -77,7 +78,7 @@ public class ScenarioGenerator {
 	    public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 	        List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
 	        PaddleSpecification paddle = new PaddleSpecification(world);
-	        BallSpecification ball = new BallSpecification(0.1, -0.004, 0.005, world);
+	        BallSpecification ball = new BallSpecification(0.1, -0.004, 0.005, world, false);
 	        list.add(paddle);
 	        list.add(ball);
 	        return list;

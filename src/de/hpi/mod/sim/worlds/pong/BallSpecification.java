@@ -11,14 +11,17 @@ public class BallSpecification implements EntitySpecification<Ball>  {
 	 private double yPos;
 	 private double yDirection;
 	 private double xDirection;
+	 private boolean isInTests;
 
 	 
-	 public BallSpecification(double yPos, double xDirection, double yDirection, PongWorld world) {
+	 public BallSpecification(double yPos, double xDirection, double yDirection, PongWorld world, boolean isInTests) {
 		 this.yPos = yPos;
 		 this.xDirection = xDirection;
 	     this.yDirection = yDirection;
 	     this.world = world;
+	     this.isInTests = isInTests;
 	 }
+	 
 
 	 public BallSpecification(double xPos, double yPos, double xDirection, double yDirection, PongWorld world) {
 		 this.yPos = yPos;
@@ -36,7 +39,7 @@ public class BallSpecification implements EntitySpecification<Ball>  {
 			 world.setBall(ball);
 		     return ball;
 		 }
-		 Ball ball = new Ball (yPos, yDirection, xDirection, world); 
+		 Ball ball = new Ball (yPos, yDirection, xDirection, world, isInTests); 
 		 world.setBall(ball);
 	     return ball;
 	    }
