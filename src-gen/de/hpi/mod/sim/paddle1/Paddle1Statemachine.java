@@ -207,11 +207,11 @@ public class Paddle1Statemachine implements IPaddle1Statemachine {
 	}
 	
 	private boolean check_pong__choice_0_tr0_tr0() {
-		return (sCInterface.operationCallback.myPos()>sCInterface.getBallPosValue() && sCInterface.operationCallback.myPos()>sCInterface.getMinPos());
+		return (sCInterface.operationCallback.myPos()>((sCInterface.getBallPosValue() + 10)) && sCInterface.operationCallback.myPos()>sCInterface.getMinPos());
 	}
 	
 	private boolean check_pong__choice_0_tr1_tr1() {
-		return (sCInterface.operationCallback.myPos()<sCInterface.getBallPosValue() && sCInterface.operationCallback.myPos()<sCInterface.getMaxPos());
+		return (sCInterface.operationCallback.myPos()<((sCInterface.getBallPosValue() - 10)) && sCInterface.operationCallback.myPos()<sCInterface.getMaxPos());
 	}
 	
 	private boolean check_pong__choice_1_tr0_tr0() {
