@@ -60,9 +60,8 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 		
 		BufferedImage img = isOn ? bulbOn : bulbOff;
 		graphics.drawImage(img, (width - img.getWidth()) / 2, (height - img.getHeight()) / 2, null);
-		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
-		graphics.setColor(Color.BLACK);
-		graphics.drawString("Task / Remaining: (" + timesToBlink +" / "+ remainingBlinks + " )", width/20, height- height/20);
+
+		
 	}
 
 	private void loadImages() {
@@ -183,5 +182,15 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 
 	public void setCheckOnTimeForTests(boolean b) {
 		this.checkOnTimeForTests = b;
+	}
+
+
+
+
+
+
+
+	public int getRemainingBlinks() {
+		return remainingBlinks;
 	}
 }

@@ -1,5 +1,7 @@
 package de.hpi.mod.sim.worlds.flasher;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,8 +83,26 @@ public class FlashWorld extends World {
 
 	@Override
 	public void render(Graphics graphics) {
-		if (bulb != null)
+		if (bulb != null) {
 			bulb.bulbRender(graphics, width, height);
+			drawCounter(graphics);
+			}
+	}
+	
+	
+	private void drawCounter(Graphics graphics) {
+		int remainingBlinks;
+		String haekchen = "";
+		if(!bulb.isOn()&& bulb.getRemainingBlinks()== 0) {
+			remainingBlinks=starter.getTask();
+			haekchen = "    finished \u2713";
+		}
+		else {
+			remainingBlinks= bulb.getRemainingBlinks();
+		}
+		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
+		graphics.setColor(Color.BLACK);
+		graphics.drawString("Task / Remaining: " + starter.getTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
 	}
 
 	@Override
