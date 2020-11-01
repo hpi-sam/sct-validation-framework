@@ -56,4 +56,8 @@ public class Starter implements Entity {
        return onRepeat || posBlink == blinkCounts.size();
    }
 
+public int getTask() {
+	return blinkCounts.get(posBlink);
+}
+
 }

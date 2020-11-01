@@ -18,7 +18,7 @@ import java.awt.event.MouseMotionListener;
 /**
  * Stores the values needed to display the Simulation, renders it and keeps track of the mouse
  */
-public abstract class AnimationPanel extends JPanel implements MouseListener, MouseMotionListener {
+public class AnimationPanel extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = -361892313938561668L;
 
@@ -196,10 +196,10 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 		return offsetY;
 	}
 
-	public abstract void resetZoom();
+	public void resetZoom() {}
 	
-	public abstract void zoomIn(float zoom);
+	public void zoomIn(float zoom){}
 	
-	public abstract void zoomOut(float zoom);
+	public void zoomOut(float zoom){}
 
 }
