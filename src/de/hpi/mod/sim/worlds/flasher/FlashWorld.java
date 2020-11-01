@@ -163,9 +163,4 @@ public class FlashWorld extends World {
 			
 		};
 	}
-
-	}
-	
-	
-	
 }
