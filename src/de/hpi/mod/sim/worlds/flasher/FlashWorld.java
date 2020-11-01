@@ -144,8 +144,26 @@ public class FlashWorld extends World {
 
 	@Override
 	public AnimationPanel getAnimationPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new AnimationPanel(this) {
+
+			
+			private static final long serialVersionUID = -3511125389453371432L;
+
+			@Override
+			public void resetZoom() {
+			}
+
+			@Override
+			public void zoomIn(float zoom) {
+			}
+
+			@Override
+			public void zoomOut(float zoom) {
+			}
+			
+		};
+	}
+
 	}
 	
 	
