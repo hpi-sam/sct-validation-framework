@@ -7,11 +7,10 @@ import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 /**
+ * @author Tim Cech, Jonas Kordt, Paul Methfessel, Chiara Schirmer, Simon Wietheger, Christian Zöllner
+ *         (System Analysis and Modeling Group @ Hasso-Plattner-Institute, Potsdam University, Germany)
+ * @version 0.9.0
  * 
- * @author Tim Cech, Jonas Kordt, Paul Methfessel, Simon Wietheger, Chiara Schirmer
- *         (Hasso-Plattner-Institute chair for software analysis and modeling)
- * @version 1.0.0
- *
  *          This classes starts the execution of the program.
  */
 public class App {

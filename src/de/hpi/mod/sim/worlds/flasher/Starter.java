@@ -57,7 +57,10 @@ public class Starter implements Entity {
    }
 
 public int getTask() {
-	return blinkCounts.get(posBlink);
+	if(posBlink == 0 ){
+		return blinkCounts.get(posBlink);
+	}
+	return blinkCounts.get(posBlink-1);		
 }
 
 }
