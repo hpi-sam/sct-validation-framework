@@ -10,12 +10,9 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 
 public class TestCaseGenerator {
 
-    private static FlashWorld world;
-
     public static Map<String, List<TestScenario>> getAllTestCases(FlashWorld worldP) {
         Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
         testGroups.put("Flash tests", generateTests(worldP));
-        world = worldP;
         return testGroups;
     }
 

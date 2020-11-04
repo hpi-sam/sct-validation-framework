@@ -9,7 +9,6 @@ import java.util.List;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
-import de.hpi.mod.sim.worlds.pong.PongWorld;
 
 public class Ball implements Entity, IHighlightable{
 

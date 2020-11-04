@@ -1,8 +1,5 @@
 package de.hpi.mod.sim.worlds.flasher;
 
-import java.awt.Color;
-
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,11 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import de.hpi.mod.sim.IStatemachine;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
