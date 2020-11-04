@@ -43,7 +43,7 @@ public class SimulatorFrame extends JFrame {
 	public SimulatorFrame(World world) {
 		super("Statechart Simulator");
 		this.world = world;
-		animationPanel = world.getAnimationPanel();
+		animationPanel = world.createAnimationPanel();
 		SimulationRunner simulationRunner = new SimulationRunner(world, animationPanel);
 		world.initialize(this, simulationRunner);
 

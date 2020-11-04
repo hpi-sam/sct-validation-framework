@@ -35,7 +35,7 @@ public abstract class GridWorld extends World {
     }
 
     @Override
-    public AnimationPanel getAnimationPanel() {
+    public AnimationPanel createAnimationPanel() {
         return getSimulationBlockView();
     }
 

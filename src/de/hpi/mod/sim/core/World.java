@@ -23,6 +23,8 @@ public abstract class World {
 
     private List<Detector> detectors;
 
+    private AnimationPanel panel;
+
     protected abstract List<Detector> createDetectors();
 
     public List<Detector> getDetectors() {
@@ -98,7 +100,13 @@ public abstract class World {
 
     public abstract void close();
 
-    public abstract AnimationPanel getAnimationPanel();
+    public AnimationPanel createAnimationPanel() {
+        return new AnimationPanel(this);
+    }
+
+    public AnimationPanel getAnimationPanel() {
+        return panel;
+    }
 
 	
 
