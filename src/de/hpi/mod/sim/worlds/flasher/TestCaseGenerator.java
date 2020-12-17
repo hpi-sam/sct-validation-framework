@@ -10,12 +10,9 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 
 public class TestCaseGenerator {
 
-    private static FlashWorld world;
-
     public static Map<String, List<TestScenario>> getAllTestCases(FlashWorld worldP) {
         Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
         testGroups.put("Flash tests", generateTests(worldP));
-        world = worldP;
         return testGroups;
     }
 
@@ -71,15 +68,11 @@ public class TestCaseGenerator {
 
     private static class ConcreteTestScenario extends TestScenario {
         List<EntitySpecification<?>> newEntities = new ArrayList<>();
-        BulbSpecification bulb;
-        StarterSpecification starter;
 
         public ConcreteTestScenario(String name, String description, BulbSpecification bulb, StarterSpecification starter) {
             this.name = name;
             this.description = description;
             this.newEntities = Arrays.asList(bulb, starter);
-            this.starter = starter;
-            this.bulb = bulb;
         }
 
         @Override

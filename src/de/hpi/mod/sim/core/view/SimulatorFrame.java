@@ -41,7 +41,7 @@ public class SimulatorFrame extends JFrame {
 	public static Color MENU_WHITE = Color.WHITE;
 
 	public SimulatorFrame(World world) {
-		super("Drive System Simulator");
+		super("Statechart Simulator");
 		this.world = world;
 		animationPanel = world.createAnimationPanel();
 		SimulationRunner simulationRunner = new SimulationRunner(world, animationPanel);

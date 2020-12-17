@@ -3,9 +3,11 @@ package de.hpi.mod.sim.worlds.infinitewarehouse.environment;
 import java.awt.Color;
 
 import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
+import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 
 public enum CellType implements ICellType {
-    WAYPOINT, CROSSROAD, BLOCK, CHARGER, LOADING, STATION, QUEUE, CHARGER_UNUSED, LOADING_UNUSED, QUEUE_UNUSED, STATION_UNUSED;
+    WAYPOINT, CROSSROAD, BLOCK, CHARGER, LOADING, STATION, QUEUE, CHARGER_UNUSED, LOADING_UNUSED, QUEUE_UNUSED,
+    STATION_UNUSED;
 
     boolean hasBorderLeft = false;
     boolean hasBorderRight = false;
@@ -18,7 +20,7 @@ public enum CellType implements ICellType {
         CHARGER.hasBorderLeft = true;
         LOADING.hasBorderLeft = true;
         QUEUE.hasBorderLeft = true;
-        
+
         WAYPOINT.color = Color.WHITE;
         CROSSROAD.color = Color.LIGHT_GRAY;
         CHARGER.color = new Color(0xe0d9f9);
@@ -31,25 +33,19 @@ public enum CellType implements ICellType {
     public Color getColor() {
         return color;
     }
+
+    @Override
+    public boolean hasBorder(Orientation orientation) {
+        switch (orientation) {
+            case EAST:
+                return hasBorderRight;
+            case NORTH:
+                return hasBorderTop;
+            case SOUTH:
+                return hasBorderBottom;
+            default: //WEST
+                return hasBorderLeft;
+        }
+    }
     
-
-    @Override
-    public boolean borderLeft() {
-        return hasBorderLeft;
-    }
-
-    @Override
-    public boolean borderTop() {
-        return hasBorderTop;
-    }
-
-    @Override
-    public boolean borderRight() {
-        return hasBorderRight;
-    }
-
-    @Override
-    public boolean borderBottom() {
-        return hasBorderBottom;
-    }
 }

@@ -783,12 +783,11 @@ public class WarehouseManager extends RobotGridManager implements ISensorDataPro
 		return robot;
 	}
 	
-	public WarehouseRobot addRobotInScenario(Position position, Orientation facing, int delay) {
+	public WarehouseRobot createScenarioRobot(Position position, Orientation facing, int delay) {
 
 		if (posType(position) == PositionType.STATION || posType(position) == PositionType.WAYPOINT) {
 			int stationID = stations.getStationIDFromPosition(position);
 			WarehouseRobot robot = new WarehouseRobot(WarehouseRobot.incrementID(), stationID, this, stations, position, facing, delay);
-			addRobot(robot);
 			return robot;
 		} else {
 			throw new IllegalStateException(

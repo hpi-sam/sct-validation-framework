@@ -6,11 +6,15 @@ public interface ICellType {
     
     public Color getColor();
 
-    public boolean borderLeft();
+    public default boolean hasBorder(Orientation orientation) {
+        return false;
+    }
 
-    public boolean borderTop();
+    public default Color borderColor(Orientation orientation) {
+        return Color.DARK_GRAY;
+    }
 
-    public boolean borderRight();
-
-    public boolean borderBottom();
+    public default float borderWidth(Orientation orientation) {
+        return 1;
+    }
 }

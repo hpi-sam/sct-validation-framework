@@ -81,7 +81,7 @@ public abstract class RobotWorld extends GridWorld {
     
     @Override
     public void clearEntities() {
-        getEntities().clear();
+        getRobots().clear();
     }
     
     @Override
@@ -96,5 +96,26 @@ public abstract class RobotWorld extends GridWorld {
     
     protected void renderEntities(Graphics graphics) {
         robotRenderer.render(graphics, getSimulationBlockView().getBlockSize());
+    }
+    
+    @Override
+    public void refreshEntities() {
+        getRobotGridManager().refresh();
+    }
+
+    @Override
+    public void close() {
+        getRobotGridManager().close();
+    }
+    
+    @Override
+    public void updateEntities(float delta) {
+        for (Robot robot : getRobots()) {
+            if (robot.getRobotSpecificDelay() == 0 || !robot.isInTest()) {
+                robot.getDriveManager().update(delta);
+            } else {
+                robot.getDriveManager().update(delta, robot.getRobotSpecificDelay());
+            }
+        }
     }
 }

@@ -3,7 +3,6 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
-import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouseConfiguration;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,11 +31,11 @@ public class RobotRenderer {
 
     private void loadImages() {
         try {
-            robotIcon = ImageIO.read(new File(InfiniteWarehouseConfiguration.getStringPathToRobotIcon()));
-            leftClickedRobotIcon = ImageIO.read(new File(InfiniteWarehouseConfiguration.getStringPathToLeftClickedRobotIcon()));
-            rightClickedRobotIcon = ImageIO.read(new File(InfiniteWarehouseConfiguration.getStringPathToRightClickedRobotIcon()));
-            batteryIcon = ImageIO.read(new File(InfiniteWarehouseConfiguration.getStringPathToEmptyBattery()));
-            packageIcon = ImageIO.read(new File(InfiniteWarehouseConfiguration.getStringPathToPackage()));
+            robotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRobotIcon()));
+            leftClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToLeftClickedRobotIcon()));
+            rightClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRightClickedRobotIcon()));
+            batteryIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToEmptyBattery()));
+            packageIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToPackage()));
         } catch (IOException e) {
             e.printStackTrace();
         }

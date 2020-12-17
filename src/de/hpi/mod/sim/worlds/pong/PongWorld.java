@@ -3,7 +3,6 @@ package de.hpi.mod.sim.worlds.pong;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +15,6 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
-import de.hpi.mod.sim.worlds.pong.TestCaseGenerator;
 public class PongWorld extends World {
 
 	private int width, height;

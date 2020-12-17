@@ -11,14 +11,11 @@ import de.hpi.mod.sim.core.scenario.TestScenario;
 
 
 public class TestCaseGenerator {
-
-    private static PongWorld world;
     
 
     public static Map<String, List<TestScenario>> getAllTestCases(PongWorld worldP) {
         Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
         testGroups.put("Pong tests", generateTests(worldP));
-        world = worldP;
         return testGroups;
     }
 
@@ -77,16 +74,12 @@ public class TestCaseGenerator {
 
     private static class ConcreteTestScenario extends TestScenario {
         List<EntitySpecification<?>> newEntities = new ArrayList<>();
-        PaddleSpecification paddle1;
-        BallSpecification ball;
         
 
         public ConcreteTestScenario(String name, String description, PaddleSpecification paddle1, BallSpecification ball) {
             this.name = name;
             this.description = description;
             this.newEntities = Arrays.asList(paddle1, ball);
-            this.paddle1 = paddle1;
-            this.ball = ball;
         }
 
         @Override

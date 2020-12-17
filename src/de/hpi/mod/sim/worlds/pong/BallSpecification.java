@@ -2,7 +2,6 @@ package de.hpi.mod.sim.worlds.pong;
 
 
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
-import de.hpi.mod.sim.worlds.pong.PongWorld;
 
 public class BallSpecification implements EntitySpecification<Ball>  {
 	

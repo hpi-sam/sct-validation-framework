@@ -22,8 +22,12 @@ public abstract class GridWorld extends World {
 
     @Override
     public void initialize() {
-        gridRenderer = new GridRenderer(getSimulationBlockView(), getGridManager());
+        gridRenderer = createGridRenderer(simView, getGridManager());
     }
+
+    protected GridRenderer createGridRenderer(SimulationBlockView panel, GridManager manager) {
+        return new GridRenderer(panel, manager);
+    } 
     
     @Override
     public void render(Graphics graphics) {
