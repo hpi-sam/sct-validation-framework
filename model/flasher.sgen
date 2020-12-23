@@ -3,7 +3,7 @@ GeneratorModel for yakindu::java {
 	statechart flasher {
 
 		feature Outlet {
-			targetProject = "drivesystem"
+			targetProject = "sct-sim-edu"
 			targetFolder = "src-gen"
 		}
 		
