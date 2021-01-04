@@ -36,6 +36,7 @@ public class RobotConfiguration extends GridConfiguration {
    	private static float batteryLoss = BATTERY_LOSS;
    	private static float batteryChargingSpeed = BATTERY_LOADING_SPEED;
    	private static float minBatteryRatio = MIN_BATTERY_RATIO;
+   	
    	public static String getStringPathToRobotIcon() {
 		return stringPathToRobotIcon;
 	}
