@@ -14,10 +14,11 @@ public class TrafficLightsConfiguration extends RobotConfiguration {
     private static int fieldWidth = DEFAULT_FIELD_WIDTH;
 	private static int fieldHeight = DEFAULT_FIELD_HEIGHT;
 
-	static {
-		setOriginOffsetX(-TrafficLightsConfiguration.getFieldWidth() / 2 - 1);
-		setOriginOffsetY(2);
-	}
+	// TEMPORARILY MOVED TO WORLD INITIALIZATION
+//	static {
+//		setOriginOffsetX(-TrafficLightsConfiguration.getFieldWidth() / 2 - 1);
+//		setOriginOffsetY(2);
+//	}
 
 	public static int getDefaultFieldWidth() {
 		return DEFAULT_FIELD_WIDTH;

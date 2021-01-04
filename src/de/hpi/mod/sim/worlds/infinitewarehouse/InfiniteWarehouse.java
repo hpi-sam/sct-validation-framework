@@ -6,6 +6,7 @@ import java.util.Map;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Detector;
+import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.infinitewarehouse.detectors.*;
@@ -29,6 +30,13 @@ public class InfiniteWarehouse extends RobotWorld {
         return new WarehouseManager(stationManager);
     }
 
+    @Override
+    public void initialize() {
+    	super.initialize();
+    	// Moved here from static initialization of configuration class, until a better solution from the configuration if found.
+    	GridConfiguration.setOriginOffsetY(InfiniteWarehouseConfiguration.getQueueSize());
+    }
+    
     @Override
     protected List<Detector> createDetectors() {
         List<Detector> detectors = super.createDetectors();
