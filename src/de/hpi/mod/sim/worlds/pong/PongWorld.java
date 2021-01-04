@@ -21,7 +21,11 @@ public class PongWorld extends World {
 	private Paddle1 paddle1;
 	private Paddle2 paddle2;
 	private Ball ball;
-	
+    
+    public PongWorld() {
+		super();
+		publicName = "Ping Pong Game World";
+	}	
 	 
 	@Override
 	public List<Detector> createDetectors() {

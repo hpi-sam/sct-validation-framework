@@ -8,6 +8,7 @@ import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
+import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
@@ -15,6 +16,11 @@ import de.hpi.mod.sim.worlds.traffic_light_robots.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class TrafficLightWorld extends RobotWorld {
+    
+    public TrafficLightWorld() {
+		super();
+		publicName = "Robots with Traffic Light World";
+	}
 
     @Override
     protected GridManager createGridManager() {
@@ -24,6 +30,15 @@ public class TrafficLightWorld extends RobotWorld {
     @Override
     public void resetScenario() {}
 
+
+    @Override
+    public void initialize() {
+    	super.initialize();
+    	// Moved here from static initialization of configuration class, until a better solution from the configuration if found.
+    	GridConfiguration.setOriginOffsetX(-TrafficLightsConfiguration.getFieldWidth() / 2 - 1);
+    	GridConfiguration.setOriginOffsetY(2);
+    }
+    
     @Override
     public List<Scenario> getScenarios() {
         return new ScenarioGenerator(this).getScenarios();
