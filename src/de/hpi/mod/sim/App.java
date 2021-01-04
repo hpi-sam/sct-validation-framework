@@ -22,27 +22,47 @@ public class App {
             "de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWorld",
      };
 
-     private static World selectWorld() {
-        String chosenName;
-        if (POSSIBLE_WORLDS.length == 1)
-            chosenName = POSSIBLE_WORLDS[0];
-        else
-            chosenName = (String) JOptionPane.showInputDialog(null, "Choose a world ...", "World selection",
-                    JOptionPane.QUESTION_MESSAGE, null, POSSIBLE_WORLDS, POSSIBLE_WORLDS[0]);
+     private static String selectWorldName() {
+    	 // Catch cases where either one one no world is available.
+	     if (POSSIBLE_WORLDS.length < 1) {
+	    	 return null;
+	     }
+	     if (POSSIBLE_WORLDS.length == 1) {
+	    	 return POSSIBLE_WORLDS[0];
+	     }
+	     
+	     // Get World Name from list
+	     String inputResponse = (String) JOptionPane.showInputDialog(null, "Select the world that you want to simulate...", "World Selection",
+                    					            				 JOptionPane.QUESTION_MESSAGE, null, 
+                    					            				 POSSIBLE_WORLDS, POSSIBLE_WORLDS[0]);
+	     return (inputResponse == null || inputResponse.isBlank()) ? null : inputResponse.strip();
+     }
+
+     private static World instanciateWorld(String name) {
         try {
             @SuppressWarnings("unchecked")
-            Constructor<? extends World> con = (Constructor<? extends World>) Class.forName(chosenName).getConstructors()[0];
+            Constructor<? extends World> con = (Constructor<? extends World>) Class.forName(name).getConstructors()[0];
             return con.newInstance();
         } catch (Exception e) {
-            System.err.println("Found no such subclass of world: " + chosenName);
+            System.err.println("Found no such subclass of world: " + name);
             e.printStackTrace();
             return null;
         }
     }
 
     public static void main(String[] args) {
+    	// Set global system 
         SimulatorFrame.setSystemLookAndFeel();
-        World world = selectWorld();
-        new SimulatorFrame(world);
+        
+        // Let the User Select a World, exit is nothing is selected
+        String worldName = selectWorldName();
+        if (worldName == null) System.exit(1);
+        
+        // Instranciate Simulator World, exit if selected world is invalid
+        World world = instanciateWorld(worldName);
+        if (world == null) System.exit(1);
+        
+        // Start Simulator 
+	    new SimulatorFrame(world);
     }
 }
