@@ -5,6 +5,7 @@ import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.GridWorld;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 import de.hpi.mod.sim.worlds.abstract_robots.detectors.CollisionDetector;
 import de.hpi.mod.sim.worlds.abstract_robots.detectors.DeadlockDetector;
 import de.hpi.mod.sim.worlds.util.ExplosionRenderer;
@@ -20,6 +21,11 @@ public abstract class RobotWorld extends GridWorld {
 
     private RobotRenderer robotRenderer;
 
+    public RobotWorld() {
+    	super();
+    	publicName = "Grid-based World with Robots";
+    }
+    
     @Override
     public void initialize() {
         super.initialize();

@@ -15,6 +15,11 @@ import de.hpi.mod.sim.worlds.traffic_light_robots.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class TrafficLightWorld extends RobotWorld {
+    
+    public TrafficLightWorld() {
+		super();
+		publicName = "Robots with Traffic Light World";
+	}
 
     @Override
     protected GridManager createGridManager() {

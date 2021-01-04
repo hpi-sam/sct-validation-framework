@@ -17,7 +17,12 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
 public class InfiniteWarehouse extends RobotWorld {
     
-    @Override
+    public InfiniteWarehouse() {
+		super();
+		publicName = "Infinite Warehouse World";
+	}
+
+	@Override
     protected GridManager createGridManager() {
         int chargingStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
         StationManager stationManager = new StationManager(chargingStations);
