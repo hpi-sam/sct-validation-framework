@@ -145,30 +145,37 @@ public class PongWorld extends World {
 
 	@Override
 	public IHighlightable getHighlightAtPosition(int x, int y) {
-	
-	//click in Paddle1
-	if(x <= toPixel(paddle1.getRightEnd(), width)
-	 && x >= toPixel(paddle1.getLeftEnd(), width)
-	 && y > (height- (toPixel(paddle1.getUpperEnd(), height)))
-	 && y < (height - (toPixel(paddle1.getLowerEnd(), height)))){
-	 	return paddle1;
-	 }
-	 //click in paddle2
-	 if(x <= toPixel(paddle2.getRightEnd(), width)
-	 && x >= toPixel(paddle2.getLeftEnd(), width)
-	 && y > (height- (toPixel(paddle2.getUpperEnd(), height)))
-	 && y < (height - (toPixel(paddle2.getLowerEnd(), height)))){
-	 	return paddle2;
-	 }
-	 //click in ball
-	 if(x <= toPixel(ball.getRightEnd() + PongConfiguration.bufferForMouseClick, width)
-	 && x >= toPixel(ball.getLeftEnd()- PongConfiguration.bufferForMouseClick, width)
-	 && y > (height- (toPixel(ball.getUpperEnd()+ PongConfiguration.bufferForMouseClick, height)))
-	 && y < (height - (toPixel(ball.getLowerEnd()- PongConfiguration.bufferForMouseClick, height)))){
-	 	return ball;
-	 }
+
+		if (getSimulationRunner().isRunning()){
+				
+			//click in Paddle1
+			if(x <= toPixel(paddle1.getRightEnd(), width)
+					&& x >= toPixel(paddle1.getLeftEnd(), width)
+					&& y > (height- (toPixel(paddle1.getUpperEnd(), height)))
+					&& y < (height - (toPixel(paddle1.getLowerEnd(), height)))){
+				return paddle1;
+			}
+			
+			//click in paddle2
+			if (paddle2 != null) {
+				if(x <= toPixel(paddle2.getRightEnd(), width)
+						&& x >= toPixel(paddle2.getLeftEnd(), width)
+						&& y > (height- (toPixel(paddle2.getUpperEnd(), height)))
+						&& y < (height - (toPixel(paddle2.getLowerEnd(), height)))){
+					return paddle2;
+				}
+			}
+			 
+			//click in ball
+			if(x <= toPixel(ball.getRightEnd() + PongConfiguration.bufferForMouseClick, width)
+					&& x >= toPixel(ball.getLeftEnd()- PongConfiguration.bufferForMouseClick, width)
+					&& y > (height- (toPixel(ball.getUpperEnd()+ PongConfiguration.bufferForMouseClick, height)))
+					&& y < (height - (toPixel(ball.getLowerEnd()- PongConfiguration.bufferForMouseClick, height)))){
+				 return ball;
+			}
+		}
 	 
-    return null;
+		return null;
 	}
 
 	@Override
