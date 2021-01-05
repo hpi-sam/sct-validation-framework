@@ -40,7 +40,6 @@ public class AnimationPanel extends JPanel implements MouseListener, MouseMotion
 	 * Entity changes
 	 */
 	private List<IHighlightedListener> highlightedEntityListeners = new ArrayList<>();
-	private List<IHighlightedListener> highlightedEntityListeners2 = new ArrayList<>();
 
 	/**
 	 * Offset of viewed part of the simulation. Has to be interpretated by subclass
@@ -65,10 +64,6 @@ public class AnimationPanel extends JPanel implements MouseListener, MouseMotion
 
 	public void addHighlightedListener(IHighlightedListener highlightedListener) {
 		highlightedEntityListeners.add(highlightedListener);
-	}
-
-	public void addHighlightedListener2(IHighlightedListener highlightedListener) {
-		highlightedEntityListeners2.add(highlightedListener);
 	}
 
 	public boolean isMousePointing() {
@@ -98,7 +93,7 @@ public class AnimationPanel extends JPanel implements MouseListener, MouseMotion
 	}
 	
 	private void refreshHighlightedListeners() {
-		highlightedEntityListeners.forEach(IHighlightedListener::onHighlightedChange);
+		highlightedEntityListeners.forEach(IHighlightedListener::onHighlightedEntitySelection);
 	}
 
 	public void resetHighlightedEntities() {
