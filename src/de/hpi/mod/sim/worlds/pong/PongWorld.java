@@ -18,15 +18,15 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 public class PongWorld extends World {
 
 	private int width, height;
-	private Paddle1 paddle1;
-	private Paddle2 paddle2;
+	private LeftPaddle paddle1;
+	private RightPaddle paddle2;
 	private Ball ball;
-    
-    public PongWorld() {
+	
+	public PongWorld() {
 		super();
 		publicName = "Ping Pong Game World";
 	}	
-	 
+
 	@Override
 	public List<Detector> createDetectors() {
 		Detector det = new Detector(this) {
@@ -185,7 +185,7 @@ public class PongWorld extends World {
 	}
 
 
-	public void setPaddleLeft(Paddle1 paddle) {
+	public void setPaddleLeft(LeftPaddle paddle) {
 		this.paddle1 = paddle;
 	}
 	
@@ -273,7 +273,7 @@ public class PongWorld extends World {
 
 
 
-	public void setPaddleRight(Paddle2 paddle) {
+	public void setPaddleRight(RightPaddle paddle) {
 		this.paddle2 = paddle;
 		
 	}

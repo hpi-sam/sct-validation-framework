@@ -8,7 +8,6 @@ import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
-import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
@@ -16,7 +15,7 @@ import de.hpi.mod.sim.worlds.traffic_light_robots.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class TrafficLightWorld extends RobotWorld {
-    
+
     public TrafficLightWorld() {
 		super();
 		publicName = "Robots with Traffic Light World";
@@ -30,15 +29,6 @@ public class TrafficLightWorld extends RobotWorld {
     @Override
     public void resetScenario() {}
 
-
-    @Override
-    public void initialize() {
-    	super.initialize();
-    	// Moved here from static initialization of configuration class, until a better solution from the configuration if found.
-    	GridConfiguration.setOriginOffsetX(-TrafficLightsConfiguration.getFieldWidth() / 2 - 1);
-    	GridConfiguration.setOriginOffsetY(2);
-    }
-    
     @Override
     public List<Scenario> getScenarios() {
         return new ScenarioGenerator(this).getScenarios();
@@ -52,22 +42,19 @@ public class TrafficLightWorld extends RobotWorld {
 
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
-    	SimulationBlockView blockView = (SimulationBlockView) getAnimationPanel();
-    	if(blockView != null) {
-	        float blockSize = blockView.getBlockSize();
-	        int width = (int) ((currentWidth / blockSize) + TrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
-	                + 1;
-	        int height = (int) (((currentHeight / blockSize) - TrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
-	                + 1;
-	        TrafficLightsConfiguration.setFieldDimensions(width, height);
-	        getCrossRoadManager().updateFieldSize(width, height);
-    	}
+        float blockSize = ((SimulationBlockView) getAnimationPanel()).getBlockSize();
+        int width = (int) ((currentWidth / blockSize) + TrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
+                + 1;
+        int height = (int) (((currentHeight / blockSize) - TrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
+                + 1;
+        TrafficLightsConfiguration.setFieldDimensions(width, height);
+        getCrossRoadManager().updateFieldSize(width, height);
     }
     
     @Override
     public void refreshEntities() {
         super.refreshEntities();
-        for (TrafficLight light : getCrossRoadManager().getTrafficLights()) {
+        for (TrafficLightWrapper light : getCrossRoadManager().getTrafficLights()) {
             light.updateTimer();
         }
     }
@@ -81,7 +68,7 @@ public class TrafficLightWorld extends RobotWorld {
     @Override
     public List<? extends Entity> getEntities() {
         List<? extends Entity> superList = super.getEntities();
-        List<TrafficLight> lights = getCrossRoadManager().getTrafficLights();
+        List<TrafficLightWrapper> lights = getCrossRoadManager().getTrafficLights();
         List<Entity> list = new ArrayList<>(lights.size() + superList.size());
         list.addAll(superList);
         list.addAll(lights);

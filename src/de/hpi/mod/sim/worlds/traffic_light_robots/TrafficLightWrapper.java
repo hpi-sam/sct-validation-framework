@@ -3,15 +3,15 @@ package de.hpi.mod.sim.worlds.traffic_light_robots;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.mod.sim.IStatemachine;
+import com.yakindu.core.IStatemachine;
+
+import de.hpi.mod.sim.Trafficlight;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.trafficlight.TrafficlightStatemachine;
-import de.hpi.mod.sim.trafficlight.TrafficlightStatemachine.State;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
-public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.State>
+public class TrafficLightWrapper extends StateChartWrapper<Trafficlight.State>
         implements StateChartEntity, IHighlightable {
     /**
      * The northern, eastern, southern and western positions
@@ -27,7 +27,7 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
      * @param pos The southern position of traffic light. All other positions are
      *            calculated from this one.
      */
-    public TrafficLight(Position pos) {
+    public TrafficLightWrapper(Position pos) {
         positions[0] = pos;
         positions[1] = new Position(pos.getX() - 2, pos.getY() + 1);
         positions[2] = new Position(pos.getX() + 1, pos.getY() + 2);
@@ -49,8 +49,8 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
         return "trafficlight";
     }
 
-    private TrafficlightStatemachine getStatemachine() {
-        return (TrafficlightStatemachine) chart;
+    private Trafficlight getStatemachine() {
+        return (Trafficlight) chart;
     }
 
     @Override
@@ -58,42 +58,42 @@ public class TrafficLight extends StateChartWrapper<TrafficlightStatemachine.Sta
         /**
          * Runs a cycle of the statechart and checks if any functions got fired
          */
-        if (getStatemachine().getSCINorth().isRaisedOn())
+        if (getStatemachine().north().isRaisedOn())
             lightStates[3] = true;
-        if (getStatemachine().getSCINorth().isRaisedOff())
+        if (getStatemachine().north().isRaisedOff())
             lightStates[3] = false;
-        if (getStatemachine().getSCIEast().isRaisedOn())
+        if (getStatemachine().east().isRaisedOn())
             lightStates[2] = true;
-        if (getStatemachine().getSCIEast().isRaisedOff())
+        if (getStatemachine().east().isRaisedOff())
             lightStates[2] = false;
-        if (getStatemachine().getSCISouth().isRaisedOn())
+        if (getStatemachine().south().isRaisedOn())
             lightStates[0] = true;
-        if (getStatemachine().getSCISouth().isRaisedOff())
+        if (getStatemachine().south().isRaisedOff())
             lightStates[0] = false;
-        if (getStatemachine().getSCIWest().isRaisedOn())
+        if (getStatemachine().west().isRaisedOn())
             lightStates[1] = true;
-        if (getStatemachine().getSCIWest().isRaisedOff())
+        if (getStatemachine().west().isRaisedOff())
             lightStates[1] = false;
     }
 
     @Override
     public IStatemachine createStateMachine() {
-        return new TrafficlightStatemachine();
+        return new Trafficlight();
     }
 
     @Override
-    protected State[] getStates() {
-        return TrafficlightStatemachine.State.values();
+    protected Trafficlight.State[] getStates() {
+        return Trafficlight.State.values();
     }
 
     @Override
-    protected boolean isActive(TrafficlightStatemachine.State state) {
+    protected boolean isActive(Trafficlight.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((TrafficlightStatemachine) chart).isStateActive(state);
+        return ((Trafficlight) chart).isStateActive(state);
     }
 
     public boolean isGreenNorth() {

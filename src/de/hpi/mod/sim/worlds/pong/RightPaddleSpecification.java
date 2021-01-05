@@ -2,18 +2,18 @@ package de.hpi.mod.sim.worlds.pong;
 
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 
-public class Paddle2Specification implements EntitySpecification<Paddle2>{
+public class RightPaddleSpecification implements EntitySpecification<RightPaddle>{
 
     private PongWorld world;
 
-    public Paddle2Specification(PongWorld world) {
+    public RightPaddleSpecification(PongWorld world) {
         this.world = world;
     }
     
     @Override
-    public Paddle2 createEntity() {
+    public RightPaddle createEntity() {
     	
-    	Paddle2 paddleRight = new Paddle2();
+    	RightPaddle paddleRight = new RightPaddle();
     	world.setPaddleRight(paddleRight);
     	return paddleRight;
     	

@@ -26,7 +26,7 @@ public class TestCaseGenerator {
         // Start list of test scenarios
         List<TestScenario> testScenarios = new ArrayList<>();
         
-        PaddleSpecification paddle = new PaddleSpecification(world);
+        LeftPaddleSpecification paddle = new LeftPaddleSpecification(world);
         BallSpecification ball = new BallSpecification(0, -0.04 , 0, world, true);
         testScenarios.add(new ConcreteTestScenario("No Movement", "The ball starts at the height of the paddle.", 
                 paddle, ball));
@@ -76,7 +76,7 @@ public class TestCaseGenerator {
         List<EntitySpecification<?>> newEntities = new ArrayList<>();
         
 
-        public ConcreteTestScenario(String name, String description, PaddleSpecification paddle1, BallSpecification ball) {
+        public ConcreteTestScenario(String name, String description, LeftPaddleSpecification paddle1, BallSpecification ball) {
             this.name = name;
             this.description = description;
             this.newEntities = Arrays.asList(paddle1, ball);

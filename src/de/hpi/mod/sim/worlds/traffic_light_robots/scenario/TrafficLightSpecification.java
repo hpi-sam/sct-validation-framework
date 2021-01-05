@@ -2,10 +2,10 @@ package de.hpi.mod.sim.worlds.traffic_light_robots.scenario;
 
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLight;
+import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWrapper;
 import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWorld;
 
-public class TrafficLightSpecification implements EntitySpecification<TrafficLight> {
+public class TrafficLightSpecification implements EntitySpecification<TrafficLightWrapper> {
 
     private Position pos;
     private TrafficLightWorld world;
@@ -16,8 +16,8 @@ public class TrafficLightSpecification implements EntitySpecification<TrafficLig
     }
 
     @Override
-    public TrafficLight createEntity() {
-        return world.getCrossRoadManager().addTrafficLight(new TrafficLight(pos));
+    public TrafficLightWrapper createEntity() {
+        return world.getCrossRoadManager().addTrafficLight(new TrafficLightWrapper(pos));
     }
     
 }

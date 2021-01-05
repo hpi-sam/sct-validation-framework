@@ -25,7 +25,7 @@ public class ScenarioGenerator {
     	@Override
     	public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
     		List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-    		PaddleSpecification paddle = new PaddleSpecification(world);
+    		LeftPaddleSpecification paddle = new LeftPaddleSpecification(world);
     		BallSpecification ball = new BallSpecification(0, -0.008 , 0, world, false);
     		list.add(paddle);
     		list.add(ball);
@@ -42,7 +42,7 @@ public class ScenarioGenerator {
         @Override
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            PaddleSpecification paddle = new PaddleSpecification(world);
+            LeftPaddleSpecification paddle = new LeftPaddleSpecification(world);
             BallSpecification ball = new BallSpecification(0, -0.001, 0.003, world, false);
             list.add(paddle);
             list.add(ball);
@@ -58,7 +58,7 @@ public class ScenarioGenerator {
 	    @Override
 	    public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 	        List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-	        PaddleSpecification paddle = new PaddleSpecification(world);
+	        LeftPaddleSpecification paddle = new LeftPaddleSpecification(world);
 	        BallSpecification ball = new BallSpecification(0.1, -0.002, -0.003, world, false);
 	        list.add(paddle);
 	        list.add(ball);
@@ -77,7 +77,7 @@ public class ScenarioGenerator {
 	    @Override
 	    public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 	        List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-	        PaddleSpecification paddle = new PaddleSpecification(world);
+	        LeftPaddleSpecification paddle = new LeftPaddleSpecification(world);
 	        BallSpecification ball = new BallSpecification(0.1, -0.004, 0.005, world, false);
 	        list.add(paddle);
 	        list.add(ball);
@@ -93,8 +93,8 @@ public class ScenarioGenerator {
 		    @Override
 		    public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
 		        List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-		        PaddleSpecification paddle = new PaddleSpecification(world);
-		        Paddle2Specification paddle2 = new Paddle2Specification(world);
+		        LeftPaddleSpecification paddle = new LeftPaddleSpecification(world);
+		        RightPaddleSpecification paddle2 = new RightPaddleSpecification(world);
 		        BallSpecification ball = new BallSpecification(0, 0.1, -0.002, -0.003, world);
 		        list.add(paddle);
 		        list.add(paddle2);

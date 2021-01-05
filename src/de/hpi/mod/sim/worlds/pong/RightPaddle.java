@@ -1,35 +1,34 @@
 package de.hpi.mod.sim.worlds.pong;
 
-import de.hpi.mod.sim.IStatemachine;
+import com.yakindu.core.IStatemachine;
+import de.hpi.mod.sim.Paddle2;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.paddle1.IPaddle1Statemachine;
-import de.hpi.mod.sim.paddle1.Paddle1Statemachine;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.List;
 
-
-public class Paddle1 extends StateChartWrapper<Paddle1Statemachine.State> 
-		implements StateChartEntity, IHighlightable, IPaddle1Statemachine.SCInterfaceOperationCallback{
+public class RightPaddle extends StateChartWrapper<Paddle2.State> 
+		implements StateChartEntity, IHighlightable, Paddle2.OperationCallback{
  
 
     private final double x;
     private double y;
     private boolean reboundBall = false;
-    public int score = 0;
+    private int score = 0;
     
  
-    public Paddle1() {
+    public RightPaddle() {
     	start();
-        this.x = PongConfiguration.lowerBoundary;
+        this.x = PongConfiguration.upperBoundary;
         y = 0;
     }
 
+    
     
     public void render(Graphics graphics, int totalWidth, int totalHeight) {
     	
@@ -43,8 +42,8 @@ public class Paddle1 extends StateChartWrapper<Paddle1Statemachine.State>
     }
     
     
-    private Paddle1Statemachine getStatemachine() {
-    	return (Paddle1Statemachine) chart;
+    private Paddle2 getStatemachine() {
+    	return (Paddle2) chart;
     }
 
     @Override
@@ -86,22 +85,22 @@ public class Paddle1 extends StateChartWrapper<Paddle1Statemachine.State>
 
     @Override
     public IStatemachine createStateMachine() {
-        return new Paddle1Statemachine();
+        return new Paddle2();
     }
 
     @Override
-    protected Paddle1Statemachine.State[] getStates() {
-        return Paddle1Statemachine.State.values(); 
+    protected Paddle2.State[] getStates() {
+        return Paddle2.State.values(); 
     }
 
     @Override
-    protected boolean isActive(Paddle1Statemachine.State state) {
+    protected boolean isActive(Paddle2.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((Paddle1Statemachine) chart).isStateActive(state);
+        return ((Paddle2) chart).isStateActive(state);
     }
 
     
@@ -157,7 +156,7 @@ public class Paddle1 extends StateChartWrapper<Paddle1Statemachine.State>
 
     @Override
     public void start() {
-        getStatemachine().getSCInterface().setSCInterfaceOperationCallback(this);
+        getStatemachine().setOperationCallback(this);
         super.start();
     }
 
@@ -177,21 +176,17 @@ public class Paddle1 extends StateChartWrapper<Paddle1Statemachine.State>
 	}
 
 
+
 	public int getScore() {
 		return score;
 	}
 
 
+
 	public void increaseScore() {
 		this.score++;
-		
 	}
 
 
-	public void resetScore() {
-		this.score=0;
-	}
-
-	
 
 }

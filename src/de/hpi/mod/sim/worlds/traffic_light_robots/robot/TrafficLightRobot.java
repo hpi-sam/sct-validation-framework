@@ -10,12 +10,12 @@ import de.hpi.mod.sim.worlds.traffic_light_robots.CrossRoadsManager;
 
 public class TrafficLightRobot extends Robot implements IRobotData, IProcessor, StateChartEntity {
 
-    private DriveSystem drive;
+    private DriveSystemWrapper drive;
 
     public TrafficLightRobot(int robotID, RobotGridManager grid, Position startPosition, Orientation startFacing,
             Position destination) {
         super(robotID, grid, startPosition, startFacing);
-        drive = new DriveSystem(getDriveManager(), this, this);
+        drive = new DriveSystemWrapper(getDriveManager(), this, this);
         setTarget(destination);
         drive.newTarget();
     }
