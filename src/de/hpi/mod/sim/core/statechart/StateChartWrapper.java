@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.mod.sim.IStatemachine;
-import de.hpi.mod.sim.ITimer;
+import com.yakindu.core.IStatemachine;
+import com.yakindu.core.ITimerService;
 
 /**
  * Handles calls to the statechart.
@@ -27,7 +27,7 @@ public abstract class StateChartWrapper<T> {
         Method methodToFind = null;
         timer = new SimulationTimerService();
         try {
-            methodToFind = chart.getClass().getMethod("setTimer", new Class[] { ITimer.class });
+            methodToFind = chart.getClass().getMethod("setTimerService", new Class[] { ITimerService.class });
         } catch (NoSuchMethodException | SecurityException e) {
         }
         if (methodToFind != null) {
@@ -41,7 +41,6 @@ public abstract class StateChartWrapper<T> {
     }
 
     public void start() {
-        chart.init();
         chart.enter();
     }
 

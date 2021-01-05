@@ -18,7 +18,7 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.*;
 
 public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDriveListener, StateChartEntity {
 
-    private IDriveSystem drive;
+    private DriveSystemWrapper drive;
     private IRobotStationDispatcher robotDispatch;
     private ILocation location;
     private IScanner scanner;
