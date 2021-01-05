@@ -3,14 +3,14 @@ package de.hpi.mod.sim.core.statechart;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hpi.mod.sim.ITimer;
-import de.hpi.mod.sim.ITimerCallback;
+import com.yakindu.core.ITimerService;
+import com.yakindu.core.ITimed;
 import de.hpi.mod.sim.core.Configuration;
 
 /**
  * Can be used to (un)set timers considering the simulation time
  */
-public class SimulationTimerService implements ITimer {
+public class SimulationTimerService implements ITimerService {
 
 	// Timers in real-world system time
 	private long lastUpdateSystemTime;
@@ -20,7 +20,7 @@ public class SimulationTimerService implements ITimer {
     private class SimulationTimer{
     	
     	// Event data
-		private ITimerCallback callback;
+		private ITimed callback;
 		private int eventID;
 		private boolean repeat;
 		private boolean cancelled = false;
@@ -29,7 +29,7 @@ public class SimulationTimerService implements ITimer {
 		private long totalSimulationTime;
 		private long simulationTimeRemaining;
     	
-    	public SimulationTimer(final ITimerCallback callback, final int eventId, long time, boolean repeat) {
+    	public SimulationTimer(final ITimed callback, final int eventId, long time, boolean repeat) {
     		
     		// Set event information
     		this.callback = callback; 
@@ -42,7 +42,7 @@ public class SimulationTimerService implements ITimer {
 		}
     	
 
-    	public SimulationTimer(final ITimerCallback callback, final int eventId) {
+    	public SimulationTimer(final ITimed callback, final int eventId) {
     		this.callback = callback; 
     		this.eventID = eventId;  
 		}
@@ -64,12 +64,8 @@ public class SimulationTimerService implements ITimer {
     	}
     	
     	public void run() {
-    		this.callback.timeElapsed(this.eventID);;
+    		this.callback.raiseTimeEvent(this.eventID);
     	}
-    	
-    	// public long getRemainingTime() {
-    	// 	return this.simulationTimeRemaining;
-    	// }
     	
 		@Override
 		public boolean equals(Object obj) {
@@ -100,7 +96,7 @@ public class SimulationTimerService implements ITimer {
 	}
 	
 	@Override
-	public void setTimer(final ITimerCallback callback, final int eventID, long time, boolean isPeriodic) {
+	public void setTimer(final ITimed callback, final int eventID, long time, boolean isPeriodic) {
 		
 		timerList.add(new SimulationTimer(callback, eventID, time, isPeriodic));
 		
@@ -109,7 +105,7 @@ public class SimulationTimerService implements ITimer {
 	}
 
 	@Override
-	public void unsetTimer(ITimerCallback callback, int eventID) {
+	public void unsetTimer(ITimed callback, int eventID) {
 		int index = this.timerList.indexOf(new SimulationTimer(callback, eventID));
 		if (index != -1) {
 			this.timerList.get(index).cancel();
