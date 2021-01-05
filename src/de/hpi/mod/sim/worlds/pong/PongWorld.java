@@ -149,11 +149,13 @@ public class PongWorld extends World {
 		if (getSimulationRunner().isRunning()){
 				
 			//click in Paddle1
-			if(x <= toPixel(paddle1.getRightEnd(), width)
-					&& x >= toPixel(paddle1.getLeftEnd(), width)
-					&& y > (height- (toPixel(paddle1.getUpperEnd(), height)))
-					&& y < (height - (toPixel(paddle1.getLowerEnd(), height)))){
-				return paddle1;
+			if (paddle1 != null) {
+				if(x <= toPixel(paddle1.getRightEnd(), width)
+						&& x >= toPixel(paddle1.getLeftEnd(), width)
+						&& y > (height- (toPixel(paddle1.getUpperEnd(), height)))
+						&& y < (height - (toPixel(paddle1.getLowerEnd(), height)))){
+					return paddle1;
+				}
 			}
 			
 			//click in paddle2
@@ -167,11 +169,13 @@ public class PongWorld extends World {
 			}
 			 
 			//click in ball
-			if(x <= toPixel(ball.getRightEnd() + PongConfiguration.bufferForMouseClick, width)
-					&& x >= toPixel(ball.getLeftEnd()- PongConfiguration.bufferForMouseClick, width)
-					&& y > (height- (toPixel(ball.getUpperEnd()+ PongConfiguration.bufferForMouseClick, height)))
-					&& y < (height - (toPixel(ball.getLowerEnd()- PongConfiguration.bufferForMouseClick, height)))){
-				 return ball;
+			if(ball != null) {
+				if(x <= toPixel(ball.getRightEnd() + PongConfiguration.bufferForMouseClick, width)
+						&& x >= toPixel(ball.getLeftEnd()- PongConfiguration.bufferForMouseClick, width)
+						&& y > (height- (toPixel(ball.getUpperEnd()+ PongConfiguration.bufferForMouseClick, height)))
+						&& y < (height - (toPixel(ball.getLowerEnd()- PongConfiguration.bufferForMouseClick, height)))){
+					 return ball;
+				}
 			}
 		}
 	 
