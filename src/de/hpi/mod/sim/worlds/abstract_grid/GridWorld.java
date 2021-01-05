@@ -6,14 +6,14 @@ import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 import java.awt.Graphics;
 
 public abstract class GridWorld extends World {
-    
+	
     private GridRenderer gridRenderer;
-    
     private SimulationBlockView simView;
-
     private GridManager gridManager;
 
     public GridWorld() {
+    	super();
+    	publicName = "Grid-based World"; 
         gridManager = createGridManager();
         simView = new SimulationBlockView(this);
     }

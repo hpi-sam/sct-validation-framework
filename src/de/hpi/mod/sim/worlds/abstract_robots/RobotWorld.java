@@ -20,6 +20,11 @@ public abstract class RobotWorld extends GridWorld {
 
     private RobotRenderer robotRenderer;
 
+    public RobotWorld() {
+    	super();
+    	publicName = "Grid-based World with Robots";
+    }
+    
     @Override
     public void initialize() {
         super.initialize();

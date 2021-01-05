@@ -14,6 +14,8 @@ import de.hpi.mod.sim.core.view.SimulatorFrame;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 public abstract class World {
+	
+	protected String publicName;
 
     private SimulatorFrame frame;
 
@@ -104,9 +106,18 @@ public abstract class World {
         return new AnimationPanel(this);
     }
 
-    public AnimationPanel getAnimationPanel() {
+    @Override
+	public String toString() {
+		return getPublicName()+ " (" + this.getClass().getName() + ")";
+	}
+
+	public AnimationPanel getAnimationPanel() {
         return panel;
     }
+
+	public String getPublicName() {
+		return publicName;
+	}
 
 	
 

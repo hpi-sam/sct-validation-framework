@@ -18,6 +18,11 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 public class FlashWorld extends World {
+    
+    public FlashWorld() {
+		super();
+		publicName = "Flashing Lightbulb World";
+	}
 
 	private Bulb bulb;
 	private Starter starter;

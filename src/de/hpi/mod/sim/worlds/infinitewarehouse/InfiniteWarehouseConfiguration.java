@@ -25,9 +25,11 @@ public class InfiniteWarehouseConfiguration extends RobotConfiguration {
      * Changes to this value require changes in the implementation of the map too.
      */
 	public static final int QUEUE_SIZE = 5;
-	static {
-		setOriginOffsetY(QUEUE_SIZE);
-	}
+
+	// TEMPORARILY MOVED TO WORLD INITIALIZATION
+//	static {
+//		setOriginOffsetY(QUEUE_SIZE);
+//	}
 
 
 	/**
