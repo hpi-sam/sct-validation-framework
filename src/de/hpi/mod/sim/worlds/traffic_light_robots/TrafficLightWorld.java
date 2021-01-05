@@ -52,13 +52,16 @@ public class TrafficLightWorld extends RobotWorld {
 
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
-        float blockSize = ((SimulationBlockView) getAnimationPanel()).getBlockSize();
-        int width = (int) ((currentWidth / blockSize) + TrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
-                + 1;
-        int height = (int) (((currentHeight / blockSize) - TrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
-                + 1;
-        TrafficLightsConfiguration.setFieldDimensions(width, height);
-        getCrossRoadManager().updateFieldSize(width, height);
+    	SimulationBlockView blockView = (SimulationBlockView) getAnimationPanel();
+    	if(blockView != null) {
+	        float blockSize = blockView.getBlockSize();
+	        int width = (int) ((currentWidth / blockSize) + TrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
+	                + 1;
+	        int height = (int) (((currentHeight / blockSize) - TrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
+	                + 1;
+	        TrafficLightsConfiguration.setFieldDimensions(width, height);
+	        getCrossRoadManager().updateFieldSize(width, height);
+    	}
     }
     
     @Override
