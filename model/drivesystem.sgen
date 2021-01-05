@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 GeneratorModel for yakindu::java {
 
 	statechart drivesystem {
@@ -23,30 +22,4 @@ GeneratorModel for yakindu::java {
             TimerService = false
         }
 	}
-=======
-GeneratorModel for yakindu::java {
-
-	statechart drivesystem {
-
-		feature Outlet {
-			targetProject = "sct-sim-edu"
-			targetFolder = "src-gen"
-   			libraryTargetFolder = "src-gen"
-			skipLibraryFiles = false
-		}
-		
-		feature Naming {
-			basePackage = "de.hpi.mod.sim"
-		}
-		
-		feature OutEventAPI {
-		    observables = false
-		    getters = true
-		}
-		
-        feature GeneralFeatures {
-            TimerService = false
-        }
-	}
->>>>>>> 308c2f6b59a427da313ecd842c5fe5e5918e5f8c
 }
