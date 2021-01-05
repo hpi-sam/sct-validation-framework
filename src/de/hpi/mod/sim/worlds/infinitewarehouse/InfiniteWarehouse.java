@@ -23,18 +23,18 @@ public class InfiniteWarehouse extends RobotWorld {
 		publicName = "Infinite Warehouse World";
 	}
 
-	@Override
-    protected GridManager createGridManager() {
-        int chargingStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
-        StationManager stationManager = new StationManager(chargingStations);
-        return new WarehouseManager(stationManager);
-    }
-
     @Override
     public void initialize() {
     	super.initialize();
     	// Moved here from static initialization of configuration class, until a better solution from the configuration if found.
     	GridConfiguration.setOriginOffsetY(InfiniteWarehouseConfiguration.getQueueSize());
+    }
+
+	@Override
+    protected GridManager createGridManager() {
+        int chargingStations = InfiniteWarehouseConfiguration.getChargingStationsInUse();
+        StationManager stationManager = new StationManager(chargingStations);
+        return new WarehouseManager(stationManager);
     }
     
     @Override
