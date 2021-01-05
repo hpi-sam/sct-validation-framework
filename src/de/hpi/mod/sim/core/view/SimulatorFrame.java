@@ -195,7 +195,7 @@ public class SimulatorFrame extends JFrame {
 		// |						||------------------|				|
 		// |						||	Scenarios		|				|
 		// |						||------------------|				|
-		// |		Simulation		|| 	Speed Config	|				|
+		// |		Animation		|| 	Speed Config	|				|
 		// |						||------------------|				|
 		// |						||	Timer			|				|
 		// |						||------------------|				|
@@ -362,8 +362,8 @@ public class SimulatorFrame extends JFrame {
         lastFrame = System.currentTimeMillis();
         
 		world.getSimulationRunner().refresh();
-		entityInfoPanel1.onHighlightedChange();
-		entityInfoPanel2.onHighlightedChange();
+		entityInfoPanel1.onValueUpdate();
+		entityInfoPanel2.onValueUpdate();
 		world.getScenarioManager().refresh();
 		world.getSimulationRunner().update(delta);
 
