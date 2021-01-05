@@ -110,16 +110,15 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 		return Flasher.State.values();
 	}
 
-//	@Override
-//	protected boolean isActive(State state) {
-//		/*
-//		 * This is not intended by the YAKINDU implementation and source generation.
-//		 * Officially, the YAKINDU interface does not support this, which is why we have
-//		 * to cast to the actual DrivesystemStateChart object.
-//		 */
-////		return ((Flasher) chart).isStateActive(state);
-//		return ((Flasher) chart).isStateActive(state);
-//	}
+	@Override
+	protected boolean isActive(State state) {
+		/*
+		 * This is not intended by the YAKINDU implementation and source generation.
+		 * Officially, the YAKINDU interface does not support this, which is why we have
+		 * to cast to the actual DrivesystemStateChart object.
+		 */
+		return ((Flasher) chart).isStateActive(state);
+	}
 
 	public void start(int n) {
 		getStatemachine().raiseStart(n);
@@ -171,25 +170,7 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 		this.checkOnTimeForTests = b;
 	}
 
-
-
-
-
-
-
 	public int getRemainingBlinks() {
 		return remainingBlinks;
-	}
-
-
-
-
-
-
-
-	@Override
-	protected boolean isActive(State state) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }
