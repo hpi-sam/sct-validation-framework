@@ -386,7 +386,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     @Override
     public String getTopStateName() {
-        return "drive_System";
+        return "drive_system";
     }
 
     private WarehouseManager getWarehouseManager() {
