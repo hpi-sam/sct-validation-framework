@@ -49,7 +49,7 @@ public class TrafficLightWorld extends RobotWorld {
     @Override
     public void refreshEntities() {
         super.refreshEntities();
-        for (TrafficLight light : getCrossRoadManager().getTrafficLights()) {
+        for (TrafficLightWrapper light : getCrossRoadManager().getTrafficLights()) {
             light.updateTimer();
         }
     }
@@ -63,7 +63,7 @@ public class TrafficLightWorld extends RobotWorld {
     @Override
     public List<? extends Entity> getEntities() {
         List<? extends Entity> superList = super.getEntities();
-        List<TrafficLight> lights = getCrossRoadManager().getTrafficLights();
+        List<TrafficLightWrapper> lights = getCrossRoadManager().getTrafficLights();
         List<Entity> list = new ArrayList<>(lights.size() + superList.size());
         list.addAll(superList);
         list.addAll(lights);

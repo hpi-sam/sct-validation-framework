@@ -25,7 +25,7 @@ public class CrossRoadsManager extends RobotGridManager {
     /**
      * Contains all traffic lights, from lines from bottom to top and from left to right
      */
-    private List<TrafficLight> lights = new ArrayList<>(0);
+    private List<TrafficLightWrapper> lights = new ArrayList<>(0);
     private int lightsPerRow, lightsPerCol;
 
     public CrossRoadsManager() {
@@ -40,7 +40,7 @@ public class CrossRoadsManager extends RobotGridManager {
         lights = new ArrayList<>(lightsPerCol * lightsPerRow);
     }
     
-    public TrafficLight getLightForCrossroad(int x, int y) {
+    public TrafficLightWrapper getLightForCrossroad(int x, int y) {
         int index = y * lightsPerRow + x;
         if (lights.size() > index)
             return lights.get(index);
@@ -88,7 +88,7 @@ public class CrossRoadsManager extends RobotGridManager {
             return CellType.ARRIVAL_POINT;
 
         if (x % 3 == 2 && y % 3 == 0) {
-            TrafficLight light = getLightForCrossroad(x / 3, y / 3);
+            TrafficLightWrapper light = getLightForCrossroad(x / 3, y / 3);
             if (light == null)
                 return CellType.PURE_WAYPOINT;
             if (light.isGreenSouth())
@@ -96,7 +96,7 @@ public class CrossRoadsManager extends RobotGridManager {
             return CellType.TRAFFIC_LIGHT_RED_SOUTH;
         }
         if (x % 3 == 0 && y % 3 == 1) {
-             TrafficLight light = getLightForCrossroad(x / 3, y / 3);
+             TrafficLightWrapper light = getLightForCrossroad(x / 3, y / 3);
             if (light == null)
                 return CellType.PURE_WAYPOINT;
             if (light.isGreenWest())
@@ -104,7 +104,7 @@ public class CrossRoadsManager extends RobotGridManager {
             return CellType.TRAFFIC_LIGHT_RED_WEST;
         }
         if (x % 3 == 1 && y % 3 == 0) {
-             TrafficLight light = getLightForCrossroad(x / 3, y / 3 - 1);
+             TrafficLightWrapper light = getLightForCrossroad(x / 3, y / 3 - 1);
             if (light == null)
                 return CellType.PURE_WAYPOINT;
             if (light.isGreenNorth())
@@ -112,7 +112,7 @@ public class CrossRoadsManager extends RobotGridManager {
             return CellType.TRAFFIC_LIGHT_RED_NORTH;
         }
         if (x % 3 == 0 && y % 3 == 2) {
-             TrafficLight light = getLightForCrossroad(x / 3 - 1, y / 3);
+             TrafficLightWrapper light = getLightForCrossroad(x / 3 - 1, y / 3);
             if (light == null)
                 return CellType.PURE_WAYPOINT;
             if (light.isGreenEast())
@@ -296,7 +296,7 @@ public class CrossRoadsManager extends RobotGridManager {
         return cells;
     }
 
-    public List<TrafficLight> getTrafficLights() {
+    public List<TrafficLightWrapper> getTrafficLights() {
         return lights;
     }
 
@@ -349,7 +349,7 @@ public class CrossRoadsManager extends RobotGridManager {
         }
     }
 
-    public TrafficLight addTrafficLight(TrafficLight trafficLight) {
+    public TrafficLightWrapper addTrafficLight(TrafficLightWrapper trafficLight) {
         Position pos = trafficLight.getSouthPosition();
         int x = (pos.getX() - 2) / 3;
         int y = pos.getY() / 3;
