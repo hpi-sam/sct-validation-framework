@@ -124,9 +124,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 			// Ensure  that the state String has changed since last time 
 			String stateString = entity.getMachineState();
 			if (stateString.equals(lastDisplayedStateString)) return;
-			
-			System.out.println(stateString);
-			
+						
 			lastDisplayedStateString = stateString;
 
 			String[] states = splitStates(stateString, entity.getTopStateName());
@@ -135,7 +133,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 			for (int i = 0; i < states.length; i++) {
 				for (int j = 0; j < 2 * i + 1; j++)
 					stringBuilder.append("&nbsp;"); // adds a secure space since the JLabel won't render normal
-													// spaces liek we want it to
+													// spaces like we want it to
 				stringBuilder.append(states[i]);
 				stringBuilder.append("<br/>");
 			}
