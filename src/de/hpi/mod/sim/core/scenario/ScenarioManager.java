@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
@@ -31,12 +32,14 @@ public class ScenarioManager {
 	SimulatorFrame frame;
 	private List<TestScenario> tests = new ArrayList<>();
 	private World world;
+	private TestResultDatabase testResults; 
 
 	public ScenarioManager(World world) {
 		this.world = world;
 		this.frame = world.getFrame();
-		scenarios = world.getScenarios();
-		testGroups = world.getTestGroups();
+		this.testResults = new TestResultDatabase(Configuration.getTestFileName());
+		this.scenarios = world.getScenarios();
+		this.testGroups = world.getTestGroups();
 		initializeTestList();
 	}
 
