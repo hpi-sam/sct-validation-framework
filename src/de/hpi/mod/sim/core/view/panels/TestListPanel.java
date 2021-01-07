@@ -35,7 +35,7 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
 	    addGroupLabel(key);
 	    yCoordinate++;
 	    for (TestScenario test : list) {
-	    	addTest(test);
+	    	addTestLabelAndButton(test);
 	    	if(scenarioManager.isTestPassed(test))
 	    		markTestPassed(test);
 	    	yCoordinate++;
@@ -77,7 +77,7 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
         add(SimulatorFrame.setComponentDesign(180, 30, SimulatorFrame.MAIN_MENU_COLOR, label), labelConstraints);
 	}
 	
-    private void addTest(TestScenario test) {
+    private void addTestLabelAndButton(TestScenario test) {
     	
     	// --------------------------
     	// | -------------	-------	|
