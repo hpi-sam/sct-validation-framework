@@ -13,7 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 
@@ -24,11 +27,17 @@ import de.hpi.mod.sim.core.Configuration;
 public class TestResultDatabase {
 	
 	private String filename; 
-	private List<TestResultsForWorld> resultsForWorlds;
+	private String selectedWorldName;
+	private Map<String, Map<String,Result>> results;
+	
+	TestResultDatabase(String worldName){
+		this(Configuration.getTestFileName(), worldName);
+	}
 		
-	TestResultDatabase(String filename){
+	TestResultDatabase(String filename, String worldName){
 		this.filename = filename;
-		this.resultsForWorlds = new ArrayList<>();
+		this.selectedWorldName = worldName;
+		this.results = new HashMap<>();
 		try {
 			this.createFileIfNotExist();
 			this.loadFile();
@@ -37,41 +46,85 @@ public class TestResultDatabase {
 		}
 	}
 	
-	public void resetTestResultsForWorld(String worldName) {
-		
+	public void resetTestResults() {
+		this.resetTestResults(this.selectedWorldName);
+	}
+	
+	public void resetTestResults(String worldName) {
+		this.getResultMapForWorld(worldName).replaceAll((k ,v) -> Result.NOT_TESTED);
 	}
 
-	public void setTestResult(String worldName, String testName, Result result) {
-		
+	public void addTest(String testName) {
+		this.addTest(this.selectedWorldName, testName);
 	}
+
+	public void addTest(String worldName, String testName) {
+		this.getResultMapForWorld(worldName).putIfAbsent(testName, Result.NOT_TESTED);
+	}
+
+	public void resetTestResult(String testName) {
+		this.resetTestResult(this.selectedWorldName, testName);
+	}
+
+	public void resetTestResult(String worldName, String testName) {
+		this.getResultMapForWorld(worldName).put(testName, Result.NOT_TESTED);
+	}
+
+	public void setTestPassed(String testName) {
+		this.setTestPassed(this.selectedWorldName, testName);
+	}
+
 
 	public void setTestPassed(String worldName, String testName) {
-		
+		this.getResultMapForWorld(worldName).put(testName, Result.LAST_TEST_PASSED);
 	}
+
+	public void setTestFailed(String testName) {
+		this.setTestFailed(this.selectedWorldName, testName);
+	}
+
 
 	public void setTestFailed(String worldName, String testName) {
-		
+		this.getResultMapForWorld(worldName).put(testName, Result.LAST_TEST_FAILED);
 	}
 
+	public Result getTestResult(String testName) {
+		return this.getTestResult(this.selectedWorldName, testName);
+	}
+	
 	public Result getTestResult(String worldName, String testName) {
-		TestResultsForWorld worldResults = this.getTestResultsForWorld(worldName);
-		return worldResults.getResultFor(testName);
+		return this.getResultMapForWorld(worldName).getOrDefault(testName, Result.TEST_UNKNOWN);
 	}
 
-	public TestResultsForWorld getTestResultsForWorld(String worldName) {
-		// Try to get existing result set for world
-		for(TestResultsForWorld worldResults: this.resultsForWorlds) 
-			if(worldResults.name.equals(worldName)) 
-				return worldResults;
-		
-		// If none existsed, create new result set
-		TestResultsForWorld newWorldResults = new TestResultsForWorld(worldName);
-		this.resultsForWorlds.add(newWorldResults);
-		return newWorldResults;
+	public int getNumberOfTests() {
+		return this.getNumberOfTestsForWorld(this.selectedWorldName);
+	}
+
+	public int getNumberOfTestsForWorld(String worldName) {
+		return this.getResultMapForWorld(worldName).size();
+	}
+
+	public int getSuccessfulTestNumber() {
+		return this.getSuccessfulTestNumberForWorld(this.selectedWorldName);
 	}
 
 	public int getSuccessfulTestNumberForWorld(String worldName) {
-		return 0;
+		return Collections.frequency(this.getResultMapForWorld(worldName).values(), Result.LAST_TEST_PASSED);
+	}
+
+	private Map<String, Result> getResultMapForSelectedWorld() {
+		return this.getResultMapForWorld(this.selectedWorldName);
+	}
+	
+	private Map<String, Result> getResultMapForWorld(String worldName) {
+		// Try to get existing result set for world
+		if(this.results.containsKey(worldName))
+			return this.results.get(worldName);
+		
+		// If none existsed, create new result set
+		Map<String,Result> newWorldResults = new HashMap<>();
+		this.results.put(worldName, newWorldResults);
+		return newWorldResults;
 	}
 	
 	private void createFileIfNotExist() throws IOException {
@@ -104,29 +157,6 @@ public class TestResultDatabase {
 		TEST_UNKNOWN, NOT_TESTED, LAST_TEST_PASSED, LAST_TEST_FAILED
 	}
 	
-	private class TestReultEntry{
-		String name;
-		Result value;
-	}
-	
-	
-	private class TestResultsForWorld{
-		String name; 
-		List<TestReultEntry> results;
-		
-		public TestResultsForWorld(String name) {
-			this.name = name;
-			this.results = new ArrayList<>();
-		}
-		
-		public Result getResultFor(String testName) {
-			for(TestReultEntry entry: this.results) 
-				if(entry.name.equals(testName)) 
-					return entry.value;
-			throw new IllegalArgumentException(); 
-		}
-		
-	}
 	
 	
 //	private void resetTestFile(String testFileName) {
