@@ -37,7 +37,7 @@ public class ScenarioManager {
 	public ScenarioManager(World world) {
 		this.world = world;
 		this.frame = world.getFrame();
-		this.testResults = new TestResultDatabase(Configuration.getTestFileName());
+		this.testResults = new TestResultDatabase(world.getInternalName());
 		this.scenarios = world.getScenarios();
 		this.testGroups = world.getTestGroups();
 		initializeTestList();
@@ -149,7 +149,7 @@ public class ScenarioManager {
 			} else if (activeTest.isPassed()) {
 				world.deactivateDetectors();
 				for (ITestScenarioListener listener : listeners) {
-					listener.onTestCompleted(activeTest);
+					listener.passTest(activeTest);
 				}
 				activeTest.notifySuccessToUser(frame);
 				isRunningTest = false;
