@@ -32,7 +32,7 @@ public class SimulatorFrame extends JFrame {
 	private SimulationControlPanel simulationControlPanel;
 	private TimerPanel timerPanel;
 
-	private long lastFrame;
+	private long lastUpdateTime;
 	private boolean running = true;
 
 	public static Color MAIN_MENU_COLOR = new Color(0xfff3e2);
@@ -43,20 +43,21 @@ public class SimulatorFrame extends JFrame {
 	public SimulatorFrame(World world) {
 		super("Statechart Simulator");
 		this.world = world;
-		animationPanel = world.createAnimationPanel();
-		SimulationRunner simulationRunner = new SimulationRunner(world, animationPanel);
+		this.animationPanel = world.createAnimationPanel();
+		SimulationRunner simulationRunner = new SimulationRunner(world, this.animationPanel);
 		world.initialize(this, simulationRunner);
 
 		setLayout(new GridBagLayout());
 
-		createFileIfNotExist(Configuration.getTestFileName());
-		initializePanels(animationPanel);
-		loadTestFileContent(Configuration.getTestFileName());
-		addListeners(animationPanel);
-		setDesignOfSubpanels();
-		setDesignOfMainWindow();
+		this.initializeControlAndInforamtionPanels();
+		this.initializeMenuBar();
+//		this.loadTestFileContent(Configuration.getTestFileName());
+		
+		this.addListeners();
+		this.setDesignOfSubpanels();
+		this.setDesignOfMainWindow();
 
-		lastFrame = System.currentTimeMillis();
+		lastUpdateTime = System.currentTimeMillis();
 		while (running)
 			update();
 		close();
@@ -131,21 +132,32 @@ public class SimulatorFrame extends JFrame {
 		}
     }
     
-    private void initializePanels(AnimationPanel animationPanel) {
-		entityInfoPanel1 = new EntityInfoPanel(animationPanel, false);
-        entityInfoPanel2 = new EntityInfoPanel(animationPanel, true);
-        simulationControlPanel = new SimulationControlPanel(world.getSimulationRunner(), world.getScenarioManager());
-        testListPanel = new TestListPanel(world.getScenarioManager());
-        testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        testOverviewPanel = new TestOverviewPanel(world.getScenarioManager(), this);
-		timerPanel = new TimerPanel(world.getSimulationRunner());
-        scenarioPanel = new ScenarioPanel(world.getScenarioManager());
-        setJMenuBar(new DriveSimMenuBar(world.getSimulationRunner(), animationPanel));
+    private void initializeControlAndInforamtionPanels() {
+    	// Entity Details
+		this.entityInfoPanel1 = new EntityInfoPanel(this.animationPanel, false);
+		this.entityInfoPanel2 = new EntityInfoPanel(this.animationPanel, true);
+				
+		// Tests
+		this.testListPanel = new TestListPanel(world.getScenarioManager());
+		this.testListScrollPane = new JScrollPane(testListPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		this.testOverviewPanel = new TestOverviewPanel(world.getScenarioManager(), this);
+		
+		// Scenarios
+		this.scenarioPanel = new ScenarioPanel(world.getScenarioManager());
+		
+		// Simulation Control 
+		this.simulationControlPanel = new SimulationControlPanel(world.getSimulationRunner(), world.getScenarioManager());
+		this.timerPanel = new TimerPanel(world.getSimulationRunner());
 	}
     
-    private void addListeners(AnimationPanel animationPanel) {
-		animationPanel.addHighlightedListener(entityInfoPanel1);
-        animationPanel.addHighlightedListener(entityInfoPanel2);
+
+    private void initializeMenuBar() {
+    	setJMenuBar(new DriveSimMenuBar(world.getSimulationRunner(), animationPanel));
+    }
+    
+    private void addListeners() {
+		this.animationPanel.addHighlightedListener(entityInfoPanel1);
+		this.animationPanel.addHighlightedListener(entityInfoPanel2);
         world.getSimulationRunner().addTimeListener(simulationControlPanel);
         world.getScenarioManager().addTestScenarioListener(testListPanel);
         world.getScenarioManager().addTestScenarioListener(testOverviewPanel);
@@ -340,33 +352,25 @@ public class SimulatorFrame extends JFrame {
 		return true;
 	}
 
-	private void createFileIfNotExist(String fileName) {
-    	File file = new File(fileName);
-    	try {
-			file.createNewFile();
-		} catch (IOException e) {
-			System.out.println("Could not write persistence file to file system.");
-			e.printStackTrace();
-		}
-	}
-
 	private void update() {
-		while (System.currentTimeMillis() - lastFrame < Configuration.getDefaultRefreshInterval()) {
+		while (System.currentTimeMillis() - this.lastUpdateTime < Configuration.getDefaultRefreshInterval()) {
 			try {
 				Thread.sleep(3);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-        float delta = System.currentTimeMillis() - lastFrame;
-        lastFrame = System.currentTimeMillis();
+        float delta = System.currentTimeMillis() - this.lastUpdateTime;
+        this.lastUpdateTime = System.currentTimeMillis();
         
-		world.getSimulationRunner().refresh();
-		entityInfoPanel1.onValueUpdate();
-		entityInfoPanel2.onValueUpdate();
-		world.getScenarioManager().refresh();
-		world.getSimulationRunner().update(delta);
+        // Refresh Control Programm(s) 
+		this.world.getSimulationRunner().refresh();
+		this.entityInfoPanel1.onValueUpdate();
+		this.entityInfoPanel2.onValueUpdate();
+		this.world.getScenarioManager().refresh();
+		this.world.getSimulationRunner().update(delta);
 
+		// Repaint Layout Elements
         this.repaint();
     }
 
