@@ -138,12 +138,21 @@ public class TestResultDatabase {
 		
 		// Iterate all lines
 		for(String line : Files.readAllLines(path, StandardCharsets.UTF_8)) {
+			// Split Line by separator
+			String[] lineParts = line.split("#");
 			
 			// Ignore lines that contain less than 1 or more than 2 times "#"
-			int hashCounter = line.length() - line.replaceAll("#","").length();
-			if(hashCounter < 1 || hashCounter > 2) continue;
+			if(lineParts.length < 2 || lineParts.length > 3) continue;
 			
-			System.out.println(line);
+			String worldName = lineParts[0];
+			String testName = lineParts[1];
+			if(lineParts.length == 3 && lineParts[2] == "y") {
+				this.setTestPassed(worldName, testName);
+			} else if(lineParts.length == 3 && lineParts[2] == "n") {
+				this.setTestFailed(worldName, testName);	
+			} else {
+				this.addTest(worldName, testName);	
+			}
 		}
 
 		
