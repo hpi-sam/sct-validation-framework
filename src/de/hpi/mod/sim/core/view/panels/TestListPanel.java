@@ -36,6 +36,8 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
 	    yCoordinate++;
 	    for (TestScenario test : list) {
 	    	addTest(test);
+	    	if(scenarioManager.isTestPassed(test))
+	    		markTestPassed(test);
 	    	yCoordinate++;
 	    }
 		

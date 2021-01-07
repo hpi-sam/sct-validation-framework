@@ -195,4 +195,8 @@ public class ScenarioManager {
 	public Map<String,List<TestScenario>> getTestGroups() {
 		return testGroups;
 	}
+
+	public boolean isTestPassed(TestScenario test) {
+		return this.testResults.getTestResult(test.getName()) == TestResultDatabase.Result.LAST_TEST_PASSED;
+	}
 }
