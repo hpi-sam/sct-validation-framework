@@ -138,7 +138,7 @@ public class ScenarioManager {
 			if (currentTestFailed) {
 				world.deactivateDetectors();
 				for (ITestScenarioListener listener : listeners) {
-					listener.failTest(activeTest);
+					listener.markTestFailed(activeTest);
 				}
 				activeTest.notifyFailToUser(frame, failReason);
 				currentTestFailed = false;
@@ -149,7 +149,7 @@ public class ScenarioManager {
 			} else if (activeTest.isPassed()) {
 				world.deactivateDetectors();
 				for (ITestScenarioListener listener : listeners) {
-					listener.passTest(activeTest);
+					listener.markTestPassed(activeTest);
 				}
 				activeTest.notifySuccessToUser(frame);
 				isRunningTest = false;

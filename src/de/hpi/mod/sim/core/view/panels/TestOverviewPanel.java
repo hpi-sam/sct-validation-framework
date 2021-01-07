@@ -208,7 +208,7 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 	}
 	
 	@Override
-	public void onTestCompleted(TestScenario test) {
+	public void markTestPassed(TestScenario test) {
 		try {
 			writeTestPassed(test);
 		} catch (IOException e) {
@@ -218,7 +218,7 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 	}
 	
 	@Override
-	public void failTest(TestScenario test) {
+	public void markTestFailed(TestScenario test) {
 		
 	}
 }

@@ -293,7 +293,7 @@ public class SimulatorFrame extends JFrame {
     		test = world.getScenarioManager().getTests().get(i);
 			written = writeLineIfNeeded(test, fileName);
     		if(!written && testPassed(test, fileName)) {
-    			testListPanel.onTestCompleted(test);
+    			testListPanel.markTestPassed(test);
     		}
     	}
 	}
