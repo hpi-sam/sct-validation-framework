@@ -16,6 +16,8 @@ import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
+import de.hpi.mod.sim.worlds.flasher.entities.Bulb;
+import de.hpi.mod.sim.worlds.flasher.entities.Starter;
 
 public class FlashWorld extends World {
     

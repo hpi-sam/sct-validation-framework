@@ -7,6 +7,8 @@ import java.util.List;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Entity;
+import de.hpi.mod.sim.worlds.flasher.entities.BulbSpecification;
+import de.hpi.mod.sim.worlds.flasher.entities.StarterSpecification;
 
 public class ScenarioGenerator {
 

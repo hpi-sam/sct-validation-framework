@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.TestScenario;
+import de.hpi.mod.sim.worlds.flasher.entities.BulbSpecification;
+import de.hpi.mod.sim.worlds.flasher.entities.StarterSpecification;
 
 public class TestCaseGenerator {
 
