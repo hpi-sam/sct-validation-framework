@@ -119,6 +119,10 @@ public abstract class World {
 		return publicName;
 	}
 
+	public String getInternalName() {
+		return this.getClass().getName().replace(" ", "").toLowerCase();
+	}
+
 	
 
 }
