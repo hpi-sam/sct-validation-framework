@@ -5,18 +5,10 @@ import javax.swing.border.EtchedBorder;
 
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.Configuration;
-import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.SimulationRunner;
 import de.hpi.mod.sim.core.view.panels.*;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class SimulatorFrame extends JFrame {
 
@@ -295,61 +287,6 @@ public class SimulatorFrame extends JFrame {
 		
         pack();
         setVisible(true);
-	}
-    
-    private void loadTestFileContent(String fileName) {
-    	boolean written = true;
-    	TestScenario test;
-    	
-    	for (int i = 0; i < world.getScenarioManager().getTests().size(); i++) {
-    		test = world.getScenarioManager().getTests().get(i);
-			written = writeLineIfNeeded(test, fileName);
-    		if(!written && testPassed(test, fileName)) {
-    			testListPanel.markTestPassed(test);
-    		}
-    	}
-	}
-
-	private boolean testPassed(TestScenario test, String fileName) {
-		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-		    String line;
-		    while ((line = br.readLine()) != null) {
-		       String[] parts = line.split("#");
-		       if(parts[0].equals(test.getName())) {
-		    	   if(parts[1].equals("n")) {
-		    		   return false;
-		    	   } else if (parts[1].equals("y")) {
-		    		   return true;
-		    	   }
-		       }
-		    }
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	private boolean writeLineIfNeeded(TestScenario test, String fileName) {
-		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-		    String line;
-		    while ((line = br.readLine()) != null) {
-		       String[] parts = line.split("#");
-		       if(parts[0].equals(test.getName())) {
-		    	   return false;
-		       }
-		    }
-		    br.close();
-		    BufferedWriter output = new BufferedWriter(new FileWriter(fileName, true));
-		    output.append(test.getName() + "#n" + System.lineSeparator());
-		    output.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return true;
 	}
 
 	private void update() {
