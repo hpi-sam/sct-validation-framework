@@ -1,12 +1,14 @@
 package de.hpi.mod.sim.worlds.flasher;
 
+import java.awt.Color;
+
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.imageio.ImageIO;
 
 import com.yakindu.core.IStatemachine;
@@ -40,14 +42,16 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 		super();
 		loadImages();
 		start();
+ 
 	}
 	
 	public void bulbRender(Graphics graphics, int width, int height) {
 		
 		BufferedImage img = isOn ? bulbOn : bulbOff;
 		graphics.drawImage(img, (width - img.getWidth()) / 2, (height - img.getHeight()) / 2, null);
-
-		
+		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
+		graphics.setColor(Color.BLACK);
+		graphics.drawString("Task / Remaining: (" + timesToBlink +" / "+ remainingBlinks + " )", width/20, height- height/20);
 	}
 
 	private void loadImages() {
