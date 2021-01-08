@@ -30,25 +30,33 @@ public class ScenarioManager {
 	private TestScenario activeTest = null;
 
 	SimulatorFrame frame;
-	private List<TestScenario> tests = new ArrayList<>();
+	private List<TestScenario> testList = new ArrayList<>();
 	private World world;
 	private TestResultDatabase testResults; 
 
 	public ScenarioManager(World world) {
+		// Important References to World and to Primary Frame
 		this.world = world;
 		this.frame = world.getFrame();
+		
+		// Set up test result database and add it as a test listener.
 		this.testResults = new TestResultDatabase(world.getInternalName());
+		this.addTestScenarioListener(this.testResults);
+		
+		// Load Tests and Scenarios
 		this.scenarios = world.getScenarios();
 		this.testGroups = world.getTestGroups();
-		initializeTestList();
+		initializeTestListAndLoadResults();
 	}
 
-	private void initializeTestList() {
+	private void initializeTestListAndLoadResults() {
 		for (String key : testGroups.keySet()) {
 			for (TestScenario test : testGroups.get(key)) {
-				tests.add(test);
+				this.testList.add(test);
+				this.testResults.earmarkTest(test.getName());
 			}
 		}
+		this.testResults.loadTestResultsFromFile();
 	}
 
 	private void updateDetectors() {
@@ -92,7 +100,7 @@ public class ScenarioManager {
     
     public void runAllTests() {
     	testsToRun.clear();
-    	testsToRun.addAll(tests);
+    	testsToRun.addAll(testList);
     	runningAllTests = true;
     	frame.displayMessage("Running all tests.");
     	runNextTest();
@@ -166,7 +174,7 @@ public class ScenarioManager {
     }
 
     public List<TestScenario> getTests() {
-        return tests;
+        return testList;
     }
     
     private class EmptyScenario extends Scenario {
@@ -197,6 +205,6 @@ public class ScenarioManager {
 	}
 
 	public boolean isTestPassed(TestScenario test) {
-		return this.testResults.getTestResult(test.getName()) == TestResultDatabase.Result.LAST_TEST_PASSED;
+		return this.testResults.getTestResult(test.getName()) == TestResultDatabase.Result.TEST_PASSED;
 	}
 }

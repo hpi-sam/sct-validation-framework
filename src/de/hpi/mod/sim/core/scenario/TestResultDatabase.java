@@ -1,65 +1,79 @@
 package de.hpi.mod.sim.core.scenario;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.swing.JButton;
+import java.util.Map.Entry;
 
 import de.hpi.mod.sim.core.Configuration;
 
+public class TestResultDatabase implements ITestScenarioListener {
 
+	private final String SEPERATOR = "#";
 
-public class TestResultDatabase {
-	
-	private String filename; 
+	private String filename;
 	private String selectedWorldName;
-	private Map<String, Map<String,Result>> results;
-	
-	TestResultDatabase(String worldName){
+	private Map<String, Map<String, Result>> results;
+
+	TestResultDatabase(String worldName) {
 		this(Configuration.getTestFileName(), worldName);
 	}
-		
-	TestResultDatabase(String filename, String worldName){
+
+	TestResultDatabase(String filename, String worldName) {
 		this.filename = filename;
 		this.selectedWorldName = worldName;
 		this.results = new HashMap<>();
-		try {
-			this.createFileIfNotExist();
-			this.loadFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.createFileIfNotExist();
 	}
 	
+	public void loadTestResultsFromFile() {
+		this.loadFile(false);
+	}
+	
+	public void loadTestResultsFromFile(boolean ignoreAdditionalTestsForSlectedWorld) {
+		this.loadFile(ignoreAdditionalTestsForSlectedWorld);
+	}
+
 	public void resetTestResults() {
 		this.resetTestResults(this.selectedWorldName);
 	}
-	
+
 	public void resetTestResults(String worldName) {
-		this.getResultMapForWorld(worldName).replaceAll((k ,v) -> Result.NOT_TESTED);
+		this.getResultMapForWorld(worldName).replaceAll((k, v) -> Result.NOT_TESTED);
 	}
 
-	public void addTest(String testName) {
-		this.addTest(this.selectedWorldName, testName);
+	public void earmarkTest(String testName) {
+		this.earmarkTest(this.selectedWorldName, testName, Result.NOT_TESTED);
 	}
 
-	public void addTest(String worldName, String testName) {
-		this.getResultMapForWorld(worldName).putIfAbsent(testName, Result.NOT_TESTED);
+	public void earmarkTest(String worldName, String testName) {
+		this.earmarkTest(this.selectedWorldName, testName, Result.NOT_TESTED);
+	}
+
+	public void earmarkTest(String testName, Result testResult) {
+		this.earmarkTest(this.selectedWorldName, testName, testResult);
+	}
+
+	public void earmarkTest(String worldName, String testName, Result testResult) {
+		this.getResultMapForWorld(worldName).put(testName, testResult);
+	}
+
+	public void insertNewTest(String testName) {
+		this.insertNewTest(this.selectedWorldName, testName);
+	}
+
+	public void insertNewTest(String worldName, String testName) {
+		if (this.getResultMapForWorld(worldName).putIfAbsent(testName, Result.NOT_TESTED) == null)
+			// Write to file if test was actually added
+			this.writeFile();
 	}
 
 	public void resetTestResult(String testName) {
@@ -67,31 +81,39 @@ public class TestResultDatabase {
 	}
 
 	public void resetTestResult(String worldName, String testName) {
-		this.getResultMapForWorld(worldName).put(testName, Result.NOT_TESTED);
+		if (this.getResultMapForWorld(worldName).put(testName, Result.NOT_TESTED) != Result.NOT_TESTED)
+			// Write to file if value was changed
+			this.writeFile();
 	}
 
 	public void setTestPassed(String testName) {
 		this.setTestPassed(this.selectedWorldName, testName);
 	}
 
-
 	public void setTestPassed(String worldName, String testName) {
-		this.getResultMapForWorld(worldName).put(testName, Result.LAST_TEST_PASSED);
+		if (this.getResultMapForWorld(worldName).put(testName, Result.TEST_PASSED) != Result.TEST_PASSED)
+			// Write to file if value was changed
+			this.writeFile();
 	}
 
 	public void setTestFailed(String testName) {
 		this.setTestFailed(this.selectedWorldName, testName);
 	}
 
-
 	public void setTestFailed(String worldName, String testName) {
-		this.getResultMapForWorld(worldName).put(testName, Result.LAST_TEST_FAILED);
+		if (this.getResultMapForWorld(worldName).put(testName, Result.TEST_FAILED) != Result.TEST_FAILED)
+			// Write to file if value was changed
+			this.writeFile();
+	}
+
+	private boolean hasTest(String worldName, String testName) {
+		return this.getResultMapForWorld(worldName).containsKey(testName);
 	}
 
 	public Result getTestResult(String testName) {
 		return this.getTestResult(this.selectedWorldName, testName);
 	}
-	
+
 	public Result getTestResult(String worldName, String testName) {
 		return this.getResultMapForWorld(worldName).getOrDefault(testName, Result.TEST_UNKNOWN);
 	}
@@ -109,183 +131,118 @@ public class TestResultDatabase {
 	}
 
 	public int getSuccessfulTestNumberForWorld(String worldName) {
-		return Collections.frequency(this.getResultMapForWorld(worldName).values(), Result.LAST_TEST_PASSED);
+		return Collections.frequency(this.getResultMapForWorld(worldName).values(), Result.TEST_PASSED);
 	}
 
 	private Map<String, Result> getResultMapForSelectedWorld() {
 		return this.getResultMapForWorld(this.selectedWorldName);
 	}
-	
+
 	private Map<String, Result> getResultMapForWorld(String worldName) {
 		// Try to get existing result set for world
-		if(this.results.containsKey(worldName))
+		if (this.results.containsKey(worldName))
 			return this.results.get(worldName);
-		
+
 		// If none existsed, create new result set
-		Map<String,Result> newWorldResults = new HashMap<>();
+		Map<String, Result> newWorldResults = new HashMap<>();
 		this.results.put(worldName, newWorldResults);
 		return newWorldResults;
 	}
-	
-	private void createFileIfNotExist() throws IOException {
+
+	private void createFileIfNotExist() {
 		File file = new File(this.filename);
-		file.createNewFile();
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	private void loadFile() throws IOException {
+	private void loadFile() {
+		this.loadFile(false);
+	}
+
+	private void loadFile(boolean ignoreAdditionalTestForSlectedWorld) {
+		
 		// Open the fule path
 		Path path = Paths.get(this.filename);
-		
-		// Iterate all lines
-		for(String line : Files.readAllLines(path, StandardCharsets.UTF_8)) {
-			// Split Line by separator
-			String[] lineParts = line.split("#");
-			
-			// Ignore lines that contain less than 1 or more than 2 times "#"
-			if(lineParts.length < 2 || lineParts.length > 3) continue;
-			
-			String worldName = lineParts[0];
-			String testName = lineParts[1];
-			if(lineParts.length == 3 && lineParts[2] == "y") {
-				this.setTestPassed(worldName, testName);
-			} else if(lineParts.length == 3 && lineParts[2] == "n") {
-				this.setTestFailed(worldName, testName);	
-			} else {
-				this.addTest(worldName, testName);	
+
+		try {
+			// Iterate all lines
+			for (String line : Files.readAllLines(path, StandardCharsets.UTF_8)) {
+				// Split Line by separator
+				String[] lineParts = line.split("#");
+
+				// Ignore lines that contain less or more than 2 timesthe separator "#"
+				if (lineParts.length != 3)
+					continue;
+				
+				String worldName = lineParts[0];
+				String testName = lineParts[1];
+				String testResult = lineParts[2];
+				
+				// Ignore lines that contain an illegal test result value
+				if ( !testResult.equals(Result.TEST_PASSED.toString())
+						&& !testResult.equals(Result.TEST_FAILED.toString())
+						&& !testResult.equals(Result.NOT_TESTED.toString()))
+					continue;
+
+				// Add all tests that...
+				// a) are in a different world than is currently selected (we have no real test data data on other worlds, so we must load the results and assume they are true in order to store them to the file again while writing)
+				// b) if we are NOT in ignoreAdditionalTestForSlectedWorld mode (in that case, all tests for the current world may be importet, even in not imported yet)
+				// or
+				// c) if the test case is already known to use (relevant to load PASS or FAIL results for known tests in ignoreAdditionalTestForSlectedWorld) 
+				if (worldName != this.selectedWorldName || 
+						!ignoreAdditionalTestForSlectedWorld || 
+						this.hasTest(worldName, testName)) {
+					if (testResult.equals(Result.TEST_PASSED.toString())) {
+						this.earmarkTest(worldName, testName, Result.TEST_PASSED);
+					}else if (testResult.equals(Result.TEST_FAILED.toString())) {
+						this.earmarkTest(worldName, testName, Result.TEST_FAILED);
+					}else{
+						this.earmarkTest(worldName, testName);
+					}
+				}
+
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		
 	}
-	
+
 	private void writeFile() {
-		
+		try (BufferedWriter outputFile = new BufferedWriter(new FileWriter(this.filename, false))) {
+			// Iterate all worlds
+			for (Entry<String, Map<String, Result>> worldEntry : this.results.entrySet()) {
+				String worldName = worldEntry.getKey();
+				// Iterate over all test in the world
+				for (Entry<String, Result> testEntry : worldEntry.getValue().entrySet()) {
+					String testName = testEntry.getKey();
+					String testResult = testEntry.getValue().toString();
+					// Write it to the file
+					outputFile.append(worldName + this.SEPERATOR + testName + this.SEPERATOR + testResult);
+					outputFile.newLine();
+				}
+			}
+			outputFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	public enum Result {
-		TEST_UNKNOWN, NOT_TESTED, LAST_TEST_PASSED, LAST_TEST_FAILED
+		TEST_UNKNOWN, NOT_TESTED, TEST_PASSED, TEST_FAILED
 	}
-	
-	
-	
-//	private void resetTestFile(String testFileName) {
-//		try {
-//			changeContent(testFileName, "#y", "#n");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	private JButton newResetButton() {
-//		JButton button = new JButton("Reset Results");
-//		
-//		button.addActionListener(e -> {
-//			resetTestFile(Configuration.getTestFileName());
-//			resetTests();
-//			updateProgressDisplay();
-//			frame.getTestListPanel().resetColors();
-//		});
-//		
-//		return button;
-//	}
-//	
-//	private int getCompletedTestCount() {
-//		Path path = Paths.get(Configuration.getTestFileName());
-//		Charset charset = StandardCharsets.UTF_8;
-//		
-//		int count = 0;
-//		try {
-//			String content;
-//			content = new String(Files.readAllBytes(path), charset);
-//			count = content.split("#y", -1).length - 1;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return count;
-//	}
-//	
-//	private int getCompletedTestCount() {
-//		Path path = Paths.get(Configuration.getTestFileName());
-//		Charset charset = StandardCharsets.UTF_8;
-//		
-//		int count = 0;
-//		try {
-//			String content;
-//			content = new String(Files.readAllBytes(path), charset);
-//			count = content.split("#y", -1).length - 1;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return count;
-//	}
-//
-//	private void writeTestPassed(TestScenario test) throws IOException {
-//		changeContent(Configuration.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
-//	}
-//	
-//	private void changeContent(String fileName, String oldContent, String newContent) throws IOException {
-//		Path path = Paths.get(fileName);
-//		Charset charset = StandardCharsets.UTF_8;
-//
-//		String content = new String(Files.readAllBytes(path), charset);
-//		content = content.replaceAll(oldContent, newContent);
-//		Files.write(path, content.getBytes(charset));
-//	}
-//
-//	
-//
-//	private boolean testPassed(TestScenario test, String fileName) {
-//		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-//		    String line;
-//		    while ((line = br.readLine()) != null) {
-//		       String[] parts = line.split("#");
-//		       if(parts[0].equals(test.getName())) {
-//		    	   if(parts[1].equals("n")) {
-//		    		   return false;
-//		    	   } else if (parts[1].equals("y")) {
-//		    		   return true;
-//		    	   }
-//		       }
-//		    }
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return false;
-//	}
-//
-//	private boolean writeLineIfNeeded(TestScenario test, String fileName) {
-//		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-//		    String line;
-//		    while ((line = br.readLine()) != null) {
-//		       String[] parts = line.split("#");
-//		       if(parts[0].equals(test.getName())) {
-//		    	   return false;
-//		       }
-//		    }
-//		    br.close();
-//		    BufferedWriter output = new BufferedWriter(new FileWriter(fileName, true));
-//		    output.append(test.getName() + "#n" + System.lineSeparator());
-//		    output.close();
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return true;
-//	}
-//
-//	private void createFileIfNotExist(String fileName) {
-//    	File file = new File(fileName);
-//    	try {
-//			file.createNewFile();
-//		} catch (IOException e) {
-//			System.out.println("Could not write persistence file to file system.");
-//			e.printStackTrace();
-//		}
-//	}
-	
+
+	@Override
+	public void markTestPassed(TestScenario test) {
+		this.setTestPassed(test.getName());
+	}
+
+	@Override
+	public void markTestFailed(TestScenario test) {
+		this.setTestFailed(test.getName());
+	}
+
 }
