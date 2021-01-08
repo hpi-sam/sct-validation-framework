@@ -16,7 +16,7 @@ import com.yakindu.core.IStatemachine;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.worlds.flasher.FlasherConfiguration;
+import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
 import de.hpi.mod.sim.Flasher;
 import de.hpi.mod.sim.Flasher.State;
 
