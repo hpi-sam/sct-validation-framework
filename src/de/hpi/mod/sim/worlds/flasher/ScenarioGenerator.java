@@ -7,7 +7,7 @@ import java.util.List;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Entity;
-import de.hpi.mod.sim.worlds.flasher.entities.BulbSpecification;
+import de.hpi.mod.sim.worlds.flasher.entities.LightBulbSpecification;
 import de.hpi.mod.sim.worlds.flasher.entities.StarterSpecification;
 
 public class ScenarioGenerator {
@@ -26,7 +26,7 @@ public class ScenarioGenerator {
         @Override
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            BulbSpecification bulb = new BulbSpecification(false, false, false, world);
+            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
             StarterSpecification starter = new StarterSpecification(Arrays.asList(1), Arrays.asList(3000f), true, world);
 
             list.add(bulb);
@@ -43,7 +43,7 @@ public class ScenarioGenerator {
         @Override
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            BulbSpecification bulb = new BulbSpecification(false, false, false, world);
+            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
             StarterSpecification starter = new StarterSpecification(Arrays.asList(2), Arrays.asList(3000f), true,
                     world);
 
@@ -69,7 +69,7 @@ public class ScenarioGenerator {
             }
 
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            BulbSpecification bulb = new BulbSpecification(false, false, false, world);
+            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
             StarterSpecification starter = new StarterSpecification(fibonacci, waitTimes, true, world);
 
             list.add(bulb);

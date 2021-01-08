@@ -3,12 +3,12 @@ package de.hpi.mod.sim.worlds.flasher.entities;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.worlds.flasher.FlashWorld;
 
-public class BulbSpecification implements EntitySpecification<Bulb> {
+public class LightBulbSpecification implements EntitySpecification<LightBulb> {
 
     private boolean hasToBeOffForTests, checkOnTimeForTests, checkOffTimeForTests;
     private FlashWorld world;
 
-    public BulbSpecification(boolean hasToBeOffForTests, boolean checkOnTimeForTests, boolean checkOffTimeForTests, FlashWorld world) {
+    public LightBulbSpecification(boolean hasToBeOffForTests, boolean checkOnTimeForTests, boolean checkOffTimeForTests, FlashWorld world) {
         this.hasToBeOffForTests = hasToBeOffForTests;
         this.checkOnTimeForTests = checkOnTimeForTests;
         this.checkOffTimeForTests = checkOffTimeForTests;
@@ -16,8 +16,8 @@ public class BulbSpecification implements EntitySpecification<Bulb> {
     }
 
     @Override
-    public Bulb createEntity() {
-        Bulb bulb = new Bulb();
+    public LightBulb createEntity() {
+        LightBulb bulb = new LightBulb();
         bulb.setCheckOffTimeForTests(checkOffTimeForTests);
         bulb.setCheckOnTimeForTests(checkOnTimeForTests);
         bulb.setHasToBeOffForTests(hasToBeOffForTests);

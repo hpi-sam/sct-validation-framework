@@ -20,14 +20,14 @@ import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
 import de.hpi.mod.sim.Flasher;
 import de.hpi.mod.sim.Flasher.State;
 
-public class Bulb extends StateChartWrapper<Flasher.State>
+public class LightBulb extends StateChartWrapper<Flasher.State>
 		implements StateChartEntity, IHighlightable {
 
 	private BufferedImage bulbOn, bulbOff;
 	private boolean isOn = false;
-	private int timesToBlink = 0;
+	private int currentTaskBlinks = 0;
 
-	private int remainingBlinks = -1;
+	private int blinksSinceLastTask = -1;
 	
 	private boolean hasToBeOffForTests = false;
 	private boolean checkOnTimeForTests = false;
@@ -39,7 +39,7 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 	
 	private Long lastOn, lastOff;
 
-	public Bulb() {
+	public LightBulb() {
 		super();
 		loadImages();
 		start();
@@ -52,7 +52,7 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 		graphics.drawImage(img, (width - img.getWidth()) / 2, (height - img.getHeight()) / 2, null);
 		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
 		graphics.setColor(Color.BLACK);
-		graphics.drawString("Task / Remaining: (" + timesToBlink +" / "+ remainingBlinks + " )", width/20, height- height/20);
+		graphics.drawString("Task / Remaining: (" + currentTaskBlinks +" / "+ blinksSinceLastTask + " )", width/20, height- height/20);
 	}
 
 	private void loadImages() {
@@ -82,13 +82,13 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 	public void turnOn() {
 		if (isOn)
 			return;
-		remainingBlinks--;
+		blinksSinceLastTask++;
 		isOn = true;
 		lastOn = System.currentTimeMillis();
 		if(lastOff == null)
 			return;
 		long offtime = lastOn - lastOff;
-		if (remainingBlinks > 0 && (offtime < 450 || offtime > 700)) {
+		if (blinksSinceLastTask > 0 && (offtime < 450 || offtime > 700)) {
 			onlyCorrectOffTimes = false;
 		}
 	}
@@ -117,18 +117,16 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 
 	@Override
 	protected boolean isActive(State state) {
-		/*
-		 * This is not intended by the YAKINDU implementation and source generation.
-		 * Officially, the YAKINDU interface does not support this, which is why we have
-		 * to cast to the actual DrivesystemStateChart object.
-		 */
-		return ((Flasher) chart).isStateActive(state);
+		return getStatemachine().isStateActive(state);
 	}
 
-	public void start(int n) {
-		getStatemachine().raiseStart(n);
-		timesToBlink = n;
-		remainingBlinks = n;
+	public void doBlinkingTask(int n) {
+		// Save task parameters
+		currentTaskBlinks = n;
+		blinksSinceLastTask = 0;
+		
+		// Send command to state machine and have it run for a cycle.
+		getStatemachine().raiseStart(n); 
 		update();
 	}
 
@@ -144,12 +142,12 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("Times to blink " + timesToBlink, "Remaining blinks: "  + remainingBlinks, "Lamp is on: " + isOn());
+		return Arrays.asList("Times to blink " + currentTaskBlinks, "Blinks since last tasks: "  + blinksSinceLastTask, "Lamp is on: " + isOn());
 	}
 
 	@Override
 	public boolean hasPassedAllTestCriteria() {
-		return remainingBlinks == 0 && 
+		return blinksSinceLastTask == 0 && 
 			   (!hasToBeOffForTests || !isOn) &&
 			   (!checkOffTimeForTests || onlyCorrectOffTimes) &&
 			   (!checkOnTimeForTests || onlyCorrectOnTimes);
@@ -160,7 +158,7 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 	}
 
 	public int getTimesToBlink() {
-		return timesToBlink;
+		return currentTaskBlinks;
 	}
 
 	public void setHasToBeOffForTests(boolean b) {
@@ -176,6 +174,6 @@ public class Bulb extends StateChartWrapper<Flasher.State>
 	}
 
 	public int getRemainingBlinks() {
-		return remainingBlinks;
+		return blinksSinceLastTask;
 	}
 }

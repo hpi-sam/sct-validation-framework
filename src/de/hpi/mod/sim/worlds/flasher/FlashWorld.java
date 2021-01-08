@@ -16,7 +16,7 @@ import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
-import de.hpi.mod.sim.worlds.flasher.entities.Bulb;
+import de.hpi.mod.sim.worlds.flasher.entities.LightBulb;
 import de.hpi.mod.sim.worlds.flasher.entities.Starter;
 
 public class FlashWorld extends World {
@@ -26,7 +26,7 @@ public class FlashWorld extends World {
 		publicName = "Flashing Lightbulb World";
 	}
 
-	private Bulb bulb;
+	private LightBulb bulb;
 	private Starter starter;
 	private int width, height;
 	 
@@ -93,7 +93,7 @@ public class FlashWorld extends World {
 		if (bulb != null) {
 			bulb.bulbRender(graphics, width, height);
 			drawCounter(graphics);
-			}
+		}
 	}
 	
 	
@@ -128,7 +128,7 @@ public class FlashWorld extends World {
 		bulb.close();
 	}
 
-	public void setBulb(Bulb bulb) {
+	public void setBulb(LightBulb bulb) {
 		this.bulb = bulb;
 	}
 
@@ -144,7 +144,7 @@ public class FlashWorld extends World {
 
 	public void startBulb(int n) {
 		if (bulb != null)
-			bulb.start(n);
+			bulb.doBlinkingTask(n);
 	}
 
 
