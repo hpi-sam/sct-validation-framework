@@ -123,6 +123,24 @@ public class ScenarioManager {
         listeners.add(listener);
     }
 	
+	private void notifyTestScenarioListenersAboutPassedTest(TestScenario test) {
+		for (ITestScenarioListener listener : listeners) {
+			listener.markTestPassed(test);
+		}
+	}
+	
+	private void notifyTestScenarioListenersAboutFailedTest(TestScenario test) {
+		for (ITestScenarioListener listener : listeners) {
+			listener.markTestFailed(activeTest);
+		}
+	}
+	
+	private void notifyTestScenarioListenersAboutReset() {
+		for (ITestScenarioListener listener : listeners) {
+			listener.resetAllTests();
+		}
+	}
+				
 	public void clearScenario() {
 		currentScenario = null;
 		testsToRun.clear();
@@ -142,26 +160,40 @@ public class ScenarioManager {
 	}
 
     public void refresh() {
-		if (isRunningTest) {
-			if (currentTestFailed) {
+    	if (isRunningTest) { // Is a test running?
+			
+			if (currentTestFailed) { // Was I notified about a test failure?
+				
+				// Stop detectors
 				world.deactivateDetectors();
-				for (ITestScenarioListener listener : listeners) {
-					listener.markTestFailed(activeTest);
-				}
+				
+				// Nofity UI
+				this.notifyTestScenarioListenersAboutFailedTest(activeTest);
 				activeTest.notifyFailToUser(frame, failReason);
+
+				// Reset internal state
 				currentTestFailed = false;
 				isRunningTest = false;
 				activeTest = null;
+				
+				// Optional: Run next test
 				if (runningAllTests)
 					runNextTest();
-			} else if (activeTest.isPassed()) {
+				
+			
+			} else if (activeTest.isPassed()) { // Check the success condition been met yet?
+				// Stop detectors
 				world.deactivateDetectors();
-				for (ITestScenarioListener listener : listeners) {
-					listener.markTestPassed(activeTest);
-				}
+
+				// Nofity UI
+				this.notifyTestScenarioListenersAboutPassedTest(activeTest);
 				activeTest.notifySuccessToUser(frame);
+
+				// Reset internal state
 				isRunningTest = false;
 				activeTest = null;
+				
+				// Optional: Run next test
 				if (runningAllTests)
 					runNextTest();
 			}
@@ -206,5 +238,19 @@ public class ScenarioManager {
 
 	public boolean isTestPassed(TestScenario test) {
 		return this.testResults.getTestResult(test.getName()) == TestResultDatabase.Result.TEST_PASSED;
+	}
+
+	public int getNumberOfAvailableTests() {
+		return this.testList.size();
+		// return this.testResults.getNumberOfTests();
+	}
+
+	public int getNumberOfPassedTests() {
+		return this.testResults.getNumberOfPassedTests();
+	}
+
+	public void resetTests() {
+		this.testResults.resetTestResults();
+		this.notifyTestScenarioListenersAboutReset();
 	}
 }

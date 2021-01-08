@@ -56,6 +56,13 @@ public class TestListPanel extends JPanel implements ITestScenarioListener {
     	repaint();
 	}
 
+	@Override
+	public void resetAllTests() {
+		for (JLabel label : testLabels.values())
+            label.setBackground(SimulatorFrame.MAIN_MENU_COLOR);
+		repaint();
+	}
+
 	public void resetColors() {
 		//set the background of all test labels to the generic menu color
 		for (JLabel label : testLabels.values())

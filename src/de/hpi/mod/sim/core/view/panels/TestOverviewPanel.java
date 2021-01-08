@@ -96,17 +96,19 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 	}
 	
 	private JProgressBar newProgressDisplay() {
-		JProgressBar progressBar = new JProgressBar(0, scenarioManager.getTests().size());
+		JProgressBar progressBar = new JProgressBar(0, this.scenarioManager.getNumberOfAvailableTests());
 		progressBar.setStringPainted(true);
-		progressBar.setString("0/0 green");
+		progressBar.setString("No available tests");
 		return progressBar;
 	}
 	
 	private void updateProgressDisplay() {
-		String complete = Integer.toString(getCompletedTestCount());
-		String amount = Integer.toString(scenarioManager.getTests().size());
-		progressDisplay.setValue(getCompletedTestCount());
-		progressDisplay.setString(complete + "/" + amount + " green");
+		int passed = this.scenarioManager.getNumberOfPassedTests();
+		int total = this.scenarioManager.getNumberOfAvailableTests();
+		if(total > 0) {
+			progressDisplay.setValue(passed);
+			progressDisplay.setString(Integer.toString(passed) + "/" + Integer.toString(total) + " passed");
+		}
 	}
 	
 	private JButton newShowHideButton() {
@@ -145,36 +147,11 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
 		JButton button = new JButton("Reset Results");
 		
 		button.addActionListener(e -> {
-			resetTestFile(Configuration.getTestFileName());
-			resetTests();
-			updateProgressDisplay();
-			frame.getTestListPanel().resetColors();
+			this.scenarioManager.resetTests();
+			this.updateProgressDisplay();
 		});
 		
 		return button;
-	}
-	
-	private void resetTests() {
-		for (TestScenario test : scenarioManager.getTests()) {
-			test.resetTest();
-		}
-	}
-	
-	private void resetTestFile(String testFileName) {
-		try {
-			changeContent(testFileName, "#y", "#n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void changeContent(String fileName, String oldContent, String newContent) throws IOException {
-		Path path = Paths.get(fileName);
-		Charset charset = StandardCharsets.UTF_8;
-
-		String content = new String(Files.readAllBytes(path), charset);
-		content = content.replaceAll(oldContent, newContent);
-		Files.write(path, content.getBytes(charset));
 	}
 	
 	private JButton newRunAllButton() {
@@ -187,38 +164,18 @@ public class TestOverviewPanel extends JPanel implements ITestScenarioListener {
         return button;
 	}
 	
-	private void writeTestPassed(TestScenario test) throws IOException {
-		changeContent(Configuration.getTestFileName(), test.getName() + "#n", test.getName() + "#y");
-	}
-	
-	private int getCompletedTestCount() {
-		Path path = Paths.get(Configuration.getTestFileName());
-		Charset charset = StandardCharsets.UTF_8;
-		
-		int count = 0;
-		try {
-			String content;
-			content = new String(Files.readAllBytes(path), charset);
-			count = content.split("#y", -1).length - 1;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return count;
-	}
-	
 	@Override
 	public void markTestPassed(TestScenario test) {
-		try {
-			writeTestPassed(test);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
         updateProgressDisplay();
 	}
 	
 	@Override
 	public void markTestFailed(TestScenario test) {
-		
+		updateProgressDisplay();
+	}
+	
+	@Override
+	public void resetAllTests() {
+        updateProgressDisplay();
 	}
 }

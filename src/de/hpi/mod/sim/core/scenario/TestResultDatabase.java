@@ -48,6 +48,7 @@ public class TestResultDatabase implements ITestScenarioListener {
 
 	public void resetTestResults(String worldName) {
 		this.getResultMapForWorld(worldName).replaceAll((k, v) -> Result.NOT_TESTED);
+		this.writeFile();
 	}
 
 	public void earmarkTest(String testName) {
@@ -126,11 +127,11 @@ public class TestResultDatabase implements ITestScenarioListener {
 		return this.getResultMapForWorld(worldName).size();
 	}
 
-	public int getSuccessfulTestNumber() {
-		return this.getSuccessfulTestNumberForWorld(this.selectedWorldName);
+	public int getNumberOfPassedTests() {
+		return this.getNumberOfPassedTestsForWorld(this.selectedWorldName);
 	}
 
-	public int getSuccessfulTestNumberForWorld(String worldName) {
+	public int getNumberOfPassedTestsForWorld(String worldName) {
 		return Collections.frequency(this.getResultMapForWorld(worldName).values(), Result.TEST_PASSED);
 	}
 
@@ -243,6 +244,11 @@ public class TestResultDatabase implements ITestScenarioListener {
 	@Override
 	public void markTestFailed(TestScenario test) {
 		this.setTestFailed(test.getName());
+	}
+
+	@Override
+	public void resetAllTests() {
+		this.resetTestResults();
 	}
 
 }
