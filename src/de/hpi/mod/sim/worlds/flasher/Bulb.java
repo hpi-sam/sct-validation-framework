@@ -10,14 +10,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.imageio.ImageIO;
-import de.hpi.mod.sim.IStatemachine;
+
+import com.yakindu.core.IStatemachine;
+
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.flasher.FlasherStatemachine;
-import de.hpi.mod.sim.flasher.FlasherStatemachine.State;
+import de.hpi.mod.sim.Flasher;
+import de.hpi.mod.sim.Flasher.State;
 
-public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
+public class Bulb extends StateChartWrapper<Flasher.State>
 		implements StateChartEntity, IHighlightable {
 
 	private BufferedImage bulbOn, bulbOff;
@@ -61,8 +63,8 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 		}
 	}
 
-	private FlasherStatemachine getStatemachine() {
-		return (FlasherStatemachine) chart;
+	private Flasher getStatemachine() {
+		return (Flasher) chart;
 	}
 
 	@Override
@@ -104,12 +106,12 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 
 	@Override
 	public IStatemachine createStateMachine() {
-		return new FlasherStatemachine();
+		return new Flasher();
 	}
 
 	@Override
 	protected State[] getStates() {
-		return FlasherStatemachine.State.values();
+		return Flasher.State.values();
 	}
 
 	@Override
@@ -119,7 +121,7 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 		 * Officially, the YAKINDU interface does not support this, which is why we have
 		 * to cast to the actual DrivesystemStateChart object.
 		 */
-		return ((FlasherStatemachine) chart).isStateActive(state);
+		return ((Flasher) chart).isStateActive(state);
 	}
 
 	public void start(int n) {
@@ -170,5 +172,9 @@ public class Bulb extends StateChartWrapper<FlasherStatemachine.State>
 
 	public void setCheckOnTimeForTests(boolean b) {
 		this.checkOnTimeForTests = b;
+	}
+
+	public int getRemainingBlinks() {
+		return remainingBlinks;
 	}
 }

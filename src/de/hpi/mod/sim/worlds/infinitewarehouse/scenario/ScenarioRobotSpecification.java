@@ -2,10 +2,11 @@ package de.hpi.mod.sim.worlds.infinitewarehouse.scenario;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotSpecification;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 
-public class ScenarioRobotSpecification extends RobotSpecification {
+public class ScenarioRobotSpecification extends RobotSpecification<WarehouseRobot, WarehouseManager> {
 	private Position position;
 	private Orientation facing;
 	private int delay = 0;
@@ -26,7 +27,7 @@ public class ScenarioRobotSpecification extends RobotSpecification {
 
 	@Override
 	public WarehouseRobot createRobot(WarehouseManager robots) {
-		WarehouseRobot robot = robots.addRobotInScenario(position, facing, delay);
+		WarehouseRobot robot = robots.createScenarioRobot(position, facing, delay);
 		robot.setIsAlone(isAlone);
 		return robot;
 	}

@@ -18,7 +18,7 @@ import java.awt.event.MouseMotionListener;
 /**
  * Stores the values needed to display the Simulation, renders it and keeps track of the mouse
  */
-public abstract class AnimationPanel extends JPanel implements MouseListener, MouseMotionListener {
+public class AnimationPanel extends JPanel implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = -361892313938561668L;
 
@@ -40,7 +40,6 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 	 * Entity changes
 	 */
 	private List<IHighlightedListener> highlightedEntityListeners = new ArrayList<>();
-	private List<IHighlightedListener> highlightedEntityListeners2 = new ArrayList<>();
 
 	/**
 	 * Offset of viewed part of the simulation. Has to be interpretated by subclass
@@ -50,8 +49,6 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 	private int currentHeight;
 	private int currentWidth;
 	private World world;
-
-
 
 	public AnimationPanel(World world) {
 		this.world = world;
@@ -67,10 +64,6 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 
 	public void addHighlightedListener(IHighlightedListener highlightedListener) {
 		highlightedEntityListeners.add(highlightedListener);
-	}
-
-	public void addHighlightedListener2(IHighlightedListener highlightedListener) {
-		highlightedEntityListeners2.add(highlightedListener);
 	}
 
 	public boolean isMousePointing() {
@@ -100,7 +93,7 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 	}
 	
 	private void refreshHighlightedListeners() {
-		highlightedEntityListeners.forEach(IHighlightedListener::onHighlightedChange);
+		highlightedEntityListeners.forEach(IHighlightedListener::onHighlightedEntitySelection);
 	}
 
 	public void resetHighlightedEntities() {
@@ -117,7 +110,6 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 
 		// Refresh simulation properties
 		refreshSimulationSize();
-		world.refreshSimulationProperties(currentHeight, currentWidth);
 	}
 
 	@Override
@@ -163,8 +155,11 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 
 	private void refreshSimulationSize() {
 		Rectangle rectangle = this.getBounds();
+		boolean change = rectangle.width != currentWidth || rectangle.height != currentHeight;
 		currentHeight = rectangle.height;
 		currentWidth = rectangle.width;
+		if (change)
+			world.refreshSimulationProperties(currentHeight, currentWidth);
 	}
 
 	public void reset() {
@@ -196,10 +191,10 @@ public abstract class AnimationPanel extends JPanel implements MouseListener, Mo
 		return offsetY;
 	}
 
-	public abstract void resetZoom();
+	public void resetZoom() {}
 	
-	public abstract void zoomIn(float zoom);
+	public void zoomIn(float zoom){}
 	
-	public abstract void zoomOut(float zoom);
+	public void zoomOut(float zoom){}
 
 }

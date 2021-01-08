@@ -5,17 +5,17 @@ This project is a simulating environment which allows to run simulations in whic
 ## Project Structure
 
 The project is devided into the following directories:
-- **`model`** contains the statechart model
-    + The model is contained in the file `drivesystem.sct`, which can be edited by YAKINDU
+- **`model`** contains the statechart models
+    + The models are contained in the `.sct` - files. They can be edited by YAKINDU.
     + The belonging `.sgen`-file contains a predefined configuration for generating executable code from the statechart.
-- **`src`** contains the source code of the simulation environment
-- **`src-gen`** contains the code generated from the statecharts. It is automatically updated after running the `.sgen`-file.
+- **`src-gen`** contains the code generated from the statecharts. It is automatically updated after choosing "Generate Code Artifacts" on the `.sgen`-file.
 - **`res`** contains resources for the GUI, as for example images
 - **`test`** contains tests for the project
+- **`src`** contains the source code of the simulation environment.
 
-## Simulator Code Structure
+## Simulator Code Structure (in directory `src`)
 - To start the simulator, execute the class `de.hpi.mod.sim.App`
-- The simulator code is devided in two packages, `de.hpi.mod.sim.core` and `de.hpi.mod.sim.core`.
+- The simulator code is devided in two packages, `de.hpi.mod.sim.core` and `de.hpi.mod.sim.worlds`.
   + The `core` package covers everything that is needed for *every* simulation, e.g. the setting up the frame and a framework for executing scenarios and test cases. When adding new applications of the simulator, the core package should not have to be touched. See details in **Core**.
   + In the `world` package, code is placed to specify the environment and entities for ones application. That is, what the environment, in which the statechart is simulated, looks like. See details in **Worlds**.
 
@@ -31,11 +31,14 @@ The core contains 2 classes and 4 packages.
 ### Worlds
 A `world` is the definition of the environment for a specific application. To set up an environment, one thus has to overwrite the abstract class `de.hpi.mod.sim.core.World`.
 + One can use inheritance to build a structure of abstract and more and more specific environments
-+ Currently there are 3 worlds
++ Currently there are 6 worlds
   - `abstract_grid.GridWorld` introduces an abstract environment with a grid-based 2D surface and provides useful utilities like the concept of positions and orientations in that grid
   - `abstract_robots.RobotWorld` is a still abstract extension of the `GridWorld` and introduces robots to be moved around on the grid
-  - `infinite_warehouse` is a ready-to-use implementation of a `RobotWorld` where robots transport package from stations to unloading stations, have to avoid collisions and be recharged. The exact behavior of the robots drivesystem is specified by a YAKINDU statechart.
-
+  - `infinite_warehouse` is a ready-to-use implementation of a `RobotWorld` where robots transport packages from stations to unloading stations, have to avoid collisions and be recharged. The exact behavior of the robots drivesystem is specified by a YAKINDU statechart.
+  - ` pong` is leand on the traditionally Pong- Game. There is a one player and two player- mode. You have to catch the ball with your paddle. The exact behavior of the paddles are specified by a YAKINDU statechart.
+  - `flasher` contains a world with a flashlight. In the beginning you get a number. This number represents the amount the bulb has to blink. The exact behavior of the bulb is specified by a YAKINDU statechart.
+  - `flash-light-world` is another implementation of a RobotWorld where robots transport packages from stations to unloading stations, have to avoid collisions. There are flash lights to help avoiding collisions. The exact behavior of the robots and flashlights are specified by a YAKINDU statechart.
+ 
 #### Setting up your world
    - When there is the need to add/edit static parameters (magic numbers), do so by extend the class `core.Configuration`
    - To set up a world, you have to implement a subclass of `core.World` which implements all its abstract methods. Inheritance hierachies can be used. To get a feeling for this, have a look at the hierachy of `worlds.infinitewarhouse.InfiniteWarehouse`. The required methods are
@@ -68,21 +71,45 @@ Für Mitarbeiter und Studierende des Hasso-Plattner-Institut steht eine Lizenz f
 
 #### Modellierung
 
-- In der Datei `model/drivesystem.sct` kann in Eclipse/YAKINDU die Roboter-Steuerung modelliert werden.
+- In dem Ordner model können Eclipse/YAKINDU Steuerungen modelliert werden
+	- Für die InfinityWarehouse world wird die Roboter-Steuerung in der Datei `model/drivesystem.sct` modelliert.
+	- Für die FlashWorld wird die Glühbirnen-Steuerung in der Datei `model/flasher.sct` modelliert.
+	- Die Pong World kann mit einem paddle geöffnet werden. Die Steuerung des 1. paddles(dieses wird in der Welt links angezeigt) wird in der Datei `model/paddle1.sct` modelliert. Die des 2. paddles(das paddle wird in der Welt rechts angezeigt) wird in der Datei `model/paddle2.sct` modelliert.
+	- Die flash-light world benötigt ein Modell für die Ampel- und eines für die Roboter Steuerung. Die Steuerung der Ampeln wird in der Datei `model/trafficlight.sct`modelliert, die Roboter in der Datei `tlRobot.sct`.
 - Die Schnittellen des Statecharts sind bereits vorgegeben ("Definition section" links). Diese dürfen **nicht verändert** werden, es können interne Variablen ("internal") ergänzt werden.
-- Damit in der Simulation der aktuelle Zustand angezeigt werden kann sollte die äußerste Region "Drive System" heißen und die Namen aller Unterregionen im Diagramm mir einem "_" beginnen.
 - Auf den Webseiten von YAKINDU findet sich [eine Anleitung zum Modellieren](https://www.itemis.com/en/yakindu/state-machine/documentation/user-guide/edit_editing_statecharts) und eine [Statechart-Referenz](https://www.itemis.com/en/yakindu/state-machine/documentation/user-guide/sclang_statechart_language_reference).
+
+#### Namenskonventionen für Zustände
+
+* Damit der aktuelle Zustand im Simulator angezeigt werden kann, müssen bei der Benennung der Zustände einige Bedingungen eingehalten werden.
+* Die **äußerste Region** muss in den einzelnen Welten spezielle Namen haben:
+	* InfinityWarehouse world: Die  Region muss ``Drive System`` heißen bzw zumindest genau 13 Zeichen lang sein (inkl. Leerzeichen).
+	* FlashWorld: Die Region muss ``flasher``
+	* PongWorld: Die Region muss ``pong``
+	* Traffic light World: 
+		* Im Modell des Roboters muss die äußerste Region ``tlRobot`` heißen
+		* Im Modell der Ampel (traffic-light) muss die äußerste Region ``trafficlight`` heißen
+
+* Wenn **Unterregionen** verwendet werden müssen sie entweder unbenannt sein oder mit einem Unterstich ("_") beginnen. 
+Sie dürfen keine Lehrzeichen und keine weiteren Unterstiche enthalten.
+
+* In **Zustandsnamen** dürfen *keine* Unterstiche ("_") benutzt werden.
+
 
 #### Codegenerierung
 
-- Die beigelegte Datei `model/drivesystem.sgen` Datei enthält eine Konfiguration für die Codegenerierung. 
-- Wenn in Eclipse/YAKINDU nach einem Rechtsklick auf die Datei "Generate Code Artifacts" gewählt wird, wird der zum Statechart passende Quelltext automatisch neu generiert.
+- Die beigelegten `.sgen`-Dateien enthalten die Konfigurationen für die Codegenerierung. So ist z.B. drivesystem.sgen die Konfiguration für das Modell in drivesystem.sct. 
+- Um den Code aus den Modellen zu generieren, muss in Eclipse/YAKINDU ein Rechtsklick auf die .sgen Datei gemacht werden um dann "Generate Code Artifacts" auszuwählen. Daraufhin wird der zum Statechart passende Quelltext automatisch neu generiert.
 
 #### Simulation
 
 - Zum Starten der Simulation wird die Klasse `de.hpi.mod.sim.App` im Ordner `src` rechts geklickt und "Run as" > "Java Application" ausgewählt.
 - Als Shortcut steht danach der "Run" Button oben im Eclipse-Menü zur Verfügung.
-- Ist der Simulator gestartet können entweder "Szenarien" (= dynamisch generierte Abläufe mit einem oder mehreren Robotern) oder "Tests" (= vordefinierte Situationen) ausgewählt werden. Innerhalb dieser Szenarien und Tests wird jeweils für alle Roboter der generierte Quelltext des zuvor modellierten Statecharts ausgeführt.
+- Zu Beginn kann die Welt ausgewählt werden, die simuliert werden soll. Dabei sind zur Auswahl: 
+	* InfinityWarehouse world
+	* FlashWorld
+	* PongWorld
+- Ist der Simulator gestartet können entweder "Szenarien" (= dynamisch generierte Abläufe mit einem oder mehreren Robotern) oder "Tests" (= vordefinierte Situationen) ausgewählt werden. Innerhalb dieser Szenarien und Tests wird jeweils für alle Entitäten der generierte Quelltext des zuvor modellierten Statecharts ausgeführt.
 - Sobald ein Szenario oder Test gestartet wird läuft ein Timer und die Geschwindigkeit kann verändert werden.
 - Mit den Pfeiltasten kann navigiert werden, mit `Strg +` und `Strg -` gezoomt. `R` setzt die Kamera zurück. `Space` pausiert den aktuelle laufenden Test / das aktuelle Szenario.
-- Mit der linken und rechten Maustaste kann jeweils ein Roboter ausgewählt werden, die dann farblich hervorgehoben sind und deren Eigenschaften rechts explizit ablesbar sind.
+- Mit der linken und rechten Maustaste kann jeweils ein Entität ausgewählt werden, deren Eigenschaften dann in einer info-box ablesbar sind.

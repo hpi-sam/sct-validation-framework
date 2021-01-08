@@ -6,14 +6,14 @@ import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 import java.awt.Graphics;
 
 public abstract class GridWorld extends World {
-    
+	
     private GridRenderer gridRenderer;
-    
     private SimulationBlockView simView;
-
     private GridManager gridManager;
 
     public GridWorld() {
+    	super();
+    	publicName = "Grid-based World"; 
         gridManager = createGridManager();
         simView = new SimulationBlockView(this);
     }
@@ -22,8 +22,12 @@ public abstract class GridWorld extends World {
 
     @Override
     public void initialize() {
-        gridRenderer = new GridRenderer(getSimulationBlockView(), getGridManager());
+        gridRenderer = createGridRenderer(simView, getGridManager());
     }
+
+    protected GridRenderer createGridRenderer(SimulationBlockView panel, GridManager manager) {
+        return new GridRenderer(panel, manager);
+    } 
     
     @Override
     public void render(Graphics graphics) {
@@ -31,7 +35,7 @@ public abstract class GridWorld extends World {
     }
 
     @Override
-    public AnimationPanel getAnimationPanel() {
+    public AnimationPanel createAnimationPanel() {
         return getSimulationBlockView();
     }
 

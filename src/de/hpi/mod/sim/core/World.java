@@ -14,6 +14,8 @@ import de.hpi.mod.sim.core.view.SimulatorFrame;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 public abstract class World {
+	
+	protected String publicName;
 
     private SimulatorFrame frame;
 
@@ -22,6 +24,8 @@ public abstract class World {
     private ScenarioManager scenarioManager;
 
     private List<Detector> detectors;
+
+    private AnimationPanel panel;
 
     protected abstract List<Detector> createDetectors();
 
@@ -98,7 +102,26 @@ public abstract class World {
 
     public abstract void close();
 
-    public abstract AnimationPanel getAnimationPanel();
+    public AnimationPanel createAnimationPanel() {
+        return new AnimationPanel(this);
+    }
+
+    @Override
+	public String toString() {
+		return getPublicName()+ " (" + this.getClass().getName() + ")";
+	}
+
+	public AnimationPanel getAnimationPanel() {
+        return panel;
+    }
+
+	public String getPublicName() {
+		return publicName;
+	}
+
+	public String getInternalName() {
+		return this.getClass().getName().replace(" ", "").toLowerCase();
+	}
 
 	
 

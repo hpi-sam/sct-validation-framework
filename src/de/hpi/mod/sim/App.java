@@ -1,48 +1,59 @@
 package de.hpi.mod.sim;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+
 import javax.swing.JOptionPane;
 
 import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.worlds.flasher.FlashWorld;
+import de.hpi.mod.sim.worlds.pong.PongWorld;
+import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse;
+import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWorld;
+
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 /**
+ * @author Tim Cech, Jonas Kordt, Paul Methfessel, Chiara Schirmer, Simon Wietheger, Christian Zöllner
+ *         (System Analysis and Modeling Group @ Hasso-Plattner-Institute, Potsdam University, Germany)
+ * @version 0.9.0
  * 
- * @author Tim Cech, Jonas Kordt, Paul Methfessel, Simon Wietheger
- *         (Hasso-Plattner-Institute chair for software analysis and modeling)
- * @version 1.0.0
- *
  *          This classes starts the execution of the program.
  */
 public class App {
 
-    private static final String[] POSSIBLE_WORLDS = {
-            "de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse",
-            "de.hpi.mod.sim.worlds.flasher.FlashWorld"
-    		
-     };
+	// List of instances of all available world classes to be used for selection.  
+	private static final World[] POSSIBLE_WORLDS = {
+			new FlashWorld(),
+			new PongWorld(),
+			new InfiniteWarehouse(),
+			new TrafficLightWorld(),
+	};
 
      private static World selectWorld() {
-        String chosenName;
-        if (POSSIBLE_WORLDS.length == 1)
-            chosenName = POSSIBLE_WORLDS[0];
-        else
-            chosenName = (String) JOptionPane.showInputDialog(null, "Choose a world ...", "World selection",
-                    JOptionPane.QUESTION_MESSAGE, null, POSSIBLE_WORLDS, POSSIBLE_WORLDS[0]);
-        try {
-            @SuppressWarnings("unchecked")
-            Constructor<? extends World> con = (Constructor<? extends World>) Class.forName(chosenName).getConstructors()[0];
-            return con.newInstance();
-        } catch (Exception e) {
-            System.err.println("Found no such subclass of world: " + chosenName);
-            e.printStackTrace();
-            return null;
-        }
-    }
+    	 // Catch cases where either one one no world is available.
+	     if (POSSIBLE_WORLDS.length < 1) {
+	    	 return null;
+	     }
+	     if (POSSIBLE_WORLDS.length == 1) {
+	    	 return POSSIBLE_WORLDS[0];
+	     }
+	     
+	     // Get World Name from list
+	     return (World) JOptionPane.showInputDialog(null, "Select a world to simulate...", "World Selection",
+                    					            JOptionPane.QUESTION_MESSAGE, null, 
+                    					            POSSIBLE_WORLDS, POSSIBLE_WORLDS[0]);
+     }
 
     public static void main(String[] args) {
+    	// Set global system 
         SimulatorFrame.setSystemLookAndFeel();
+        
+        // Instranciate Simulator World, exit if selected world is invalid
         World world = selectWorld();
-        new SimulatorFrame(world);
+        if (world == null) System.exit(1);
+        
+        // Start Simulator 
+	    new SimulatorFrame(world);
     }
 }

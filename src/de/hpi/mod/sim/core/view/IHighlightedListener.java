@@ -5,5 +5,9 @@ package de.hpi.mod.sim.core.view;
  * Gets called if one of the highlighted enitity changes
  */
 public interface IHighlightedListener {
-    void onHighlightedChange();
+    
+	void onHighlightedEntitySelection();
+	
+	void onValueUpdate();
+    
 }

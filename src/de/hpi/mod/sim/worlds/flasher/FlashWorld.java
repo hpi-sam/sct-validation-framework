@@ -1,5 +1,7 @@
 package de.hpi.mod.sim.worlds.flasher;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +18,11 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 
 public class FlashWorld extends World {
+    
+    public FlashWorld() {
+		super();
+		publicName = "Flashing Lightbulb World";
+	}
 
 	private Bulb bulb;
 	private Starter starter;
@@ -81,8 +88,26 @@ public class FlashWorld extends World {
 
 	@Override
 	public void render(Graphics graphics) {
-		if (bulb != null)
+		if (bulb != null) {
 			bulb.bulbRender(graphics, width, height);
+			drawCounter(graphics);
+			}
+	}
+	
+	
+	private void drawCounter(Graphics graphics) {
+		int remainingBlinks;
+		String haekchen = "";
+		if(!bulb.isOn()&& bulb.getRemainingBlinks()== 0) {
+			remainingBlinks=starter.getTask();
+			haekchen = "    finished \u2713";
+		}
+		else {
+			remainingBlinks= bulb.getRemainingBlinks();
+		}
+		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
+		graphics.setColor(Color.BLACK);
+		graphics.drawString("Task / Remaining: " + starter.getTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
 	}
 
 	@Override
@@ -100,6 +125,27 @@ public class FlashWorld extends World {
 	public void close() {
 		bulb.close();
 	}
+
+	public void setBulb(Bulb bulb) {
+		this.bulb = bulb;
+	}
+
+	public void setStarter(Starter starter) {
+		this.starter = starter;
+	}
+
+	@Override
+	public void clearEntities() {
+		bulb = null;
+		starter = null;
+	}
+
+	public void startBulb(int n) {
+		if (bulb != null)
+			bulb.start(n);
+	}
+
+
 
 	@Override
 	public AnimationPanel getAnimationPanel() {
@@ -123,25 +169,4 @@ public class FlashWorld extends World {
 		};
 	}
 
-	public void setBulb(Bulb bulb) {
-		this.bulb = bulb;
-	}
-
-	public void setStarter(Starter starter) {
-		this.starter = starter;
-	}
-
-	@Override
-	public void clearEntities() {
-		bulb = null;
-		starter = null;
-	}
-
-	public void startBulb(int n) {
-		if (bulb != null)
-			bulb.start(n);
-	}
-	
-	
-	
 }

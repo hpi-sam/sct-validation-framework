@@ -3,6 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
@@ -88,5 +89,13 @@ public abstract class RobotGridManager extends GridManager implements IRobotCont
      */
     public boolean isBlockedByMap(Position pos) {
         return false;
+    }
+    
+    @Override
+    public boolean affects(IHighlightable highlight, Position position) {
+        if (highlight == null || !(highlight instanceof Robot))
+            return false;
+        Robot r = (Robot) highlight;
+        return position.is(r.pos()) || position.is(r.oldPos());
     }
 }

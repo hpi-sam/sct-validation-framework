@@ -19,6 +19,8 @@ public abstract class Robot implements Entity, IHighlightable {
     private static int idCount = 0;
 
     protected RobotGridManager grid;
+    
+    private DriveManager manager;
 
     private Position target = null;
     private List<Position> testTargets = null;
@@ -42,20 +44,20 @@ public abstract class Robot implements Entity, IHighlightable {
 
     private Orientation facing, targetFacing;
 
-    private float battery;
-
     private float x, y, angle;
 
     private Position position, oldPosition;
+    
+    protected boolean requireUnloadingForTestCompletion = false;
 
     public Robot(int robotID, RobotGridManager grid, Position startPosition, Orientation startFacing) {
         this.robotID = robotID; //TODO handle case of already given robotID
         this.grid = grid;
         setRobotTo(startPosition);
-        oldPosition = startPosition;
         target = startPosition;
         turnRobotTo(startFacing);
         setTargetFacing(startFacing);
+        manager = new DriveManager(this);
     }
 
     public Robot(RobotGridManager grid, Position startPosition, Orientation startFacing) {
@@ -78,12 +80,21 @@ public abstract class Robot implements Entity, IHighlightable {
         this.initialNow = System.currentTimeMillis();
         this.fuzzyTestCompletion = fuzzyEnd;
         this.requireArrivedForTestCompletion = hardArrivedConstraint;
+        manager = new DriveManager(this);
     }
     
-    private void setRobotTo(Position pos) {
+    /**
+     * While {@link #setPos(Position)} is a simple setter for the field position,
+     * this method also updates {@link #oldPosition}, {@link #x} and {@link #y} which
+     * is necessary when the position is not changed because of normal driving but by placing the robot arbitrarily.
+     * 
+     * @param pos The position to set the robot to
+     */
+    public void setRobotTo(Position pos) {
         this.x = pos.getX();
         this.y = pos.getY();
         this.position = pos;
+        this.oldPosition = pos;
     }
 
 	/**
@@ -194,6 +205,16 @@ public abstract class Robot implements Entity, IHighlightable {
         this.facing = facing;
     }
 
+    /**
+     * Sets the robots facing just like {@link #setFacing(Orientation)} but additionally updates the angle.
+     * This is necessary when the facing is not changed by rotation but set arbitrarily.
+     * @param facing The new orientation
+     */
+    public void setFacingTo(Orientation facing) {
+        setFacing(facing);
+        setAngle(facing.getAngle());
+    }
+
     public boolean isOnTarget() {
         if (this.fuzzyTestCompletion) {
             return isOnTargetFuzzy() && this.pos().equals(this.oldPos());
@@ -213,7 +234,10 @@ public abstract class Robot implements Entity, IHighlightable {
     
     @Override
     public boolean hasPassedAllTestCriteria() {
-        return testTargets.isEmpty() && this.isOnTarget() && arrivementFullfilled();
+        return testTargets.isEmpty() 
+            && this.isOnTarget()
+            && arrivementFullfilled()
+            && (!requireUnloadingForTestCompletion || getDriveManager().hasUnloadedSomething());
     }
     
     public boolean arrivementFullfilled() {
@@ -254,10 +278,6 @@ public abstract class Robot implements Entity, IHighlightable {
 
     public void setTarget(Position target) {
         this.target = target;
-    }
-
-    public float getBattery() {
-        return battery;
     }
 
     public Position getTarget() {
@@ -310,8 +330,22 @@ public abstract class Robot implements Entity, IHighlightable {
     public void setArrivedEventWasCalled(boolean b) {
         this.arrivedEventWasCalled = b;
     }
+    
+    /**
+     * Called once after the actors have performed a movement (turning, driving, unloading)
+     */
+    public void actionCompleted() {
+    }
 
-	public boolean hasPackage() {
-		return false;
-	}
+    public DriveManager getDriveManager() {
+        return manager;
+    }
+    
+    public float getBattery() {
+        return getDriveManager().getBattery();
+    }
+
+    public boolean hasPackage() {
+        return getDriveManager().hasPackage();
+    }
 }

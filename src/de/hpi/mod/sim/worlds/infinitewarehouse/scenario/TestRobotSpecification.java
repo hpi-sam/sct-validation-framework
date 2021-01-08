@@ -6,11 +6,12 @@ import java.util.List;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotSpecification;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot.RobotState;
 
-public class TestRobotSpecification extends RobotSpecification {
+public class TestRobotSpecification extends RobotSpecification<WarehouseRobot, WarehouseManager> {
     private Position position;
     private RobotState state;
     private List<Position> targets = new ArrayList<Position>();

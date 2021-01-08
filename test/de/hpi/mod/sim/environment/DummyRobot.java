@@ -3,11 +3,11 @@ package de.hpi.mod.sim.environment;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.IRobotActors;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.infinitewarehouse.environment.PositionType;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IProcessor;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotActors;
 import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.ISensor;
 
 public class DummyRobot extends Robot implements ISensor, IRobotActors, IProcessor {
