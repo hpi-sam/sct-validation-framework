@@ -17,7 +17,7 @@ import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulb;
-import de.hpi.mod.sim.worlds.flasher.entities.Starter;
+import de.hpi.mod.sim.worlds.flasher.entities.TaskProvider;
 
 public class FlashWorld extends World {
     
@@ -27,7 +27,7 @@ public class FlashWorld extends World {
 	}
 
 	private LightBulb bulb;
-	private Starter starter;
+	private TaskProvider starter;
 	private int width, height;
 	 
 	@Override
@@ -101,7 +101,7 @@ public class FlashWorld extends World {
 		int remainingBlinks;
 		String haekchen = "";
 		if(!bulb.isOn()&& bulb.getRemainingBlinks()== 0) {
-			remainingBlinks=starter.getTask();
+			remainingBlinks=starter.getCurrentTask().getNumberOfFlashes();
 			haekchen = "    finished \u2713";
 		}
 		else {
@@ -109,7 +109,7 @@ public class FlashWorld extends World {
 		}
 		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
 		graphics.setColor(Color.BLACK);
-		graphics.drawString("Task / Remaining: " + starter.getTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
+		graphics.drawString("Task / Remaining: " + starter.getCurrentTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class FlashWorld extends World {
 		this.bulb = bulb;
 	}
 
-	public void setStarter(Starter starter) {
+	public void setStarter(TaskProvider starter) {
 		this.starter = starter;
 	}
 

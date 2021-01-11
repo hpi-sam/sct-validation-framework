@@ -7,8 +7,9 @@ import java.util.List;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Entity;
+import de.hpi.mod.sim.worlds.flasher.entities.FlashTask;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulbSpecification;
-import de.hpi.mod.sim.worlds.flasher.entities.StarterSpecification;
+import de.hpi.mod.sim.worlds.flasher.entities.TaskProviderSpecification;
 
 public class ScenarioGenerator {
 
@@ -27,7 +28,9 @@ public class ScenarioGenerator {
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
-            StarterSpecification starter = new StarterSpecification(Arrays.asList(1), Arrays.asList(3000f), true, world);
+            
+            TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(new FlashTask(1, 3000)), true, world);
+            //TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(1), Arrays.asList(3000f), true, world);
 
             list.add(bulb);
             list.add(starter);
@@ -44,8 +47,10 @@ public class ScenarioGenerator {
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
             LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
-            StarterSpecification starter = new StarterSpecification(Arrays.asList(2), Arrays.asList(3000f), true,
-                    world);
+            
+            TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(new FlashTask(2, 3000)), true, world);
+//            TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(2), Arrays.asList(3000f), true,
+//                    world);
 
             list.add(bulb);
             list.add(starter);
@@ -53,36 +58,36 @@ public class ScenarioGenerator {
         }
     }
     
-    private class FibonacciBlinkScenario extends Scenario {
-
-        public FibonacciBlinkScenario() {
-            name = "Fibonacci Blinks";
-        }
-
-        @Override
-        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
-
-            List<Integer> fibonacci = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55);
-            List<Float> waitTimes = new ArrayList<>(fibonacci.size());
-            for (int f : fibonacci) {
-                waitTimes.add(f * 1000f + 3500f);
-            }
-
-            List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
-            StarterSpecification starter = new StarterSpecification(fibonacci, waitTimes, true, world);
-
-            list.add(bulb);
-            list.add(starter);
-            return list;
-        }
-    }
+//    private class FibonacciBlinkScenario extends Scenario {
+//
+//        public FibonacciBlinkScenario() {
+//            name = "Fibonacci Blinks";
+//        }
+//
+//        @Override
+//        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
+//
+//            List<Integer> fibonacci = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55);
+//            List<Float> waitTimes = new ArrayList<>(fibonacci.size());
+//            for (int f : fibonacci) {
+//                waitTimes.add(f * 1000f + 3500f);
+//            }
+//
+//            List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
+//            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
+//            TaskProviderSpecification starter = new TaskProviderSpecification(fibonacci, waitTimes, true, world);
+//
+//            list.add(bulb);
+//            list.add(starter);
+//            return list;
+//        }
+//    }
 
     public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList<>();
         scenarios.add(new OneBlinkScenario());
         scenarios.add(new TwoBlinkScenario());
-        scenarios.add(new FibonacciBlinkScenario());
+//        scenarios.add(new FibonacciBlinkScenario());
         return scenarios;
     }
 }
