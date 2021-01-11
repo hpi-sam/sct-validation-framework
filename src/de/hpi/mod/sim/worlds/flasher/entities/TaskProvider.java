@@ -24,7 +24,6 @@ public abstract class TaskProvider implements Entity {
 		// Decrement timer
 		if (this.countdownTimer > 0) {
 			this.countdownTimer -= delta;
-			System.out.println(this.countdownTimer);
 		}
 
 		// Update depending on current task and timer...
@@ -34,11 +33,10 @@ public abstract class TaskProvider implements Entity {
 				&& this.currentTask != null) {
 
 			// ...send task to lightbulb and start timer
-			System.out.println("End Pause, Send Task");
 			this.currentState = TaskProviderState.TASK_IS_RUNNING;
 			this.world.startBulb(this.currentTask.getNumberOfFlashes());
-			this.countdownTimer = FlasherConfiguration.getWaitingTimeBeforeTask()
-					/ Configuration.getEntitySpeedFactor();
+			this.countdownTimer = this.currentTask.getWaitingTime() / Configuration.getEntitySpeedFactor();
+			System.out.println("End Pause, Send Task, STart Timer: " + this.countdownTimer);
 		}
 
 		// Case 2: Waiting for task OR ( if a task if running AND Timer has run out )...

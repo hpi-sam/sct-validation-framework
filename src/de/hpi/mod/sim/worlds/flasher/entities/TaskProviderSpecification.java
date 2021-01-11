@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.worlds.flasher.FlashWorld;
+import de.hpi.mod.sim.worlds.flasher.entities.TaskProviderWithGenerator.ITaskGenerator;
 
 public class TaskProviderSpecification implements EntitySpecification<TaskProvider> {
 

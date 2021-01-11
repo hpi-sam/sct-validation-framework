@@ -10,6 +10,7 @@ import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.flasher.entities.FlashTask;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulbSpecification;
 import de.hpi.mod.sim.worlds.flasher.entities.TaskProviderSpecification;
+import de.hpi.mod.sim.worlds.flasher.entities.TaskProviderWithGenerator.ITaskGenerator;
 
 public class ScenarioGenerator {
 
@@ -58,36 +59,48 @@ public class ScenarioGenerator {
         }
     }
     
-//    private class FibonacciBlinkScenario extends Scenario {
-//
-//        public FibonacciBlinkScenario() {
-//            name = "Fibonacci Blinks";
-//        }
-//
-//        @Override
-//        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
-//
-//            List<Integer> fibonacci = Arrays.asList(1, 1, 2, 3, 5, 8, 13, 21, 34, 55);
-//            List<Float> waitTimes = new ArrayList<>(fibonacci.size());
-//            for (int f : fibonacci) {
-//                waitTimes.add(f * 1000f + 3500f);
-//            }
-//
-//            List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-//            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
-//            TaskProviderSpecification starter = new TaskProviderSpecification(fibonacci, waitTimes, true, world);
-//
-//            list.add(bulb);
-//            list.add(starter);
-//            return list;
-//        }
-//    }
+    private class FibonacciBlinkScenario extends Scenario {
+
+        public FibonacciBlinkScenario() {
+            name = "Fibonacci Blinks";
+        }
+        
+        private class FibonacciGenerator implements ITaskGenerator{
+        	
+        	int secondLastValue = 1;
+        	int lastValue = 0;
+
+			@Override
+			public FlashTask next() {
+				// Overwrite last and second last values
+				// (The temporary value is a "hack" for the first iteration) 
+				int temporaryReturnValue = this.lastValue + this.secondLastValue;
+				this.secondLastValue = this.lastValue;
+				this.lastValue = temporaryReturnValue;
+				return new FlashTask(temporaryReturnValue, (temporaryReturnValue* 1000) + 3500);
+			}
+        		
+        }        
+        
+        @Override
+        public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
+
+
+            List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
+            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
+            TaskProviderSpecification starter = new TaskProviderSpecification(new FibonacciGenerator(), world);
+
+            list.add(bulb);
+            list.add(starter);
+            return list;
+        }
+    }
 
     public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList<>();
         scenarios.add(new OneBlinkScenario());
         scenarios.add(new TwoBlinkScenario());
-//        scenarios.add(new FibonacciBlinkScenario());
+        scenarios.add(new FibonacciBlinkScenario());
         return scenarios;
     }
 }
