@@ -23,7 +23,7 @@ import de.hpi.mod.sim.Flasher.State;
 public class LightBulb extends StateChartWrapper<Flasher.State>
 		implements StateChartEntity, IHighlightable {
 
-	private BufferedImage bulbOn, bulbOff;
+	private BufferedImage lightBulbOnImage, lightBulbOffImage;
 	private boolean isOn = false;
 	private int currentTaskBlinks = 0;
 
@@ -46,19 +46,41 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
  
 	}
 	
-	public void bulbRender(Graphics graphics, int width, int height) {
+	public void render(Graphics graphics, int panelWidth, int panelHeight) {
+		BufferedImage lightBulbImage = isOn ? lightBulbOnImage : lightBulbOffImage;
 		
-		BufferedImage img = isOn ? bulbOn : bulbOff;
-		graphics.drawImage(img, (width - img.getWidth()) / 2, (height - img.getHeight()) / 2, null);
-		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
-		graphics.setColor(Color.BLACK);
-		graphics.drawString("Task / Remaining: (" + currentTaskBlinks +" / "+ blinksSinceLastTask + " )", width/20, height- height/20);
+		int maximumPermittedImageWidth = (int) (panelWidth * FlasherConfiguration.getLightBulbImageMaximumWidthRate());
+		int maximumPermittedImageHeight = (int) (panelHeight * FlasherConfiguration.getLightBulbImageMaximumHeightRate());
+		
+		int imageWidth = lightBulbImage.getWidth();
+		int imageHeight = lightBulbImage.getHeight();
+		
+		// Scale image if original width is too large 
+		if(imageWidth > maximumPermittedImageWidth) {
+			imageWidth = maximumPermittedImageWidth;
+			imageHeight = (imageWidth * lightBulbImage.getHeight()) / lightBulbImage.getWidth();
+		}
+
+		// Scale image if original height is too large
+		if(imageHeight > maximumPermittedImageHeight) {
+			imageHeight = maximumPermittedImageHeight;
+			imageWidth = (imageHeight * lightBulbImage.getWidth()) / lightBulbImage.getHeight();
+		}		
+		
+		graphics.drawImage(lightBulbImage, 
+				(panelWidth - imageWidth) / 2, (panelHeight - imageHeight) / 2, // Image Position 
+				imageWidth, imageHeight, // Image Size
+				null);
+		
+//		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
+//		graphics.setColor(Color.BLACK);
+//		graphics.drawString("Task / Remaining BLAH: (" + currentTaskBlinks +" / "+ blinksSinceLastTask + " )", width/20, height- height/20);
 	}
 
 	private void loadImages() {
 		try {
-			bulbOn = ImageIO.read(new File(FlasherConfiguration.getStringPathBulbOn()));
-			bulbOff = ImageIO.read(new File(FlasherConfiguration.getStringPathBulbOff()));
+			lightBulbOnImage = ImageIO.read(new File(FlasherConfiguration.getStringPathBulbOn()));
+			lightBulbOffImage = ImageIO.read(new File(FlasherConfiguration.getStringPathBulbOff()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -91,7 +91,7 @@ public class FlashWorld extends World {
 	@Override
 	public void render(Graphics graphics) {
 		if (bulb != null) {
-			bulb.bulbRender(graphics, width, height);
+			bulb.render(graphics, width, height);
 			drawCounter(graphics);
 		}
 	}
