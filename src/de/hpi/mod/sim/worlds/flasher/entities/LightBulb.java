@@ -68,13 +68,10 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		}		
 		
 		graphics.drawImage(lightBulbImage, 
-				(panelWidth - imageWidth) / 2, (panelHeight - imageHeight) / 2, // Image Position 
-				imageWidth, imageHeight, // Image Size
+				(panelWidth - imageWidth) / 2, (panelHeight - imageHeight) / 2, // Image Position (top left)
+				imageWidth, imageHeight, // Image Size (scaled)
 				null);
 		
-//		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
-//		graphics.setColor(Color.BLACK);
-//		graphics.drawString("Task / Remaining BLAH: (" + currentTaskBlinks +" / "+ blinksSinceLastTask + " )", width/20, height- height/20);
 	}
 
 	private void loadImages() {
