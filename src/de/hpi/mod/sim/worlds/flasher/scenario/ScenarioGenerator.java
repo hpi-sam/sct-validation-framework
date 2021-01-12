@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.flasher;
+package de.hpi.mod.sim.worlds.flasher.scenario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +7,7 @@ import java.util.List;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Entity;
+import de.hpi.mod.sim.worlds.flasher.FlashWorld;
 import de.hpi.mod.sim.worlds.flasher.entities.FlashTask;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulbSpecification;
 import de.hpi.mod.sim.worlds.flasher.entities.TaskProviderSpecification;

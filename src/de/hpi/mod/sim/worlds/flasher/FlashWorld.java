@@ -18,6 +18,8 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulb;
 import de.hpi.mod.sim.worlds.flasher.entities.TaskProvider;
+import de.hpi.mod.sim.worlds.flasher.scenario.ScenarioGenerator;
+import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseGenerator;
 
 public class FlashWorld extends World {
     
