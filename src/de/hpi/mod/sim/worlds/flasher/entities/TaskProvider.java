@@ -62,10 +62,8 @@ public abstract class TaskProvider implements Entity {
 		}
 	}
 
+	// This method is left to the concrete impelementations.
 	protected abstract FlashTask getNextTask();
-
-	@Override
-	public abstract boolean hasPassedAllTestCriteria();
 
 	public FlashTask getCurrentTask() {
 		return currentTask;
