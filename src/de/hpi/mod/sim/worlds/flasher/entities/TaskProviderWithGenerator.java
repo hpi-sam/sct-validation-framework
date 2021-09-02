@@ -17,18 +17,9 @@ public class TaskProviderWithGenerator extends TaskProvider{
 		return this.taskGenerator.next();
 			
 	}
-
-	@Override
-	public boolean hasPassedAllTestCriteria() {
-		return true;
-		
-		
-	}
 	
 	
 	public interface ITaskGenerator {
-		
-		public FlashTask next();
-		
+		public FlashTask next();		
 	}
 }

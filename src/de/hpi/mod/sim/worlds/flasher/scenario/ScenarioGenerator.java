@@ -29,7 +29,7 @@ public class ScenarioGenerator {
         @Override
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
+            LightBulbSpecification bulb = new LightBulbSpecification(world);
             
             TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(new FlashTask(1, 3000)), true, world);
             //TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(1), Arrays.asList(3000f), true, world);
@@ -48,7 +48,7 @@ public class ScenarioGenerator {
         @Override
         public List<EntitySpecification<? extends Entity>> getScenarioEntities() {
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
+            LightBulbSpecification bulb = new LightBulbSpecification(world);
             
             TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(new FlashTask(2, 3000)), true, world);
 //            TaskProviderSpecification starter = new TaskProviderSpecification(Arrays.asList(2), Arrays.asList(3000f), true,
@@ -88,7 +88,7 @@ public class ScenarioGenerator {
 
 
             List<EntitySpecification<? extends Entity>> list = new ArrayList<>();
-            LightBulbSpecification bulb = new LightBulbSpecification(false, false, false, world);
+            LightBulbSpecification bulb = new LightBulbSpecification(world);
             TaskProviderSpecification starter = new TaskProviderSpecification(new FibonacciGenerator(), world);
 
             list.add(bulb);

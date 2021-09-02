@@ -28,12 +28,6 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	private int currentTaskBlinks = 0;
 
 	private int blinksSinceLastTask = -1;
-	
-	private boolean hasToBeOffForTests = false;
-	private boolean checkOnTimeForTests = false;
-	private boolean checkOffTimeForTests = false;
-	private boolean onlyCorrectOnTimes = true;
-	private boolean onlyCorrectOffTimes = true;
 
 	
 	
@@ -106,10 +100,6 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		lastOn = System.currentTimeMillis();
 		if(lastOff == null)
 			return;
-		long offtime = lastOn - lastOff;
-		if (blinksSinceLastTask > 0 && (offtime < 450 || offtime > 700)) {
-			onlyCorrectOffTimes = false;
-		}
 	}
 
 	public void turnOff() {
@@ -119,9 +109,6 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		lastOff = System.currentTimeMillis();
 		if (lastOn == null)
 			return;
-		long ontime = lastOff - lastOn; 
-		if (ontime < 450 || ontime > 700)
-			onlyCorrectOnTimes = false;
 	}
 
 	@Override
@@ -164,32 +151,12 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		return Arrays.asList("Times to blink " + currentTaskBlinks, "Blinks since last tasks: "  + blinksSinceLastTask, "Lamp is on: " + isOn());
 	}
 
-	@Override
-	public boolean hasPassedAllTestCriteria() {
-		return blinksSinceLastTask == 0 && 
-			   (!hasToBeOffForTests || !isOn) &&
-			   (!checkOffTimeForTests || onlyCorrectOffTimes) &&
-			   (!checkOnTimeForTests || onlyCorrectOnTimes);
-	}
-
 	public boolean isOn() {
 		return isOn;
 	}
 
 	public int getTimesToBlink() {
 		return currentTaskBlinks;
-	}
-
-	public void setHasToBeOffForTests(boolean b) {
-		this.hasToBeOffForTests = b;
-	}
-	
-	public void setCheckOffTimeForTests(boolean b) {
-		this.checkOffTimeForTests = b;
-	}
-
-	public void setCheckOnTimeForTests(boolean b) {
-		this.checkOnTimeForTests = b;
 	}
 
 	public int getRemainingBlinks() {
