@@ -17,6 +17,7 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
+import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseExpectation;
 import de.hpi.mod.sim.Flasher;
 import de.hpi.mod.sim.Flasher.State;
 
@@ -28,16 +29,22 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	private int currentTaskBlinks = 0;
 
 	private int blinksSinceLastTask = -1;
-
 	
+	private TestCaseExpectation expectation = null;
 	
 	private Long lastOn, lastOff;
 
+	public LightBulb(TestCaseExpectation expectation) {
+		super();
+		this.expectation = expectation;
+		loadImages();
+		start();
+	}
+	
 	public LightBulb() {
 		super();
 		loadImages();
 		start();
- 
 	}
 	
 	public void render(Graphics graphics, int panelWidth, int panelHeight) {
