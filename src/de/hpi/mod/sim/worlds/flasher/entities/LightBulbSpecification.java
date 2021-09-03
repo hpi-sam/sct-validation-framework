@@ -22,7 +22,7 @@ public class LightBulbSpecification implements EntitySpecification<LightBulb> {
     public LightBulb createEntity() {
     	LightBulb bulb;
     	if(this.expectation == null) {
-    		bulb = new LightBulb(expectation);
+    		bulb = new LightBulbWithExpectation(expectation);
     	}else {
     		bulb = new LightBulb();
     	}       

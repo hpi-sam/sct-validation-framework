@@ -30,16 +30,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 
 	private int blinksSinceLastTask = -1;
 	
-	private TestCaseExpectation expectation = null;
-	
 	private Long lastOn, lastOff;
-
-	public LightBulb(TestCaseExpectation expectation) {
-		super();
-		this.expectation = expectation;
-		loadImages();
-		start();
-	}
 	
 	public LightBulb() {
 		super();
