@@ -20,7 +20,6 @@ public class TestCaseExpectation {
         for(TestCaseExpectation.Generator generator:generators) {
         	expectationEntries.addAll(generator.generateEntries());
         }                
-        this.sortExpectations();
 	}
 	
 	private void sortExpectations() {
@@ -33,6 +32,7 @@ public class TestCaseExpectation {
 	}
 	
 	public List<Entry> getExpectations() {
+        this.sortExpectations();
 		return this.expectations;
 	}
 	
