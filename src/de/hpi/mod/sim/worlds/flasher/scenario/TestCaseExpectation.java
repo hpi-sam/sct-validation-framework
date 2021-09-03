@@ -19,16 +19,19 @@ public class TestCaseExpectation {
         List<Entry> expectationEntries = new ArrayList<>();        
         for(TestCaseExpectation.Generator generator:generators) {
         	expectationEntries.addAll(generator.generateEntries());
-        }                
+        }    
+		this.sortExpectations();            
 	}
 	
 	private void sortExpectations() {
-		this.expectations.sort(new Comparator<Entry>() {
-			@Override
-			public int compare(Entry lhs, Entry rhs) {
-		        return lhs.getTime() > rhs.getTime() ? -1 : (lhs.getTime() < rhs.getTime()) ? 1 : 0;
-			}
-		});
+		if(this.expectations != null && !this.expectations.isEmpty()) {
+			this.expectations.sort(new Comparator<Entry>() {
+				@Override
+				public int compare(Entry lhs, Entry rhs) {
+			        return lhs.getTime() > rhs.getTime() ? -1 : (lhs.getTime() < rhs.getTime()) ? 1 : 0;
+				}
+			});
+		}
 	}
 	
 	public List<Entry> getExpectations() {

@@ -160,4 +160,8 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public int getRemainingBlinks() {
 		return blinksSinceLastTask;
 	}
+
+	public void update(float delta) {
+		
+	}
 }

@@ -19,4 +19,9 @@ public class FlashTask {
 		return waitingTime;
 	}
 	
+	@Override
+	public String toString() {
+		return Integer.toString(timesToBlink);
+	}
+	
 }

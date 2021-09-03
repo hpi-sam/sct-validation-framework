@@ -62,27 +62,27 @@ public class TestCaseGenerator {
         TaskProviderSpecification provider3 = new TaskProviderSpecification(t_list(t(1, 10000)), false, world);
         testScenarios.add(new ConcreteTestScenario("Turns off again", "The bulb turns off after flashing.", bulb3, provider3));
 
-        TestCaseExpectation expectation4 = new TestCaseExpectation(g(0, 20000, 1000, false));
+        TestCaseExpectation expectation4 = new TestCaseExpectation(g(0, 40000, 1000, false));
         LightBulbSpecification bulb4 = new LightBulbSpecification(world, expectation4);
         TaskProviderSpecification provider4 = new TaskProviderSpecification(t_list(t(2, 10000)), false, world);
         testScenarios.add(new ConcreteTestScenario("Two flashes", "The bulb flashes two times after called with start(2).", bulb4, provider4));
 
-        TestCaseExpectation expectation5 = new TestCaseExpectation(g(0, 20000, 1000, false));
+        TestCaseExpectation expectation5 = new TestCaseExpectation(g(0, 40000, 1000, false));
         LightBulbSpecification bulb5 = new LightBulbSpecification(world, expectation5);
         TaskProviderSpecification provider5 = new TaskProviderSpecification(t_list(t(5, 10000)), false, world);
         testScenarios.add(new ConcreteTestScenario("Five flashes", "The bulb flashes five times after called with start(5).", bulb5, provider5));
 
-        TestCaseExpectation expectation6 = new TestCaseExpectation(g(0, 20000, 1000, false));
+        TestCaseExpectation expectation6 = new TestCaseExpectation(g(0, 40000, 1000, false));
         LightBulbSpecification bulb6 = new LightBulbSpecification(world, expectation6);
         TaskProviderSpecification provider6 = new TaskProviderSpecification(t_list(t(2, 10000)), false, world);
         testScenarios.add(new ConcreteTestScenario("Correct flashing time", "The bulb flashes have a duration of 500ms.", bulb6, provider6));
 
-        TestCaseExpectation expectation7 = new TestCaseExpectation(g(0, 20000, 1000, false));
+        TestCaseExpectation expectation7 = new TestCaseExpectation(g(0, 40000, 1000, false));
         LightBulbSpecification bulb7 = new LightBulbSpecification(world, expectation7);
         TaskProviderSpecification provider7 = new TaskProviderSpecification(t_list(t(0, 10000)), false, world);
         testScenarios.add(new ConcreteTestScenario("Correct pausing time", "The pauses between the flashes have a duration of 500ms.", bulb7, provider7));
 
-        TestCaseExpectation expectation8 = new TestCaseExpectation(g(0, 20000, 1000, false));
+        TestCaseExpectation expectation8 = new TestCaseExpectation(g(0, 40000, 1000, false));
         LightBulbSpecification bulb8 = new LightBulbSpecification(world, expectation8);
         TaskProviderSpecification provider8 = new TaskProviderSpecification(t_list(t(2, 2000), t(4, 4000), t(1, 2000)), false, world);
         testScenarios.add(new ConcreteTestScenario("Multiple start calls", "The bulb can react to multiple, sequential start calls (start(2), start(4), start(1))", bulb8, provider8));

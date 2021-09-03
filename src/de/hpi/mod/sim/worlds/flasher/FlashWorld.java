@@ -17,6 +17,7 @@ import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulb;
+import de.hpi.mod.sim.worlds.flasher.entities.LightBulbWithExpectation;
 import de.hpi.mod.sim.worlds.flasher.entities.TaskProvider;
 import de.hpi.mod.sim.worlds.flasher.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseGenerator;
@@ -57,8 +58,10 @@ public class FlashWorld extends World {
 
 	@Override
 	public void updateEntities(float delta) {
-		if (starter != null)
-			starter.update(delta);		
+		if (this.starter != null)
+			this.starter.update(delta);		
+		if (this.bulb != null && (this.bulb instanceof LightBulbWithExpectation))
+			((LightBulbWithExpectation) this.bulb).update(delta);	
 	}
 
 	@Override

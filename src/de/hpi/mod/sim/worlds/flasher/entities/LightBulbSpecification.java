@@ -22,9 +22,9 @@ public class LightBulbSpecification implements EntitySpecification<LightBulb> {
     public LightBulb createEntity() {
     	LightBulb bulb;
     	if(this.expectation == null) {
-    		bulb = new LightBulbWithExpectation(expectation);
-    	}else {
     		bulb = new LightBulb();
+    	}else {
+    		bulb = new LightBulbWithExpectation(expectation);
     	}       
         world.setBulb(bulb);
         return bulb;

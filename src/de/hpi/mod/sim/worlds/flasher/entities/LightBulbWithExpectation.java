@@ -19,7 +19,6 @@ public class LightBulbWithExpectation extends LightBulb {
 		for(TestCaseExpectation.Entry entry : expectation.getExpectations()) {
 			upcomingTests.add(new TestResult(entry.getTime(), entry.isExpectedOn()));
 		}
-			
 	}
 	
 	private class TestResult{
@@ -58,6 +57,10 @@ public class LightBulbWithExpectation extends LightBulb {
 	public boolean hasPassedAllTestCriteria() {
 		return !failedTest && this.upcomingTests.isEmpty();
 	}
+	
+	public boolean hasFailedTest() {
+		return failedTest;
+	}
 
 	
 	public void update(float delta) {
@@ -67,6 +70,8 @@ public class LightBulbWithExpectation extends LightBulb {
 
 		// Is timer reached?
 		if(this.nextTest != null && this.timer >= nextTest.getTime()) {
+			
+			System.out.println(this.timer + "TEST EVENT " + this.upcomingTests.size());
 			
 			// If yes, check if test is fullfilled...
 			if(this.isOn() != nextTest.isExpectedOn()) {
