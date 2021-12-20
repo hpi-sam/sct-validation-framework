@@ -10,8 +10,12 @@ public class TestCaseExpectation {
 	private List<Entry> expectations;
 
 	public TestCaseExpectation(List<Entry> expectations) {
-		this.expectations = expectations;
-		this.sortExpectations();
+		if(expectations != null) {
+			this.expectations = expectations;
+			this.sortExpectations();
+		} else {
+			this.expectations = new ArrayList<>();
+		}
 	}
 	
 
@@ -28,14 +32,13 @@ public class TestCaseExpectation {
 			this.expectations.sort(new Comparator<Entry>() {
 				@Override
 				public int compare(Entry lhs, Entry rhs) {
-			        return lhs.getTime() > rhs.getTime() ? -1 : (lhs.getTime() < rhs.getTime()) ? 1 : 0;
+			        return lhs.getTime() < rhs.getTime() ? -1 : (lhs.getTime() > rhs.getTime()) ? 1 : 0;
 				}
 			});
 		}
-	}
+	} 
 	
 	public List<Entry> getExpectations() {
-        this.sortExpectations();
 		return this.expectations;
 	}
 	

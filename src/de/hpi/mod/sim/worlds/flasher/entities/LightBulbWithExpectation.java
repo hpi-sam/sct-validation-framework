@@ -11,14 +11,16 @@ public class LightBulbWithExpectation extends LightBulb {
 	private boolean failedTest = false;
 	
 	private double timer = 0;
-	private MeasurementPoint nextTest;
+	private MeasurementPoint nextMeasurement;
 
 	public LightBulbWithExpectation(TestCaseExpectation expectation) {
 		super();
 		// Create Test Entries
 		for(TestCaseExpectation.Entry entry : expectation.getExpectations()) {
-			upcomingMeasurements.add(new MeasurementPoint(entry.getTime(), entry.isExpectedOn()));
+			this.upcomingMeasurements.add(new MeasurementPoint(entry.getTime(), entry.isExpectedOn()));
 		}
+		// Start with first expected measurement
+		this.nextMeasurement = this.getNextMeasurement();
 	}
 	
 	private class MeasurementPoint{
@@ -39,7 +41,7 @@ public class LightBulbWithExpectation extends LightBulb {
 		}
 	}
 
-	private MeasurementPoint getNextTest() {
+	private MeasurementPoint getNextMeasurement() {
 
 		// Quit if list is empty
 		if(this.upcomingMeasurements.isEmpty()) {
@@ -69,17 +71,15 @@ public class LightBulbWithExpectation extends LightBulb {
 		this.timer += delta;
 
 		// Is timer reached?
-		if(this.nextTest != null && this.timer >= nextTest.getTime()) {
-			
-			System.out.println(this.timer + "TEST EVENT " + this.upcomingMeasurements.size());
+		if(this.nextMeasurement != null && this.timer >= nextMeasurement.getTime()) {
 			
 			// If yes, check if test is fulfilled...
-			if(this.isOn() != nextTest.isExpectedOn()) {
+			if(this.isOn() != nextMeasurement.isExpectedOn()) {
 				this.failedTest = true;
 			}
 			
 			// ...and get next test.
-			this.nextTest = this.getNextTest();
+			this.nextMeasurement = this.getNextMeasurement();
 			
 		}
 	}

@@ -21,12 +21,14 @@ public class TestExpectationDetector extends Detector {
 			for(Entity entity:entities) {
 				if (entity instanceof LightBulbWithExpectation) {
 					LightBulbWithExpectation lightBulb = (LightBulbWithExpectation) entity;
+					System.out.println("try to detect failure");
 					if(lightBulb.hasFailedTest()) {
+						System.out.println("detected");
 						this.errorReported = true;
 						if (lightBulb.isOn()) {
-							report("Should be off.", lightBulb, null);
+							report("light bulb should be off now.", lightBulb);
 						}else {
-							report("Should be on.", lightBulb, null);
+							report("light bulb should be on now.", lightBulb);
 						}
 				}
 			}		

@@ -39,7 +39,7 @@ public abstract class TaskProvider implements Entity {
 			System.out.println("End Pause, Send Task, STart Timer: " + this.countdownTimer);
 		}
 
-		// Case 2: Waiting for task OR ( if a task if running AND Timer has run out )...
+		// Case 2: Waiting for task OR ( if a task is running AND Timer has run out )...
 		if (this.currentState == TaskProviderState.WAITING_FOR_NEXT_TASK
 				|| (this.currentState == TaskProviderState.TASK_IS_RUNNING && this.countdownTimer <= 0)) {
 
