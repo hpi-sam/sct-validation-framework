@@ -52,7 +52,7 @@ public class LightBulbWithExpectation extends LightBulb {
 		MeasurementPoint nextTest = this.upcomingMeasurements.get(0);
 		this.upcomingMeasurements.remove(0);
 		return nextTest;
-
+		
 	}
 	
 	@Override
@@ -71,9 +71,7 @@ public class LightBulbWithExpectation extends LightBulb {
 		this.timer += delta;
 
 		// Is timer reached?
-		if(this.nextMeasurement != null && this.timer >= nextMeasurement.getTime()) {
-			
-			System.out.println("(" + this.timer + ") Expecting: "+nextMeasurement.isExpectedOn()+"  Is:"+this.isOn());
+		while(this.nextMeasurement != null && this.timer >= nextMeasurement.getTime()) {
 			
 			// If yes, check if test is fulfilled...
 			if(this.isOn() != nextMeasurement.isExpectedOn()) {
