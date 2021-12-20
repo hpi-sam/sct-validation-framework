@@ -7,25 +7,25 @@ import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseExpectation;
 
 public class LightBulbWithExpectation extends LightBulb {
 	
-	private List<TestResult> upcomingTests = new ArrayList<TestResult>();
+	private List<MeasurementPoint> upcomingMeasurements = new ArrayList<MeasurementPoint>();
 	private boolean failedTest = false;
 	
 	private double timer = 0;
-	private TestResult nextTest;
+	private MeasurementPoint nextTest;
 
 	public LightBulbWithExpectation(TestCaseExpectation expectation) {
 		super();
 		// Create Test Entries
 		for(TestCaseExpectation.Entry entry : expectation.getExpectations()) {
-			upcomingTests.add(new TestResult(entry.getTime(), entry.isExpectedOn()));
+			upcomingMeasurements.add(new MeasurementPoint(entry.getTime(), entry.isExpectedOn()));
 		}
 	}
 	
-	private class TestResult{
+	private class MeasurementPoint{
 		private double time;
 		private boolean result;
 		
-		public TestResult(double time, boolean on) {
+		public MeasurementPoint(double time, boolean on) {
 			this.time = time;
 			this.result = on;
 		}
@@ -39,23 +39,23 @@ public class LightBulbWithExpectation extends LightBulb {
 		}
 	}
 
-	private TestResult getNextTest() {
+	private MeasurementPoint getNextTest() {
 
-		// Quit if list ist empty
-		if(this.upcomingTests.isEmpty()) {
+		// Quit if list is empty
+		if(this.upcomingMeasurements.isEmpty()) {
 			return null;
 		}
 		
 		// Take first element and remove from list
-		TestResult nextTest = this.upcomingTests.get(0);
-		this.upcomingTests.remove(0);
+		MeasurementPoint nextTest = this.upcomingMeasurements.get(0);
+		this.upcomingMeasurements.remove(0);
 		return nextTest;
 
 	}
 	
 	@Override
 	public boolean hasPassedAllTestCriteria() {
-		return !failedTest && this.upcomingTests.isEmpty();
+		return !failedTest && this.upcomingMeasurements.isEmpty();
 	}
 	
 	public boolean hasFailedTest() {
@@ -71,9 +71,9 @@ public class LightBulbWithExpectation extends LightBulb {
 		// Is timer reached?
 		if(this.nextTest != null && this.timer >= nextTest.getTime()) {
 			
-			System.out.println(this.timer + "TEST EVENT " + this.upcomingTests.size());
+			System.out.println(this.timer + "TEST EVENT " + this.upcomingMeasurements.size());
 			
-			// If yes, check if test is fullfilled...
+			// If yes, check if test is fulfilled...
 			if(this.isOn() != nextTest.isExpectedOn()) {
 				this.failedTest = true;
 			}

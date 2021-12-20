@@ -16,9 +16,9 @@ public class TestCaseExpectation {
 	
 
 	public TestCaseExpectation(TestCaseExpectation.Generator... generators) {
-        List<Entry> expectationEntries = new ArrayList<>();        
+		this.expectations = new ArrayList<>();        
         for(TestCaseExpectation.Generator generator:generators) {
-        	expectationEntries.addAll(generator.generateEntries());
+        	this.expectations.addAll(generator.generateEntries());
         }    
 		this.sortExpectations();            
 	}
