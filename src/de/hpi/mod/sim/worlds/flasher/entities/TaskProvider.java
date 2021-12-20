@@ -1,7 +1,5 @@
 package de.hpi.mod.sim.worlds.flasher.entities;
 
-import java.util.List;
-
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.flasher.FlashWorld;
@@ -35,11 +33,11 @@ public abstract class TaskProvider implements Entity {
 			// ...send task to lightbulb and start timer
 			this.currentState = TaskProviderState.TASK_IS_RUNNING;
 			this.world.startBulb(this.currentTask.getNumberOfFlashes());
-			this.countdownTimer = this.currentTask.getWaitingTime() / Configuration.getEntitySpeedFactor();
-			System.out.println("End Pause, Send Task, STart Timer: " + this.countdownTimer);
+			this.countdownTimer = this.currentTask.getTaskTime() / Configuration.getEntitySpeedFactor();
+			System.out.println("End Pause, Send Task, Start Timer: " + this.countdownTimer);
 		}
 
-		// Case 2: Waiting for task OR ( if a task is running AND Timer has run out )...
+		// Case 2: Waiting for task OR ( Task is running AND Timer has run out)...
 		if (this.currentState == TaskProviderState.WAITING_FOR_NEXT_TASK
 				|| (this.currentState == TaskProviderState.TASK_IS_RUNNING && this.countdownTimer <= 0)) {
 
@@ -48,10 +46,10 @@ public abstract class TaskProvider implements Entity {
 
 			if (this.currentTask != null) {
 				// ...start mandatory pause before task execution if next task is available...
-				System.out.println("Get New Task, Start Pause");
+				System.out.println("");
 				this.currentState = TaskProviderState.PAUSE_BEFORE_TASK;
-				this.countdownTimer = FlasherConfiguration.getWaitingTimeBeforeTask()
-						/ Configuration.getEntitySpeedFactor();
+				this.countdownTimer = currentTask.getPreTaskWaitingTime() / Configuration.getEntitySpeedFactor();
+				System.out.println("Get New Task, Start Pause for " + this.countdownTimer/1000 + "s");
 
 			} else {
 				// ...or move to final state if no new task was found.
@@ -62,7 +60,7 @@ public abstract class TaskProvider implements Entity {
 		}
 	}
 
-	// This method is left to the concrete impelementations.
+	// This method must be specified by the concrete implementations.
 	protected abstract FlashTask getNextTask();
 
 	public FlashTask getCurrentTask() {

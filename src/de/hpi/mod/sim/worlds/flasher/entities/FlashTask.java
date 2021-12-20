@@ -1,22 +1,34 @@
 package de.hpi.mod.sim.worlds.flasher.entities;
 
+import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
+
 public class FlashTask {
 
 	private int timesToBlink;
-	private double waitingTime;
+	private double waitingTimeBeforeTask;
+	private double waitingTimeDuringTask;
 
-	public FlashTask(int timesToBlink, double waitingTime) {
+	public FlashTask(int timesToBlink, double waitingTimeBeforeTask, double waitingTimeDuringTask) {
 		super();
 		this.timesToBlink = timesToBlink;
-		this.waitingTime = waitingTime;
+		this.waitingTimeBeforeTask = waitingTimeBeforeTask;
+		this.waitingTimeDuringTask = waitingTimeDuringTask;
+	}
+
+	public FlashTask(int timesToBlink, double waitingTime) {
+		this(timesToBlink, FlasherConfiguration.getWaitingTimeBeforeTask(), waitingTime);
 	}
 
 	public int getNumberOfFlashes() {
 		return timesToBlink;
 	}
 	
-	public double getWaitingTime() {
-		return waitingTime;
+	public double getPreTaskWaitingTime() {
+		return waitingTimeBeforeTask;
+	}
+	
+	public double getTaskTime() {
+		return waitingTimeDuringTask;
 	}
 	
 	@Override

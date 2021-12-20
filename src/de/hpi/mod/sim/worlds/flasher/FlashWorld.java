@@ -16,6 +16,7 @@ import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
+import de.hpi.mod.sim.worlds.flasher.detectors.TestExpectationDetector;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulb;
 import de.hpi.mod.sim.worlds.flasher.entities.LightBulbWithExpectation;
 import de.hpi.mod.sim.worlds.flasher.entities.TaskProvider;
@@ -35,19 +36,7 @@ public class FlashWorld extends World {
 	 
 	@Override
 	public List<Detector> createDetectors() {
-		Detector det = new Detector(this) {
-
-			@Override
-			public void update(List<? extends Entity> entities) {
-				if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0) {
-					report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
-				}
-			}
-
-			@Override
-			public void reset() {}
-		};
-		return Arrays.asList(det);
+		return Arrays.asList(new TestExpectationDetector(this));
 	}
 
 	

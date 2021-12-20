@@ -11,7 +11,7 @@ public class TestExpectationDetector extends Detector {
 
 	private boolean errorReported = false;
 	
-	protected TestExpectationDetector(FlashWorld world) {
+	public TestExpectationDetector(FlashWorld world) {
 		super(world);
 	}
 

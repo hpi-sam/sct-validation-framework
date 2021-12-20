@@ -73,6 +73,8 @@ public class LightBulbWithExpectation extends LightBulb {
 		// Is timer reached?
 		if(this.nextMeasurement != null && this.timer >= nextMeasurement.getTime()) {
 			
+			System.out.println("(" + this.timer + ") Expecting: "+nextMeasurement.isExpectedOn()+"  Is:"+this.isOn());
+			
 			// If yes, check if test is fulfilled...
 			if(this.isOn() != nextMeasurement.isExpectedOn()) {
 				this.failedTest = true;

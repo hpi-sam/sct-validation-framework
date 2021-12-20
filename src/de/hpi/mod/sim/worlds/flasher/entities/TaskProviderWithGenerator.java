@@ -15,7 +15,6 @@ public class TaskProviderWithGenerator extends TaskProvider{
 		
 		// Return next generator event
 		return this.taskGenerator.next();
-			
 	}
 	
 	
