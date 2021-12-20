@@ -72,8 +72,8 @@ public class SimulationRunner {
 	}
 
 	/**
-	 * Refreshes the Simulation and sends Sensor-Refreshes to all entities. Locks the
-	 * List of entities
+	 * Refreshes the Simulation and sends Sensor-Refreshes to all entities. 
+	 * Locks the List of entities
 	 */
 	public synchronized void refresh() {
 		if (running && !runForbidden) {
@@ -85,7 +85,8 @@ public class SimulationRunner {
 	}
 
 	/**
-	 * Updates the Entities each frame. Locks the List of Entities
+	 * Updates the Entities each frame. 
+	 * Locks the List of Entities
 	 * 
 	 * @param delta The time since last frame in milliseconds
 	 */

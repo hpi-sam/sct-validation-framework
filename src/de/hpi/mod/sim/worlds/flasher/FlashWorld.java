@@ -16,6 +16,12 @@ import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.view.panels.AnimationPanel;
+import de.hpi.mod.sim.worlds.flasher.detectors.TestExpectationDetector;
+import de.hpi.mod.sim.worlds.flasher.entities.LightBulb;
+import de.hpi.mod.sim.worlds.flasher.entities.LightBulbWithExpectation;
+import de.hpi.mod.sim.worlds.flasher.entities.TaskProvider;
+import de.hpi.mod.sim.worlds.flasher.scenario.ScenarioGenerator;
+import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseGenerator;
 
 public class FlashWorld extends World {
     
@@ -24,25 +30,13 @@ public class FlashWorld extends World {
 		publicName = "Flashing Lightbulb World";
 	}
 
-	private Bulb bulb;
-	private Starter starter;
+	private LightBulb bulb;
+	private TaskProvider starter;
 	private int width, height;
 	 
 	@Override
 	public List<Detector> createDetectors() {
-		Detector det = new Detector(this) {
-
-			@Override
-			public void update(List<? extends Entity> entities) {
-				if (bulb != null && bulb.isOn() && bulb.getTimesToBlink() == 0) {
-					report("The lamp was on but no flashing was requested (either no start signal or just start(0)).");
-				}
-			}
-
-			@Override
-			public void reset() {}
-		};
-		return Arrays.asList(det);
+		return Arrays.asList(new TestExpectationDetector(this));
 	}
 
 	
@@ -53,8 +47,10 @@ public class FlashWorld extends World {
 
 	@Override
 	public void updateEntities(float delta) {
-		if (starter != null)
-			starter.update(delta);		
+		if (this.starter != null)
+			this.starter.update(delta);		
+		if (this.bulb != null && (this.bulb instanceof LightBulbWithExpectation))
+			((LightBulbWithExpectation) this.bulb).update(delta);	
 	}
 
 	@Override
@@ -89,9 +85,9 @@ public class FlashWorld extends World {
 	@Override
 	public void render(Graphics graphics) {
 		if (bulb != null) {
-			bulb.bulbRender(graphics, width, height);
+			bulb.render(graphics, width, height);
 			drawCounter(graphics);
-			}
+		}
 	}
 	
 	
@@ -99,7 +95,7 @@ public class FlashWorld extends World {
 		int remainingBlinks;
 		String haekchen = "";
 		if(!bulb.isOn()&& bulb.getRemainingBlinks()== 0) {
-			remainingBlinks=starter.getTask();
+			remainingBlinks=starter.getCurrentTask().getNumberOfFlashes();
 			haekchen = "    finished \u2713";
 		}
 		else {
@@ -107,7 +103,7 @@ public class FlashWorld extends World {
 		}
 		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
 		graphics.setColor(Color.BLACK);
-		graphics.drawString("Task / Remaining: " + starter.getTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
+		graphics.drawString("Task / Remaining: " + starter.getCurrentTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
 	}
 
 	@Override
@@ -126,11 +122,11 @@ public class FlashWorld extends World {
 		bulb.close();
 	}
 
-	public void setBulb(Bulb bulb) {
+	public void setBulb(LightBulb bulb) {
 		this.bulb = bulb;
 	}
 
-	public void setStarter(Starter starter) {
+	public void setStarter(TaskProvider starter) {
 		this.starter = starter;
 	}
 
@@ -142,7 +138,7 @@ public class FlashWorld extends World {
 
 	public void startBulb(int n) {
 		if (bulb != null)
-			bulb.start(n);
+			bulb.doBlinkingTask(n);
 	}
 
 
