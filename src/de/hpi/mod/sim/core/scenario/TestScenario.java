@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.core.scenario;
 
 import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
@@ -14,6 +15,11 @@ public abstract class TestScenario extends Scenario {
         super.loadScenario(world);
         hasRun = true;
     }
+
+    @Override
+	public boolean isDetectorNeeded(Detector d) {
+		return d.isNeededForTests();
+	}
 
     public boolean isPassed() {
         return hasRun && entities.stream().allMatch(Entity::hasPassedAllTestCriteria);

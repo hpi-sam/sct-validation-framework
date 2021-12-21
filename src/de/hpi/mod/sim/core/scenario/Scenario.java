@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 
 /**
@@ -49,5 +50,9 @@ public abstract class Scenario {
 	public boolean isResizable() {
 		return resizable;
 	};
+	
+	public boolean isDetectorNeeded(Detector d) {
+		return d.isNeededForScenarios();
+	}
 }
 

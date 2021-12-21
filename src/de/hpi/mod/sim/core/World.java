@@ -67,8 +67,12 @@ public abstract class World {
         getSimulationRunner().reset();
         getSimulationRunner().playScenario(scenario);
         resetScenario();
-        for (Detector detector : getDetectors())
-            detector.reset();
+        
+        for (Detector detector : getDetectors()) {
+        	if(scenario.isDetectorNeeded(detector))
+        		detector.reset();
+        }
+            
         if (!getSimulationRunner().isRunning())
             getSimulationRunner().toggleRunning();
 

@@ -94,7 +94,7 @@ public class ScenarioManager {
 		runningAllTests = false;
 		frame.getScenarioPanel().select(scenario);
 		frame.getTimerPanel().startNewClock();
-		frame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
+		frame.displayMessage("Starting scenario \"" + scenario.getName() + "\"");
 		runScenario(scenario, false);
 	}
 
