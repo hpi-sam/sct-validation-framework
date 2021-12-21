@@ -1,63 +1,70 @@
 package de.hpi.mod.sim.worlds.flasher.entities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseExpectation;
 
 public class LightBulbWithExpectation extends LightBulb {
 	
-	private List<MeasurementPoint> upcomingMeasurements = new ArrayList<MeasurementPoint>();
+	private List<LightBulbObservation> upcomingObservations = new ArrayList<LightBulbObservation>();
+	private List<LightBulbObservation> activeExpectation = new ArrayList<LightBulbObservation>();
+	
 	private boolean failedTest = false;
 	
 	private double timer = 0;
-	private MeasurementPoint nextMeasurement;
+	private LightBulbObservation nextMeasurement;
 
-	public LightBulbWithExpectation(TestCaseExpectation expectation) {
+	public LightBulbWithExpectation(TestCaseExpectation testExpectedation) {
 		super();
-		// Create Test Entries
-		for(TestCaseExpectation.Entry entry : expectation.getExpectations()) {
-			this.upcomingMeasurements.add(new MeasurementPoint(entry.getTime(), entry.isExpectedOn()));
+		
+		// Create local Observations to be made
+		for(TestCaseExpectation.Expectation expectation : testExpectedation.getExpectations()) {
+			List<Boolean> expectedResults = expectation.getExpectedValueList();
+			if(!expectedResults.isEmpty())
+				this.upcomingObservations.add(new LightBulbObservation(expectation.getStartTime(), expectation.getEndTime(), expectedResults));
 		}
-		// Start with first expected measurement
-		this.nextMeasurement = this.getNextMeasurement();
 	}
 	
-	private class MeasurementPoint{
-		private double time;
-		private boolean result;
+	private class LightBulbObservation{
+		private double startTime;
+		private double endTime;
+		private List<Boolean> expectedValues;
+		private List<Boolean> observedValues;
 		
-		public MeasurementPoint(double time, boolean on) {
-			this.time = time;
-			this.result = on;
-		}
-
-		public double getTime() {
-			return time;
-		}
-
-		public boolean isExpectedOn() {
-			return result;
-		}
-	}
-
-	private MeasurementPoint getNextMeasurement() {
-
-		// Quit if list is empty
-		if(this.upcomingMeasurements.isEmpty()) {
-			return null;
+		public LightBulbObservation(double startTime, double endTime, List<Boolean> results) {
+			this.startTime = startTime;
+			this.endTime = endTime;
+			this.expectedValues = results;
+			this.observedValues = new ArrayList<>();
 		}
 		
-		// Take first element and remove from list
-		MeasurementPoint nextTest = this.upcomingMeasurements.get(0);
-		this.upcomingMeasurements.remove(0);
-		return nextTest;
+		public void addObservation(boolean newValue) {
+			if(this.observedValues.isEmpty() || this.observedValues.get(this.observedValues.size() - 1) != newValue)
+				this.observedValues.add(newValue);
+		}
 		
+		public boolean isIntermediateObservartionValid() {
+			return this.expectedValues.get(0) == this.observedValues.get(0) && this.observedValues.size() <= this.expectedValues.size();
+		}
+		
+		public boolean isObservartionValidAndComplete() {
+			return this.observedValues.equals(this.expectedValues);
+		}
+
+		public double getStartTime() {
+			return this.startTime;
+		}
+
+		public double getEndTime() {
+			return this.endTime;
+		}
 	}
 	
 	@Override
 	public boolean hasPassedAllTestCriteria() {
-		return !failedTest && this.upcomingMeasurements.isEmpty();
+		return !failedTest && this.upcomingObservations.isEmpty() && this.activeExpectation.isEmpty();
 	}
 	
 	public boolean hasFailedTest() {
@@ -67,21 +74,38 @@ public class LightBulbWithExpectation extends LightBulb {
 	
 	public void update(float delta) {
 
-		// Decrement timer
+		// Increment local timer
 		this.timer += delta;
-
-		// Is timer reached?
-		while(this.nextMeasurement != null && this.timer >= nextMeasurement.getTime()) {
-			
-			// If yes, check if test is fulfilled...
-			if(this.isOn() != nextMeasurement.isExpectedOn()) {
-				this.failedTest = true;
+		
+		// REMOVE active observations if end time was passed and perform FINAL CHECK
+		//     (by having the remove before the adding and checking of new observations, we ensure that single value expectations are checked once.)
+		Iterator<LightBulbObservation> activeObservationsIterator = this.activeExpectation.iterator();
+		while (activeObservationsIterator.hasNext()) {
+			LightBulbObservation observation = activeObservationsIterator.next();
+			if(timer > observation.getEndTime()){
+				activeObservationsIterator.remove();
+				if(!observation.isObservartionValidAndComplete())
+					this.failedTest = true;
 			}
-			
-			// ...and get next test.
-			this.nextMeasurement = this.getNextMeasurement();
-			
 		}
+
+		// ADD active observations (from upcoming list) if start time is reached
+		Iterator<LightBulbObservation> upcomingObservationsIterator = this.upcomingObservations.iterator();
+		while (upcomingObservationsIterator.hasNext()) {
+			LightBulbObservation observation = upcomingObservationsIterator.next();
+			if(timer >= observation.getStartTime()) {
+				upcomingObservationsIterator.remove();
+				this.activeExpectation.add(observation);				
+			}
+		}
+		
+		// APPEND current value to active  and perform INTERMEDIATE CHECK
+		for(LightBulbObservation observartion: this.activeExpectation) {
+			observartion.addObservation(this.isOn());
+			if(!observartion.isIntermediateObservartionValid())
+				this.failedTest = true;
+		}
+		
 	}
 
 	
