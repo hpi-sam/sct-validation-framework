@@ -92,10 +92,11 @@ public class FlashWorld extends World {
 	
 	
 	private void drawCounter(Graphics graphics) {
-		int remainingBlinks;
+		int remainingBlinks = 0;
 		String haekchen = "";
 		if(!bulb.isOn()&& bulb.getRemainingBlinks()== 0) {
-			remainingBlinks=starter.getCurrentTask().getNumberOfFlashes();
+			if(starter.getCurrentTask() != null)
+				remainingBlinks=starter.getCurrentTask().getNumberOfFlashes();
 			haekchen = "    finished \u2713";
 		}
 		else {
