@@ -7,97 +7,102 @@ import java.util.List;
 
 public class TestCaseExpectation {
 
-	private List<Entry> expectations;
-
-	public TestCaseExpectation(List<Entry> expectations) {
-		if(expectations != null) {
-			this.expectations = expectations;
-			this.sortExpectations();
-		} else {
-			this.expectations = new ArrayList<>();
-		}
-	}
+	private List<Expectation> expectations;
 	
 
-	public TestCaseExpectation(TestCaseExpectation.Generator... generators) {
-		this.expectations = new ArrayList<>();        
-        for(TestCaseExpectation.Generator generator:generators) {
-        	this.expectations.addAll(generator.generateEntries());
-        }    
+	public TestCaseExpectation(TestCaseExpectation.Expectation... expectations) {
+		this.expectations = Arrays.asList(expectations);    
 		this.sortExpectations();            
 	}
 	
 	private void sortExpectations() {
 		if(this.expectations != null && !this.expectations.isEmpty()) {
-			this.expectations.sort(new Comparator<Entry>() {
+			this.expectations.sort(new Comparator<Expectation>() {
 				@Override
-				public int compare(Entry lhs, Entry rhs) {
-			        return lhs.getTime() < rhs.getTime() ? -1 : (lhs.getTime() > rhs.getTime()) ? 1 : 0;
+				public int compare(Expectation lhs, Expectation rhs) {
+			        return lhs.getStartTime() < rhs.getStartTime() ? -1 : (lhs.getStartTime() > rhs.getStartTime()) ? 1 : 0;
 				}
 			});
 		}
 	} 
 	
-	public List<Entry> getExpectations() {
+	public List<Expectation> getExpectations() {
 		return this.expectations;
 	}
 	
-	
-	public static class Entry{
-	
-		private double time;
-		private boolean expectedOn;
-	
-		public Entry(double time, boolean expectedLightBulbOn) {
-			this.time = time;
-			this.expectedOn = expectedLightBulbOn;
-		}
-	
-		public boolean isExpectedOn() {
-			return expectedOn;
-		}
-	
-		public double getTime() {
-			return time;
-		}
-	
-	
-	}
-	
-	public static class Generator {
+	public static abstract class Expectation {
 		
-		double startTime;
-		double endTime;
-		double timeDelta;
-		boolean repeat;
-		boolean expectedOn;
+		private double startTime;
+		private double endTime;
 		
-		public Generator(double time, boolean expectedLightBulbOn) {
-			this.startTime = time;
-			this.endTime = time;
-			this.expectedOn = expectedLightBulbOn;
-		}
-		
-		public Generator(double startTime, double endTime, double invervalLength, boolean expectedLightBulbOn) {
+		public Expectation(double startTime, double endTime) {
 			this.startTime = startTime;
 			this.endTime = endTime;
-			this.timeDelta = invervalLength;
+		}
+		
+		public double getStartTime() {
+			return this.startTime;
+		}
+		
+		public double getEndTime() {
+			return this.endTime;
+		}
+		
+		public abstract List<Boolean> getExpectedValueList();
+	}
+
+	public static class SingleValueExpectation extends Expectation {
+		
+		boolean expectedOn;
+		
+		public SingleValueExpectation(double time, boolean expectedLightBulbOn) {
+			super(time, time);
 			this.expectedOn = expectedLightBulbOn;
 		}
 
-		public List<Entry> generateEntries(){
-	        List<Entry> expectationEntries = new ArrayList<>();
-	        if(this.endTime > this.startTime) {
-	        	double time = this.startTime;
-		        while(time < this.endTime) {
-		        	expectationEntries.add(new Entry(time, this.expectedOn));
-		        	time += this.timeDelta;
-		        }        
-	        }else {
-	        	expectationEntries.add(new Entry(startTime, this.expectedOn));
-	        }	        
-			return expectationEntries;			
-		}		
+		@Override
+		public List<Boolean> getExpectedValueList() {
+			return new ArrayList<>(Arrays.asList(expectedOn));
+		}
+		
+	}
+
+	public static class IntervalExpectation extends Expectation {
+		
+		boolean expectedOn;
+		
+		public IntervalExpectation(double startTime, double endTime, boolean expectedLightBulbOn) {
+			super(startTime, endTime);
+			this.expectedOn = expectedLightBulbOn;
+		}
+
+		@Override
+		public List<Boolean> getExpectedValueList() {
+			return new ArrayList<>(Arrays.asList(expectedOn));
+		}
+		
+	}
+
+	public static class SequenceExpectation extends Expectation {
+		
+		boolean[] expectedOnSequence;
+		
+		public SequenceExpectation(double startTime, double endTime, boolean...expectedValues) {
+			super(startTime, endTime);
+			this.expectedOnSequence = expectedValues;
+		}
+
+		@Override
+		public List<Boolean> getExpectedValueList() {
+			List<Boolean> result = new ArrayList<>();
+			
+			// Return all values as flattened ArrayList (flattened = no same values behind each other!) 
+			for(boolean onValue : expectedOnSequence)
+				if(result.isEmpty()|| result.get(result.size() - 1) != onValue)
+					result.add(onValue);
+			return result;
+		}
+		
 	}
 
 }
