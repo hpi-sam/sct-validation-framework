@@ -23,7 +23,7 @@ public class DeadlockDetector extends RobotDetector {
 
 	@Override
 	public void robotUpdate(List<Robot> robots) {
-		if (!world.getSimulationRunner().isRunning() || !isActivated()) {
+		if (!world.getSimulationRunner().isRunning() || !isEnabled()) {
 			return;
 		}
 
@@ -55,7 +55,7 @@ public class DeadlockDetector extends RobotDetector {
 	}
 
 	private void reportDeadlock() {
-		deactivate();
+		disable();
 		String reason = "Deadlock detected!";
 		world.reportDeadlock(reason);
 		if (world.getScenarioManager().isRunningTest()) {

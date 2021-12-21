@@ -17,7 +17,7 @@ public class CollisionDetector extends RobotDetector {
 			for (Robot robot2 : robots) {
 				if (robot1 != robot2 && (robot1.pos().is(robot2.pos()) || robot1.oldPos().is(robot2.pos())
 						|| robot1.oldPos().is(robot2.oldPos()))) {
-					this.deactivate();
+					this.disable();
 					reportCollision(robot1, robot2);
 				}
 			}
@@ -27,6 +27,6 @@ public class CollisionDetector extends RobotDetector {
 	private void reportCollision(Robot robot1, Robot robot2) {
 		String reason = "Collision detected!";
 		world.reportCollision(robot1, robot2, reason);
-		report(reason, robot1, robot2);
+		reportDetectedProblem(reason, robot1, robot2);
 	}
 }

@@ -75,9 +75,9 @@ public abstract class World {
         	
         	// activate if needed
         	if(scenario.isDetectorNeeded(detector))
-            	detector.activate();
+            	detector.enable();
         	else
-        		detector.deactivate();
+        		detector.disable();
         		
         }
             
@@ -91,8 +91,8 @@ public abstract class World {
     
     public void deactivateDetectors() {
         for (Detector detector : getDetectors())
-			if(detector.isActivated())
-				detector.deactivate();
+			if(detector.isEnabled())
+				detector.disable();
     }
 
     public abstract List<? extends Entity> getEntities();
@@ -139,7 +139,7 @@ public abstract class World {
 	public void updateDetectors() {
 		List<? extends Entity> entities = this.getEntities();
 		for (Detector detector : this.getDetectors())
-			if(detector.isActivated())
+			if(detector.isEnabled())
 				detector.update(entities);
 	}
 

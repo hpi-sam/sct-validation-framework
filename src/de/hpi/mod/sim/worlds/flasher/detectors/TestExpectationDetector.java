@@ -15,17 +15,17 @@ public class TestExpectationDetector extends Detector {
 
 	@Override
 	public void update(List<? extends Entity> entities) {
-		if(!isActivated())
+		if(!isEnabled())
 			return;
 		for(Entity entity:entities) {
 			if (entity instanceof LightBulbWithExpectation) {
 				LightBulbWithExpectation lightBulb = (LightBulbWithExpectation) entity;
 				if(lightBulb.hasFailedTest()) {
-					this.deactivate();
+					this.disable();
 					if (lightBulb.isOn()) {
-						report("light bulb should be off now.", lightBulb);
+						reportDetectedProblem("light bulb should be off now.", lightBulb);
 					}else {
-						report("light bulb should be on now.", lightBulb);
+						reportDetectedProblem("light bulb should be on now.", lightBulb);
 					}
 				}
 			}		

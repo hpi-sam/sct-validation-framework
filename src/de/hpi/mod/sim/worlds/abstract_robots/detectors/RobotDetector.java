@@ -27,7 +27,7 @@ public abstract class RobotDetector extends Detector {
 
     @Override
     public void update(List<? extends Entity> entities) {
-		if(!isActivated())
+		if(!isEnabled())
 			return;
         List<Robot> list = entities.stream()
                 .filter(e -> (e instanceof Robot))

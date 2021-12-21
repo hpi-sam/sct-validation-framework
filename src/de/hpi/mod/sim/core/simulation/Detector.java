@@ -8,7 +8,7 @@ public abstract class Detector {
 
     protected World world;
 
-    private boolean activated = false;
+    private boolean enabled = false;
     private boolean neededForTests = true;
     private boolean neededForScenarios = true; 
 
@@ -22,7 +22,7 @@ public abstract class Detector {
     	this(world, true, true);
     }
 
-    public void report(String reason, IHighlightable involved1, IHighlightable involved2) {
+    public void reportDetectedProblem(String reason, IHighlightable involved1, IHighlightable involved2) {
         if (involved1 != null)
             world.getSimulationRunner().getAnimationPanel().setHighlighted1(involved1);
         
@@ -36,30 +36,28 @@ public abstract class Detector {
             world.getScenarioManager().failCurrentTest(reason);
     }
 
-    public void report(String reason, IHighlightable involved) {
-        report(reason, involved, null);
+    public void reportDetectedProblem(String reason, IHighlightable involved) {
+        reportDetectedProblem(reason, involved, null);
     }
 
-    public void report(String reason) {
-        report(reason, null, null);
+    public void reportDetectedProblem(String reason) {
+        reportDetectedProblem(reason, null, null);
     }
 
     public abstract void update(List<? extends Entity> entities);
 
     public void reset() {};
 
-    public boolean isActivated() {
-        return activated;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void activate() {
-    	System.out.println("ENABLE "+this.toString());
-        activated = true;
+    public void enable() {
+        enabled = true;
     }
 
-    public void deactivate() {
-    	System.out.println("DISABLE "+this.toString());
-        activated = false;
+    public void disable() {
+        enabled = false;
     }
 
 	public boolean isNeededForTests() {

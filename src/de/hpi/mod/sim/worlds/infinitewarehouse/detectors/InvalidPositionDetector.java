@@ -21,15 +21,15 @@ public class InvalidPositionDetector extends RobotDetector {
 				continue;
 			WarehouseRobot robot = (WarehouseRobot) generalRobot;
 			if (getWorld().getWarehouseManager().isInvalid(robot.pos())) {
-				this.deactivate();
+				this.disable();
 				reportInvalidPosition(robot, robot.pos());
 			}
 			if (getWorld().getWarehouseManager().isInvalid(robot.oldPos())) {
-				this.deactivate();
+				this.disable();
 				reportInvalidPosition(robot, robot.oldPos());
 			}
 			if (getWorld().getWarehouseManager().invalidManoeuvre(robot.oldPos(), robot.pos())) {
-				this.deactivate();
+				this.disable();
 				reportInvalidPosition(robot, robot.pos());
 			}
 		}
@@ -39,7 +39,7 @@ public class InvalidPositionDetector extends RobotDetector {
 		String reason = "Robot at invalid position at: (" + String.valueOf(invalidPosition.getX()) + ","
 				+ String.valueOf(invalidPosition.getY()) + ")!";
 		getWorld().reportInvalidPosition(robot, reason);
-		report(reason, robot);
+		reportDetectedProblem(reason, robot);
 	}
 	
 	private InfiniteWarehouse getWorld() {

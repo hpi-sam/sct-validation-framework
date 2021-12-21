@@ -22,7 +22,7 @@ public class InvalidTurningDetector extends RobotDetector {
 			WarehouseRobot robot = (WarehouseRobot) general_robot;
 			if (getWorld().getGridManager().cellType(robot.pos()) == CellType.CHARGER
 					&& (robot.getDriveManager().isTurningLeft() || robot.getDriveManager().isTurningRight())) {
-				this.deactivate();
+				this.disable();
 				reportInvalidTurning(robot);
 			}
 		}
@@ -32,7 +32,7 @@ public class InvalidTurningDetector extends RobotDetector {
 	private void reportInvalidTurning(WarehouseRobot robot) {
 		String reason = "Robot destroyed charging apparature because robot turned on charger!";
 		getWorld().reportInvalidTurning(robot, reason);
-		report(reason, robot);
+		reportDetectedProblem(reason, robot);
 	}
 	
 	private InfiniteWarehouse getWorld() {

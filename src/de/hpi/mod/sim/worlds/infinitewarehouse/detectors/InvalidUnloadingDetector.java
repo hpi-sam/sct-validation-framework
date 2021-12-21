@@ -23,7 +23,7 @@ public class InvalidUnloadingDetector extends RobotDetector {
 			WarehouseRobot robot = (WarehouseRobot) general_robot;
 			if (robot.getInvalidUnloadingPosition() != null) {
 				robot.resetInvalidUnloadingPosition();
-				this.deactivate();
+				this.disable();
 				reportInvalidPosition(robot, robot.pos());
 				getWorld().getWarehouseManager().makePositionInvalid(robot.pos());
 			}
@@ -39,7 +39,7 @@ public class InvalidUnloadingDetector extends RobotDetector {
 		String reason = "Robot at (" + String.valueOf(invalidPosition.getX()) + ","
 				+ String.valueOf(invalidPosition.getY()) + ") unloaded to illegal position!";
 		getWorld().reportInvalidUnloading(robot, reason);
-		report(reason, robot);
+		reportDetectedProblem(reason, robot);
 	}
 	
 	private InfiniteWarehouse getWorld() {

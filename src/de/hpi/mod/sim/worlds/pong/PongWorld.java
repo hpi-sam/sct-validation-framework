@@ -32,16 +32,16 @@ public class PongWorld extends World {
 		return Arrays.asList(new Detector(this) {
 			@Override
 			public void update(List<? extends Entity> entities) {
-				if(!isActivated())
+				if(!isEnabled())
 					return;
 				if (ball != null && paddle2 == null && ball.isOutOfBounds() && ball.getIsInTests()) {
-			 		report("The ball is out of bounds (the paddle didn't caught the ball).");
+			 		reportDetectedProblem("The ball is out of bounds (the paddle didn't caught the ball).");
 			 		}
 				if (paddle1 != null && paddle1.getHeight() + PongConfiguration.buffer > PongConfiguration.maxPos) {
-					report("The paddle is above maxPos.");
+					reportDetectedProblem("The paddle is above maxPos.");
 				}
 				if (paddle1 != null && paddle1.getHeight() - PongConfiguration.buffer < PongConfiguration.minPos) {
-					report("The paddle is beneath minPos.");
+					reportDetectedProblem("The paddle is beneath minPos.");
 			 	}
 			}
 		});
