@@ -46,7 +46,7 @@ public abstract class Detector {
 
     public abstract void update(List<? extends Entity> entities);
 
-    public abstract void reset();
+    public void reset() {};
 
     public boolean isActivated() {
         return activated;

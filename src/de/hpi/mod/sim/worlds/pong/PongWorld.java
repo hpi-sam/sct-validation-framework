@@ -29,24 +29,22 @@ public class PongWorld extends World {
 
 	@Override
 	public List<Detector> createDetectors() {
-		Detector det = new Detector(this) {
-
-		@Override
-		public void update(List<? extends Entity> entities) {
-			if (ball != null && paddle2 == null && ball.isOutOfBounds() && ball.getIsInTests()) {
-		 		report("The ball is out of bounds (the paddle didn't caught the ball).");
-		 		}
-			if (paddle1 != null && paddle1.getHeight() + PongConfiguration.buffer > PongConfiguration.maxPos) {
-				report("The paddle is above maxPos.");
+		return Arrays.asList(new Detector(this) {
+			@Override
+			public void update(List<? extends Entity> entities) {
+				if(!isActivated())
+					return;
+				if (ball != null && paddle2 == null && ball.isOutOfBounds() && ball.getIsInTests()) {
+			 		report("The ball is out of bounds (the paddle didn't caught the ball).");
+			 		}
+				if (paddle1 != null && paddle1.getHeight() + PongConfiguration.buffer > PongConfiguration.maxPos) {
+					report("The paddle is above maxPos.");
+				}
+				if (paddle1 != null && paddle1.getHeight() - PongConfiguration.buffer < PongConfiguration.minPos) {
+					report("The paddle is beneath minPos.");
+			 	}
 			}
-			if (paddle1 != null && paddle1.getHeight() - PongConfiguration.buffer < PongConfiguration.minPos) {
-				report("The paddle is beneath minPos.");
-		 	}
-		}
-		 	@Override
-		 	public void reset() {}
-		};
-		return Arrays.asList(det);
+		});
 	}
 
 	
