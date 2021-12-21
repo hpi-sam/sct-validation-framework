@@ -3,6 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_robots.detectors;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
@@ -17,10 +18,17 @@ public abstract class RobotDetector extends Detector {
         this.world = world;
     }
 
-    public abstract void robotUpdate(List<Robot> robots);
+    public RobotDetector(RobotWorld world, boolean forTests, boolean forScenarios) {
+        super(world, forTests, forScenarios);
+        this.world = world;
+    }
+
+	public abstract void robotUpdate(List<Robot> robots);
 
     @Override
     public void update(List<? extends Entity> entities) {
+		if(!isEnabled())
+			return;
         List<Robot> list = entities.stream()
                 .filter(e -> (e instanceof Robot))
                 .map(e -> (Robot) e)

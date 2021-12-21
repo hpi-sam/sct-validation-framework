@@ -67,8 +67,20 @@ public abstract class World {
         getSimulationRunner().reset();
         getSimulationRunner().playScenario(scenario);
         resetScenario();
-        for (Detector detector : getDetectors())
-            detector.reset();
+        
+        // prepare detectors
+        for (Detector detector : getDetectors()) {
+        	// reset
+        	detector.reset();
+        	
+        	// activate if needed
+        	if(scenario.isDetectorNeeded(detector))
+            	detector.enable();
+        	else
+        		detector.disable();
+        		
+        }
+            
         if (!getSimulationRunner().isRunning())
             getSimulationRunner().toggleRunning();
 
@@ -79,7 +91,8 @@ public abstract class World {
     
     public void deactivateDetectors() {
         for (Detector detector : getDetectors())
-            detector.deactivate();
+			if(detector.isEnabled())
+				detector.disable();
     }
 
     public abstract List<? extends Entity> getEntities();
@@ -121,6 +134,13 @@ public abstract class World {
 
 	public String getInternalName() {
 		return this.getClass().getName().replace(" ", "").toLowerCase();
+	}
+
+	public void updateDetectors() {
+		List<? extends Entity> entities = this.getEntities();
+		for (Detector detector : this.getDetectors())
+			if(detector.isEnabled())
+				detector.update(entities);
 	}
 
 	

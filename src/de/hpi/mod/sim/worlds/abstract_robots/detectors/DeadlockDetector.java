@@ -12,7 +12,7 @@ import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 public class DeadlockDetector extends RobotDetector {
 
 	public DeadlockDetector(RobotWorld world) {
-		super(world);
+		super(world, false, true);
 		getRobotPositions();
 	}
 
@@ -23,7 +23,7 @@ public class DeadlockDetector extends RobotDetector {
 
 	@Override
 	public void robotUpdate(List<Robot> robots) {
-		if (!world.getSimulationRunner().isRunning() || !isActivated()) {
+		if (!world.getSimulationRunner().isRunning() || !isEnabled()) {
 			return;
 		}
 
@@ -55,7 +55,7 @@ public class DeadlockDetector extends RobotDetector {
 	}
 
 	private void reportDeadlock() {
-		deactivate();
+		disable();
 		String reason = "Deadlock detected!";
 		world.reportDeadlock(reason);
 		if (world.getScenarioManager().isRunningTest()) {
@@ -73,9 +73,5 @@ public class DeadlockDetector extends RobotDetector {
 			robotPositions.put(robot.getID(), robot.pos());
 		}
 	}
-
-	@Override
-	public void reset() {
-		activate();
-	}
+	
 }

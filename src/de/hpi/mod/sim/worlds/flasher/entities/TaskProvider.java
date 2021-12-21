@@ -34,7 +34,6 @@ public abstract class TaskProvider implements Entity {
 			this.currentState = TaskProviderState.TASK_IS_RUNNING;
 			this.world.startBulb(this.currentTask.getNumberOfFlashes());
 			this.countdownTimer = this.currentTask.getTaskTime() / Configuration.getEntitySpeedFactor();
-			System.out.println("End Pause, Send Task, Start Timer: " + this.countdownTimer);
 		}
 
 		// Case 2: Waiting for task OR ( Task is running AND Timer has run out)...
@@ -46,14 +45,11 @@ public abstract class TaskProvider implements Entity {
 
 			if (this.currentTask != null) {
 				// ...start mandatory pause before task execution if next task is available...
-				System.out.println("");
 				this.currentState = TaskProviderState.PAUSE_BEFORE_TASK;
 				this.countdownTimer = currentTask.getPreTaskWaitingTime() / Configuration.getEntitySpeedFactor();
-				System.out.println("Get New Task, Start Pause for " + this.countdownTimer/1000 + "s");
 
 			} else {
 				// ...or move to final state if no new task was found.
-				System.out.println("End Queue");
 				this.currentState = TaskProviderState.NO_TASK_LEFT;
 			}
 

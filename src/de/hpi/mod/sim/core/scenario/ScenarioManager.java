@@ -59,12 +59,6 @@ public class ScenarioManager {
 		this.testResults.loadTestResultsFromFile();
 	}
 
-	private void updateDetectors() {
-		List<? extends Entity> entities = world.getEntities();
-		for (Detector detector : world.getDetectors())
-			detector.update(entities);
-	}
-
 	private void runScenario(Scenario scenario, boolean isTest) {
 		world.runScenario(scenario);
 
@@ -94,7 +88,7 @@ public class ScenarioManager {
 		runningAllTests = false;
 		frame.getScenarioPanel().select(scenario);
 		frame.getTimerPanel().startNewClock();
-		frame.displayMessage("Starting scenario: \"" + scenario.getName() + "\"");
+		frame.displayMessage("Starting scenario \"" + scenario.getName() + "\"");
 		runScenario(scenario, false);
 	}
 
@@ -148,6 +142,9 @@ public class ScenarioManager {
 		frame.clearSelections();
 		frame.getTimerPanel().clearTimer();
 		runScenario(clear, false);
+		
+		// Stop detectors
+		world.deactivateDetectors();
 	}
 
 	public void restartScenario() {
@@ -180,7 +177,8 @@ public class ScenarioManager {
 				if (runningAllTests)
 					runNextTest();
 
-			} else if (activeTest.isPassed()) { // Check the success condition been met yet?
+			} else if (activeTest.isPassed()) { // Has the success condition been met yet?
+				
 				// Stop detectors
 				world.deactivateDetectors();
 
@@ -197,7 +195,7 @@ public class ScenarioManager {
 					runNextTest();
 			}
 		}
-		updateDetectors();
+		this.world.updateDetectors();
 	}
 
 	public List<Scenario> getScenarios() {

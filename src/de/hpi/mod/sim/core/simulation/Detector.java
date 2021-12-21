@@ -8,46 +8,63 @@ public abstract class Detector {
 
     protected World world;
 
-    private boolean activated = false;
+    private boolean enabled = false;
+    private boolean neededForTests = true;
+    private boolean neededForScenarios = true; 
 
-    protected Detector(World world) {
+    protected Detector(World world, boolean forTests, boolean forScenarios) {
         this.world = world;
+        this.neededForTests = forTests;
+        this.neededForScenarios = forScenarios;
     }
 
-    public void report(String reason, IHighlightable involved1, IHighlightable involved2) {
+    protected Detector(World world) {
+    	this(world, true, true);
+    }
+
+    public void reportDetectedProblem(String reason, IHighlightable involved1, IHighlightable involved2) {
         if (involved1 != null)
             world.getSimulationRunner().getAnimationPanel().setHighlighted1(involved1);
+        
         if (involved2 != null)
             world.getSimulationRunner().getAnimationPanel().setHighlighted2(involved2);
 
         if (world.getSimulationRunner().isRunning())
             world.getSimulationRunner().toggleRunning();
-        if (world.getScenarioManager().isRunningTest()) {
+        
+        if (world.getScenarioManager().isRunningTest())
             world.getScenarioManager().failCurrentTest(reason);
-        }
     }
 
-    public void report(String reason, IHighlightable involved) {
-        report(reason, involved, null);
+    public void reportDetectedProblem(String reason, IHighlightable involved) {
+        reportDetectedProblem(reason, involved, null);
     }
 
-    public void report(String reason) {
-        report(reason, null, null);
+    public void reportDetectedProblem(String reason) {
+        reportDetectedProblem(reason, null, null);
     }
 
     public abstract void update(List<? extends Entity> entities);
 
-    public abstract void reset();
+    public void reset() {};
 
-    public boolean isActivated() {
-        return activated;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void activate() {
-        activated = true;
+    public void enable() {
+        enabled = true;
     }
 
-    public void deactivate() {
-        activated = false;
+    public void disable() {
+        enabled = false;
     }
+
+	public boolean isNeededForTests() {
+		return neededForTests;
+	}
+
+	public boolean isNeededForScenarios() {
+		return neededForScenarios;
+	}
 }
