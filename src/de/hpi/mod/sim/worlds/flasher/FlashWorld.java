@@ -27,7 +27,7 @@ public class FlashWorld extends World {
     
     public FlashWorld() {
 		super();
-		publicName = "Flashing Lightbulb World";
+		publicName = "Flashing Light Bulb World";
 	}
 
 	private LightBulb bulb;
