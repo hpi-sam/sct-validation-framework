@@ -95,22 +95,6 @@ public class FlashWorld extends World {
 	public int getCurrentBlinkCounter() {
 		return this.bulb.getCurrentBlinkCounter();
 	}
-	
-	private void drawCounter(Graphics graphics) {
-		int remainingBlinks = 0;
-		String haekchen = "";
-		if(!bulb.isOn()&& bulb.getCurrentBlinkCounter()== 0) {
-			if(starter.getCurrentTask() != null)
-				remainingBlinks=starter.getCurrentTask().getNumberOfFlashes();
-			haekchen = "    finished \u2713";
-		}
-		else {
-			remainingBlinks= bulb.getCurrentBlinkCounter();
-		}
-		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
-		graphics.setColor(Color.BLACK);
-		graphics.drawString("Task / Remaining: " + starter.getCurrentTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
-	}
 
 	@Override
 	public void refreshSimulationProperties(int currentHeight, int currentWidth) {
