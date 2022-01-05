@@ -87,7 +87,7 @@ public abstract class TaskProvider implements Entity {
 		int taskDisplayHeight = FlasherConfiguration.getTaskDisplayHeight();
 		
 		// Get fonts
-		Font taskHeaderFont = new Font("Monospaced", Font.BOLD, FlasherConfiguration.getTaskDisplayHeight()/5);
+		Font taskHeaderFont = new Font("Sans-Serif", Font.BOLD, FlasherConfiguration.getTaskDisplayHeight()/5);
 		FontMetrics taskHeaderFontMetrics = graphics.getFontMetrics(taskHeaderFont);
 		Font taskDescriptionFont = new Font("Monospaced", Font.PLAIN, FlasherConfiguration.getTaskDisplayHeight()/6);
 		FontMetrics taskDescriptionFontMetrics = graphics.getFontMetrics(taskDescriptionFont);
@@ -100,13 +100,13 @@ public abstract class TaskProvider implements Entity {
 			// Draw box with color depending on current status.
 			if(world.getCurrentBlinkCounter() < this.getCurrentTask().getNumberOfFlashes()) {
 				// // Not byet blinked enough => Yellow box
-				graphics.setColor(Color.yellow); 
+				graphics.setColor(new Color(255, 255, 0, 100)); 
 			} else if(world.getCurrentBlinkCounter() == this.getCurrentTask().getNumberOfFlashes()) {
 				// Blinked often enough => Green box
-				graphics.setColor(new Color(0xdcf3d0)); 
+				graphics.setColor(new Color(0, 255, 0, 100));
 			} else {
 				// Blinked too often => Red box
-				graphics.setColor(new Color(0xffe1d0)); 
+				graphics.setColor(new Color(255, 0, 0, 100));
 			}
 			graphics.fillRect(taskDisplayTopLeftX, taskDisplayTopLeftY, taskDisplayWidth, taskDisplayHeight);
 			
