@@ -41,8 +41,12 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void render(Graphics graphics, int panelWidth, int panelHeight) {
 		BufferedImage lightBulbImage = isOn ? lightBulbOnImage : lightBulbOffImage;
 		
+		// Recude effective panel hight by the size required for the task display below.
+		int availablePanelHight = panelHeight - FlasherConfiguration.getTaskDisplayReservedHeight();
+		
+		// Get maximum sizes of light bulb image based on total heigt/with and scaling factors 
 		int maximumPermittedImageWidth = (int) (panelWidth * FlasherConfiguration.getLightBulbImageMaximumRelativeWidth());
-		int maximumPermittedImageHeight = (int) (panelHeight * FlasherConfiguration.getLightBulbImageMaximumRelativeHeight());
+		int maximumPermittedImageHeight = (int) (availablePanelHight * FlasherConfiguration.getLightBulbImageMaximumRelativeHeight());
 		
 		int imageWidth = lightBulbImage.getWidth();
 		int imageHeight = lightBulbImage.getHeight();
@@ -60,7 +64,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		}		
 		
 		graphics.drawImage(lightBulbImage, 
-				(panelWidth - imageWidth) / 2, (panelHeight - imageHeight) / 2, // Image Position (top left)
+				(panelWidth - imageWidth) / 2, (availablePanelHight - imageHeight) / 2, // Image Position (top left)
 				imageWidth, imageHeight, // Image Size (scaled)
 				null);
 		

@@ -9,9 +9,9 @@ public class FlasherConfiguration {
     private static final double LIGHT_BULB_IMAGE_MAXIMUM_RELATIVE_WIDTH = 0.5;
     private static final double LIGHT_BULB_IMAGE_MAXIMUM_RELATIVE_HEIGHT = 0.8;
 
-    private static final double TASK_DISPLAY_HEIGHT = 100;
-    private static final double TASK_DISPLAY_PADDING = 10;
-    private static final double TASK_DISPLAY_SPACING = 50;
+    private static final int TASK_DISPLAY_HEIGHT = 100;
+    private static final int TASK_DISPLAY_PADDING = 10;
+    private static final int TASK_DISPLAY_SPACING = 50;
     
     private static final double WAITING_TIME_BEFORE_TASK = 2000.0;
     
@@ -35,19 +35,19 @@ public class FlasherConfiguration {
 		return WAITING_TIME_BEFORE_TASK;
 	}
 
-	public static double getTaskDisplayHeight() {
+	public static int getTaskDisplayHeight() {
 		return TASK_DISPLAY_HEIGHT;
 	}
 
-	public static double getTaskDisplayPadding() {
+	public static int getTaskDisplayPadding() {
 		return TASK_DISPLAY_PADDING;
 	}
 
-	public static double getTaskDisplaySpacing() {
+	public static int getTaskDisplaySpacing() {
 		return TASK_DISPLAY_SPACING;
 	}    
 
-	public static double getTaskDisplayReservedHeight() {
+	public static int getTaskDisplayReservedHeight() {
 		return TASK_DISPLAY_HEIGHT + (2 * TASK_DISPLAY_SPACING);
 	}
     
