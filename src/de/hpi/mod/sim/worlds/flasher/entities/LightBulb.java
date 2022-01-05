@@ -41,8 +41,8 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void render(Graphics graphics, int panelWidth, int panelHeight) {
 		BufferedImage lightBulbImage = isOn ? lightBulbOnImage : lightBulbOffImage;
 		
-		int maximumPermittedImageWidth = (int) (panelWidth * FlasherConfiguration.getLightBulbImageMaximumWidthRate());
-		int maximumPermittedImageHeight = (int) (panelHeight * FlasherConfiguration.getLightBulbImageMaximumHeightRate());
+		int maximumPermittedImageWidth = (int) (panelWidth * FlasherConfiguration.getLightBulbImageMaximumRelativeWidth());
+		int maximumPermittedImageHeight = (int) (panelHeight * FlasherConfiguration.getLightBulbImageMaximumRelativeHeight());
 		
 		int imageWidth = lightBulbImage.getWidth();
 		int imageHeight = lightBulbImage.getHeight();
