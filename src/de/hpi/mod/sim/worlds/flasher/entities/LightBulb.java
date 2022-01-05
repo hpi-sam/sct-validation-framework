@@ -151,7 +151,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("Blinks in current task: " + this.getTimesToBlinkText(), "Blinks since task start: "  + this.getCurrentBlinkCounterText(), "", "Lamp is on: " + this.isOn());
+		return Arrays.asList("Blinks in latest task: " + this.getTimesToBlinkText(), "Blinks since task start: "  + this.getCurrentBlinkCounterText(), "", "Lamp is on: " + this.isOn());
 	}
 
 	public boolean isOn() {
@@ -163,7 +163,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	}
 
 	private String getTimesToBlinkText() {
-		if(currentTaskBlinks <= 0) {
+		if(currentTaskBlinks < 0) {
 			return "No Task.";
 		}
 		return Integer.toString(currentTaskBlinks);
@@ -174,7 +174,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	}
 
 	private String getCurrentBlinkCounterText() {
-		if(this.getCurrentBlinkCounter() <= 0) {
+		if(this.getCurrentBlinkCounter() < 0) {
 			return "No Task.";
 		}
 		return Integer.toString(this.getCurrentBlinkCounter());
