@@ -87,7 +87,6 @@ public class FlashWorld extends World {
 		if (bulb != null) {
 			bulb.render(graphics, width, height);
 			starter.render(graphics, width, height);
-//			drawCounter(graphics);
 		}
 	}
 	

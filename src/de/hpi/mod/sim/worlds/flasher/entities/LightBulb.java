@@ -28,7 +28,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	private boolean isOn = false;
 	private int currentTaskBlinks = 0;
 
-	private int blinksSinceLastTask = -1;
+	private int actionsSinceLastTask = -1;
 	
 	private Long lastOn, lastOff;
 	
@@ -97,7 +97,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void turnOn() {
 		if (isOn)
 			return;
-		blinksSinceLastTask++;
+		actionsSinceLastTask++;
 		isOn = true;
 		lastOn = System.currentTimeMillis();
 		if(lastOff == null)
@@ -107,6 +107,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void turnOff() {
 		if (!isOn)
 			return;
+		actionsSinceLastTask++;
 		isOn = false;
 		lastOff = System.currentTimeMillis();
 		if (lastOn == null)
@@ -131,7 +132,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void doBlinkingTask(int n) {
 		// Save task parameters
 		currentTaskBlinks = n;
-		blinksSinceLastTask = 0;
+		actionsSinceLastTask = 0;
 		
 		// Send command to state machine and have it run for a cycle.
 		getStatemachine().raiseStart(n); 
@@ -169,14 +170,14 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	}
 
 	public int getCurrentBlinkCounter() {
-		return currentTaskBlinks;
+		return actionsSinceLastTask/2;
 	}
 
 	private String getCurrentBlinkCounterText() {
-		if(currentTaskBlinks <= 0) {
+		if(this.getCurrentBlinkCounter() <= 0) {
 			return "No Task.";
 		}
-		return Integer.toString(blinksSinceLastTask);
+		return Integer.toString(this.getCurrentBlinkCounter());
 	}
 
 	public void update(float delta) {

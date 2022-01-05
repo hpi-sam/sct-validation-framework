@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.Entity;
@@ -84,10 +87,12 @@ public abstract class TaskProvider implements Entity {
 		int taskDisplayHeight = FlasherConfiguration.getTaskDisplayHeight();
 		
 		// Get fonts
-		Font taskHeaderFont = new Font("Candara", Font.BOLD, FlasherConfiguration.getTaskDisplayHeight()/5);
+		Font taskHeaderFont = new Font("Monospaced", Font.BOLD, FlasherConfiguration.getTaskDisplayHeight()/5);
 		FontMetrics taskHeaderFontMetrics = graphics.getFontMetrics(taskHeaderFont);
-		Font taskDescriptionFont = new Font("Arial", Font.PLAIN, FlasherConfiguration.getTaskDisplayHeight()/6);
+		Font taskDescriptionFont = new Font("Monospaced", Font.PLAIN, FlasherConfiguration.getTaskDisplayHeight()/6);
 		FontMetrics taskDescriptionFontMetrics = graphics.getFontMetrics(taskDescriptionFont);
+		
+		DecimalFormat timerFormat = new DecimalFormat("000.0", DecimalFormatSymbols.getInstance( Locale.ENGLISH ));
 
 		// Case 1: TASK_IS_RUNNING => Show Task + executed flashes + countup since task start
 		if(this.currentState == TaskProviderState.TASK_IS_RUNNING) {
@@ -113,6 +118,17 @@ public abstract class TaskProvider implements Entity {
 			graphics.setFont(taskHeaderFont);
 			graphics.drawString(taskHeaderText, taskHeaderTextX, taskHeaderTextY);
 
+			// Draw Task Description
+			double timer = (this.currentTask.getTaskTime() - this.countdownTimer)/1000;
+			String taskDescriptionText = "Task running since " + timerFormat.format(timer) + "s.\r\n Blinked " + world.getCurrentBlinkCounter() + " times.";
+			if(world.getCurrentBlinkCounter() == this.getCurrentTask().getNumberOfFlashes()) taskDescriptionText += "Done!";
+			if(world.getCurrentBlinkCounter() > this.getCurrentTask().getNumberOfFlashes()) taskDescriptionText += "Too often!";
+			int taskDescritptionTextX = taskDisplayTopLeftX + (taskDisplayWidth - taskHeaderFontMetrics.stringWidth(taskDescriptionText)) / 2;
+			int taskDescritptionTextY = taskDisplayTopLeftY + 2 * taskHeaderFontMetrics.getHeight();
+			graphics.setColor(Color.black);
+			graphics.setFont(taskDescriptionFont);
+			graphics.drawString(taskDescriptionText, taskDescritptionTextX, taskDescritptionTextY);
+			
 		
 		// Case 2: PAUSE_BEFORE_TASK => Alraedy show Task + additional show countdown until task start
 		} else if(this.currentState == TaskProviderState.PAUSE_BEFORE_TASK) {
@@ -128,6 +144,15 @@ public abstract class TaskProvider implements Entity {
 			graphics.setColor(Color.darkGray);
 			graphics.setFont(taskHeaderFont);
 			graphics.drawString(taskHeaderText, taskHeaderTextX, taskHeaderTextY);
+
+			// Draw Task Description
+			double timer = this.countdownTimer/1000;
+			String taskDescriptionText = "Task starts in " + timerFormat.format(timer) + "s";
+			int taskDescritptionTextX = taskDisplayTopLeftX + (taskDisplayWidth - taskHeaderFontMetrics.stringWidth(taskDescriptionText)) / 2;
+			int taskDescritptionTextY = taskDisplayTopLeftY + 2 * taskHeaderFontMetrics.getHeight();
+			graphics.setColor(Color.black);
+			graphics.setFont(taskDescriptionFont);
+			graphics.drawString(taskDescriptionText, taskDescritptionTextX, taskDescritptionTextY);
 
 		
 		
