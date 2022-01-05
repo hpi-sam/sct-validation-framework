@@ -28,7 +28,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	private boolean isOn = false;
 	private int currentTaskBlinks = 0;
 
-	private int blinksSinceLastTask = -1;
+	private int actionsSinceLastTask = -1;
 	
 	private Long lastOn, lastOff;
 	
@@ -41,8 +41,12 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void render(Graphics graphics, int panelWidth, int panelHeight) {
 		BufferedImage lightBulbImage = isOn ? lightBulbOnImage : lightBulbOffImage;
 		
-		int maximumPermittedImageWidth = (int) (panelWidth * FlasherConfiguration.getLightBulbImageMaximumWidthRate());
-		int maximumPermittedImageHeight = (int) (panelHeight * FlasherConfiguration.getLightBulbImageMaximumHeightRate());
+		// Recude effective panel hight by the size required for the task display below.
+		int availablePanelHight = panelHeight - FlasherConfiguration.getTaskDisplayReservedHeight();
+		
+		// Get maximum sizes of light bulb image based on total heigt/with and scaling factors 
+		int maximumPermittedImageWidth = (int) (panelWidth * FlasherConfiguration.getLightBulbImageMaximumRelativeWidth());
+		int maximumPermittedImageHeight = (int) (availablePanelHight * FlasherConfiguration.getLightBulbImageMaximumRelativeHeight());
 		
 		int imageWidth = lightBulbImage.getWidth();
 		int imageHeight = lightBulbImage.getHeight();
@@ -60,7 +64,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		}		
 		
 		graphics.drawImage(lightBulbImage, 
-				(panelWidth - imageWidth) / 2, (panelHeight - imageHeight) / 2, // Image Position (top left)
+				(panelWidth - imageWidth) / 2, (availablePanelHight - imageHeight) / 2, // Image Position (top left)
 				imageWidth, imageHeight, // Image Size (scaled)
 				null);
 		
@@ -93,7 +97,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void turnOn() {
 		if (isOn)
 			return;
-		blinksSinceLastTask++;
+		actionsSinceLastTask++;
 		isOn = true;
 		lastOn = System.currentTimeMillis();
 		if(lastOff == null)
@@ -103,6 +107,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void turnOff() {
 		if (!isOn)
 			return;
+		actionsSinceLastTask++;
 		isOn = false;
 		lastOff = System.currentTimeMillis();
 		if (lastOn == null)
@@ -127,7 +132,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 	public void doBlinkingTask(int n) {
 		// Save task parameters
 		currentTaskBlinks = n;
-		blinksSinceLastTask = 0;
+		actionsSinceLastTask = 0;
 		
 		// Send command to state machine and have it run for a cycle.
 		getStatemachine().raiseStart(n); 
@@ -146,7 +151,7 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 
 	@Override
 	public List<String> getHighlightInfo() {
-		return Arrays.asList("Times to blink " + currentTaskBlinks, "Blinks since last tasks: "  + blinksSinceLastTask, "Lamp is on: " + isOn());
+		return Arrays.asList("Blinks in latest task: " + this.getTimesToBlinkText(), "Blinks since task start: "  + this.getCurrentBlinkCounterText(), "", "Lamp is on: " + this.isOn());
 	}
 
 	public boolean isOn() {
@@ -157,8 +162,22 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		return currentTaskBlinks;
 	}
 
-	public int getRemainingBlinks() {
-		return blinksSinceLastTask;
+	private String getTimesToBlinkText() {
+		if(currentTaskBlinks < 0) {
+			return "No Task.";
+		}
+		return Integer.toString(currentTaskBlinks);
+	}
+
+	public int getCurrentBlinkCounter() {
+		return actionsSinceLastTask/2;
+	}
+
+	private String getCurrentBlinkCounterText() {
+		if(this.getCurrentBlinkCounter() < 0) {
+			return "No Task.";
+		}
+		return Integer.toString(this.getCurrentBlinkCounter());
 	}
 
 	public void update(float delta) {

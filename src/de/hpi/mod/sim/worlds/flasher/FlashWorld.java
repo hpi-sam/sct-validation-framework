@@ -86,25 +86,13 @@ public class FlashWorld extends World {
 	public void render(Graphics graphics) {
 		if (bulb != null) {
 			bulb.render(graphics, width, height);
-			drawCounter(graphics);
+			starter.render(graphics, width, height);
 		}
 	}
 	
 	
-	private void drawCounter(Graphics graphics) {
-		int remainingBlinks = 0;
-		String haekchen = "";
-		if(!bulb.isOn()&& bulb.getRemainingBlinks()== 0) {
-			if(starter.getCurrentTask() != null)
-				remainingBlinks=starter.getCurrentTask().getNumberOfFlashes();
-			haekchen = "    finished \u2713";
-		}
-		else {
-			remainingBlinks= bulb.getRemainingBlinks();
-		}
-		graphics.setFont(new Font("TimesRoman", Font.PLAIN, height/40));
-		graphics.setColor(Color.BLACK);
-		graphics.drawString("Task / Remaining: " + starter.getCurrentTask() +" / "+ remainingBlinks + haekchen, width/20, height- height/20);
+	public int getCurrentBlinkCounter() {
+		return this.bulb.getCurrentBlinkCounter();
 	}
 
 	@Override
