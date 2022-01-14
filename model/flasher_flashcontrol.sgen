@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature Naming {
-			basePackage = "de.hpi.mod.sim.flasher"
+			basePackage = "de.hpi.mod.sim.models.flasher"
 		}
 		
 		feature OutEventAPI {

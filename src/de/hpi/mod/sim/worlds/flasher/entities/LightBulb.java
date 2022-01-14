@@ -1,8 +1,5 @@
 package de.hpi.mod.sim.worlds.flasher.entities;
 
-import java.awt.Color;
-
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,8 +14,7 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
-import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseExpectation;
-import de.hpi.mod.sim.flasher.FlashControl;
+import de.hpi.mod.sim.models.flasher.FlashControl;
 
 public class LightBulb extends StateChartWrapper<FlashControl.State>
 		implements StateChartEntity, IHighlightable {

@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature Naming {
-			basePackage = "de.hpi.mod.sim.pong"
+			basePackage = "de.hpi.mod.sim.models.pong"
 		}
 		
 		feature OutEventAPI {

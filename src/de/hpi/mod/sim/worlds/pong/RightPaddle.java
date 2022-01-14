@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.worlds.pong;
 
 import com.yakindu.core.IStatemachine;
-import de.hpi.mod.sim.pong.PaddleControl2;
+import de.hpi.mod.sim.models.pong.PaddleControl2;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
