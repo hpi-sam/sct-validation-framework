@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature Naming {
-			basePackage = "de.hpi.mod.sim.models.infinitewarehouse"
+			basePackage = "de.hpi.mod.sim.statemachines.infinitewarehouse"
 		}
 		
 		feature OutEventAPI {

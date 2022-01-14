@@ -4,7 +4,7 @@ import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.models.pong.PaddleControl1;
+import de.hpi.mod.sim.statemachines.pong.PaddleControl1;
 
 import java.awt.Color;
 import java.awt.Graphics;

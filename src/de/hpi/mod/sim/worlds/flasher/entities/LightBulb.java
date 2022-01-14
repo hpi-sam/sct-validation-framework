@@ -14,7 +14,7 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
-import de.hpi.mod.sim.models.flasher.FlashControl;
+import de.hpi.mod.sim.statemachines.flasher.FlashControl;
 
 public class LightBulb extends StateChartWrapper<FlashControl.State>
 		implements StateChartEntity, IHighlightable {

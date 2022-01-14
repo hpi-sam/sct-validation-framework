@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature Naming {
-			basePackage = "de.hpi.mod.sim.statecharts.trafficlights"
+			basePackage = "de.hpi.mod.sim.statemachines.trafficlights"
 		}
 		
 		feature OutEventAPI {

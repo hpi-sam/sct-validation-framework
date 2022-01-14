@@ -2,7 +2,7 @@ package de.hpi.mod.sim.worlds.trafficlights.robot;
 
 import com.yakindu.core.IStatemachine;
 
-import de.hpi.mod.sim.statecharts.trafficlights.TrafficLightRobot;
+import de.hpi.mod.sim.statemachines.trafficlights.TrafficLightRobot;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_robots.IRobotActors;
 

@@ -4,7 +4,7 @@ import com.yakindu.core.IStatemachine;
 
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 
-import de.hpi.mod.sim.models.infinitewarehouse.DriveSystem;
+import de.hpi.mod.sim.statemachines.infinitewarehouse.DriveSystem;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;

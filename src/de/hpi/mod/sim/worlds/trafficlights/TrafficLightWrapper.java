@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.yakindu.core.IStatemachine;
 
-import de.hpi.mod.sim.statecharts.trafficlights.TrafficLight;
+import de.hpi.mod.sim.statemachines.trafficlights.TrafficLight;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
