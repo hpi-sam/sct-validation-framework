@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.worlds.flasher.FlashWorld;
 import de.hpi.mod.sim.worlds.pong.PongWorld;
+import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightWorld;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightWorld;
 import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
@@ -27,6 +28,7 @@ public class App {
 			new PongWorld(),
 			new InfiniteWarehouse(),
 			new TrafficLightWorld(),
+			new SimpleTrafficLightWorld(),
 	};
 
      private static World selectWorld() {
