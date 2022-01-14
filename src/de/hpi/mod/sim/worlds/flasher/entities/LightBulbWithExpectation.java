@@ -14,7 +14,6 @@ public class LightBulbWithExpectation extends LightBulb {
 	private boolean failedTest = false;
 	
 	private double timer = 0;
-	private LightBulbObservation nextMeasurement;
 
 	public LightBulbWithExpectation(TestCaseExpectation testExpectedation) {
 		super();

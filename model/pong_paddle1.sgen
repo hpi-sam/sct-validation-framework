@@ -1,7 +1,7 @@
 GeneratorModel for yakindu::java {
 
-	statechart tlRobot {
-
+	statechart PaddleControl1 {
+		
 		feature Outlet {
 			targetProject = "sct-sim-edu"
 			targetFolder = "src-gen"
@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature Naming {
-			basePackage = "de.hpi.mod.sim"
+			basePackage = "de.hpi.mod.sim.statemachines.pong"
 		}
 		
 		feature OutEventAPI {

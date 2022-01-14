@@ -1,12 +1,12 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots.robot;
+package de.hpi.mod.sim.worlds.trafficlights.robot;
 
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
-import de.hpi.mod.sim.worlds.traffic_light_robots.CellType;
-import de.hpi.mod.sim.worlds.traffic_light_robots.CrossRoadsManager;
+import de.hpi.mod.sim.worlds.trafficlights.CellType;
+import de.hpi.mod.sim.worlds.trafficlights.CrossRoadsManager;
 
 public class TrafficLightRobot extends Robot implements IRobotData, IProcessor, StateChartEntity {
 

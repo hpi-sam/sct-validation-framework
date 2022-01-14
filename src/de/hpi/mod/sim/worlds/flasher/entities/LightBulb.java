@@ -1,8 +1,5 @@
 package de.hpi.mod.sim.worlds.flasher.entities;
 
-import java.awt.Color;
-
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,11 +14,9 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
-import de.hpi.mod.sim.worlds.flasher.scenario.TestCaseExpectation;
-import de.hpi.mod.sim.Flasher;
-import de.hpi.mod.sim.Flasher.State;
+import de.hpi.mod.sim.statemachines.flasher.FlashControl;
 
-public class LightBulb extends StateChartWrapper<Flasher.State>
+public class LightBulb extends StateChartWrapper<FlashControl.State>
 		implements StateChartEntity, IHighlightable {
 
 	private BufferedImage lightBulbOnImage, lightBulbOffImage;
@@ -79,8 +74,8 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 		}
 	}
 
-	private Flasher getStatemachine() {
-		return (Flasher) chart;
+	private FlashControl getStatemachine() {
+		return (FlashControl) chart;
 	}
 
 	@Override
@@ -116,16 +111,16 @@ public class LightBulb extends StateChartWrapper<Flasher.State>
 
 	@Override
 	public IStatemachine createStateMachine() {
-		return new Flasher();
+		return new FlashControl();
 	}
 
 	@Override
-	protected State[] getStates() {
-		return Flasher.State.values();
+	protected FlashControl.State[] getStates() {
+		return FlashControl.State.values();
 	}
 
 	@Override
-	protected boolean isActive(State state) {
+	protected boolean isActive(FlashControl.State state) {
 		return getStatemachine().isStateActive(state);
 	}
 

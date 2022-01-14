@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots;
+package de.hpi.mod.sim.worlds.trafficlights;
 
 import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
 

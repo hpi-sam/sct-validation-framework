@@ -1,7 +1,7 @@
 package de.hpi.mod.sim.worlds.pong;
 
 import com.yakindu.core.IStatemachine;
-import de.hpi.mod.sim.Paddle2;
+import de.hpi.mod.sim.statemachines.pong.PaddleControl2;
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
@@ -12,8 +12,8 @@ import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.List;
 
-public class RightPaddle extends StateChartWrapper<Paddle2.State> 
-		implements StateChartEntity, IHighlightable, Paddle2.OperationCallback{
+public class RightPaddle extends StateChartWrapper<PaddleControl2.State> 
+		implements StateChartEntity, IHighlightable, PaddleControl2.OperationCallback{
  
 
     private final double x;
@@ -42,8 +42,8 @@ public class RightPaddle extends StateChartWrapper<Paddle2.State>
     }
     
     
-    private Paddle2 getStatemachine() {
-    	return (Paddle2) chart;
+    private PaddleControl2 getStatemachine() {
+    	return (PaddleControl2) chart;
     }
 
     @Override
@@ -85,22 +85,22 @@ public class RightPaddle extends StateChartWrapper<Paddle2.State>
 
     @Override
     public IStatemachine createStateMachine() {
-        return new Paddle2();
+        return new PaddleControl2();
     }
 
     @Override
-    protected Paddle2.State[] getStates() {
-        return Paddle2.State.values(); 
+    protected PaddleControl2.State[] getStates() {
+        return PaddleControl2.State.values(); 
     }
 
     @Override
-    protected boolean isActive(Paddle2.State state) {
+    protected boolean isActive(PaddleControl2.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((Paddle2) chart).isStateActive(state);
+        return ((PaddleControl2) chart).isStateActive(state);
     }
 
     

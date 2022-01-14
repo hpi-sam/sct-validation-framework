@@ -1,12 +1,12 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots.robot;
+package de.hpi.mod.sim.worlds.trafficlights.robot;
 
 import com.yakindu.core.IStatemachine;
 
-import de.hpi.mod.sim.TlRobot;
+import de.hpi.mod.sim.statemachines.trafficlights.TrafficLightRobot;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_robots.IRobotActors;
 
-public class DriveSystemWrapper extends StateChartWrapper<TlRobot.State> implements TlRobot.Data.OperationCallback {
+public class DriveSystemWrapper extends StateChartWrapper<TrafficLightRobot.State> implements TrafficLightRobot.Data.OperationCallback {
 
     private IRobotActors actors;
     private IProcessor processor;
@@ -25,8 +25,8 @@ public class DriveSystemWrapper extends StateChartWrapper<TlRobot.State> impleme
         super.start();
     }
 
-    private TlRobot getStatemachine() {
-		return (TlRobot) chart;
+    private TrafficLightRobot getStatemachine() {
+		return (TrafficLightRobot) chart;
 	}
 
 	@Override
@@ -46,22 +46,22 @@ public class DriveSystemWrapper extends StateChartWrapper<TlRobot.State> impleme
 
     @Override
     public IStatemachine createStateMachine() {
-        return new TlRobot();
+        return new TrafficLightRobot();
     }
 
     @Override
-    protected TlRobot.State[] getStates() {
-        return TlRobot.State.values();
+    protected TrafficLightRobot.State[] getStates() {
+        return TrafficLightRobot.State.values();
     }
 
     @Override
-    protected boolean isActive(TlRobot.State state) {
+    protected boolean isActive(TrafficLightRobot.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((TlRobot) chart).isStateActive(state);}
+        return ((TrafficLightRobot) chart).isStateActive(state);}
 
     @Override
     public long cellType() {

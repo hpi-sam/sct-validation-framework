@@ -4,7 +4,7 @@ import com.yakindu.core.IStatemachine;
 
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 
-import de.hpi.mod.sim.Drivesystem;
+import de.hpi.mod.sim.statemachines.infinitewarehouse.DriveSystem;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
@@ -18,7 +18,7 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.ISensor;
  * Handles calls to the statechard.
  * This should be the only file with logic depending on the statechard implementation.
  */
-public class DriveSystemWrapper extends StateChartWrapper<Drivesystem.State> implements Drivesystem.Data.OperationCallback, Drivesystem.RawData.OperationCallback {
+public class DriveSystemWrapper extends StateChartWrapper<DriveSystem.State> implements DriveSystem.Data.OperationCallback, DriveSystem.RawData.OperationCallback {
 
     private ISensor data;
     private IRobotActors actors;
@@ -45,7 +45,7 @@ public class DriveSystemWrapper extends StateChartWrapper<Drivesystem.State> imp
 
     @Override
     public IStatemachine createStateMachine() {
-        return new Drivesystem();
+        return new DriveSystem();
     }
 
     @Override
@@ -55,8 +55,8 @@ public class DriveSystemWrapper extends StateChartWrapper<Drivesystem.State> imp
         super.start();
     }
 
-    private Drivesystem getStatemachine() {
-        return (Drivesystem) chart;
+    private DriveSystem getStatemachine() {
+        return (DriveSystem) chart;
     }
 
     /**
@@ -238,18 +238,18 @@ public class DriveSystemWrapper extends StateChartWrapper<Drivesystem.State> imp
     }
     
     @Override
-    public boolean isActive(Drivesystem.State state) {
+    public boolean isActive(DriveSystem.State state) {
         /*
         * This is not intended by the YAKINDU implementation and source generation. 
         * Officially, the YAKINDU interface does not support this, which is why we have 
         * to cast to the actual DrivesystemStateChart object.
         */
-        return ((Drivesystem) chart).isStateActive(state);
+        return ((DriveSystem) chart).isStateActive(state);
     }
 
     @Override
-    public Drivesystem.State[] getStates() {
-        return Drivesystem.State.values();
+    public DriveSystem.State[] getStates() {
+        return DriveSystem.State.values();
     }
 
 }

@@ -1,14 +1,7 @@
 package de.hpi.mod.sim.worlds.flasher.entities;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-
 import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.flasher.FlashWorld;

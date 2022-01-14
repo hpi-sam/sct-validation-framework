@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots.scenario;
+package de.hpi.mod.sim.worlds.trafficlights.scenario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.traffic_light_robots.CrossRoadsManager;
-import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWorld;
-import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightsConfiguration;
+import de.hpi.mod.sim.worlds.trafficlights.CrossRoadsManager;
+import de.hpi.mod.sim.worlds.trafficlights.TrafficLightWorld;
+import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 
 public class ScenarioGenerator {
 

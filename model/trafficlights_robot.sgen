@@ -1,7 +1,7 @@
 GeneratorModel for yakindu::java {
 
-	statechart paddle1 {
-		
+	statechart TrafficLightRobot {
+
 		feature Outlet {
 			targetProject = "sct-sim-edu"
 			targetFolder = "src-gen"
@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature Naming {
-			basePackage = "de.hpi.mod.sim"
+			basePackage = "de.hpi.mod.sim.statemachines.trafficlights"
 		}
 		
 		feature OutEventAPI {

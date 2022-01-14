@@ -1,9 +1,9 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots.scenario;
+package de.hpi.mod.sim.worlds.trafficlights.scenario;
 
 import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWrapper;
-import de.hpi.mod.sim.worlds.traffic_light_robots.TrafficLightWorld;
+import de.hpi.mod.sim.worlds.trafficlights.TrafficLightWorld;
+import de.hpi.mod.sim.worlds.trafficlights.TrafficLightWrapper;
 
 public class TrafficLightSpecification implements EntitySpecification<TrafficLightWrapper> {
 
