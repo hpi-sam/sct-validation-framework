@@ -4,7 +4,7 @@ import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
-import de.hpi.mod.sim.Paddle1;
+import de.hpi.mod.sim.pong.PaddleControl1;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -15,8 +15,8 @@ import java.util.List;
 import com.yakindu.core.IStatemachine;
 
 
-public class LeftPaddle extends StateChartWrapper<Paddle1.State> 
-		implements StateChartEntity, IHighlightable, Paddle1.OperationCallback{
+public class LeftPaddle extends StateChartWrapper<PaddleControl1.State> 
+		implements StateChartEntity, IHighlightable, PaddleControl1.OperationCallback{
  
 
     private final double x;
@@ -44,8 +44,8 @@ public class LeftPaddle extends StateChartWrapper<Paddle1.State>
     }
     
     
-    private Paddle1 getStatemachine() {
-    	return (Paddle1) chart;
+    private PaddleControl1 getStatemachine() {
+    	return (PaddleControl1) chart;
     }
 
     @Override
@@ -87,22 +87,22 @@ public class LeftPaddle extends StateChartWrapper<Paddle1.State>
 
     @Override
     public IStatemachine createStateMachine() {
-        return new Paddle1();
+        return new PaddleControl1();
     }
 
     @Override
-    protected Paddle1.State[] getStates() {
-        return Paddle1.State.values(); 
+    protected PaddleControl1.State[] getStates() {
+        return PaddleControl1.State.values(); 
     }
 
     @Override
-    protected boolean isActive(Paddle1.State state) {
+    protected boolean isActive(PaddleControl1.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((Paddle1) chart).isStateActive(state);
+        return ((PaddleControl1) chart).isStateActive(state);
     }
 
     

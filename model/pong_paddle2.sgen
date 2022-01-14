@@ -1,6 +1,6 @@
 GeneratorModel for yakindu::java {
 
-	statechart paddle2 {
+	statechart PaddleControl2 {
 
 		feature Outlet {
 			targetProject = "sct-sim-edu"
@@ -10,7 +10,7 @@ GeneratorModel for yakindu::java {
 		}
 		
 		feature Naming {
-			basePackage = "de.hpi.mod.sim"
+			basePackage = "de.hpi.mod.sim.pong"
 		}
 		
 		feature OutEventAPI {
