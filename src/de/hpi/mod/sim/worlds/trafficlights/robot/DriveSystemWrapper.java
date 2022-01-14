@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots.robot;
+package de.hpi.mod.sim.worlds.trafficlights.robot;
 
 import com.yakindu.core.IStatemachine;
 

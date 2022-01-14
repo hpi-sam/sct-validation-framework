@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.traffic_light_robots;
+package de.hpi.mod.sim.worlds.trafficlights;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
-import de.hpi.mod.sim.worlds.traffic_light_robots.scenario.ScenarioGenerator;
+import de.hpi.mod.sim.worlds.trafficlights.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class TrafficLightWorld extends RobotWorld {

@@ -1,3 +1,4 @@
+package de.hpi.mod.sim.worlds.trafficlights.scenario;
 // package de.hpi.mod.sim.worlds.traffic_light_robots.scenario;
 
 // import java.util.ArrayList;
