@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.yakindu.core.IStatemachine;
 
-import de.hpi.mod.sim.Trafficlight;
+import de.hpi.mod.sim.statecharts.trafficlights.TrafficLight;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
-public class TrafficLightWrapper extends StateChartWrapper<Trafficlight.State>
+public class TrafficLightWrapper extends StateChartWrapper<TrafficLight.State>
         implements StateChartEntity, IHighlightable {
     /**
      * The northern, eastern, southern and western positions
@@ -49,8 +49,8 @@ public class TrafficLightWrapper extends StateChartWrapper<Trafficlight.State>
         return "trafficlight";
     }
 
-    private Trafficlight getStatemachine() {
-        return (Trafficlight) chart;
+    private TrafficLight getStatemachine() {
+        return (TrafficLight) chart;
     }
 
     @Override
@@ -78,22 +78,22 @@ public class TrafficLightWrapper extends StateChartWrapper<Trafficlight.State>
 
     @Override
     public IStatemachine createStateMachine() {
-        return new Trafficlight();
+        return new TrafficLight();
     }
 
     @Override
-    protected Trafficlight.State[] getStates() {
-        return Trafficlight.State.values();
+    protected TrafficLight.State[] getStates() {
+        return TrafficLight.State.values();
     }
 
     @Override
-    protected boolean isActive(Trafficlight.State state) {
+    protected boolean isActive(TrafficLight.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((Trafficlight) chart).isStateActive(state);
+        return ((TrafficLight) chart).isStateActive(state);
     }
 
     public boolean isGreenNorth() {
