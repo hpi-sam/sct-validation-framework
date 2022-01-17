@@ -51,15 +51,78 @@ public class SimpleTrafficLightsGridManager extends RobotGridManager {
      */
     @Override
     public CellType cellType(Position position) {
+    	
+    	// Is priamry field area
     	if (position.getY() >= 0 && position.getY() < SimpleTrafficLightsConfiguration.getFieldHeight()
          && position.getX() >= 0 && position.getX() < SimpleTrafficLightsConfiguration.getFieldWidth()) {
+
+    		int blockSize = SimpleTrafficLightsConfiguration.getStreetLength() + SimpleTrafficLightsConfiguration.getCrossroadLength();
+    		
+    		// OPTION 1. Outside Border (except innermost line)
+        	if (position.getY() < SimpleTrafficLightsConfiguration.getFieldBorderWidth() - 1 
+        	        || position.getX() < SimpleTrafficLightsConfiguration.getFieldBorderWidth() - 1 
+        			|| position.getY() > SimpleTrafficLightsConfiguration.getFieldHeight() - SimpleTrafficLightsConfiguration.getFieldBorderWidth() 
+        	        || position.getX() > SimpleTrafficLightsConfiguration.getFieldWidth() - SimpleTrafficLightsConfiguration.getFieldBorderWidth() )
+        		return CellType.WALL;
+        	
+    		int x2 = position.getX() - SimpleTrafficLightsConfiguration.getFieldBorderWidth();
+    		int y2 = position.getY() - SimpleTrafficLightsConfiguration.getFieldBorderWidth();
+    		        	
+        	// OPTION 2. Street and/or Crossroad
+    		if((x2+2) % blockSize <= 1 || (y2+2) % blockSize <= 1) {
+    			
+    			// OPTION 2.1.a Bottom Border (innermost line), including arrival and departure points 
+            	if (position.getY() < SimpleTrafficLightsConfiguration.getFieldBorderWidth()){
+            		if((x2+2) % blockSize == 0 && x2 < SimpleTrafficLightsConfiguration.getFieldWidth()-blockSize)
+            			return CellType.ARRIVAL_POINT;
+            		if((x2+2) % blockSize == 1 && x2 > 0)
+            			return CellType.DEPARTURE_POINT;
+            		return CellType.WALL;
+            	}
+    			// OPTION 2.1.b Top Border (innermost line), including arrival and departure points 
+            	if (position.getY() >= SimpleTrafficLightsConfiguration.getFieldHeight() - SimpleTrafficLightsConfiguration.getFieldBorderWidth()){
+            		if((x2+2) % blockSize == 0 && x2 < SimpleTrafficLightsConfiguration.getFieldWidth()-blockSize)
+            			return CellType.DEPARTURE_POINT;
+            		if((x2+2) % blockSize == 1 && x2 > 0)
+            			return CellType.ARRIVAL_POINT;
+            		return CellType.WALL;
+            	}
+    			// OPTION 2.1.c Left Border (innermost line), including arrival and departure points 
+            	if (position.getX() < SimpleTrafficLightsConfiguration.getFieldBorderWidth()){
+            		if((y2+2) % blockSize == 0 && y2 < SimpleTrafficLightsConfiguration.getFieldHeight()-blockSize)
+            			return CellType.DEPARTURE_POINT;
+            		if((y2+2) % blockSize == 1 && y2 > 0)
+            			return CellType.ARRIVAL_POINT;
+            		return CellType.WALL;
+            	}
+    			// OPTION 2.1.d Right Border (innermost line), including arrival and departure points 
+            	if (position.getX() >= SimpleTrafficLightsConfiguration.getFieldWidth() - SimpleTrafficLightsConfiguration.getFieldBorderWidth()){
+            		if((y2+2) % blockSize == 0 && y2 < SimpleTrafficLightsConfiguration.getFieldHeight()-blockSize)
+            			return CellType.ARRIVAL_POINT;
+            		if((y2+2) % blockSize == 1 && y2 > 0)
+            			return CellType.DEPARTURE_POINT;
+            		return CellType.WALL;
+            	}
+            	
+    			// OPTION 2.2. Crossroad 
+            	if((x2+2) % blockSize <= 1 && (y2+2) % blockSize <= 1)
+            		return CellType.CROSSROAD;
+
+    			// OPTION 2.3. Waiting Point before crossroad 
+            	if(x2 % blockSize == 6 && y2 % blockSize == 4 && y2 < SimpleTrafficLightsConfiguration.getFieldWidth()-blockSize)
+            		return CellType.CROSSROAD_WAITING_POINT;
+            	if(x2 % blockSize == 0 && y2 % blockSize == 6 && x2 > 0)
+            		return CellType.CROSSROAD_WAITING_POINT;
+            	if(x2 % blockSize == 5 && y2 % blockSize == 0 && y2 > 0)
+            		return CellType.CROSSROAD_WAITING_POINT;
+            	if(x2 % blockSize == 4 && y2 % blockSize == 5 && x2 < SimpleTrafficLightsConfiguration.getFieldHeight()-blockSize)
+            		return CellType.CROSSROAD_WAITING_POINT;
+
+    			// OPTION 2.4. Generic Street (default) 
+            	return CellType.STREET;
+            }		   		
     		return CellType.WALL;
-            // Each third
-//            if (position.getY() % 3 == 0 && position.getX() % 3 == 0)
-//                return CellType.WALL;
-//            if (isWaypoint(position.getX(), position.getY()))
-//                return getWaypointCellType(position.getX(), position.getY());
-//            return CellType.CROSSROAD;
+    		
         } else {
             return CellType.EMPTY;
         }

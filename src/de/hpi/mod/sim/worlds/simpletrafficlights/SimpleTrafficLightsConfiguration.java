@@ -13,15 +13,20 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
         SINGLE_CROSSROAD, TWO_CROSSROADS, MAXIMUM_CROSSROADS
     }
 
-	public static final int FIELD_SIDE_SPACING = 2;
-	public static final int STREET_LENGTH = 5;
-	public static final int CROSSROAD_LENGTH = 2;
-	public static final int FIELD_BORDER_WIDTH = 2;
-	public static final int MINIMUM_CROSSROADS_IN_MAXIMUM_MODE = 2;
-	public static final GridMode DEFAULT_CROSSROAD_MODE = GridMode.MAXIMUM_CROSSROADS;
+    private static final int FIELD_SIDE_SPACING = 2;
+	private static final int STREET_LENGTH = 5;
+	private static final int CROSSROAD_LENGTH = 2;
+	private static final int FIELD_BORDER_WIDTH = 2;
+	private static final int MINIMUM_CROSSROADS_IN_MAXIMUM_MODE = 2;
+	private static final GridMode DEFAULT_CROSSROAD_MODE = GridMode.MAXIMUM_CROSSROADS;
 	
-    public static final int DEFAULT_FIELD_WIDTH = 30;
-	public static final int DEFAULT_FIELD_HEIGHT = 30;
+	private static final int DEFAULT_FIELD_WIDTH = 30;
+    private static final int DEFAULT_FIELD_HEIGHT = 30;
+    
+
+	private static int fieldBorderWidth = FIELD_BORDER_WIDTH;
+    private static int streetLength = STREET_LENGTH;
+    private static int crossroadLength = CROSSROAD_LENGTH;
 
     private static int availableFieldWidth = DEFAULT_FIELD_WIDTH;
 	private static int availableFieldHeight = DEFAULT_FIELD_HEIGHT;
@@ -63,6 +68,18 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 
 	public static int getHorizontalStreets() {
 		return horizontalStreets;
+	}
+
+	public static int getFieldBorderWidth() {
+		return fieldBorderWidth;
+	}
+
+	public static int getStreetLength() {
+		return streetLength;
+	}
+
+	public static int getCrossroadLength() {
+		return crossroadLength;
 	}
 
 

@@ -62,15 +62,19 @@ public class CellType implements ICellType {
     public Color getColor() {
         switch(type) {
 	        case DEPARTURE_POINT:
-	            return new Color(235, 235, 235);
+	            return Color.GREEN; // new Color(235, 235, 235);
             case ARRIVAL_POINT:
-                return new Color(235, 235, 235);
+                return Color.RED; //new Color(235, 235, 235);
             case WALL:
                 return Color.DARK_GRAY;
             case EMPTY:
                 return Color.WHITE;
-            case CROSSROAD:
+            case STREET:
                 return Color.LIGHT_GRAY;
+            case CROSSROAD:
+                return Color.YELLOW;
+            case CROSSROAD_WAITING_POINT:
+            	return Color.ORANGE;
             default:
                 return Color.DARK_GRAY;
         }
