@@ -24,11 +24,11 @@ public class App {
 
 	// List of instances of all available world classes to be used for selection.  
 	private static final World[] POSSIBLE_WORLDS = {
-			new FlashWorld(),
-			new PongWorld(),
-			new InfiniteWarehouse(),
-			new TrafficLightWorld(),
 			new SimpleTrafficLightWorld(),
+//			new FlashWorld(),
+//			new PongWorld(),
+//			new InfiniteWarehouse(),
+//			new TrafficLightWorld(),
 	};
 
      private static World selectWorld() {
