@@ -6,7 +6,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.CellType;
-import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsGridManager;
+import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 
 public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateChartEntity {
 
@@ -25,8 +25,8 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
         super.arrived();
         Position pos = getCrossRoadsManager().getRandomStart();
         setRobotTo(pos);
-        setFacingTo(SimpleTrafficLightsGridManager.getSuitableRobotOrientationForPosition(pos));
-        setTarget(SimpleTrafficLightsGridManager.getRandomDestination());
+        setFacingTo(StreetNetworkManager.getSuitableRobotOrientationForPosition(pos));
+        setTarget(StreetNetworkManager.getRandomDestination());
         control.newTarget();
     }
 
@@ -62,8 +62,8 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
         return getCrossRoadsManager().cellType(pos()).type;
     }
 
-    private SimpleTrafficLightsGridManager getCrossRoadsManager() {
-        return (SimpleTrafficLightsGridManager) grid;
+    private StreetNetworkManager getCrossRoadsManager() {
+        return (StreetNetworkManager) grid;
     }
 
     @Override

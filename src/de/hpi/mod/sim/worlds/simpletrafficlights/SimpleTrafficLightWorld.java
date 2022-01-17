@@ -12,7 +12,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
-import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightStatechartWrapper;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightWithStatechart;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
@@ -34,7 +34,7 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     
     @Override
     protected GridManager createGridManager() {
-        return new SimpleTrafficLightsGridManager();
+        return new StreetNetworkManager();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     @Override
     public void refreshEntities() {
         super.refreshEntities();
-        for (TrafficLightStatechartWrapper light : getCrossRoadManager().getTrafficLights()) {
+        for (TrafficLightWithStatechart light : getCrossRoadManager().getTrafficLights()) {
             light.updateTimer();
         }
     }
@@ -84,15 +84,15 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     @Override
     public List<? extends Entity> getEntities() {
         List<? extends Entity> superList = super.getEntities();
-        List<TrafficLightStatechartWrapper> lights = getCrossRoadManager().getTrafficLights();
+        List<TrafficLightWithStatechart> lights = getCrossRoadManager().getTrafficLights();
         List<Entity> list = new ArrayList<>(lights.size() + superList.size());
         list.addAll(superList);
         list.addAll(lights);
         return list;
     }
 
-    public SimpleTrafficLightsGridManager getCrossRoadManager() {
-        return (SimpleTrafficLightsGridManager) getGridManager();
+    public StreetNetworkManager getCrossRoadManager() {
+        return (StreetNetworkManager) getGridManager();
     }
 
     @Override

@@ -8,7 +8,7 @@ import de.hpi.mod.sim.core.scenario.EntitySpecification;
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsGridManager;
+import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightWorld;
 import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
 
@@ -109,7 +109,7 @@ public class ScenarioGenerator {
     }
 
     private List<SimpleRobotSpecification> getRandomRobots(int count) {
-        List<Position> positions = SimpleTrafficLightsGridManager.getAllPossiblePositions();
+        List<Position> positions = StreetNetworkManager.getAllPossiblePositions();
         List<SimpleRobotSpecification> robots = new ArrayList<>(count);
 
         if (count > positions.size())  
@@ -120,7 +120,7 @@ public class ScenarioGenerator {
             Position pos = positions.get(index);
             positions.remove(index);
             robots.add(new SimpleRobotSpecification(world, pos,
-                    SimpleTrafficLightsGridManager.getSuitableRobotOrientationForPosition(pos), SimpleTrafficLightsGridManager.getRandomDestination()));
+                    StreetNetworkManager.getSuitableRobotOrientationForPosition(pos), StreetNetworkManager.getRandomDestination()));
         }
         return robots;
     }

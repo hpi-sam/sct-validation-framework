@@ -4,11 +4,11 @@ import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotSpecification;
-import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsGridManager;
+import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightWorld;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.SimpleRobot;
 
-public class SimpleRobotSpecification extends RobotSpecification<SimpleRobot, SimpleTrafficLightsGridManager> {
+public class SimpleRobotSpecification extends RobotSpecification<SimpleRobot, StreetNetworkManager> {
 
     private Position pos;
     private Orientation facing;
@@ -22,7 +22,7 @@ public class SimpleRobotSpecification extends RobotSpecification<SimpleRobot, Si
     }
 
     @Override
-    public SimpleRobot createRobot(SimpleTrafficLightsGridManager robots) {
+    public SimpleRobot createRobot(StreetNetworkManager robots) {
         return new SimpleRobot(Robot.incrementID(), robots, pos, facing, destination);
     }
     

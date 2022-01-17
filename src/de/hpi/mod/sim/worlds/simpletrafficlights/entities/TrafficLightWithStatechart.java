@@ -11,7 +11,7 @@ import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
-public class TrafficLightStatechartWrapper extends StateChartWrapper<TrafficLight.State>
+public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.State>
         implements StateChartEntity, IHighlightable {
     /**
      * The northern, eastern, southern and western positions
@@ -27,7 +27,7 @@ public class TrafficLightStatechartWrapper extends StateChartWrapper<TrafficLigh
      * @param pos The southern position of traffic light. All other positions are
      *            calculated from this one.
      */
-    public TrafficLightStatechartWrapper(Position pos) {
+    public TrafficLightWithStatechart(Position pos) {
         positions[0] = pos;
         positions[1] = new Position(pos.getX() - 2, pos.getY() + 1);
         positions[2] = new Position(pos.getX() + 1, pos.getY() + 2);
