@@ -14,6 +14,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightStatechartWrapper;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.ScenarioGenerator;
+import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class SimpleTrafficLightWorld extends RobotWorld {
@@ -27,8 +28,8 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     public void initialize() {
     	super.initialize();
     	// Moved here from static initialization of configuration class, until a better solution from the configuration if found.
-    	GridConfiguration.setOriginOffsetX(-SimpleTrafficLightsConfiguration.getFieldWidth() / 2 - 1);
-    	GridConfiguration.setOriginOffsetY(2);
+    	GridConfiguration.setOriginOffsetX(-TrafficLightsConfiguration.getFieldWidth() / 2 - 1);
+    	SimpleTrafficLightsConfiguration.setOriginOffsetY(2);
 	}
     
     @Override
@@ -54,17 +55,16 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
     	SimulationBlockView blockView = getSimulationBlockView();
     	if(blockView != null) {
-
-        	System.out.println("WORLD: "+currentHeight+" x "+currentWidth);
+    		// Transform pixes size to blocks
 	        float blockSize = blockView.getBlockSize();
-	        int width = (int) ((currentWidth / blockSize) + SimpleTrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
-	                + 1;
-	        int height = (int) (((currentHeight / blockSize) - SimpleTrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
-	                + 1;
-	        SimpleTrafficLightsConfiguration.setFieldDimensions(width, height);
-
-	    	System.out.println("WORLD: => "+width+" x "+height);
-	        getCrossRoadManager().updateFieldSize(width, height);
+	        int width = (int) (currentWidth / blockSize);
+	        int height = (int) (currentHeight / blockSize);
+	        
+	        // Update fild size in configuration 
+	        SimpleTrafficLightsConfiguration.setAvailableFieldDimensions(width, height);
+	        
+	        // Update size in GridManager
+	        getCrossRoadManager().updateFieldSize();
     	}
     }
     

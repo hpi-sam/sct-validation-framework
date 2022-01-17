@@ -58,15 +58,15 @@ public class GridConfiguration extends Configuration {
         return notUsedRows;
     }
 
-    public static void setMapHeight(int mapHeight) {
-        GridConfiguration.mapHeight = mapHeight;
+    public static void setMapHeight(int height) {
+        mapHeight = height;
     }
 
     public static void setOriginOffsetX(int offset) {
-        GridConfiguration.originOffsetX = offset;
+        originOffsetX = offset;
     }
    
     public static void setOriginOffsetY(int offset) {
-        GridConfiguration.originOffsetY = offset;
+        originOffsetY = offset;
     }
 }

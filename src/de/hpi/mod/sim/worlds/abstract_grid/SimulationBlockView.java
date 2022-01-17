@@ -67,9 +67,9 @@ public class SimulationBlockView extends AnimationPanel {
         y = (int) (getHeight() - y - blockSize / 2);
         int blockX = (int) Math.floor(
                 x / blockSize - getWidth() / (2 * blockSize) - GridConfiguration.getOriginOffsetX() + getOffsetX());
-        int blockY = (int) Math
-                .floor(y / blockSize - GridConfiguration.getOriginOffsetY() + getOffsetY());
-
+        int blockY = (int) Math.floor(
+        		y / blockSize - GridConfiguration.getOriginOffsetY() + getOffsetY());
+        System.out.println(x+"x"+y+" => "+blockX+"x"+blockY);
         return new Position(blockX, blockY);
     }
 

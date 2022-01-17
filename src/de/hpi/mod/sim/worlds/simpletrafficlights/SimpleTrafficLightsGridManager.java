@@ -16,39 +16,28 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightStatechart
 
 /**
  * Represents the Map and contains all logic which is dependant of the
- * implementation of the map. The Position (0, 0) is the upper left block of a
- * station. (2, 0) is therefore the first loading position on the right side of
- * the coordinate system. All cells which have a Y value below or equal to 0 are
- * in a station.
+ * implementation of the map. The Position (0, 0) is the bottom left block of the 
+ * whole grid and necessarily a wall.
  */
 public class SimpleTrafficLightsGridManager extends RobotGridManager {
 
-	//
-	private int height, width;
-	
 //    /**
 //     * Contains all traffic lights, from lines from bottom to top and from left to right
 //     */
     private List<TrafficLightStatechartWrapper> lights = new ArrayList<>(0);
-    private int lightsPerRow, lightsPerCol;
 
     public SimpleTrafficLightsGridManager() {
         super();
-        updateFieldSize(SimpleTrafficLightsConfiguration.getFieldWidth(), SimpleTrafficLightsConfiguration.getFieldHeight());
+        updateFieldSize();
     }
 
 
-    public void updateFieldSize(int w, int h) {
-    	System.out.println(w+" x "+h);
-    	this.width = w;
-    	this.height = h;
-    	this.lightsPerRow = w / 3;
-    	this.lightsPerCol = h / 3;
-    	this.lights = new ArrayList<>(this.lightsPerCol * this.lightsPerRow);
+    public void updateFieldSize() {
+    	this.lights = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * SimpleTrafficLightsConfiguration.getFieldHeight());
     }
     
     public TrafficLightStatechartWrapper getLightForCrossroad(int x, int y) {
-        int index = y * lightsPerRow + x;
+        int index = y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x;
         if (lights.size() > index)
             return lights.get(index);
         return null;
@@ -62,17 +51,17 @@ public class SimpleTrafficLightsGridManager extends RobotGridManager {
      */
     @Override
     public CellType cellType(Position position) {
-        if (position.getY() >= 0 && position.getY() < SimpleTrafficLightsConfiguration.getFieldHeight()
+    	if (position.getY() >= 0 && position.getY() < SimpleTrafficLightsConfiguration.getFieldHeight()
          && position.getX() >= 0 && position.getX() < SimpleTrafficLightsConfiguration.getFieldWidth()) {
-
+    		return CellType.WALL;
             // Each third
-            if (position.getY() % 3 == 0 && position.getX() % 3 == 0)
-                return CellType.WALL;
-            if (isWaypoint(position.getX(), position.getY()))
-                return getWaypointCellType(position.getX(), position.getY());
-            return CellType.CROSSROAD;
+//            if (position.getY() % 3 == 0 && position.getX() % 3 == 0)
+//                return CellType.WALL;
+//            if (isWaypoint(position.getX(), position.getY()))
+//                return getWaypointCellType(position.getX(), position.getY());
+//            return CellType.CROSSROAD;
         } else {
-            return CellType.WALL;
+            return CellType.EMPTY;
         }
     }
 
@@ -360,7 +349,7 @@ public class SimpleTrafficLightsGridManager extends RobotGridManager {
         Position pos = trafficLight.getSouthPosition();
         int x = (pos.getX() - 2) / 3;
         int y = pos.getY() / 3;
-        lights.add(y * lightsPerRow + x, trafficLight);
+        lights.add(y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x, trafficLight);
         return trafficLight;
     }
     
