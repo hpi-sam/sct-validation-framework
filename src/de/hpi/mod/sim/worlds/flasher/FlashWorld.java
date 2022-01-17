@@ -130,28 +130,4 @@ public class FlashWorld extends World {
 			bulb.doBlinkingTask(n);
 	}
 
-
-
-	@Override
-	public AnimationPanel getAnimationPanel() {
-		return new AnimationPanel(this) {
-
-			
-			private static final long serialVersionUID = -3511125389453371432L;
-
-			@Override
-			public void resetZoom() {
-			}
-
-			@Override
-			public void zoomIn(float zoom) {
-			}
-
-			@Override
-			public void zoomOut(float zoom) {
-			}
-			
-		};
-	}
-
 }

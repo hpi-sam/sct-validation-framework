@@ -25,8 +25,6 @@ public abstract class World {
 
     private List<Detector> detectors;
 
-    private AnimationPanel panel;
-
     protected abstract List<Detector> createDetectors();
 
     public List<Detector> getDetectors() {
@@ -123,11 +121,6 @@ public abstract class World {
 	public String toString() {
 		return getPublicName()+ " (" + this.getClass().getName() + ")";
 	}
-
-	public AnimationPanel getAnimationPanel() {
-        return panel;
-    }
-
 	public String getPublicName() {
 		return publicName;
 	}

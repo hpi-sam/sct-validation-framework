@@ -20,7 +20,7 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 
     public SimpleTrafficLightWorld() {
 		super();
-		publicName = "Robots with Traffic Light World";
+		publicName = "Simple robots with Traffic Light World";
 	}
 
     @Override
@@ -33,7 +33,7 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     
     @Override
     protected GridManager createGridManager() {
-        return new CrossRoadsManager();
+        return new SimpleTrafficLightsGridManager();
     }
 
     @Override
@@ -52,14 +52,18 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
-    	SimulationBlockView blockView = (SimulationBlockView) getAnimationPanel();
+    	SimulationBlockView blockView = getSimulationBlockView();
     	if(blockView != null) {
+
+        	System.out.println("WORLD: "+currentHeight+" x "+currentWidth);
 	        float blockSize = blockView.getBlockSize();
 	        int width = (int) ((currentWidth / blockSize) + SimpleTrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
 	                + 1;
 	        int height = (int) (((currentHeight / blockSize) - SimpleTrafficLightsConfiguration.getOriginOffsetY() * 2) / 3) * 3
 	                + 1;
 	        SimpleTrafficLightsConfiguration.setFieldDimensions(width, height);
+
+	    	System.out.println("WORLD: => "+width+" x "+height);
 	        getCrossRoadManager().updateFieldSize(width, height);
     	}
     }
@@ -88,8 +92,8 @@ public class SimpleTrafficLightWorld extends RobotWorld {
         return list;
     }
 
-    public CrossRoadsManager getCrossRoadManager() {
-        return (CrossRoadsManager) getGridManager();
+    public SimpleTrafficLightsGridManager getCrossRoadManager() {
+        return (SimpleTrafficLightsGridManager) getGridManager();
     }
 
     @Override
