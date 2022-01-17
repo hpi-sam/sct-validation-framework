@@ -21,24 +21,30 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightStatechart
  * the coordinate system. All cells which have a Y value below or equal to 0 are
  * in a station.
  */
-public class CrossRoadsManager extends RobotGridManager {
+public class SimpleTrafficLightsGridManager extends RobotGridManager {
 
-    /**
-     * Contains all traffic lights, from lines from bottom to top and from left to right
-     */
+	//
+	private int height, width;
+	
+//    /**
+//     * Contains all traffic lights, from lines from bottom to top and from left to right
+//     */
     private List<TrafficLightStatechartWrapper> lights = new ArrayList<>(0);
     private int lightsPerRow, lightsPerCol;
 
-    public CrossRoadsManager() {
+    public SimpleTrafficLightsGridManager() {
         super();
         updateFieldSize(SimpleTrafficLightsConfiguration.getFieldWidth(), SimpleTrafficLightsConfiguration.getFieldHeight());
     }
 
 
-    public void updateFieldSize(int width, int height) {
-        lightsPerRow = width / 3;
-        lightsPerCol = height / 3;
-        lights = new ArrayList<>(lightsPerCol * lightsPerRow);
+    public void updateFieldSize(int w, int h) {
+    	System.out.println(w+" x "+h);
+    	this.width = w;
+    	this.height = h;
+    	this.lightsPerRow = w / 3;
+    	this.lightsPerCol = h / 3;
+    	this.lights = new ArrayList<>(this.lightsPerCol * this.lightsPerRow);
     }
     
     public TrafficLightStatechartWrapper getLightForCrossroad(int x, int y) {
@@ -61,12 +67,12 @@ public class CrossRoadsManager extends RobotGridManager {
 
             // Each third
             if (position.getY() % 3 == 0 && position.getX() % 3 == 0)
-                return CellType.BLOCK;
+                return CellType.WALL;
             if (isWaypoint(position.getX(), position.getY()))
                 return getWaypointCellType(position.getX(), position.getY());
             return CellType.CROSSROAD;
         } else {
-            return CellType.BLOCK;
+            return CellType.WALL;
         }
     }
 
@@ -91,34 +97,34 @@ public class CrossRoadsManager extends RobotGridManager {
         if (x % 3 == 2 && y % 3 == 0) {
             TrafficLightStatechartWrapper light = getLightForCrossroad(x / 3, y / 3);
             if (light == null)
-                return CellType.PURE_WAYPOINT;
+                return CellType.STREET;
             if (light.isGreenSouth())
-                return CellType.TRAFFIC_LIGHT_GREEN_SOUTH;
-            return CellType.TRAFFIC_LIGHT_RED_SOUTH;
+                return CellType.CROSSROAD_WAITING_POINT;
+            return CellType.CROSSROAD_WAITING_POINT;
         }
         if (x % 3 == 0 && y % 3 == 1) {
              TrafficLightStatechartWrapper light = getLightForCrossroad(x / 3, y / 3);
             if (light == null)
-                return CellType.PURE_WAYPOINT;
+                return CellType.STREET;
             if (light.isGreenWest())
-                return CellType.TRAFFIC_LIGHT_GREEN_WEST;
-            return CellType.TRAFFIC_LIGHT_RED_WEST;
+                return CellType.CROSSROAD_WAITING_POINT;
+            return CellType.CROSSROAD_WAITING_POINT;
         }
         if (x % 3 == 1 && y % 3 == 0) {
              TrafficLightStatechartWrapper light = getLightForCrossroad(x / 3, y / 3 - 1);
             if (light == null)
-                return CellType.PURE_WAYPOINT;
+                return CellType.STREET;
             if (light.isGreenNorth())
-                return CellType.TRAFFIC_LIGHT_GREEN_NORTH;
-            return CellType.TRAFFIC_LIGHT_RED_NORTH;
+                return CellType.CROSSROAD_WAITING_POINT;
+            return CellType.CROSSROAD_WAITING_POINT;
         }
         if (x % 3 == 0 && y % 3 == 2) {
              TrafficLightStatechartWrapper light = getLightForCrossroad(x / 3 - 1, y / 3);
             if (light == null)
-                return CellType.PURE_WAYPOINT;
+                return CellType.STREET;
             if (light.isGreenEast())
-                return CellType.TRAFFIC_LIGHT_GREEN_EAST;
-            return CellType.TRAFFIC_LIGHT_RED_EAST;
+                return CellType.CROSSROAD_WAITING_POINT;
+            return CellType.CROSSROAD_WAITING_POINT;
         }
         return null;     
     }
@@ -130,7 +136,7 @@ public class CrossRoadsManager extends RobotGridManager {
      */
     @Override
     public boolean isBlockedByMap(Position position) {
-        return cellType(position) == CellType.BLOCK;
+        return cellType(position) == CellType.WALL;
     }
 
     /**

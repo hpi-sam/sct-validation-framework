@@ -66,10 +66,10 @@ public class RobotStatechartWrapper extends StateChartWrapper<TrafficLightRobot.
     @Override
     public long cellType() {
         switch (data.cellType()) {
-            case TRAFFIC_LIGHT_GREEN:
+            case CROSSROAD_WAITING_POINT:
                 return getStatemachine().cellType().getTRAFFICLIGHT_GREEN();
-            case TRAFFIC_LIGHT_RED:
-                return getStatemachine().cellType().getTRAFFICLIGHT_RED();
+//            case CROSSROAD_WAITING_POINT:
+//                return getStatemachine().cellType().getTRAFFICLIGHT_RED();
             case CROSSROAD:
                 return getStatemachine().cellType().getCROSSROAD();
             default:
