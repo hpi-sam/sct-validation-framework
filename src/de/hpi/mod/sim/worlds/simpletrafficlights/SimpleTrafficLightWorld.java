@@ -1,8 +1,11 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
@@ -64,45 +67,43 @@ public class SimpleTrafficLightWorld extends RobotWorld {
         SimpleTrafficLightsConfiguration.setAvailableFieldDimensions(width, height);
         
         // Trigger update in GridManager
-        getCrossRoadManager().updateFieldSize();
+        getStreetNetworkManager().updateFieldSize();
     }
     
     @Override
     public void refreshEntities() {
         super.refreshEntities();
-        for (TrafficLightWithStatechart light : getCrossRoadManager().getTrafficLights()) {
-            light.updateTimer();
-        }
+        getStreetNetworkManager().refreshEntities();
     }
 
     @Override
     public void clearEntities() {
         super.clearEntities();
-        getCrossRoadManager().getTrafficLights().clear();
+        getStreetNetworkManager().clearEntities();
     }
     
     @Override
     public List<? extends Entity> getEntities() {
-        List<? extends Entity> superList = super.getEntities();
-        List<TrafficLightWithStatechart> lights = getCrossRoadManager().getTrafficLights();
-        List<Entity> list = new ArrayList<>(lights.size() + superList.size());
-        list.addAll(superList);
-        list.addAll(lights);
-        return list;
+        List<? extends Entity> superEntities = super.getEntities();
+        List<? extends Entity> streetNetworkEntities = getStreetNetworkManager().getEntities();
+        return Stream.concat(superEntities.stream(), streetNetworkEntities.stream()).collect(Collectors.toList());
     }
 
-    public StreetNetworkManager getCrossRoadManager() {
+    public StreetNetworkManager getStreetNetworkManager() {
         return (StreetNetworkManager) getGridManager();
     }
 
     @Override
     public IHighlightable getHighlightAtPosition(int x, int y) {
+    	
+    	// Use super method to find if there is a robot at the targeted position
         IHighlightable highlight = super.getHighlightAtPosition(x, y);
         if (highlight != null)
             return highlight;
         
+        // If there is no robot, check if there is a crossroad
         Position pos = getSimulationBlockView().toGridPosition(x, y);
-        return getCrossRoadManager().getLightForCrossroad(pos.getX() / 3, pos.getY() / 3);
+        return getStreetNetworkManager().getLightForCrossroad(pos.getX() / 3, pos.getY() / 3);
         
     }
 }

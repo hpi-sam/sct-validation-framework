@@ -15,7 +15,7 @@ public class SimpleRobotSpecification extends RobotSpecification<SimpleRobot, St
     private Position destination;
 
     public SimpleRobotSpecification(SimpleTrafficLightWorld world, Position pos, Orientation facing, Position destination) {
-        super(world.getCrossRoadManager());
+        super(world.getStreetNetworkManager());
         this.pos = pos;
         this.facing = facing;
         this.destination = destination;

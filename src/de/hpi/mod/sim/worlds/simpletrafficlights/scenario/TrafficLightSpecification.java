@@ -17,7 +17,7 @@ public class TrafficLightSpecification implements EntitySpecification<TrafficLig
 
     @Override
     public TrafficLightWithStatechart createEntity() {
-        return world.getCrossRoadManager().addTrafficLight(new TrafficLightWithStatechart(pos));
+        return world.getStreetNetworkManager().addTrafficLight(new TrafficLightWithStatechart(pos));
     }
     
 }

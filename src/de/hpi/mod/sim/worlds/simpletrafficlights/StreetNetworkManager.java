@@ -2,11 +2,14 @@ package de.hpi.mod.sim.worlds.simpletrafficlights;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
@@ -26,7 +29,7 @@ public class StreetNetworkManager extends RobotGridManager {
 //    /**
 //     * Contains all traffic lights, from lines from bottom to top and from left to right
 //     */
-    private List<TrafficLightWithStatechart> lights = new ArrayList<>(0);
+    private List<TrafficLightWithStatechart> trafficLights = new ArrayList<>(0);
     private List<ArrivalPoint> arrivalPoints = new ArrayList<>(0);
     private List<DeparturePoint> departurePoints = new ArrayList<>(0);
 
@@ -39,13 +42,13 @@ public class StreetNetworkManager extends RobotGridManager {
     public void updateFieldSize() {
     	this.arrivalPoints = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * 2 + SimpleTrafficLightsConfiguration.getFieldHeight() * 2);
     	this.departurePoints = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * 2 + SimpleTrafficLightsConfiguration.getFieldHeight() * 2);
-    	this.lights = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * SimpleTrafficLightsConfiguration.getFieldHeight());
+    	this.trafficLights = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * SimpleTrafficLightsConfiguration.getFieldHeight());
     }
     
     public TrafficLightWithStatechart getLightForCrossroad(int x, int y) {
         int index = y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x;
-        if (lights.size() > index)
-            return lights.get(index);
+        if (trafficLights.size() > index)
+            return trafficLights.get(index);
         return null;
     }
 
@@ -144,6 +147,7 @@ public class StreetNetworkManager extends RobotGridManager {
             || (x == SimpleTrafficLightsConfiguration.getFieldWidth()-1 && y % 3 == 1) 
             || (x % 3 == 2 && y == SimpleTrafficLightsConfiguration.getFieldHeight()-1);
     }
+
 
     /**
      * Returns true if and only if there is a traffic light at position x,y and it is green
@@ -360,11 +364,36 @@ public class StreetNetworkManager extends RobotGridManager {
         // Return filtered results
         return cells;
     }
-
-    public List<TrafficLightWithStatechart> getTrafficLights() {
-        return lights;
+    
+    
+    
+    
+    
+    
+    public void createEntities() {
+    	
     }
 
+    public List<Entity> getEntities() {
+        return Stream.of(trafficLights,arrivalPoints,departurePoints).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+	public void clearEntities() {
+		this.trafficLights.clear();
+		this.departurePoints.clear();
+		this.arrivalPoints.clear();
+	}
+	
+	public void refreshEntities() {
+        for (TrafficLightWithStatechart light : this.trafficLights) {
+            light.updateTimer();
+        }
+	}
+
+	
+	
+	
+	
     /**
      * If the waypoints left, ahead and right of the crossroad which the position
      * faces are blocked.<br>
@@ -418,7 +447,7 @@ public class StreetNetworkManager extends RobotGridManager {
         Position pos = trafficLight.getSouthPosition();
         int x = (pos.getX() - 2) / 3;
         int y = pos.getY() / 3;
-        lights.add(y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x, trafficLight);
+        trafficLights.add(y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x, trafficLight);
         return trafficLight;
     }
     
@@ -464,8 +493,7 @@ public class StreetNetworkManager extends RobotGridManager {
         List<Position> positions = getAllPossiblePositions();
         positions = positions.stream().filter(p -> !isBlockedByRobot(p)).collect(Collectors.toList());
         return positions.get(new Random().nextInt(positions.size()));
-    }
-    
+    }   
    
 
 }
