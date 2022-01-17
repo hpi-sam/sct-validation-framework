@@ -53,19 +53,18 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 
     @Override
     public void refreshSimulationProperties(int currentHeight, int currentWidth) {
+    	
+		// Transform pixes size to blocks
     	SimulationBlockView blockView = getSimulationBlockView();
-    	if(blockView != null) {
-    		// Transform pixes size to blocks
-	        float blockSize = blockView.getBlockSize();
-	        int width = (int) (currentWidth / blockSize);
-	        int height = (int) (currentHeight / blockSize);
-	        
-	        // Update fild size in configuration 
-	        SimpleTrafficLightsConfiguration.setAvailableFieldDimensions(width, height);
-	        
-	        // Update size in GridManager
-	        getCrossRoadManager().updateFieldSize();
-    	}
+        float blockSize = blockView.getBlockSize();
+        int width = (int) (currentWidth / blockSize);
+        int height = (int) (currentHeight / blockSize);
+        
+        // Update fild size in configuration 
+        SimpleTrafficLightsConfiguration.setAvailableFieldDimensions(width, height);
+        
+        // Trigger update in GridManager
+        getCrossRoadManager().updateFieldSize();
     }
     
     @Override
