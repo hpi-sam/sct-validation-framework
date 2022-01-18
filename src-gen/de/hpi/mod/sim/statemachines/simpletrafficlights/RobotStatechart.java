@@ -7,7 +7,7 @@ import com.yakindu.core.ITimerService;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class TrafficLightRobot implements IStatemachine, ITimed {
+public class RobotStatechart implements IStatemachine, ITimed {
 	public static class Processor {
 		private boolean arrived;
 		
@@ -225,7 +225,7 @@ public class TrafficLightRobot implements IStatemachine, ITimed {
 	protected void setIsExecuting(boolean value) {
 		this.isExecuting = value;
 	}
-	public TrafficLightRobot() {
+	public RobotStatechart() {
 		processor = new Processor();
 		actors = new Actors();
 		data = new Data();

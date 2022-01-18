@@ -1,6 +1,6 @@
 GeneratorModel for yakindu::java {
 
-	statechart TrafficLightRobot {
+	statechart RobotStatechart {
 
 		feature Outlet {
 			targetProject = "sct-sim-edu"

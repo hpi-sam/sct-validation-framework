@@ -2,11 +2,11 @@ package de.hpi.mod.sim.worlds.simpletrafficlights.entities;
 
 import com.yakindu.core.IStatemachine;
 
-import de.hpi.mod.sim.statemachines.simpletrafficlights.TrafficLightRobot;
+import de.hpi.mod.sim.statemachines.simpletrafficlights.RobotStatechart;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_robots.IRobotActors;
 
-public class RobotStatechartWrapper extends StateChartWrapper<TrafficLightRobot.State> implements TrafficLightRobot.Data.OperationCallback {
+public class RobotStatechartWrapper extends StateChartWrapper<RobotStatechart.State> implements RobotStatechart.Data.OperationCallback {
 
     private IRobotActors actors;
     private IProcessor processor;
@@ -25,8 +25,8 @@ public class RobotStatechartWrapper extends StateChartWrapper<TrafficLightRobot.
         super.start();
     }
 
-    private TrafficLightRobot getStatemachine() {
-		return (TrafficLightRobot) chart;
+    private RobotStatechart getStatemachine() {
+		return (RobotStatechart) chart;
 	}
 
 	@Override
@@ -46,22 +46,22 @@ public class RobotStatechartWrapper extends StateChartWrapper<TrafficLightRobot.
 
     @Override
     public IStatemachine createStateMachine() {
-        return new TrafficLightRobot();
+        return new RobotStatechart();
     }
 
     @Override
-    protected TrafficLightRobot.State[] getStates() {
-        return TrafficLightRobot.State.values();
+    protected RobotStatechart.State[] getStates() {
+        return RobotStatechart.State.values();
     }
 
     @Override
-    protected boolean isActive(TrafficLightRobot.State state) {
+    protected boolean isActive(RobotStatechart.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((TrafficLightRobot) chart).isStateActive(state);}
+        return ((RobotStatechart) chart).isStateActive(state);}
 
     @Override
     public long cellType() {
