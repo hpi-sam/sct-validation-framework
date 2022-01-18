@@ -20,7 +20,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class SimpleTrafficLightWorld extends RobotWorld {
 
-    private de.hpi.mod.sim.worlds.simpletrafficlights.TrafficLightRenderer trafficLightRenderer;
+    private TrafficLightRenderer trafficLightRenderer;
 
 	public SimpleTrafficLightWorld() {
 		super();

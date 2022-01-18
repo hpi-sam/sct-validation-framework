@@ -76,6 +76,21 @@ public class TrafficLightRenderer {
         	topLightY += (0.65*blockSize);
         	bottomLightX += (0.35*blockSize);
         	bottomLightY += (0.35*blockSize);
+    	}else if(orientation == Orientation.WEST) {
+        	topLightX += (0.35*blockSize);
+        	topLightY += (0.35*blockSize);
+        	bottomLightX += (0.65*blockSize);
+        	bottomLightY += (0.35*blockSize);
+    	}else if(orientation == Orientation.NORTH) {
+        	topLightX += (0.65*blockSize);
+        	topLightY += (0.35*blockSize);
+        	bottomLightX += (0.65*blockSize);
+        	bottomLightY += (0.65*blockSize);
+    	}else if(orientation == Orientation.EAST) {
+        	topLightX += (0.65*blockSize);
+        	topLightY += (0.65*blockSize);
+        	bottomLightX += (0.35*blockSize);
+        	bottomLightY += (0.65*blockSize);
     	}
     	
 
