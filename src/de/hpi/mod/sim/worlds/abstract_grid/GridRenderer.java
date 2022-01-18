@@ -34,8 +34,8 @@ public class GridRenderer {
 
         int lowestY = GridConfiguration.getOriginOffsetY() + 1;
         int leftestX = GridConfiguration.getOriginOffsetX() + 1;
+        
         //Draw cells
-       
         for (int y = -lowestY + (int) blocksOffsetY; y < heightInBlocks - lowestY + blocksOffsetY; y++) {
             for (int x = -leftestX + (int) blocksOffsetX - widthInBlocks / 2; x < widthInBlocks / 2
                     - leftestX + blocksOffsetX; x++) {
@@ -93,8 +93,6 @@ public class GridRenderer {
 
         //draw the grid pattern around the block
         graphic.setColor(darken(graphic.getColor()));
-        // graphic.drawRect(x, y, (int) blockSize, (int) blockSize);
-
         graphic.drawLine(x, y, x + (int) blockSize, y);
         graphic.drawLine(x, y, x, y + (int) blockSize);
         graphic.drawLine(x + (int) blockSize, y, x + (int) blockSize, y + (int) blockSize);
