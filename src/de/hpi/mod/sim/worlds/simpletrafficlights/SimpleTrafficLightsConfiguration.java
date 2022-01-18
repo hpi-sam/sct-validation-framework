@@ -8,7 +8,9 @@ import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
  */
 public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 
-
+    public static final String STRING_PATH_TO_RED_TRAFFIC_LIGHT_ICON = "res/traffic-light-red.png";
+    public static final String STRING_PATH_TO_GREEN_TRAFFIC_LIGHT_ICON = "res/traffic-light-green.png";
+   	
     public static enum GridMode {
         SINGLE_CROSSROAD, TWO_CROSSROADS, MAXIMUM_CROSSROADS
     }
@@ -24,6 +26,9 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
     private static final int DEFAULT_FIELD_HEIGHT = 30;
     
 
+    private static String stringPathToRedTrafficLightIcon = STRING_PATH_TO_RED_TRAFFIC_LIGHT_ICON;
+    private static String stringPathToGreenTrafficLightIcon = STRING_PATH_TO_GREEN_TRAFFIC_LIGHT_ICON;
+    
 	private static int fieldBorderWidth = FIELD_BORDER_WIDTH;
     private static int streetLength = STREET_LENGTH;
     private static int crossroadLength = CROSSROAD_LENGTH;
@@ -39,6 +44,14 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	
 	private static GridMode crossroadsMode = DEFAULT_CROSSROAD_MODE;
 
+   	public static String getStringPathToRedTrafficLightIcon() {
+		return stringPathToRedTrafficLightIcon;
+	}
+   	
+   	public static String getStringPathToGreenTrafficLightIcon() {
+		return stringPathToGreenTrafficLightIcon;
+	}
+   	
 	public static int getFieldWidth() {
 		return fieldWidth;
 	}

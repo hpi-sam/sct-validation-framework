@@ -17,7 +17,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.ArrivalPoint;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
-import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightWithStatechart;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -29,7 +29,7 @@ public class StreetNetworkManager extends RobotGridManager {
 //    /**
 //     * Contains all traffic lights, from lines from bottom to top and from left to right
 //     */
-    private TrafficLightWithStatechart[] trafficLights;
+    private TrafficLight[] trafficLights;
     private ArrivalPoint[] arrivalPoints;
     private DeparturePoint[] departurePoints;
 
@@ -42,10 +42,10 @@ public class StreetNetworkManager extends RobotGridManager {
     public void resetFieldDataStructures() {
     	this.arrivalPoints = new ArrivalPoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
     	this.departurePoints = new DeparturePoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
-    	this.trafficLights = new TrafficLightWithStatechart[SimpleTrafficLightsConfiguration.getNumberOfCrossroads()];
+    	this.trafficLights = new TrafficLight[SimpleTrafficLightsConfiguration.getNumberOfCrossroads()];
     }
     
-    public TrafficLightWithStatechart getLightForCrossroad(int x, int y) {
+    public TrafficLight getLightForCrossroad(int x, int y) {
         int index = y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x;
         if (trafficLights.length > index)
             return trafficLights[index];
@@ -157,7 +157,7 @@ public class StreetNetworkManager extends RobotGridManager {
             return CellType.ARRIVAL_POINT;
 
         if (x % 3 == 2 && y % 3 == 0) {
-        	TrafficLightWithStatechart light = getLightForCrossroad(x / 3, y / 3);
+        	TrafficLight light = getLightForCrossroad(x / 3, y / 3);
             if (light == null)
                 return CellType.STREET;
             if (light.isGreenSouth())
@@ -165,7 +165,7 @@ public class StreetNetworkManager extends RobotGridManager {
             return CellType.CROSSROAD_WAITING_POINT;
         }
         if (x % 3 == 0 && y % 3 == 1) {
-        	TrafficLightWithStatechart light = getLightForCrossroad(x / 3, y / 3);
+        	TrafficLight light = getLightForCrossroad(x / 3, y / 3);
             if (light == null)
                 return CellType.STREET;
             if (light.isGreenWest())
@@ -173,7 +173,7 @@ public class StreetNetworkManager extends RobotGridManager {
             return CellType.CROSSROAD_WAITING_POINT;
         }
         if (x % 3 == 1 && y % 3 == 0) {
-        	TrafficLightWithStatechart light = getLightForCrossroad(x / 3, y / 3 - 1);
+        	TrafficLight light = getLightForCrossroad(x / 3, y / 3 - 1);
             if (light == null)
                 return CellType.STREET;
             if (light.isGreenNorth())
@@ -181,7 +181,7 @@ public class StreetNetworkManager extends RobotGridManager {
             return CellType.CROSSROAD_WAITING_POINT;
         }
         if (x % 3 == 0 && y % 3 == 2) {
-        	TrafficLightWithStatechart light = getLightForCrossroad(x / 3 - 1, y / 3);
+        	TrafficLight light = getLightForCrossroad(x / 3 - 1, y / 3);
             if (light == null)
                 return CellType.STREET;
             if (light.isGreenEast())
@@ -365,27 +365,16 @@ public class StreetNetworkManager extends RobotGridManager {
         return cells;
     }
     
-//    
-//    public void createCrossroadEntities() {
-//    	int blockSize =  + SimpleTrafficLightsConfiguration.getCrossroadLength();
-//    
-//    	for(int x = SimpleTrafficLightsConfiguration.getFieldBorderWidth() + SimpleTrafficLightsConfiguration.getStreetLength();
-//    			x < SimpleTrafficLightsConfiguration.getFieldWidth() - SimpleTrafficLightsConfiguration.getFieldBorderWidth();
-//    			x += SimpleTrafficLightsConfiguration.getStreetLength() + SimpleTrafficLightsConfiguration.getCrossroadLength()) {
-//        	for(int y = SimpleTrafficLightsConfiguration.getFieldBorderWidth() + SimpleTrafficLightsConfiguration.getStreetLength();
-//        			y < SimpleTrafficLightsConfiguration.getFieldHeight() - SimpleTrafficLightsConfiguration.getFieldBorderWidth();
-//        			y += SimpleTrafficLightsConfiguration.getStreetLength() + SimpleTrafficLightsConfiguration.getCrossroadLength()) {
-//        		System.out.println(x+"x"+y);
-//        	}
-//    	}
-//    }
-    
+	public List<TrafficLight> getTraffigLights() {
+		return Arrays.stream(trafficLights).filter(x -> x != null).collect(Collectors.toList());
+	}
+	
     public List<Entity> getEntities() {    	
         return Stream.of(
         		Arrays.asList(trafficLights),
         		Arrays.asList(arrivalPoints),
         		Arrays.asList(departurePoints)
-        		).flatMap(Collection::stream).collect(Collectors.toList());
+        		).filter(x -> x != null).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     @Override
@@ -394,7 +383,7 @@ public class StreetNetworkManager extends RobotGridManager {
     	super.clearEntities();
 		
 		// Stop TrafficLight Statecharts
-		for(TrafficLightWithStatechart trafficLight : this.trafficLights)
+		for(TrafficLight trafficLight : this.trafficLights)
 			if(trafficLight != null)
 				trafficLight.stop();
 		
@@ -403,7 +392,7 @@ public class StreetNetworkManager extends RobotGridManager {
 	}
 	
 	public void refreshEntities() {
-        for (TrafficLightWithStatechart trafficLight : this.trafficLights) {
+        for (TrafficLight trafficLight : this.trafficLights) {
         	if(trafficLight != null)
         		trafficLight.updateTimer();
         }
@@ -462,7 +451,7 @@ public class StreetNetworkManager extends RobotGridManager {
         }
     }
 
-    public void addTrafficLight(TrafficLightWithStatechart trafficLight) {
+    public void addTrafficLight(TrafficLight trafficLight) {
         Position relativePosition = trafficLight.getRelativePosition(); 
         int index = relativePosition.getY() * SimpleTrafficLightsConfiguration.getVerticalStreets() + relativePosition.getX();
         if(trafficLights.length > index)
@@ -522,5 +511,7 @@ public class StreetNetworkManager extends RobotGridManager {
         positions = positions.stream().filter(p -> !isBlockedByRobot(p)).collect(Collectors.toList());
         return positions.get(new Random().nextInt(positions.size()));
     }
+
+
 
 }

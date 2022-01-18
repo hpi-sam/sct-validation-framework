@@ -1,6 +1,6 @@
 GeneratorModel for yakindu::java {
 
-	statechart TrafficLight {
+	statechart TrafficLightStatechart {
 
 		feature Outlet {
 			targetProject = "sct-sim-edu"

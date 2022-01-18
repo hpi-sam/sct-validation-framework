@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.yakindu.core.IStatemachine;
 
-import de.hpi.mod.sim.statemachines.simpletrafficlights.TrafficLight;
+import de.hpi.mod.sim.statemachines.simpletrafficlights.TrafficLightStatechart;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
-public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.State>
+public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State>
         implements StateChartEntity, IHighlightable {
     /**
      * The northern, eastern, southern and western positions
@@ -20,8 +20,8 @@ public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.S
 	private RelativePosition relativePosition;
 	private Position basePosition;
     
-    private boolean[] lightStates = { false, false, false, false }; // Which positions show green. Order: South, West,
-                                                                    // East, North (by y-value)
+    private boolean[] lightStates = { false, false, false, false }; // true if a light is green. 
+    																// Order of entries: South, West, East, North (clockwise!)
 
     /**
      * Creates a traffic light. Each traffic light is responsible for a whole
@@ -30,7 +30,7 @@ public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.S
      * @param pos The southern position of traffic light. All other positions are
      *            calculated from this one.
      */
-    public TrafficLightWithStatechart(RelativePosition relative, Position absolute) {
+    public TrafficLight(RelativePosition relative, Position absolute) {
     	relativePosition = relative;
     	basePosition = absolute;
         start();
@@ -50,8 +50,8 @@ public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.S
         return "trafficlight";
     }
 
-    private TrafficLight getStatemachine() {
-        return (TrafficLight) chart;
+    private TrafficLightStatechart getStatemachine() {
+        return (TrafficLightStatechart) chart;
     }
 
     @Override
@@ -59,42 +59,42 @@ public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.S
         /**
          * Runs a cycle of the statechart and checks if any functions got fired
          */
-        if (getStatemachine().north().isRaisedOn())
+        if (getStatemachine().north().isRaisedGreen())
             lightStates[3] = true;
-        if (getStatemachine().north().isRaisedOff())
+        if (getStatemachine().north().isRaisedRed())
             lightStates[3] = false;
-        if (getStatemachine().east().isRaisedOn())
+        if (getStatemachine().east().isRaisedGreen())
             lightStates[2] = true;
-        if (getStatemachine().east().isRaisedOff())
+        if (getStatemachine().east().isRaisedRed())
             lightStates[2] = false;
-        if (getStatemachine().south().isRaisedOn())
+        if (getStatemachine().south().isRaisedGreen())
             lightStates[0] = true;
-        if (getStatemachine().south().isRaisedOff())
+        if (getStatemachine().south().isRaisedRed())
             lightStates[0] = false;
-        if (getStatemachine().west().isRaisedOn())
+        if (getStatemachine().west().isRaisedGreen())
             lightStates[1] = true;
-        if (getStatemachine().west().isRaisedOff())
+        if (getStatemachine().west().isRaisedRed())
             lightStates[1] = false;
     }
 
     @Override
     public IStatemachine createStateMachine() {
-        return new TrafficLight();
+        return new TrafficLightStatechart();
     }
 
     @Override
-    protected TrafficLight.State[] getStates() {
-        return TrafficLight.State.values();
+    protected TrafficLightStatechart.State[] getStates() {
+        return TrafficLightStatechart.State.values();
     }
 
     @Override
-    protected boolean isActive(TrafficLight.State state) {
+    protected boolean isActive(TrafficLightStatechart.State state) {
         /*
          * This is not intended by the YAKINDU implementation and source generation.
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((TrafficLight) chart).isStateActive(state);
+        return ((TrafficLightStatechart) chart).isStateActive(state);
     }
 
     public boolean isGreenNorth() {

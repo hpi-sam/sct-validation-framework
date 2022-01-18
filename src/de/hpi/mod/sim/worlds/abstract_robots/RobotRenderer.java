@@ -58,7 +58,7 @@ public class RobotRenderer {
 	                Point2D drawPos = simView.toDrawPosition(robot.x(), robot.y());
 	                Point2D targetPos = simView.toDrawPosition(robot.getTarget());
 	
-	                drawTarget(graphic, drawPos, targetPos, size);
+	                drawLineToTarget(graphic, drawPos, targetPos, size);
             }
         }
     }
@@ -87,7 +87,7 @@ public class RobotRenderer {
             graphic.drawImage(batteryIcon, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) size, (int) size, null);
     }
 
-    private void drawTarget(Graphics graphic, Point2D drawPosition, Point2D targetPosition, float size) {
+    private void drawLineToTarget(Graphics graphic, Point2D drawPosition, Point2D targetPosition, float size) {
         Graphics2D Graphic2D = (Graphics2D) graphic;
         graphic.setColor(Color.RED);
 

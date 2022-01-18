@@ -7,102 +7,102 @@ import com.yakindu.core.ITimerService;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class TrafficLight implements IStatemachine, ITimed {
+public class TrafficLightStatechart implements IStatemachine, ITimed {
 	public static class North {
-		private boolean on;
+		private boolean green;
 		
 		
-		protected void raiseOn() {
-			on = true;
+		protected void raiseGreen() {
+			green = true;
 		}
-		public boolean isRaisedOn() {
-			return on;
+		public boolean isRaisedGreen() {
+			return green;
 		}
 		
 		
-		private boolean off;
+		private boolean red;
 		
 		
-		protected void raiseOff() {
-			off = true;
+		protected void raiseRed() {
+			red = true;
 		}
-		public boolean isRaisedOff() {
-			return off;
+		public boolean isRaisedRed() {
+			return red;
 		}
 		
 		
 	}
 	
 	public static class East {
-		private boolean on;
+		private boolean green;
 		
 		
-		protected void raiseOn() {
-			on = true;
+		protected void raiseGreen() {
+			green = true;
 		}
-		public boolean isRaisedOn() {
-			return on;
+		public boolean isRaisedGreen() {
+			return green;
 		}
 		
 		
-		private boolean off;
+		private boolean red;
 		
 		
-		protected void raiseOff() {
-			off = true;
+		protected void raiseRed() {
+			red = true;
 		}
-		public boolean isRaisedOff() {
-			return off;
+		public boolean isRaisedRed() {
+			return red;
 		}
 		
 		
 	}
 	
 	public static class South {
-		private boolean on;
+		private boolean green;
 		
 		
-		protected void raiseOn() {
-			on = true;
+		protected void raiseGreen() {
+			green = true;
 		}
-		public boolean isRaisedOn() {
-			return on;
+		public boolean isRaisedGreen() {
+			return green;
 		}
 		
 		
-		private boolean off;
+		private boolean red;
 		
 		
-		protected void raiseOff() {
-			off = true;
+		protected void raiseRed() {
+			red = true;
 		}
-		public boolean isRaisedOff() {
-			return off;
+		public boolean isRaisedRed() {
+			return red;
 		}
 		
 		
 	}
 	
 	public static class West {
-		private boolean on;
+		private boolean green;
 		
 		
-		protected void raiseOn() {
-			on = true;
+		protected void raiseGreen() {
+			green = true;
 		}
-		public boolean isRaisedOn() {
-			return on;
+		public boolean isRaisedGreen() {
+			return green;
 		}
 		
 		
-		private boolean off;
+		private boolean red;
 		
 		
-		protected void raiseOff() {
-			off = true;
+		protected void raiseRed() {
+			red = true;
 		}
-		public boolean isRaisedOff() {
-			return off;
+		public boolean isRaisedRed() {
+			return red;
 		}
 		
 		
@@ -117,15 +117,15 @@ public class TrafficLight implements IStatemachine, ITimed {
 	protected West west;
 	
 	public enum State {
-		TRAFFICLIGHT_OFF,
-		TRAFFICLIGHT_NORTH,
-		TRAFFICLIGHT_EAST,
-		TRAFFICLIGHT_WEST,
-		TRAFFICLIGHT_WAITEAST,
-		TRAFFICLIGHT_WAITSOUTH,
-		TRAFFICLIGHT_WAITWEST,
-		TRAFFICLIGHT_WAITNORTH,
-		TRAFFICLIGHT_SOUTH,
+		TRAFFIC_LIGHT_OFF,
+		TRAFFIC_LIGHT_NORTH,
+		TRAFFIC_LIGHT_EAST,
+		TRAFFIC_LIGHT_WEST,
+		TRAFFIC_LIGHT_WAITEAST,
+		TRAFFIC_LIGHT_WAITSOUTH,
+		TRAFFIC_LIGHT_WAITWEST,
+		TRAFFIC_LIGHT_WAITNORTH,
+		TRAFFIC_LIGHT_SOUTH,
 		$NULLSTATE$
 	};
 	
@@ -147,7 +147,7 @@ public class TrafficLight implements IStatemachine, ITimed {
 	protected void setIsExecuting(boolean value) {
 		this.isExecuting = value;
 	}
-	public TrafficLight() {
+	public TrafficLightStatechart() {
 		north = new North();
 		east = new East();
 		south = new South();
@@ -173,7 +173,7 @@ public class TrafficLight implements IStatemachine, ITimed {
 			return;
 		}
 		isExecuting = true;
-		enterSequence_trafficlight_default();
+		enterSequence_traffic_light_default();
 		isExecuting = false;
 	}
 	
@@ -182,7 +182,7 @@ public class TrafficLight implements IStatemachine, ITimed {
 			return;
 		}
 		isExecuting = true;
-		exitSequence_trafficlight();
+		exitSequence_traffic_light();
 		isExecuting = false;
 	}
 	
@@ -202,14 +202,14 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return false;
 	}
 	private void clearOutEvents() {
-		north.on = false;
-		north.off = false;
-		east.on = false;
-		east.off = false;
-		south.on = false;
-		south.off = false;
-		west.on = false;
-		west.off = false;
+		north.green = false;
+		north.red = false;
+		east.green = false;
+		east.red = false;
+		south.green = false;
+		south.red = false;
+		west.green = false;
+		west.red = false;
 	}
 	
 	private void clearInEvents() {
@@ -239,32 +239,32 @@ public class TrafficLight implements IStatemachine, ITimed {
 		do { 
 			for (nextStateIndex = 0; nextStateIndex < stateVector.length; nextStateIndex++) {
 				switch (stateVector[nextStateIndex]) {
-				case TRAFFICLIGHT_OFF:
-					trafficlight_Off_react(true);
+				case TRAFFIC_LIGHT_OFF:
+					traffic_light_Off_react(true);
 					break;
-				case TRAFFICLIGHT_NORTH:
-					trafficlight_North_react(true);
+				case TRAFFIC_LIGHT_NORTH:
+					traffic_light_North_react(true);
 					break;
-				case TRAFFICLIGHT_EAST:
-					trafficlight_East_react(true);
+				case TRAFFIC_LIGHT_EAST:
+					traffic_light_East_react(true);
 					break;
-				case TRAFFICLIGHT_WEST:
-					trafficlight_West_react(true);
+				case TRAFFIC_LIGHT_WEST:
+					traffic_light_West_react(true);
 					break;
-				case TRAFFICLIGHT_WAITEAST:
-					trafficlight_WaitEast_react(true);
+				case TRAFFIC_LIGHT_WAITEAST:
+					traffic_light_WaitEast_react(true);
 					break;
-				case TRAFFICLIGHT_WAITSOUTH:
-					trafficlight_WaitSouth_react(true);
+				case TRAFFIC_LIGHT_WAITSOUTH:
+					traffic_light_WaitSouth_react(true);
 					break;
-				case TRAFFICLIGHT_WAITWEST:
-					trafficlight_WaitWest_react(true);
+				case TRAFFIC_LIGHT_WAITWEST:
+					traffic_light_WaitWest_react(true);
 					break;
-				case TRAFFICLIGHT_WAITNORTH:
-					trafficlight_WaitNorth_react(true);
+				case TRAFFIC_LIGHT_WAITNORTH:
+					traffic_light_WaitNorth_react(true);
 					break;
-				case TRAFFICLIGHT_SOUTH:
-					trafficlight_South_react(true);
+				case TRAFFIC_LIGHT_SOUTH:
+					traffic_light_South_react(true);
 					break;
 				default:
 					// $NULLSTATE$
@@ -290,24 +290,24 @@ public class TrafficLight implements IStatemachine, ITimed {
 	public boolean isStateActive(State state) {
 	
 		switch (state) {
-		case TRAFFICLIGHT_OFF:
-			return stateVector[0] == State.TRAFFICLIGHT_OFF;
-		case TRAFFICLIGHT_NORTH:
-			return stateVector[0] == State.TRAFFICLIGHT_NORTH;
-		case TRAFFICLIGHT_EAST:
-			return stateVector[0] == State.TRAFFICLIGHT_EAST;
-		case TRAFFICLIGHT_WEST:
-			return stateVector[0] == State.TRAFFICLIGHT_WEST;
-		case TRAFFICLIGHT_WAITEAST:
-			return stateVector[0] == State.TRAFFICLIGHT_WAITEAST;
-		case TRAFFICLIGHT_WAITSOUTH:
-			return stateVector[0] == State.TRAFFICLIGHT_WAITSOUTH;
-		case TRAFFICLIGHT_WAITWEST:
-			return stateVector[0] == State.TRAFFICLIGHT_WAITWEST;
-		case TRAFFICLIGHT_WAITNORTH:
-			return stateVector[0] == State.TRAFFICLIGHT_WAITNORTH;
-		case TRAFFICLIGHT_SOUTH:
-			return stateVector[0] == State.TRAFFICLIGHT_SOUTH;
+		case TRAFFIC_LIGHT_OFF:
+			return stateVector[0] == State.TRAFFIC_LIGHT_OFF;
+		case TRAFFIC_LIGHT_NORTH:
+			return stateVector[0] == State.TRAFFIC_LIGHT_NORTH;
+		case TRAFFIC_LIGHT_EAST:
+			return stateVector[0] == State.TRAFFIC_LIGHT_EAST;
+		case TRAFFIC_LIGHT_WEST:
+			return stateVector[0] == State.TRAFFIC_LIGHT_WEST;
+		case TRAFFIC_LIGHT_WAITEAST:
+			return stateVector[0] == State.TRAFFIC_LIGHT_WAITEAST;
+		case TRAFFIC_LIGHT_WAITSOUTH:
+			return stateVector[0] == State.TRAFFIC_LIGHT_WAITSOUTH;
+		case TRAFFIC_LIGHT_WAITWEST:
+			return stateVector[0] == State.TRAFFIC_LIGHT_WAITWEST;
+		case TRAFFIC_LIGHT_WAITNORTH:
+			return stateVector[0] == State.TRAFFIC_LIGHT_WAITNORTH;
+		case TRAFFIC_LIGHT_SOUTH:
+			return stateVector[0] == State.TRAFFIC_LIGHT_SOUTH;
 		default:
 			return false;
 		}
@@ -348,280 +348,280 @@ public class TrafficLight implements IStatemachine, ITimed {
 	}
 	
 	/* Entry action for state 'Off'. */
-	private void entryAction_trafficlight_Off() {
+	private void entryAction_traffic_light_Off() {
 		timerService.setTimer(this, 0, (2 * 1000), false);
 	}
 	
 	/* Entry action for state 'North'. */
-	private void entryAction_trafficlight_North() {
+	private void entryAction_traffic_light_North() {
 		timerService.setTimer(this, 1, (3 * 1000), false);
 		
-		north.raiseOn();
+		north.raiseGreen();
 	}
 	
 	/* Entry action for state 'East'. */
-	private void entryAction_trafficlight_East() {
+	private void entryAction_traffic_light_East() {
 		timerService.setTimer(this, 2, (3 * 1000), false);
 		
-		east.raiseOn();
+		east.raiseGreen();
 	}
 	
 	/* Entry action for state 'West'. */
-	private void entryAction_trafficlight_West() {
+	private void entryAction_traffic_light_West() {
 		timerService.setTimer(this, 3, (3 * 1000), false);
 		
-		west.raiseOn();
+		west.raiseGreen();
 	}
 	
 	/* Entry action for state 'WaitEast'. */
-	private void entryAction_trafficlight_WaitEast() {
+	private void entryAction_traffic_light_WaitEast() {
 		timerService.setTimer(this, 4, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'WaitSouth'. */
-	private void entryAction_trafficlight_WaitSouth() {
+	private void entryAction_traffic_light_WaitSouth() {
 		timerService.setTimer(this, 5, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'WaitWest'. */
-	private void entryAction_trafficlight_WaitWest() {
+	private void entryAction_traffic_light_WaitWest() {
 		timerService.setTimer(this, 6, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'WaitNorth'. */
-	private void entryAction_trafficlight_WaitNorth() {
+	private void entryAction_traffic_light_WaitNorth() {
 		timerService.setTimer(this, 7, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'South'. */
-	private void entryAction_trafficlight_South() {
+	private void entryAction_traffic_light_South() {
 		timerService.setTimer(this, 8, (3 * 1000), false);
 		
-		south.raiseOn();
+		south.raiseGreen();
 	}
 	
 	/* Exit action for state 'Off'. */
-	private void exitAction_trafficlight_Off() {
+	private void exitAction_traffic_light_Off() {
 		timerService.unsetTimer(this, 0);
 	}
 	
 	/* Exit action for state 'North'. */
-	private void exitAction_trafficlight_North() {
+	private void exitAction_traffic_light_North() {
 		timerService.unsetTimer(this, 1);
 		
-		north.raiseOff();
+		north.raiseRed();
 	}
 	
 	/* Exit action for state 'East'. */
-	private void exitAction_trafficlight_East() {
+	private void exitAction_traffic_light_East() {
 		timerService.unsetTimer(this, 2);
 		
-		east.raiseOff();
+		east.raiseRed();
 	}
 	
 	/* Exit action for state 'West'. */
-	private void exitAction_trafficlight_West() {
+	private void exitAction_traffic_light_West() {
 		timerService.unsetTimer(this, 3);
 		
-		west.raiseOff();
+		west.raiseRed();
 	}
 	
 	/* Exit action for state 'WaitEast'. */
-	private void exitAction_trafficlight_WaitEast() {
+	private void exitAction_traffic_light_WaitEast() {
 		timerService.unsetTimer(this, 4);
 	}
 	
 	/* Exit action for state 'WaitSouth'. */
-	private void exitAction_trafficlight_WaitSouth() {
+	private void exitAction_traffic_light_WaitSouth() {
 		timerService.unsetTimer(this, 5);
 	}
 	
 	/* Exit action for state 'WaitWest'. */
-	private void exitAction_trafficlight_WaitWest() {
+	private void exitAction_traffic_light_WaitWest() {
 		timerService.unsetTimer(this, 6);
 	}
 	
 	/* Exit action for state 'WaitNorth'. */
-	private void exitAction_trafficlight_WaitNorth() {
+	private void exitAction_traffic_light_WaitNorth() {
 		timerService.unsetTimer(this, 7);
 	}
 	
 	/* Exit action for state 'South'. */
-	private void exitAction_trafficlight_South() {
+	private void exitAction_traffic_light_South() {
 		timerService.unsetTimer(this, 8);
 		
-		south.raiseOff();
+		south.raiseRed();
 	}
 	
 	/* 'default' enter sequence for state Off */
-	private void enterSequence_trafficlight_Off_default() {
-		entryAction_trafficlight_Off();
+	private void enterSequence_traffic_light_Off_default() {
+		entryAction_traffic_light_Off();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_OFF;
+		stateVector[0] = State.TRAFFIC_LIGHT_OFF;
 	}
 	
 	/* 'default' enter sequence for state North */
-	private void enterSequence_trafficlight_North_default() {
-		entryAction_trafficlight_North();
+	private void enterSequence_traffic_light_North_default() {
+		entryAction_traffic_light_North();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_NORTH;
+		stateVector[0] = State.TRAFFIC_LIGHT_NORTH;
 	}
 	
 	/* 'default' enter sequence for state East */
-	private void enterSequence_trafficlight_East_default() {
-		entryAction_trafficlight_East();
+	private void enterSequence_traffic_light_East_default() {
+		entryAction_traffic_light_East();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_EAST;
+		stateVector[0] = State.TRAFFIC_LIGHT_EAST;
 	}
 	
 	/* 'default' enter sequence for state West */
-	private void enterSequence_trafficlight_West_default() {
-		entryAction_trafficlight_West();
+	private void enterSequence_traffic_light_West_default() {
+		entryAction_traffic_light_West();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_WEST;
+		stateVector[0] = State.TRAFFIC_LIGHT_WEST;
 	}
 	
 	/* 'default' enter sequence for state WaitEast */
-	private void enterSequence_trafficlight_WaitEast_default() {
-		entryAction_trafficlight_WaitEast();
+	private void enterSequence_traffic_light_WaitEast_default() {
+		entryAction_traffic_light_WaitEast();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_WAITEAST;
+		stateVector[0] = State.TRAFFIC_LIGHT_WAITEAST;
 	}
 	
 	/* 'default' enter sequence for state WaitSouth */
-	private void enterSequence_trafficlight_WaitSouth_default() {
-		entryAction_trafficlight_WaitSouth();
+	private void enterSequence_traffic_light_WaitSouth_default() {
+		entryAction_traffic_light_WaitSouth();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_WAITSOUTH;
+		stateVector[0] = State.TRAFFIC_LIGHT_WAITSOUTH;
 	}
 	
 	/* 'default' enter sequence for state WaitWest */
-	private void enterSequence_trafficlight_WaitWest_default() {
-		entryAction_trafficlight_WaitWest();
+	private void enterSequence_traffic_light_WaitWest_default() {
+		entryAction_traffic_light_WaitWest();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_WAITWEST;
+		stateVector[0] = State.TRAFFIC_LIGHT_WAITWEST;
 	}
 	
 	/* 'default' enter sequence for state WaitNorth */
-	private void enterSequence_trafficlight_WaitNorth_default() {
-		entryAction_trafficlight_WaitNorth();
+	private void enterSequence_traffic_light_WaitNorth_default() {
+		entryAction_traffic_light_WaitNorth();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_WAITNORTH;
+		stateVector[0] = State.TRAFFIC_LIGHT_WAITNORTH;
 	}
 	
 	/* 'default' enter sequence for state South */
-	private void enterSequence_trafficlight_South_default() {
-		entryAction_trafficlight_South();
+	private void enterSequence_traffic_light_South_default() {
+		entryAction_traffic_light_South();
 		nextStateIndex = 0;
-		stateVector[0] = State.TRAFFICLIGHT_SOUTH;
+		stateVector[0] = State.TRAFFIC_LIGHT_SOUTH;
 	}
 	
-	/* 'default' enter sequence for region trafficlight */
-	private void enterSequence_trafficlight_default() {
-		react_trafficlight__entry_Default();
+	/* 'default' enter sequence for region traffic light */
+	private void enterSequence_traffic_light_default() {
+		react_traffic_light__entry_Default();
 	}
 	
 	/* Default exit sequence for state Off */
-	private void exitSequence_trafficlight_Off() {
+	private void exitSequence_traffic_light_Off() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_Off();
+		exitAction_traffic_light_Off();
 	}
 	
 	/* Default exit sequence for state North */
-	private void exitSequence_trafficlight_North() {
+	private void exitSequence_traffic_light_North() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_North();
+		exitAction_traffic_light_North();
 	}
 	
 	/* Default exit sequence for state East */
-	private void exitSequence_trafficlight_East() {
+	private void exitSequence_traffic_light_East() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_East();
+		exitAction_traffic_light_East();
 	}
 	
 	/* Default exit sequence for state West */
-	private void exitSequence_trafficlight_West() {
+	private void exitSequence_traffic_light_West() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_West();
+		exitAction_traffic_light_West();
 	}
 	
 	/* Default exit sequence for state WaitEast */
-	private void exitSequence_trafficlight_WaitEast() {
+	private void exitSequence_traffic_light_WaitEast() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_WaitEast();
+		exitAction_traffic_light_WaitEast();
 	}
 	
 	/* Default exit sequence for state WaitSouth */
-	private void exitSequence_trafficlight_WaitSouth() {
+	private void exitSequence_traffic_light_WaitSouth() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_WaitSouth();
+		exitAction_traffic_light_WaitSouth();
 	}
 	
 	/* Default exit sequence for state WaitWest */
-	private void exitSequence_trafficlight_WaitWest() {
+	private void exitSequence_traffic_light_WaitWest() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_WaitWest();
+		exitAction_traffic_light_WaitWest();
 	}
 	
 	/* Default exit sequence for state WaitNorth */
-	private void exitSequence_trafficlight_WaitNorth() {
+	private void exitSequence_traffic_light_WaitNorth() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_WaitNorth();
+		exitAction_traffic_light_WaitNorth();
 	}
 	
 	/* Default exit sequence for state South */
-	private void exitSequence_trafficlight_South() {
+	private void exitSequence_traffic_light_South() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_trafficlight_South();
+		exitAction_traffic_light_South();
 	}
 	
-	/* Default exit sequence for region trafficlight */
-	private void exitSequence_trafficlight() {
+	/* Default exit sequence for region traffic light */
+	private void exitSequence_traffic_light() {
 		switch (stateVector[0]) {
-		case TRAFFICLIGHT_OFF:
-			exitSequence_trafficlight_Off();
+		case TRAFFIC_LIGHT_OFF:
+			exitSequence_traffic_light_Off();
 			break;
-		case TRAFFICLIGHT_NORTH:
-			exitSequence_trafficlight_North();
+		case TRAFFIC_LIGHT_NORTH:
+			exitSequence_traffic_light_North();
 			break;
-		case TRAFFICLIGHT_EAST:
-			exitSequence_trafficlight_East();
+		case TRAFFIC_LIGHT_EAST:
+			exitSequence_traffic_light_East();
 			break;
-		case TRAFFICLIGHT_WEST:
-			exitSequence_trafficlight_West();
+		case TRAFFIC_LIGHT_WEST:
+			exitSequence_traffic_light_West();
 			break;
-		case TRAFFICLIGHT_WAITEAST:
-			exitSequence_trafficlight_WaitEast();
+		case TRAFFIC_LIGHT_WAITEAST:
+			exitSequence_traffic_light_WaitEast();
 			break;
-		case TRAFFICLIGHT_WAITSOUTH:
-			exitSequence_trafficlight_WaitSouth();
+		case TRAFFIC_LIGHT_WAITSOUTH:
+			exitSequence_traffic_light_WaitSouth();
 			break;
-		case TRAFFICLIGHT_WAITWEST:
-			exitSequence_trafficlight_WaitWest();
+		case TRAFFIC_LIGHT_WAITWEST:
+			exitSequence_traffic_light_WaitWest();
 			break;
-		case TRAFFICLIGHT_WAITNORTH:
-			exitSequence_trafficlight_WaitNorth();
+		case TRAFFIC_LIGHT_WAITNORTH:
+			exitSequence_traffic_light_WaitNorth();
 			break;
-		case TRAFFICLIGHT_SOUTH:
-			exitSequence_trafficlight_South();
+		case TRAFFIC_LIGHT_SOUTH:
+			exitSequence_traffic_light_South();
 			break;
 		default:
 			break;
@@ -629,21 +629,21 @@ public class TrafficLight implements IStatemachine, ITimed {
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_trafficlight__entry_Default() {
-		enterSequence_trafficlight_Off_default();
+	private void react_traffic_light__entry_Default() {
+		enterSequence_traffic_light_Off_default();
 	}
 	
 	private boolean react() {
 		return false;
 	}
 	
-	private boolean trafficlight_Off_react(boolean try_transition) {
+	private boolean traffic_light_Off_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[0]) {
-				exitSequence_trafficlight_Off();
-				enterSequence_trafficlight_North_default();
+				exitSequence_traffic_light_Off();
+				enterSequence_traffic_light_North_default();
 				react();
 			} else {
 				did_transition = false;
@@ -655,13 +655,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_North_react(boolean try_transition) {
+	private boolean traffic_light_North_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[1]) {
-				exitSequence_trafficlight_North();
-				enterSequence_trafficlight_WaitEast_default();
+				exitSequence_traffic_light_North();
+				enterSequence_traffic_light_WaitEast_default();
 				react();
 			} else {
 				did_transition = false;
@@ -673,13 +673,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_East_react(boolean try_transition) {
+	private boolean traffic_light_East_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[2]) {
-				exitSequence_trafficlight_East();
-				enterSequence_trafficlight_WaitSouth_default();
+				exitSequence_traffic_light_East();
+				enterSequence_traffic_light_WaitSouth_default();
 				react();
 			} else {
 				did_transition = false;
@@ -691,13 +691,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_West_react(boolean try_transition) {
+	private boolean traffic_light_West_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[3]) {
-				exitSequence_trafficlight_West();
-				enterSequence_trafficlight_WaitNorth_default();
+				exitSequence_traffic_light_West();
+				enterSequence_traffic_light_WaitNorth_default();
 				react();
 			} else {
 				did_transition = false;
@@ -709,13 +709,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_WaitEast_react(boolean try_transition) {
+	private boolean traffic_light_WaitEast_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[4]) {
-				exitSequence_trafficlight_WaitEast();
-				enterSequence_trafficlight_East_default();
+				exitSequence_traffic_light_WaitEast();
+				enterSequence_traffic_light_East_default();
 				react();
 			} else {
 				did_transition = false;
@@ -727,13 +727,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_WaitSouth_react(boolean try_transition) {
+	private boolean traffic_light_WaitSouth_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[5]) {
-				exitSequence_trafficlight_WaitSouth();
-				enterSequence_trafficlight_South_default();
+				exitSequence_traffic_light_WaitSouth();
+				enterSequence_traffic_light_South_default();
 				react();
 			} else {
 				did_transition = false;
@@ -745,13 +745,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_WaitWest_react(boolean try_transition) {
+	private boolean traffic_light_WaitWest_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[6]) {
-				exitSequence_trafficlight_WaitWest();
-				enterSequence_trafficlight_West_default();
+				exitSequence_traffic_light_WaitWest();
+				enterSequence_traffic_light_West_default();
 				react();
 			} else {
 				did_transition = false;
@@ -763,13 +763,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_WaitNorth_react(boolean try_transition) {
+	private boolean traffic_light_WaitNorth_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[7]) {
-				exitSequence_trafficlight_WaitNorth();
-				enterSequence_trafficlight_North_default();
+				exitSequence_traffic_light_WaitNorth();
+				enterSequence_traffic_light_North_default();
 				react();
 			} else {
 				did_transition = false;
@@ -781,13 +781,13 @@ public class TrafficLight implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean trafficlight_South_react(boolean try_transition) {
+	private boolean traffic_light_South_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[8]) {
-				exitSequence_trafficlight_South();
-				enterSequence_trafficlight_WaitWest_default();
+				exitSequence_traffic_light_South();
+				enterSequence_traffic_light_WaitWest_default();
 				react();
 			} else {
 				did_transition = false;

@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.awt.Graphics;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,14 +14,15 @@ import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
-import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightWithStatechart;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class SimpleTrafficLightWorld extends RobotWorld {
 
-    public SimpleTrafficLightWorld() {
+    private de.hpi.mod.sim.worlds.simpletrafficlights.TrafficLightRenderer trafficLightRenderer;
+
+	public SimpleTrafficLightWorld() {
 		super();
 		publicName = "Simple robots with Traffic Light World";
 	}
@@ -33,6 +33,8 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     	// Moved here from static initialization of configuration class, until a better solution from the configuration if found.
     	GridConfiguration.setOriginOffsetX(-TrafficLightsConfiguration.getFieldWidth() / 2 - 1);
     	SimpleTrafficLightsConfiguration.setOriginOffsetY(2);
+    	
+    	trafficLightRenderer = new TrafficLightRenderer(getSimulationBlockView(), getStreetNetworkManager());
 	}
     
     @Override
@@ -85,6 +87,12 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     @Override
     public void clearEntities() {
         super.clearEntities();
+    }
+
+    @Override
+    protected void renderEntities(Graphics graphics) {
+    	super.renderEntities(graphics);
+        trafficLightRenderer.render(graphics, getSimulationBlockView().getBlockSize());
     }
     
     @Override

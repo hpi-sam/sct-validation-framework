@@ -5,10 +5,10 @@ import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.RelativePosition;
-import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightWithStatechart;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
 
 
-public class TrafficLightSpecification implements EntitySpecification<TrafficLightWithStatechart> {
+public class TrafficLightSpecification implements EntitySpecification<TrafficLight> {
 
     private RelativePosition relativePosition;
     private StreetNetworkManager grid;
@@ -27,8 +27,8 @@ public class TrafficLightSpecification implements EntitySpecification<TrafficLig
     }
     
     @Override
-    public TrafficLightWithStatechart createEntity() {
-    	TrafficLightWithStatechart entity = new TrafficLightWithStatechart(relativePosition, getCoordinates());
+    public TrafficLight createEntity() {
+    	TrafficLight entity = new TrafficLight(relativePosition, getCoordinates());
         this.grid.addTrafficLight(entity);
 		return entity;
     }
