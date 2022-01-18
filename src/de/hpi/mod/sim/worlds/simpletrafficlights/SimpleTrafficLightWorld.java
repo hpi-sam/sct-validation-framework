@@ -67,7 +67,13 @@ public class SimpleTrafficLightWorld extends RobotWorld {
         SimpleTrafficLightsConfiguration.setAvailableFieldDimensions(width, height);
         
         // Trigger update in GridManager
-        getStreetNetworkManager().updateFieldSize();
+        getStreetNetworkManager().resetFieldDataStructures();
+    }
+    
+    @Override
+    public void runScenario(Scenario scenario){
+    	// Start all Scenarios by 
+    	super.runScenario(scenario);
     }
     
     @Override
@@ -79,7 +85,6 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     @Override
     public void clearEntities() {
         super.clearEntities();
-        getStreetNetworkManager().clearEntities();
     }
     
     @Override

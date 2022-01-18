@@ -182,8 +182,8 @@ public class PongWorld extends World {
 
 	@Override
 	public void close() {
-		paddle1.close();
-		paddle2.close();
+		paddle1.stop();
+		paddle2.stop();
 	}
 
 	@Override

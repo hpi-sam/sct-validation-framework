@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.simpletrafficlights.scenario;
+package de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification;
 
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;

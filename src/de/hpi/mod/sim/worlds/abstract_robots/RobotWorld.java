@@ -86,7 +86,7 @@ public abstract class RobotWorld extends GridWorld {
     
     @Override
     public void clearEntities() {
-        getRobots().clear();
+    	getRobotGridManager().clearEntities();
     }
     
     @Override

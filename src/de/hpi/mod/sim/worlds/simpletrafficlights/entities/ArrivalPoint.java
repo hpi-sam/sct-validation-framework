@@ -1,9 +1,11 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights.entities;
 
-public class ArrivalPoint extends RobotWaypoint {
+import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
-	public ArrivalPoint(int x, int y) {
-		super(x, y);
+public class ArrivalPoint extends TransitPoint {
+
+	public ArrivalPoint(int i, Position p) {
+		super(i, p);
 	}
 
 }

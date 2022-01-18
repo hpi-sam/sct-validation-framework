@@ -108,7 +108,7 @@ public class FlashWorld extends World {
 
 	@Override
 	public void close() {
-		bulb.close();
+		bulb.stop();
 	}
 
 	public void setBulb(LightBulb bulb) {

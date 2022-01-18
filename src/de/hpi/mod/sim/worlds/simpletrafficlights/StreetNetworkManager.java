@@ -29,26 +29,26 @@ public class StreetNetworkManager extends RobotGridManager {
 //    /**
 //     * Contains all traffic lights, from lines from bottom to top and from left to right
 //     */
-    private List<TrafficLightWithStatechart> trafficLights = new ArrayList<>(0);
-    private List<ArrivalPoint> arrivalPoints = new ArrayList<>(0);
-    private List<DeparturePoint> departurePoints = new ArrayList<>(0);
+    private TrafficLightWithStatechart[] trafficLights;
+    private ArrivalPoint[] arrivalPoints;
+    private DeparturePoint[] departurePoints;
 
     public StreetNetworkManager() {
         super();
-        updateFieldSize();
+        resetFieldDataStructures();
     }
 
 
-    public void updateFieldSize() {
-    	this.arrivalPoints = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * 2 + SimpleTrafficLightsConfiguration.getFieldHeight() * 2);
-    	this.departurePoints = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * 2 + SimpleTrafficLightsConfiguration.getFieldHeight() * 2);
-    	this.trafficLights = new ArrayList<>(SimpleTrafficLightsConfiguration.getFieldWidth() * SimpleTrafficLightsConfiguration.getFieldHeight());
+    public void resetFieldDataStructures() {
+    	this.arrivalPoints = new ArrivalPoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
+    	this.departurePoints = new DeparturePoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
+    	this.trafficLights = new TrafficLightWithStatechart[SimpleTrafficLightsConfiguration.getNumberOfCrossroads()];
     }
     
     public TrafficLightWithStatechart getLightForCrossroad(int x, int y) {
         int index = y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x;
-        if (trafficLights.size() > index)
-            return trafficLights.get(index);
+        if (trafficLights.length > index)
+            return trafficLights[index];
         return null;
     }
 
@@ -365,28 +365,47 @@ public class StreetNetworkManager extends RobotGridManager {
         return cells;
     }
     
+//    
+//    public void createCrossroadEntities() {
+//    	int blockSize =  + SimpleTrafficLightsConfiguration.getCrossroadLength();
+//    
+//    	for(int x = SimpleTrafficLightsConfiguration.getFieldBorderWidth() + SimpleTrafficLightsConfiguration.getStreetLength();
+//    			x < SimpleTrafficLightsConfiguration.getFieldWidth() - SimpleTrafficLightsConfiguration.getFieldBorderWidth();
+//    			x += SimpleTrafficLightsConfiguration.getStreetLength() + SimpleTrafficLightsConfiguration.getCrossroadLength()) {
+//        	for(int y = SimpleTrafficLightsConfiguration.getFieldBorderWidth() + SimpleTrafficLightsConfiguration.getStreetLength();
+//        			y < SimpleTrafficLightsConfiguration.getFieldHeight() - SimpleTrafficLightsConfiguration.getFieldBorderWidth();
+//        			y += SimpleTrafficLightsConfiguration.getStreetLength() + SimpleTrafficLightsConfiguration.getCrossroadLength()) {
+//        		System.out.println(x+"x"+y);
+//        	}
+//    	}
+//    }
     
-    
-    
-    
-    
-    public void createEntities() {
-    	
+    public List<Entity> getEntities() {    	
+        return Stream.of(
+        		Arrays.asList(trafficLights),
+        		Arrays.asList(arrivalPoints),
+        		Arrays.asList(departurePoints)
+        		).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    public List<Entity> getEntities() {
-        return Stream.of(trafficLights,arrivalPoints,departurePoints).flatMap(Collection::stream).collect(Collectors.toList());
-    }
-
+    @Override
 	public void clearEntities() {
-		this.trafficLights.clear();
-		this.departurePoints.clear();
-		this.arrivalPoints.clear();
+		// Stop robot statecharts and clear robot datastructure 
+    	super.clearEntities();
+		
+		// Stop TrafficLight Statecharts
+		for(TrafficLightWithStatechart trafficLight : this.trafficLights)
+			if(trafficLight != null)
+				trafficLight.stop();
+		
+		// Trigger reset of datastructures
+		this.resetFieldDataStructures();
 	}
 	
 	public void refreshEntities() {
-        for (TrafficLightWithStatechart light : this.trafficLights) {
-            light.updateTimer();
+        for (TrafficLightWithStatechart trafficLight : this.trafficLights) {
+        	if(trafficLight != null)
+        		trafficLight.updateTimer();
         }
 	}
 
@@ -443,13 +462,22 @@ public class StreetNetworkManager extends RobotGridManager {
         }
     }
 
-    public TrafficLightWithStatechart addTrafficLight(TrafficLightWithStatechart trafficLight) {
-        Position pos = trafficLight.getSouthPosition();
-        int x = (pos.getX() - 2) / 3;
-        int y = pos.getY() / 3;
-        trafficLights.add(y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x, trafficLight);
-        return trafficLight;
+    public void addTrafficLight(TrafficLightWithStatechart trafficLight) {
+        Position relativePosition = trafficLight.getRelativePosition(); 
+        int index = relativePosition.getY() * SimpleTrafficLightsConfiguration.getVerticalStreets() + relativePosition.getX();
+        if(trafficLights.length > index)
+        	trafficLights[index] = trafficLight;
     }
+
+
+	public void addArrivalPoint(ArrivalPoint point) {
+		// TODO Auto-generated method stub
+	}   
+
+
+	public void addDeparturePoint(DeparturePoint point) {
+		// TODO Auto-generated method stub
+	}   
     
     public static Orientation getSuitableRobotOrientationForPosition(Position pos) {
         if (pos.getX() == 0)
@@ -493,7 +521,6 @@ public class StreetNetworkManager extends RobotGridManager {
         List<Position> positions = getAllPossiblePositions();
         positions = positions.stream().filter(p -> !isBlockedByRobot(p)).collect(Collectors.toList());
         return positions.get(new Random().nextInt(positions.size()));
-    }   
-   
+    }
 
 }

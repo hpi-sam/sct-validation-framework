@@ -346,7 +346,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     @Override
     public void close() {
-        chart.close();
+        chart.stop();
     }
 
     public int getStationID() {

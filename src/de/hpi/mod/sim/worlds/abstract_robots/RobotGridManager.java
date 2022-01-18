@@ -32,6 +32,17 @@ public abstract class RobotGridManager extends GridManager implements IRobotCont
         }
     }
 
+
+    /**
+     * Clears all Robots.
+     */
+    public void clearEntities() {
+        for (Robot robot : robots) {
+            robot.close();
+        }
+    	robots.clear();
+    }
+
     /**
      * Whether there is a Robot on the given Position
      * @param position The Position to check

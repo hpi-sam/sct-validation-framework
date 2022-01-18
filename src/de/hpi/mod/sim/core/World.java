@@ -134,8 +134,6 @@ public abstract class World {
 		for (Detector detector : this.getDetectors())
 			if(detector.isEnabled())
 				detector.update(entities);
-	}
-
-	
+	}	
 
 }

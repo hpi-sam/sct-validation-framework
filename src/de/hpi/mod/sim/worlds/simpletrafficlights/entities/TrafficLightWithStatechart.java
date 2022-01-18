@@ -16,7 +16,10 @@ public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.S
     /**
      * The northern, eastern, southern and western positions
      */
-    private Position[] positions = new Position[4];
+	
+	private RelativePosition relativePosition;
+	private Position basePosition;
+    
     private boolean[] lightStates = { false, false, false, false }; // Which positions show green. Order: South, West,
                                                                     // East, North (by y-value)
 
@@ -27,16 +30,14 @@ public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.S
      * @param pos The southern position of traffic light. All other positions are
      *            calculated from this one.
      */
-    public TrafficLightWithStatechart(Position pos) {
-        positions[0] = pos;
-        positions[1] = new Position(pos.getX() - 2, pos.getY() + 1);
-        positions[2] = new Position(pos.getX() + 1, pos.getY() + 2);
-        positions[3] = new Position(pos.getX() - 1, pos.getY() + 3);
+    public TrafficLightWithStatechart(RelativePosition relative, Position absolute) {
+    	relativePosition = relative;
+    	basePosition = absolute;
         start();
     }
 
-    public Position getSouthPosition() {
-        return positions[0];
+    public Position getBottomLeftPosition() {
+        return basePosition;
     }
 
     @Override
@@ -115,12 +116,16 @@ public class TrafficLightWithStatechart extends StateChartWrapper<TrafficLight.S
     @Override
     public List<String> getHighlightInfo() {
         List<String> infos = new ArrayList<>();
-        infos.add("Crossroad: " + new Position(positions[0].getX() / 3, positions[0].getY() / 3));
+        infos.add("Crossroad: " + new Position(basePosition.getX() / 3, basePosition.getY() / 3));
         infos.add("South: " + (isGreenSouth() ? "green" : "red"));
         infos.add("West: " + (isGreenWest() ? "green" : "red"));
         infos.add("East: " + (isGreenEast() ? "green" : "red"));
         infos.add("North: " + (isGreenNorth() ? "green" : "red"));
         return infos;
     }
+
+	public RelativePosition getRelativePosition() {
+		return relativePosition;
+	}
 
 }

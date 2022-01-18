@@ -44,8 +44,9 @@ public abstract class StateChartWrapper<T> {
         chart.enter();
     }
 
-    public void close() {
+    public void stop() {
         timer.cancel();
+        chart.exit();
     }
 
     public void updateTimer() {

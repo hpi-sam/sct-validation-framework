@@ -70,6 +70,15 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 		return horizontalStreets;
 	}
 
+
+	public static int getNumberOfTransferPoints() {
+		return (verticalStreets + horizontalStreets)*2;
+	}
+
+	public static int getNumberOfCrossroads() {
+		return verticalStreets * horizontalStreets;
+	}
+
 	public static int getFieldBorderWidth() {
 		return fieldBorderWidth;
 	}
