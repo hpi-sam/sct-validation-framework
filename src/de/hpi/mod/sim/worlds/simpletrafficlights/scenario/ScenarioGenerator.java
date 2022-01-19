@@ -12,6 +12,7 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguratio
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.RelativePosition;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.ArrivalPointSpecification;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.DeparturePointSpecification;
+import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.SimpleRobotSpecification;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.TrafficLightSpecification;
 
 public class ScenarioGenerator {
@@ -82,6 +83,7 @@ public class ScenarioGenerator {
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
 			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
+			list.add(new SimpleRobotSpecification(world, pos, facing, destination))
 			// TODO: Add 1 robot
 			return list;
 		}

@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights;
 
+import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
 
 /**
@@ -7,10 +8,9 @@ import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
  * Can be set by the view.
  */
 public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
-
-    public static final String STRING_PATH_TO_RED_TRAFFIC_LIGHT_ICON = "res/traffic-light-red.png";
-    public static final String STRING_PATH_TO_GREEN_TRAFFIC_LIGHT_ICON = "res/traffic-light-green.png";
-   	
+ 	
+	private static final Position DEFAULT_IDLE_ROBOTS_POSITION = new Position(-1000,-1000);
+	
     public static enum GridMode {
         SINGLE_CROSSROAD, TWO_CROSSROADS, MAXIMUM_CROSSROADS
     }
@@ -24,11 +24,7 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	
 	private static final int DEFAULT_FIELD_WIDTH = 30;
     private static final int DEFAULT_FIELD_HEIGHT = 30;
-    
-
-    private static String stringPathToRedTrafficLightIcon = STRING_PATH_TO_RED_TRAFFIC_LIGHT_ICON;
-    private static String stringPathToGreenTrafficLightIcon = STRING_PATH_TO_GREEN_TRAFFIC_LIGHT_ICON;
-    
+        
 	private static int fieldBorderWidth = FIELD_BORDER_WIDTH;
     private static int streetLength = STREET_LENGTH;
     private static int crossroadLength = CROSSROAD_LENGTH;
@@ -44,12 +40,10 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	
 	private static GridMode crossroadsMode = DEFAULT_CROSSROAD_MODE;
 
-   	public static String getStringPathToRedTrafficLightIcon() {
-		return stringPathToRedTrafficLightIcon;
-	}
-   	
-   	public static String getStringPathToGreenTrafficLightIcon() {
-		return stringPathToGreenTrafficLightIcon;
+	private static Position idleRobotsPosition = DEFAULT_IDLE_ROBOTS_POSITION;
+	
+   	public static Position getIdleRobotsPosition() {
+		return idleRobotsPosition;
 	}
    	
 	public static int getFieldWidth() {

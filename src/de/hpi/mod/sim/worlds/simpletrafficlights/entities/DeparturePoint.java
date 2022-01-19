@@ -14,8 +14,15 @@ public class DeparturePoint extends TransitPoint {
 	}
 
 	public void addStartingRobot(Robot robot, ArrivalPoint arrival) {
+		// Store References
 		startingRobot = robot;
 		targetforStartingRobot = arrival;
+		
+		// Put robot in correct spot
+		robot.setRobotTo(getPosition());
+		robot.setFacing(getOrientation());
+		
+		// TODO: Start timer to send target to robot on time.
 	}
 
 }
