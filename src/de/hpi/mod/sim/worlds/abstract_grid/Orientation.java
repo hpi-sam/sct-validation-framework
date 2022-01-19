@@ -9,7 +9,7 @@ public enum Orientation {
     NORTH, EAST, SOUTH, WEST;
 
     private float angle;
-    private Orientation left, right;
+    private Orientation left, right, inverse;
 
     static {
         NORTH.angle = 0;
@@ -26,6 +26,11 @@ public enum Orientation {
         EAST.right = SOUTH;
         SOUTH.right = WEST;
         WEST.right = NORTH;
+        
+        NORTH.inverse = SOUTH;
+        EAST.inverse = WEST;
+        SOUTH.inverse = NORTH;
+        WEST.inverse = EAST;
     }
 
     public float getAngle() {
@@ -40,6 +45,10 @@ public enum Orientation {
         return right;
     }
 
+    public Orientation getInverse() {
+        return inverse;
+    }
+    
     public static Orientation rotate(Orientation facing, Direction rotation) {
         switch (rotation) {
             case AHEAD:

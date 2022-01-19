@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification;
 
+import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
@@ -43,11 +44,17 @@ public class DeparturePointSpecification extends TransitPointSpecification<Depar
     	
     	return new Position(0, 0);
     }
+    
+    @Override
+	public Orientation getOrientation() {
+    	// Orientation facing outwards
+    	return super.getOrientation().getInverse();
+    }
 	
 	@Override
 	public DeparturePoint createEntity() {
 		
-		DeparturePoint entity = new DeparturePoint(this.id, getCoordinates());
+		DeparturePoint entity = new DeparturePoint(this.id, getCoordinates(), getOrientation());
 		this.grid.addDeparturePoint(entity);
 	    return entity;
 	}

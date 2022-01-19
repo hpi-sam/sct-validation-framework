@@ -45,7 +45,7 @@ public class ArrivalPointSpecification extends TransitPointSpecification<Arrival
 
 	@Override
 	public ArrivalPoint createEntity() {
-		ArrivalPoint entity = new ArrivalPoint(this.id, getCoordinates());
+		ArrivalPoint entity = new ArrivalPoint(this.id, getCoordinates(), getOrientation());
 		this.grid.addArrivalPoint(entity);
 	    return entity;
 	}
