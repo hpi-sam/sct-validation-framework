@@ -105,7 +105,7 @@ public abstract class RobotWorld extends GridWorld {
     
     @Override
     public void refreshEntities() {
-        getRobotGridManager().refresh();
+        getRobotGridManager().refreshRobots();
     }
 
     @Override

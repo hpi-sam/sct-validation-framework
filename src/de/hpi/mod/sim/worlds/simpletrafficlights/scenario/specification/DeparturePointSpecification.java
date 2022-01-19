@@ -45,11 +45,6 @@ public class DeparturePointSpecification extends TransitPointSpecification<Depar
     	return new Position(0, 0);
     }
     
-    @Override
-	public Orientation getOrientation() {
-    	// Orientation facing outwards
-    	return super.getOrientation().getInverse();
-    }
 	
 	@Override
 	public DeparturePoint createEntity() {

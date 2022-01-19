@@ -26,7 +26,7 @@ public abstract class RobotGridManager extends GridManager implements IRobotCont
     /**
      * Refreshes the Robots.
      */
-    public void refresh() {
+    public void refreshRobots() {
         for (Robot robot : robots) {
         	robot.refresh();
         }

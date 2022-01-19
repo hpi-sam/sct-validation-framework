@@ -1,5 +1,6 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights;
 
+import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
 
@@ -10,6 +11,7 @@ import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
 public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
  	
 	private static final Position DEFAULT_IDLE_ROBOTS_POSITION = new Position(-1000,-1000);
+	private static final Orientation DEFAULT_IDLE_ROBOTS_ORIENTATION = Orientation.NORTH;
 	
     public static enum GridMode {
         SINGLE_CROSSROAD, TWO_CROSSROADS, MAXIMUM_CROSSROADS
@@ -40,10 +42,15 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	
 	private static GridMode crossroadsMode = DEFAULT_CROSSROAD_MODE;
 
-	private static Position idleRobotsPosition = DEFAULT_IDLE_ROBOTS_POSITION;
-	
+	private static Position idleRobotsPosition = DEFAULT_IDLE_ROBOTS_POSITION;	
+	private static Orientation idleRobotsOrientation = DEFAULT_IDLE_ROBOTS_ORIENTATION;
+
    	public static Position getIdleRobotsPosition() {
 		return idleRobotsPosition;
+	}
+
+   	public static Orientation getIdleRobotsOrientation() {
+		return idleRobotsOrientation;
 	}
    	
 	public static int getFieldWidth() {

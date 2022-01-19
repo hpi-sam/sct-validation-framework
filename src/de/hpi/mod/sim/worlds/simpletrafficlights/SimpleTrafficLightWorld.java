@@ -16,6 +16,7 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
@@ -86,13 +87,16 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     	// Start all Scenarios by 
     	super.runScenario(scenario);
     }
-    
-    @Override
-    public void refreshEntities() {
-        super.refreshEntities();
-        getStreetNetworkManager().refreshEntities();
-    }
 
+    @Override
+    public void updateEntities(float delta) {
+        // Update Robots (via super)
+    	super.updateEntities(delta);
+    	
+    	// Update local entities
+    	getStreetNetworkManager().updateEntities(delta);
+    }
+    
     @Override
     public void clearEntities() {
         super.clearEntities();

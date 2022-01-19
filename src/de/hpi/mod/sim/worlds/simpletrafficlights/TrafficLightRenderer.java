@@ -23,22 +23,11 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
 public class TrafficLightRenderer {
 
     private SimulationBlockView simView;
-    private BufferedImage trafficLightGreenIcon, trafficLightRedIcon;
     private StreetNetworkManager grid;
 
     public TrafficLightRenderer(SimulationBlockView sim, StreetNetworkManager grid) {
         this.simView = sim;
         this.grid = grid;
-        loadImages();
-    }
-
-    private void loadImages() {
-        try {
-        	trafficLightGreenIcon = ImageIO.read(new File(SimpleTrafficLightsConfiguration.getStringPathToGreenTrafficLightIcon()));
-        	trafficLightRedIcon = ImageIO.read(new File(SimpleTrafficLightsConfiguration.getStringPathToRedTrafficLightIcon()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void render(Graphics graphic, float blockSize) {

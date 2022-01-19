@@ -17,7 +17,7 @@ public interface IRobotDispatch {
             int delay, int initialDelay, boolean fuzzyEnd, boolean unloadingTest, boolean hasReservedCharger,
             boolean hardArrivedConstraint);
 
-    public void refresh();
+    public void refreshRobots();
 
     public void close();
 

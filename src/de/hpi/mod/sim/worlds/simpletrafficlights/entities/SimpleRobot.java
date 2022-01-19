@@ -12,12 +12,24 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
 
     private RobotStatechartWrapper control;
 
-    public SimpleRobot(int robotID, RobotGridManager grid, Position startPosition, Orientation startFacing,
+    public SimpleRobot(int robotID, StreetNetworkManager gridManager, Position startPosition, Orientation startFacing,
             Position destination) {
-        super(robotID, grid, startPosition, startFacing);
+    	
+    	// Initialze robot itself (via parent)
+        super(robotID, gridManager, startPosition, startFacing);
+        
+        // Initialize statechart
         control = new RobotStatechartWrapper(getDriveManager(), this, this);
-        setTarget(destination);
-        control.newTarget();
+        
+        if(destination != null) {
+        	// If a specific target is given, send it to statechart...
+            setTarget(destination);
+            control.newTarget();	
+            
+        }else {
+        	// ...otherwise, put robot in the grid manager's queue .
+        	gridManager.putRobotInWaitingQueue(this);
+        }
     }
 
     @Override
@@ -65,6 +77,11 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
     private StreetNetworkManager getCrossRoadsManager() {
         return (StreetNetworkManager) grid;
     }
+
+	public void setTargetAndNotify(Position position) {
+		this.setTarget(position);
+		this.control.newTarget();
+	}
 
     @Override
     public String getMachineState() {

@@ -22,6 +22,7 @@ import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.ArrivalPoint;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.SimpleRobot;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
 
 /**
@@ -40,7 +41,7 @@ public class StreetNetworkManager extends RobotGridManager {
     List<DeparturePoint> emptyDeparturePoints = new ArrayList<>();
     List<DeparturePoint> occupiedDeparturePoints = new ArrayList<>();
     
-    List<Robot> idleRobots = new ArrayList<>();
+    List<SimpleRobot> idleRobots = new ArrayList<>();
 
     public StreetNetworkManager() {
         super();
@@ -49,7 +50,6 @@ public class StreetNetworkManager extends RobotGridManager {
 
 
     public void resetFieldDataStructures() {
-		System.out.println("Set Datastructures!");
     	this.arrivalPoints = new ArrivalPoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
     	this.departurePoints = new DeparturePoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
     	this.trafficLights = new TrafficLight[SimpleTrafficLightsConfiguration.getNumberOfCrossroads()];
@@ -400,8 +400,16 @@ public class StreetNetworkManager extends RobotGridManager {
 		// Trigger reset of datastructures
 		this.resetFieldDataStructures();
 	}
-	
-	public void refreshEntities() {
+    
+	public void updateEntities(float delta) {
+		// Start Robots
+		startRobots();
+		
+		// Update (occupied) Departure Points to trigger timed robot starts.
+		for(DeparturePoint point : this.departurePoints)
+			point.update(delta);
+		
+		// Update Traffic Lights
         for (TrafficLight trafficLight : this.trafficLights) {
         	if(trafficLight != null)
         		trafficLight.updateTimer();
@@ -478,8 +486,10 @@ public class StreetNetworkManager extends RobotGridManager {
 	}   
 
 	public void addDeparturePoint(DeparturePoint point) {	
-        if(departurePoints.length > point.getId())
+        if(departurePoints.length > point.getId()) {
         	departurePoints[point.getId()] = point;
+        	emptyDeparturePoints.add(point);
+        }
 	}   
     
     public static Orientation getSuitableRobotOrientationForPosition(Position pos) {
@@ -535,13 +545,19 @@ public class StreetNetworkManager extends RobotGridManager {
 					}
 		});
     }
+
+
+    public void putRobotInWaitingQueue(SimpleRobot r) {
+    	if(!idleRobots.contains(r))
+    		idleRobots.add(r);
+    }
     
     public void startRobots() {
     	// As long as there are robots and free starting positions...
     	while(hasIdleRobots() && hasEmptyDeparturePoints()) {
-    		
+    		    		
     		// ...Get robot, ...
-    		Robot robot = idleRobots.remove(0);
+    		SimpleRobot robot = idleRobots.remove(0);
     		
     		// ...Get start point, ...
     		DeparturePoint departure = getNextEmptyDeparturePoint();
@@ -550,7 +566,7 @@ public class StreetNetworkManager extends RobotGridManager {
     		// ...Get target and...
     		ArrivalPoint arrival = getNextRandomDestination(departure);
     		
-    		// Connect robot to selected transfer points.
+    		// ...connect robot to selected transfer points.
     		departure.addStartingRobot(robot, arrival);
     		arrival.addExpectedRobot(robot);
     		
@@ -559,6 +575,12 @@ public class StreetNetworkManager extends RobotGridManager {
 
     public boolean hasIdleRobots() {
     	return !idleRobots.isEmpty();
+    }
+
+    public SimpleRobot getNextIdleRobot() {
+    	if(idleRobots.isEmpty())
+    		return null;
+    	return idleRobots.remove(0);
     }
     
     public boolean hasEmptyDeparturePoints() {

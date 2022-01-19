@@ -83,8 +83,7 @@ public class ScenarioGenerator {
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
 			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
-			list.add(new SimpleRobotSpecification(world, pos, facing, destination))
-			// TODO: Add 1 robot
+			list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
 		}
 	}
