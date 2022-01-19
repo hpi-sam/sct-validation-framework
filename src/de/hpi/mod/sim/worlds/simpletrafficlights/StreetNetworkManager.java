@@ -459,13 +459,15 @@ public class StreetNetworkManager extends RobotGridManager {
     }
 
 
-	public void addArrivalPoint(ArrivalPoint point) {
-		// TODO Auto-generated method stub
+	public void addArrivalPoint(ArrivalPoint point) {		
+        if(arrivalPoints.length > point.getId())
+        	arrivalPoints[point.getId()] = point;
 	}   
 
 
-	public void addDeparturePoint(DeparturePoint point) {
-		// TODO Auto-generated method stub
+	public void addDeparturePoint(DeparturePoint point) {	
+        if(departurePoints.length > point.getId())
+        	departurePoints[point.getId()] = point;
 	}   
     
     public static Orientation getSuitableRobotOrientationForPosition(Position pos) {

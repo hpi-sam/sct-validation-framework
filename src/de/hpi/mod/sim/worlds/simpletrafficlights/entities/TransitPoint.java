@@ -4,8 +4,8 @@ import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 
 public abstract class TransitPoint implements Entity {
-	
-	// Id of the Transition point, starting at 1, counted on a clockwise circle starting at (1,1) in the bottom left corner
+
+	// Id of the Transition point, starting at 0, counted on a clockwise circle starting at (1,1) in the bottom left corner
 	private int id; 
 	
 	// Coordinates of the transit point
@@ -16,5 +16,12 @@ public abstract class TransitPoint implements Entity {
 		this.position = p;
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public Position getPosition() {
+		return position;
+	}	
 	
 }
