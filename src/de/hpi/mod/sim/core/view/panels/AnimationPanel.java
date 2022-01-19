@@ -159,7 +159,7 @@ public class AnimationPanel extends JPanel implements MouseListener, MouseMotion
 		currentHeight = rectangle.height;
 		currentWidth = rectangle.width;
 		if (change)
-			world.refreshSimulationProperties(currentHeight, currentWidth);
+			world.refreshSimulationSize(currentHeight, currentWidth);
 	}
 
 	public void reset() {

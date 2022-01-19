@@ -40,6 +40,7 @@ public class StreetNetworkManager extends RobotGridManager {
 
 
     public void resetFieldDataStructures() {
+		System.out.println("Set Datastructures!");
     	this.arrivalPoints = new ArrivalPoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
     	this.departurePoints = new DeparturePoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
     	this.trafficLights = new TrafficLight[SimpleTrafficLightsConfiguration.getNumberOfCrossroads()];
@@ -463,7 +464,6 @@ public class StreetNetworkManager extends RobotGridManager {
         if(arrivalPoints.length > point.getId())
         	arrivalPoints[point.getId()] = point;
 	}   
-
 
 	public void addDeparturePoint(DeparturePoint point) {	
         if(departurePoints.length > point.getId())

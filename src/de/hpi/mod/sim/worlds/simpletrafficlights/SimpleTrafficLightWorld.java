@@ -57,7 +57,13 @@ public class SimpleTrafficLightWorld extends RobotWorld {
     }
 
     @Override
-    public void refreshSimulationProperties(int currentHeight, int currentWidth) {
+    public void configurationChanged() { 
+        // Trigger update in GridManager
+        getStreetNetworkManager().resetFieldDataStructures();
+    }
+    
+    @Override
+    public void refreshSimulationSize(int currentHeight, int currentWidth) {
     	
 		// Transform pixes size to blocks
     	SimulationBlockView blockView = getSimulationBlockView();
@@ -65,11 +71,11 @@ public class SimpleTrafficLightWorld extends RobotWorld {
         int width = (int) (currentWidth / blockSize);
         int height = (int) (currentHeight / blockSize);
         
-        // Update fild size in configuration 
+        // Update field size in configuration 
         SimpleTrafficLightsConfiguration.setAvailableFieldDimensions(width, height);
         
-        // Trigger update in GridManager
-        getStreetNetworkManager().resetFieldDataStructures();
+        // Trigger a generic refresh to ensure that all properties are synced.
+        configurationChanged();
     }
     
     @Override
@@ -86,6 +92,7 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 
     @Override
     public void clearEntities() {
+		System.out.println("Clear Entities!");
         super.clearEntities();
     }
 

@@ -27,6 +27,7 @@ public class ScenarioGenerator {
     	SimpleTrafficLightsConfiguration.GridMode gridMode;
 
 		protected List<EntitySpecification<?>> getDefaultEnvironmentEntities() {
+			System.out.println("Create Entities!");
 			// Initialize list
 			List<EntitySpecification<?>> list = new ArrayList<>();
 			
@@ -51,7 +52,9 @@ public class ScenarioGenerator {
         public void loadScenario(World world) {
         	if(gridMode != null) {
         		SimpleTrafficLightsConfiguration.setCrossroadsMode(gridMode);
+        		world.configurationChanged(); 
         	}
+        	
         	super.loadScenario(world);
         }
     }

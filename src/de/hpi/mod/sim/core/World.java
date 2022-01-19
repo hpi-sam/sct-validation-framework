@@ -103,7 +103,9 @@ public abstract class World {
 
     public abstract void render(java.awt.Graphics graphics);
 
-    public abstract void refreshSimulationProperties(int currentHeight, int currentWidth);
+    public abstract void refreshSimulationSize(int currentHeight, int currentWidth);
+
+    public void configurationChanged()  { }
 
     public void mousePressed(java.awt.event.MouseEvent e) { }
 

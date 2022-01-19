@@ -50,7 +50,7 @@ public class TrafficLightWorld extends RobotWorld {
     }
 
     @Override
-    public void refreshSimulationProperties(int currentHeight, int currentWidth) {
+    public void refreshSimulationSize(int currentHeight, int currentWidth) {
     	SimulationBlockView blockView = getSimulationBlockView();
     	if(blockView != null) {
 	        float blockSize = blockView.getBlockSize();

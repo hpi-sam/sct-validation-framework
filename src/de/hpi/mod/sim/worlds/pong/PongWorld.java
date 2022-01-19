@@ -136,7 +136,7 @@ public class PongWorld extends World {
 	}
 
 	@Override
-	public void refreshSimulationProperties(int currentHeight, int currentWidth) {
+	public void refreshSimulationSize(int currentHeight, int currentWidth) {
 		this.width = (int) currentWidth;
 		this.height = (int) currentHeight;
 	}
