@@ -23,5 +23,9 @@ public abstract class TransitPoint implements Entity {
 	public Position getPosition() {
 		return position;
 	}	
+
+	public boolean isNextTo(TransitPoint other) {
+		return this.getId() == other.getId();
+	}
 	
 }

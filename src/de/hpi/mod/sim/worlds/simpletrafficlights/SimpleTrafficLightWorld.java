@@ -1,8 +1,11 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights;
 
 import java.awt.Graphics;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -92,7 +95,6 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 
     @Override
     public void clearEntities() {
-		System.out.println("Clear Entities!");
         super.clearEntities();
     }
 

@@ -3,7 +3,11 @@ package de.hpi.mod.sim.worlds.simpletrafficlights;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -14,6 +18,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.ArrivalPoint;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
@@ -26,12 +31,16 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
  */
 public class StreetNetworkManager extends RobotGridManager {
 
-//    /**
-//     * Contains all traffic lights, from lines from bottom to top and from left to right
-//     */
     private TrafficLight[] trafficLights;
+
     private ArrivalPoint[] arrivalPoints;
+    List<ArrivalPoint> emptiestArrivalPoints = new ArrayList<>();
+    
     private DeparturePoint[] departurePoints;
+    List<DeparturePoint> emptyDeparturePoints = new ArrayList<>();
+    List<DeparturePoint> occupiedDeparturePoints = new ArrayList<>();
+    
+    List<Robot> idleRobots = new ArrayList<>();
 
     public StreetNetworkManager() {
         super();
@@ -461,8 +470,11 @@ public class StreetNetworkManager extends RobotGridManager {
 
 
 	public void addArrivalPoint(ArrivalPoint point) {		
-        if(arrivalPoints.length > point.getId())
+        if(arrivalPoints.length > point.getId()) {
         	arrivalPoints[point.getId()] = point;
+        	emptiestArrivalPoints.add(point);
+        }
+        	
 	}   
 
 	public void addDeparturePoint(DeparturePoint point) {	
@@ -514,6 +526,66 @@ public class StreetNetworkManager extends RobotGridManager {
         return positions.get(new Random().nextInt(positions.size()));
     }
 
+    private void shuffleAndSortArrivalPoints() {
+    	Collections.shuffle(emptiestArrivalPoints);
+    	emptiestArrivalPoints.sort(new Comparator<ArrivalPoint>() {
+					@Override
+					public int compare(ArrivalPoint me, ArrivalPoint you) {
+						return Integer.compare(me.getNumberOfExpectedRobots(), you.getNumberOfExpectedRobots());
+					}
+		});
+    }
+    
+    public void startRobots() {
+    	// As long as there are robots and free starting positions...
+    	while(hasIdleRobots() && hasEmptyDeparturePoints()) {
+    		
+    		// ...Get robot, ...
+    		Robot robot = idleRobots.remove(0);
+    		
+    		// ...Get start point, ...
+    		DeparturePoint departure = getNextEmptyDeparturePoint();
+    		occupiedDeparturePoints.add(departure);
+    		
+    		// ...Get target and...
+    		ArrivalPoint arrival = getNextRandomDestination(departure);
+    		
+    		// Connect robot to selected transfer points.
+    		departure.addStartingRobot(robot, arrival);
+    		arrival.addExpectedRobot(robot);
+    		
+    	}
+    }
+
+    public boolean hasIdleRobots() {
+    	return !idleRobots.isEmpty();
+    }
+    
+    public boolean hasEmptyDeparturePoints() {
+    	return !emptyDeparturePoints.isEmpty();
+    }
+    
+    public DeparturePoint getNextEmptyDeparturePoint() {
+    	if(emptyDeparturePoints.isEmpty())
+    		return null;
+    	return emptyDeparturePoints.remove(new Random().nextInt(emptyDeparturePoints.size()));
+    }
+    
+    public ArrivalPoint getNextRandomDestination() {
+    	shuffleAndSortArrivalPoints();
+    	int index = (int) (Math.abs(new Random().nextGaussian() * SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() / 4 ));
+	    System.out.println(index);
+	    return emptiestArrivalPoints.get(index % SimpleTrafficLightsConfiguration.getNumberOfTransferPoints());
+    }
+    
+    public ArrivalPoint getNextRandomDestination(DeparturePoint forbiddenNeighbour) {
+    	while(true) {
+    		ArrivalPoint target = getNextRandomDestination();
+    		if(!target.isNextTo(forbiddenNeighbour)) {
+    			return target;
+    		}
+    	}
+    }
 
 
 }
