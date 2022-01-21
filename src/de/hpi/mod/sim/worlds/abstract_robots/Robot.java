@@ -55,7 +55,7 @@ public abstract class Robot implements Entity, IHighlightable {
         this.grid = grid;
         setRobotTo(startPosition);
         target = startPosition;
-        turnRobotTo(startFacing);
+        setFacingTo(startFacing);
         setTargetFacing(startFacing);
         manager = new DriveManager(this);
     }
@@ -190,11 +190,6 @@ public abstract class Robot implements Entity, IHighlightable {
 
     public void increaseAngle(float angle) {
         setAngle(getAngle() + angle);
-    }
-
-    public void turnRobotTo(Orientation facing) {
-        setFacing(facing);
-        setAngle(facing.getAngle());
     }
 
     public void setTargetFacing(Orientation facing) {

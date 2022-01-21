@@ -21,13 +21,19 @@ public class DeparturePoint extends TransitPoint {
 	}
 
 	public void addStartingRobot(SimpleRobot robot, ArrivalPoint arrival) {
+		System.out.println(">>>ADD");
+		
 		// Store References
 		this.startingRobot = robot;
 		this.targetforStartingRobot = arrival;
 		
 		// Put robot in correct spot
 		this.startingRobot.setRobotTo(getPosition());
-		this.startingRobot.setFacing(getOrientation());
+		this.startingRobot.setTargetFacing(getOrientation());
+		this.startingRobot.setFacingTo(getOrientation());
+		
+		// Temporarily define current position as destination
+		this.startingRobot.setTargetAndNotify(this.targetforStartingRobot.getPosition());
 
 		// Start timer to send target to robot on time.
 		this.currentState = DeparturePointState.ROBOT_WAITING_BEFORE_START;
@@ -35,17 +41,18 @@ public class DeparturePoint extends TransitPoint {
 	}
 
 	public void update(float delta) {
-
+		
 		// Decrement timer
 		if (this.countdownTimer > 0) {
 			this.countdownTimer -= delta;
+			System.out.println(countdownTimer);
 		}
 
 		// Update depending on current task and timer...
 
 		// Case 1: If currently in pause before task start AND timer has tun out....
 		if (this.currentState == DeparturePointState.ROBOT_WAITING_BEFORE_START && this.countdownTimer <= 0) {
-			System.out.println("START");
+			System.out.println(">>>START");
 
 			// ...send start signal to robot and update starte.
 			this.startingRobot.setTargetAndNotify(this.targetforStartingRobot.getPosition());
@@ -54,6 +61,7 @@ public class DeparturePoint extends TransitPoint {
 
 		// Case 2: Task was send AND robot left field....
 		else if (this.currentState == DeparturePointState.ROBOT_STARTED && !this.startingRobot.pos().fuzzyEquals(this.getPosition())) {
+			System.out.println(">>>FREE");
 
 			// ...update state and start timer.
 			this.currentState = DeparturePointState.ROBOT_LEFT;
@@ -62,6 +70,7 @@ public class DeparturePoint extends TransitPoint {
 
 		// Case 3: If currently in pause before task start AND timer has tun out....
 		else if (this.currentState == DeparturePointState.ROBOT_LEFT && this.countdownTimer <= 0) {
+			System.out.println(">>>WAITED");
 
 			// ...update state and start timer.
 			this.currentState = DeparturePointState.ROBOT_WAITING_BEFORE_START;

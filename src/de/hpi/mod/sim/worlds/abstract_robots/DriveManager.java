@@ -121,7 +121,7 @@ public class DriveManager implements IRobotActors {
             robot.increaseAngle(360);
 
         if (robot.getAngle() >= robot.targetFacing().getAngle()) {
-            robot.turnRobotTo(robot.targetFacing());
+            robot.setFacingTo(robot.targetFacing());
             isTurningRight = false;
             robot.actionCompleted();
         }
@@ -135,7 +135,7 @@ public class DriveManager implements IRobotActors {
         robot.increaseAngle(Math.copySign(getRotationSpeed() * delta, deltaAngle));
 
         if (robot.getAngle() <= robot.targetFacing().getAngle()) {
-            robot.turnRobotTo(robot.targetFacing());
+            robot.setFacingTo(robot.targetFacing());
             isTurningLeft = false;
             robot.actionCompleted();
         }

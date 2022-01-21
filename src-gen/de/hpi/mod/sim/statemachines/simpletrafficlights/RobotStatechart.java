@@ -493,104 +493,48 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		runCycle();
 	}
 	
-	private boolean check_tlRobot_driving__driving__choice_0_tr0_tr0() {
-		return (data.operationCallback.targetDirection()==direction.getRIGHT() && !data.operationCallback.blockedArrivalpointRight());
-	}
-	
-	private boolean check_tlRobot_driving__driving__choice_0_tr1_tr1() {
-		return (data.operationCallback.targetDirection()==direction.getAHEAD() && !data.operationCallback.blockedArrivalpointAhead());
-	}
-	
-	private boolean check_tlRobot_driving__driving__choice_0_tr2_tr2() {
-		return (data.operationCallback.targetDirection()==direction.getLEFT() && !data.operationCallback.blockedArrivalpointAhead());
-	}
-	
-	private boolean check_tlRobot_driving__driving__choice_2_tr0_tr0() {
-		return data.operationCallback.isOnTarget();
-	}
-	
-	private boolean check_tlRobot_driving__driving__choice_2_tr1_tr1() {
-		return data.operationCallback.cellType()==cellType.getTRAFFICLIGHT_GREEN();
-	}
-	
-	private boolean check_tlRobot_driving__driving__choice_3_tr0_tr0() {
+	private boolean check_tlRobot_driving__driving__choice_1_tr0_tr0() {
 		return data.operationCallback.targetDirection()==direction.getRIGHT();
 	}
 	
-	private boolean check_tlRobot_driving__driving__choice_3_tr1_tr1() {
+	private boolean check_tlRobot_driving__driving__choice_1_tr1_tr1() {
 		return data.operationCallback.targetDirection()==direction.getLEFT();
-	}
-	
-	private void effect_tlRobot_driving_tr0() {
-		exitSequence_tlRobot_driving();
-		processor.raiseArrived();
-		
-		enterSequence_tlRobot_idle_default();
-		react();
 	}
 	
 	private void effect_tlRobot_driving__driving_leaving_crossroad_ahead_tr0() {
 		exitSequence_tlRobot_driving__driving_leaving_crossroad_ahead();
-		react_tlRobot_driving__driving__choice_1();
+		react_tlRobot_driving__driving__choice_0();
 	}
 	
 	private void effect_tlRobot_driving__driving_leaving_crossroad_to_right_side_tr0() {
 		exitSequence_tlRobot_driving__driving_leaving_crossroad_to_right_side();
-		react_tlRobot_driving__driving__choice_1();
+		react_tlRobot_driving__driving__choice_0();
 	}
 	
 	private void effect_tlRobot_driving__driving_leaving_crossroad_to_left_side_tr0() {
 		exitSequence_tlRobot_driving__driving_leaving_crossroad_to_left_side();
-		react_tlRobot_driving__driving__choice_1();
+		react_tlRobot_driving__driving__choice_0();
 	}
 	
 	private void effect_tlRobot_driving__driving__choice_0_tr0() {
-		enterSequence_tlRobot_driving__driving_entering_crossroad_default();
-	}
-	
-	private void effect_tlRobot_driving__driving__choice_0_tr1() {
-		enterSequence_tlRobot_driving__driving_entering_crossroad_default();
-	}
-	
-	private void effect_tlRobot_driving__driving__choice_0_tr2() {
-		enterSequence_tlRobot_driving__driving_entering_crossroad_default();
-	}
-	
-	private void effect_tlRobot_driving__driving__choice_0_tr3() {
 		enterSequence_tlRobot_driving__driving_waiting_on_trafficlight_default();
 	}
 	
 	private void effect_tlRobot_driving__driving__choice_1_tr0() {
-		enterSequence_tlRobot_driving__driving_waiting_on_trafficlight_default();
-	}
-	
-	private void effect_tlRobot_driving__driving__choice_2_tr0() {
-		react_tlRobot_driving__driving__exit_Default();
-	}
-	
-	private void effect_tlRobot_driving__driving__choice_2_tr1() {
-		react_tlRobot_driving__driving__choice_0();
-	}
-	
-	private void effect_tlRobot_driving__driving__choice_2_tr2() {
-		enterSequence_tlRobot_driving__driving_waiting_on_trafficlight_default();
-	}
-	
-	private void effect_tlRobot_driving__driving__choice_3_tr0() {
 		enterSequence_tlRobot_driving__driving_leaving_crossroad_to_right_side_default();
 	}
 	
-	private void effect_tlRobot_driving__driving__choice_3_tr1() {
+	private void effect_tlRobot_driving__driving__choice_1_tr1() {
 		enterSequence_tlRobot_driving__driving_leaving_crossroad_to_left_side_default();
 	}
 	
-	private void effect_tlRobot_driving__driving__choice_3_tr2() {
+	private void effect_tlRobot_driving__driving__choice_1_tr2() {
 		enterSequence_tlRobot_driving__driving_leaving_crossroad_ahead_default();
 	}
 	
 	/* Entry action for state 'waiting on trafficlight'. */
 	private void entryAction_tlRobot_driving__driving_waiting_on_trafficlight() {
-		timerService.setTimer(this, 0, 500, false);
+		timerService.setTimer(this, 0, (1 * 1000), false);
 	}
 	
 	/* Entry action for state 'forward2'. */
@@ -770,11 +714,6 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
-	/* Default exit sequence for state driving */
-	private void exitSequence_tlRobot_driving() {
-		exitSequence_tlRobot_driving__driving();
-	}
-	
 	/* Default exit sequence for state waiting on trafficlight */
 	private void exitSequence_tlRobot_driving__driving_waiting_on_trafficlight() {
 		nextStateIndex = 0;
@@ -893,44 +832,6 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		}
 	}
 	
-	/* Default exit sequence for region _driving */
-	private void exitSequence_tlRobot_driving__driving() {
-		switch (stateVector[0]) {
-		case TLROBOT_DRIVING__DRIVING_WAITING_ON_TRAFFICLIGHT:
-			exitSequence_tlRobot_driving__driving_waiting_on_trafficlight();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
-			break;
-		case TLROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3:
-			exitSequence_tlRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
-			break;
-		case TLROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD:
-			exitSequence_tlRobot_driving__driving_entering_crossroad();
-			break;
-		default:
-			break;
-		}
-	}
-	
 	/* Default exit sequence for region _leavingCrossroadAhead */
 	private void exitSequence_tlRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead() {
 		switch (stateVector[0]) {
@@ -981,48 +882,18 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	/* The reactions of state null. */
 	private void react_tlRobot_driving__driving__choice_0() {
-		if (check_tlRobot_driving__driving__choice_0_tr0_tr0()) {
-			effect_tlRobot_driving__driving__choice_0_tr0();
-		} else {
-			if (check_tlRobot_driving__driving__choice_0_tr1_tr1()) {
-				effect_tlRobot_driving__driving__choice_0_tr1();
-			} else {
-				if (check_tlRobot_driving__driving__choice_0_tr2_tr2()) {
-					effect_tlRobot_driving__driving__choice_0_tr2();
-				} else {
-					effect_tlRobot_driving__driving__choice_0_tr3();
-				}
-			}
-		}
+		effect_tlRobot_driving__driving__choice_0_tr0();
 	}
 	
 	/* The reactions of state null. */
 	private void react_tlRobot_driving__driving__choice_1() {
-		effect_tlRobot_driving__driving__choice_1_tr0();
-	}
-	
-	/* The reactions of state null. */
-	private void react_tlRobot_driving__driving__choice_2() {
-		if (check_tlRobot_driving__driving__choice_2_tr0_tr0()) {
-			effect_tlRobot_driving__driving__choice_2_tr0();
+		if (check_tlRobot_driving__driving__choice_1_tr0_tr0()) {
+			effect_tlRobot_driving__driving__choice_1_tr0();
 		} else {
-			if (check_tlRobot_driving__driving__choice_2_tr1_tr1()) {
-				effect_tlRobot_driving__driving__choice_2_tr1();
+			if (check_tlRobot_driving__driving__choice_1_tr1_tr1()) {
+				effect_tlRobot_driving__driving__choice_1_tr1();
 			} else {
-				effect_tlRobot_driving__driving__choice_2_tr2();
-			}
-		}
-	}
-	
-	/* The reactions of state null. */
-	private void react_tlRobot_driving__driving__choice_3() {
-		if (check_tlRobot_driving__driving__choice_3_tr0_tr0()) {
-			effect_tlRobot_driving__driving__choice_3_tr0();
-		} else {
-			if (check_tlRobot_driving__driving__choice_3_tr1_tr1()) {
-				effect_tlRobot_driving__driving__choice_3_tr1();
-			} else {
-				effect_tlRobot_driving__driving__choice_3_tr2();
+				effect_tlRobot_driving__driving__choice_1_tr2();
 			}
 		}
 	}
@@ -1067,11 +938,6 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		effect_tlRobot_driving__driving_leaving_crossroad_to_left_side_tr0();
 	}
 	
-	/* The reactions of exit default. */
-	private void react_tlRobot_driving__driving__exit_Default() {
-		effect_tlRobot_driving_tr0();
-	}
-	
 	private boolean react() {
 		return false;
 	}
@@ -1112,7 +978,8 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		if (try_transition) {
 			if (timeEvents[0]) {
 				exitSequence_tlRobot_driving__driving_waiting_on_trafficlight();
-				react_tlRobot_driving__driving__choice_2();
+				enterSequence_tlRobot_driving__driving_entering_crossroad_default();
+				tlRobot_driving_react(false);
 			} else {
 				did_transition = false;
 			}
@@ -1306,7 +1173,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		if (try_transition) {
 			if (actionCompleted) {
 				exitSequence_tlRobot_driving__driving_entering_crossroad();
-				react_tlRobot_driving__driving__choice_3();
+				react_tlRobot_driving__driving__choice_1();
 			} else {
 				did_transition = false;
 			}

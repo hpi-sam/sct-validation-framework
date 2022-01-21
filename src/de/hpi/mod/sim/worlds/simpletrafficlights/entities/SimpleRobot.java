@@ -90,7 +90,7 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
 
     @Override
     public String getTopStateName() {
-        return "tlRobot";
+        return "simpleTrafficLightRobot";
     }
 
     @Override
