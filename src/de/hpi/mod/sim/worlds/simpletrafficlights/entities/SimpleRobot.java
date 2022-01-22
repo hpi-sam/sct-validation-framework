@@ -2,12 +2,13 @@ package de.hpi.mod.sim.worlds.simpletrafficlights.entities;
 
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
+import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
-import de.hpi.mod.sim.worlds.simpletrafficlights.CellType;
 import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
+import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager.TrafficLightState;
 
-public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateChartEntity {
+public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorData, StateChartEntity {
 
     private RobotStatechartWrapper control;
 
@@ -45,30 +46,6 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
         control.onRefresh();
     }
 
-    @Override
-    public boolean blockedWaypointAhead() {
-        return blockedWaypoint()[1];
-    }
-
-    @Override
-    public boolean blockedWaypointLeft() {
-        return blockedWaypoint()[0];
-    }
-
-    @Override
-    public boolean blockedWaypointRight() {
-        return blockedWaypoint()[2];
-    }
-
-    private boolean[] blockedWaypoint() {
-        return getCrossRoadsManager().blockedWaypoint(facing(), pos());
-    }
-
-    @Override
-    public CellType.Type cellType() {
-        return getCrossRoadsManager().cellType(pos()).type;
-    }
-
     private StreetNetworkManager getCrossRoadsManager() {
         return (StreetNetworkManager) grid;
     }
@@ -93,5 +70,40 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
         super.actionCompleted();
         control.actionCompleted();
     }
-    
+
+	@Override
+	public boolean isObstacleAhead() {
+		return getCrossRoadsManager().isBlocked(Position.nextPositionInOrientation(posOrientation(), pos()));
+	}
+
+	@Override
+	public boolean trafficLightIsGreen() {
+		return getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_GREEN;
+	}
+
+	@Override
+	public boolean trafficLightIsRed() {
+		return getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_RED;
+	}
+
+	@Override
+	public boolean isTargetAhead() {
+		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.AHEAD);
+	}
+
+	@Override
+	public boolean isTargetLeft() {
+		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.LEFT);
+	}
+
+	@Override
+	public boolean isTargetRight() {
+		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.RIGHT);
+	}
+
+	@Override
+	public boolean isTargetBehind() {
+		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.BEHIND);
+	}
+
 }

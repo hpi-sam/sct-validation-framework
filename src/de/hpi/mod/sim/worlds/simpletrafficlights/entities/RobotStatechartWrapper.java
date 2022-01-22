@@ -6,22 +6,23 @@ import de.hpi.mod.sim.statemachines.simpletrafficlights.RobotStatechart;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_robots.IRobotActors;
 
-public class RobotStatechartWrapper extends StateChartWrapper<RobotStatechart.State> implements RobotStatechart.Data.OperationCallback {
+public class RobotStatechartWrapper extends StateChartWrapper<RobotStatechart.State> {
 
     private IRobotActors actors;
-    private IProcessor processor;
-    private IRobotData data;
+    private IRobotCallback server;
+	private IRobotSensorData data;
 
-    public RobotStatechartWrapper(IRobotActors actors, IProcessor processor, IRobotData data) {
+    public RobotStatechartWrapper(IRobotActors actors, IRobotCallback callback, IRobotSensorData data) {
         this.actors = actors;
-        this.processor = processor;
+        this.server = callback;
         this.data = data;
         start();
     }
 
     @Override
     public void start() {
-        getStatemachine().data().setOperationCallback(this);
+        getStatemachine().sensors().setOperationCallback(data);
+        getStatemachine().navigation().setOperationCallback(data);
         super.start();
     }
 
@@ -40,8 +41,8 @@ public class RobotStatechartWrapper extends StateChartWrapper<RobotStatechart.St
             actors.turnLeft();
         if (getStatemachine().actors().isRaisedTurnRight())
             actors.turnRight();
-        if (getStatemachine().processor().isRaisedArrived())
-            processor.arrived();
+        if (getStatemachine().server().isRaisedArrived())
+        	server.arrived();
     }
 
     @Override
@@ -61,54 +62,7 @@ public class RobotStatechartWrapper extends StateChartWrapper<RobotStatechart.St
          * Officially, the YAKINDU interface does not support this, which is why we have
          * to cast to the actual DrivesystemStateChart object.
          */
-        return ((RobotStatechart) chart).isStateActive(state);}
-
-    @Override
-    public long cellType() {
-        switch (data.cellType()) {
-            case CROSSROAD_WAITING_POINT:
-                return getStatemachine().cellType().getTRAFFICLIGHT_GREEN();
-//            case CROSSROAD_WAITING_POINT:
-//                return getStatemachine().cellType().getTRAFFICLIGHT_RED();
-            case CROSSROAD:
-                return getStatemachine().cellType().getCROSSROAD();
-            default:
-                return getStatemachine().cellType().getBLOCKED();  
-        }
-    }
-
-    @Override
-    public long targetDirection() {
-        switch (data.targetDirection()) {
-            case AHEAD:
-                return getStatemachine().direction().getAHEAD();
-            case LEFT:
-                return getStatemachine().direction().getLEFT();
-            case RIGHT:
-                return getStatemachine().direction().getRIGHT();
-            default:
-                return getStatemachine().direction().getBEHIND();
-        }
-    }
-
-    @Override
-    public boolean isOnTarget() {
-        return data.isOnTarget();
-    }
-
-    @Override
-    public boolean blockedArrivalpointAhead() {
-        return data.blockedWaypointAhead();
-    }
-
-    @Override
-    public boolean blockedArrivalpointLeft() {
-        return data.blockedWaypointLeft();
-    }
-
-    @Override
-    public boolean blockedArrivalpointRight() {
-        return data.blockedWaypointRight();
+        return ((RobotStatechart) chart).isStateActive(state);
     }
     
     public void onRefresh() {

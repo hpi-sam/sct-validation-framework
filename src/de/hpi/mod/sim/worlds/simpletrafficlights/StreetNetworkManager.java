@@ -33,6 +33,10 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TransitPoint;
  * whole grid and necessarily a wall.
  */
 public class StreetNetworkManager extends RobotGridManager {
+	
+	public enum TrafficLightState {
+		NO_TRAFFIC_LIGHT, TRAFFIC_LIGHT_GREEN, TRAFFIC_LIGHT_RED
+	}
 
     private TrafficLight[] trafficLights;
 
@@ -648,5 +652,17 @@ public class StreetNetworkManager extends RobotGridManager {
     public ArrivalPoint getNextRandomDestination(TransitPoint forbiddenNeighbour) {
     	return getNextRandomDestination(Collections.singletonList(forbiddenNeighbour));
     }
+
+	public boolean isBlocked(Position p) {
+		return isBlockedByMap(p) || isBlockedByRobot(p);
+	}
+
+	public TrafficLightState queryTrafficLight(Position pos) {
+		return TrafficLightState.TRAFFIC_LIGHT_GREEN;
+	}
+
+	public List<Direction> getTargetDirections(Position pos) {
+		return Collections.emptyList();
+	}
 
 }

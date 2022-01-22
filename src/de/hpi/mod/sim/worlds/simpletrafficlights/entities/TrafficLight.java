@@ -20,8 +20,11 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
 	private RelativePosition relativePosition;
 	private Position basePosition;
     
-    private boolean[] lightStates = { false, false, false, false }; // true if a light is green. 
-    																// Order of entries: South, West, East, North (clockwise!)
+	// true if a light is green.
+    private boolean lightStateWest = false;
+    private boolean lightStateNorth = false;
+    private boolean lightStateEast = false;
+    private boolean lightStateSouth = false; 
 
     /**
      * Creates a traffic light. Each traffic light is responsible for a whole
@@ -60,21 +63,24 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
          * Runs a cycle of the statechart and checks if any functions got fired
          */
         if (getStatemachine().north().isRaisedGreen())
-            lightStates[3] = true;
+        	lightStateNorth = true;
         if (getStatemachine().north().isRaisedRed())
-            lightStates[3] = false;
+            lightStateNorth = false;
+        
         if (getStatemachine().east().isRaisedGreen())
-            lightStates[2] = true;
+        	lightStateEast = true;
         if (getStatemachine().east().isRaisedRed())
-            lightStates[2] = false;
+        	lightStateEast = false;
+        
         if (getStatemachine().south().isRaisedGreen())
-            lightStates[0] = true;
+        	lightStateSouth = true;
         if (getStatemachine().south().isRaisedRed())
-            lightStates[0] = false;
+            lightStateSouth = false;
+        
         if (getStatemachine().west().isRaisedGreen())
-            lightStates[1] = true;
+        	lightStateWest = true;
         if (getStatemachine().west().isRaisedRed())
-            lightStates[1] = false;
+        	lightStateWest = false;
     }
 
     @Override
@@ -98,19 +104,19 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
     }
 
     public boolean isGreenNorth() {
-        return lightStates[3];
+        return lightStateNorth;
     }
 
     public boolean isGreenEast() {
-        return lightStates[2];
+        return lightStateEast;
     }
 
     public boolean isGreenWest() {
-        return lightStates[1];
+        return lightStateWest;
     }
 
     public boolean isGreenSouth() {
-        return lightStates[0];
+        return lightStateSouth;
     }
 
     @Override
