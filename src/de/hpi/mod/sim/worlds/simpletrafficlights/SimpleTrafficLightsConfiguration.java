@@ -121,6 +121,7 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	}
 
 	// Setter Methods for properties that may change depending on user or scenario settings.
+	
 	public static void setCrossroadsMode(GridMode mode) {
 		crossroadsMode = mode;
 		computeFieldSize();
@@ -132,6 +133,7 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	}
 
 	// Computation Method to adapt settings
+	
 	private static void computeFieldSize() {
 		// Do necessary calculations
 		int twoBordersAndOneStreet = (2*fieldBorderWidth) + streetLength;

@@ -9,8 +9,15 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
 
 public class DeparturePointSpecification extends TransitPointSpecification<DeparturePoint> {
 
-	public DeparturePointSpecification(int i, StreetNetworkManager g) {
+	boolean randomizeWitingTimes = true;
+	
+	public DeparturePointSpecification(int i, StreetNetworkManager g, boolean r) {
 		super(i, g);
+		this.randomizeWitingTimes = r;
+	}
+	
+	public DeparturePointSpecification(int i, StreetNetworkManager g) {
+		super(i, g);		
 	}
 
     public Position getCoordinates() {
@@ -49,7 +56,7 @@ public class DeparturePointSpecification extends TransitPointSpecification<Depar
 	@Override
 	public DeparturePoint createEntity() {
 		
-		DeparturePoint entity = new DeparturePoint(this.id, getCoordinates(), getOrientation());
+		DeparturePoint entity = new DeparturePoint(this.id, getCoordinates(), getOrientation(), this.randomizeWitingTimes);
 		this.grid.addDeparturePoint(entity);
 	    return entity;
 	}

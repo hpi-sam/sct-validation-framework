@@ -24,6 +24,7 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.ArrivalPoint;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.SimpleRobot;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TransitPoint;
 
 /**
  * Represents the Map and contains all logic which is dependant of the
@@ -35,11 +36,8 @@ public class StreetNetworkManager extends RobotGridManager {
     private TrafficLight[] trafficLights;
 
     private ArrivalPoint[] arrivalPoints;
-    List<ArrivalPoint> emptiestArrivalPoints = new ArrayList<>();
     
     private DeparturePoint[] departurePoints;
-    List<DeparturePoint> emptyDeparturePoints = new ArrayList<>();
-    List<DeparturePoint> occupiedDeparturePoints = new ArrayList<>();
     
     List<SimpleRobot> idleRobots = new ArrayList<>();
 
@@ -480,7 +478,6 @@ public class StreetNetworkManager extends RobotGridManager {
 	public void addArrivalPoint(ArrivalPoint point) {		
         if(arrivalPoints.length > point.getId()) {
         	arrivalPoints[point.getId()] = point;
-        	emptiestArrivalPoints.add(point);
         }
         	
 	}   
@@ -488,7 +485,6 @@ public class StreetNetworkManager extends RobotGridManager {
 	public void addDeparturePoint(DeparturePoint point) {	
         if(departurePoints.length > point.getId()) {
         	departurePoints[point.getId()] = point;
-        	emptyDeparturePoints.add(point);
         }
 	}   
     
@@ -536,17 +532,6 @@ public class StreetNetworkManager extends RobotGridManager {
         return positions.get(new Random().nextInt(positions.size()));
     }
 
-    private void shuffleAndSortArrivalPoints() {
-    	Collections.shuffle(emptiestArrivalPoints);
-    	emptiestArrivalPoints.sort(new Comparator<ArrivalPoint>() {
-					@Override
-					public int compare(ArrivalPoint me, ArrivalPoint you) {
-						return Integer.compare(me.getNumberOfExpectedRobots(), you.getNumberOfExpectedRobots());
-					}
-		});
-    }
-
-
     public void putRobotInWaitingQueue(SimpleRobot r) {
     	if(!idleRobots.contains(r))
     		idleRobots.add(r);
@@ -561,10 +546,9 @@ public class StreetNetworkManager extends RobotGridManager {
     		
     		// ...Get start point, ...
     		DeparturePoint departure = getNextEmptyDeparturePoint();
-    		occupiedDeparturePoints.add(departure);
     		
     		// ...Get target and...
-    		ArrivalPoint arrival = getNextRandomDestination(departure);
+    		ArrivalPoint arrival = getNextRandomDestination(Collections.singletonList(departure));
     		
     		// ...connect robot to selected transfer points.
     		departure.addStartingRobot(robot, arrival);
@@ -584,30 +568,35 @@ public class StreetNetworkManager extends RobotGridManager {
     }
     
     public boolean hasEmptyDeparturePoints() {
-    	return !emptyDeparturePoints.isEmpty();
+    	return Arrays.stream(departurePoints).anyMatch(departurePoint -> departurePoint.isNotOccupied());
     }
     
     public DeparturePoint getNextEmptyDeparturePoint() {
-    	if(emptyDeparturePoints.isEmpty())
-    		return null;
-    	return emptyDeparturePoints.remove(new Random().nextInt(emptyDeparturePoints.size()));
+    	List<DeparturePoint> emtpyDeparturePoints = Arrays.stream(departurePoints).filter(departurePoint -> departurePoint.isNotOccupied()).collect(Collectors.toList());;
+    	return emtpyDeparturePoints.get(ThreadLocalRandom.current().nextInt(emtpyDeparturePoints.size()));
     }
     
-    public ArrivalPoint getNextRandomDestination() {
-    	shuffleAndSortArrivalPoints();
-    	int index = (int) (Math.abs(new Random().nextGaussian() * SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() / 4 ));
-	    System.out.println(index);
+    public ArrivalPoint getNextRandomDestination(List<TransitPoint> forbiddenNeighbours) {
+    	List<ArrivalPoint> emptiestArrivalPoints = Arrays.stream(arrivalPoints)
+    			.filter(arrivalPoint -> forbiddenNeighbours.stream().noneMatch(neighbour -> neighbour.isNextTo(arrivalPoint)))
+    			.collect(Collectors.toList());
+    	Collections.shuffle(emptiestArrivalPoints);
+    	emptiestArrivalPoints.sort(new Comparator<ArrivalPoint>() {
+    						@Override
+    						public int compare(ArrivalPoint me, ArrivalPoint you) {
+    							return Integer.compare(me.getNumberOfExpectedRobots(), you.getNumberOfExpectedRobots());
+    						}
+    					});
+    	int index = (int) (Math.abs(new Random().nextGaussian() * SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() / 4 ));    	
 	    return emptiestArrivalPoints.get(index % SimpleTrafficLightsConfiguration.getNumberOfTransferPoints());
     }
     
-    public ArrivalPoint getNextRandomDestination(DeparturePoint forbiddenNeighbour) {
-    	while(true) {
-    		ArrivalPoint target = getNextRandomDestination();
-    		if(!target.isNextTo(forbiddenNeighbour)) {
-    			return target;
-    		}
-    	}
+    public ArrivalPoint getNextRandomDestination() {
+    	return getNextRandomDestination(Collections.emptyList());
     }
 
+    public ArrivalPoint getNextRandomDestination(TransitPoint forbiddenNeighbour) {
+    	return getNextRandomDestination(Collections.singletonList(forbiddenNeighbour));
+    }
 
 }
