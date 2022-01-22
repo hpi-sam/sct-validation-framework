@@ -5,8 +5,8 @@ import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
-import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager.TrafficLightState;
 
 public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorData, StateChartEntity {
 
@@ -30,12 +30,10 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 
     @Override
     public void arrived() {
+    	// #TODO: Link this to arrival points. Make sure false arrivals are caught.
         super.arrived();
-        Position pos = getCrossRoadsManager().getRandomStart();
-        setRobotTo(pos);
-        setFacingTo(StreetNetworkManager.getSuitableRobotOrientationForPosition(pos));
-        setTarget(StreetNetworkManager.getRandomDestination());
-        control.newTarget();
+        moveToIdlePosition();
+        getCrossRoadsManager().makeRobotIdle(this);
     }
 
     /**
@@ -54,11 +52,17 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 		this.setTarget(position);
 		this.control.newTarget();
 	}
+	
+	public void moveToIdlePosition() {
+	    setRobotTo(SimpleTrafficLightsConfiguration.getIdleRobotsPosition());
+	    setTarget(SimpleTrafficLightsConfiguration.getIdleRobotsPosition());
+	}
 
     @Override
     public String getMachineState() {
         return control.getChartState();
     }
+    
 
     @Override
     public String getTopStateName() {
@@ -68,6 +72,8 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
     @Override
     public void actionCompleted() {
         super.actionCompleted();
+        if(getCrossRoadsManager().isInFrontOfTrRafficLight(pos()))
+        	control.actionCompletedAndTrafficLightObserved();
         control.actionCompleted();
     }
 

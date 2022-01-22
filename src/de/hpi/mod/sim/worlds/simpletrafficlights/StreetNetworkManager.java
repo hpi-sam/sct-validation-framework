@@ -25,6 +25,7 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.ArrivalPoint;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.SimpleRobot;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLightState;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TransitPoint;
 
 /**
@@ -34,11 +35,7 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TransitPoint;
  */
 public class StreetNetworkManager extends RobotGridManager {
 	
-	public enum TrafficLightState {
-		NO_TRAFFIC_LIGHT, TRAFFIC_LIGHT_GREEN, TRAFFIC_LIGHT_RED
-	}
-
-    private TrafficLight[] trafficLights;
+	private TrafficLight[] trafficLights;
 
     private ArrivalPoint[] arrivalPoints;
     
@@ -193,60 +190,6 @@ public class StreetNetworkManager extends RobotGridManager {
         }
     }
 
-    private boolean isWaypoint(int x, int y) {
-        return (x % 3 == 0) ^ (y % 3 == 0);
-    }
-
-    private boolean isArrivalPoint(int x, int y) {
-        return (x == 0 && y % 3 == 2) 
-            || (x % 3 == 1 && y == 0) 
-            || (x == SimpleTrafficLightsConfiguration.getFieldWidth()-1 && y % 3 == 1) 
-            || (x % 3 == 2 && y == SimpleTrafficLightsConfiguration.getFieldHeight()-1);
-    }
-
-
-    /**
-     * Returns true if and only if there is a traffic light at position x,y and it is green
-     */
-    private CellType getWaypointCellType(int x, int y) {
-        if (isArrivalPoint(x, y))
-            return CellType.ARRIVAL_POINT;
-
-        if (x % 3 == 2 && y % 3 == 0) {
-        	TrafficLight light = getLightForCrossroad(x / 3, y / 3);
-            if (light == null)
-                return CellType.STREET;
-            if (light.isGreenSouth())
-                return CellType.CROSSROAD_WAITING_POINT;
-            return CellType.CROSSROAD_WAITING_POINT;
-        }
-        if (x % 3 == 0 && y % 3 == 1) {
-        	TrafficLight light = getLightForCrossroad(x / 3, y / 3);
-            if (light == null)
-                return CellType.STREET;
-            if (light.isGreenWest())
-                return CellType.CROSSROAD_WAITING_POINT;
-            return CellType.CROSSROAD_WAITING_POINT;
-        }
-        if (x % 3 == 1 && y % 3 == 0) {
-        	TrafficLight light = getLightForCrossroad(x / 3, y / 3 - 1);
-            if (light == null)
-                return CellType.STREET;
-            if (light.isGreenNorth())
-                return CellType.CROSSROAD_WAITING_POINT;
-            return CellType.CROSSROAD_WAITING_POINT;
-        }
-        if (x % 3 == 0 && y % 3 == 2) {
-        	TrafficLight light = getLightForCrossroad(x / 3 - 1, y / 3);
-            if (light == null)
-                return CellType.STREET;
-            if (light.isGreenEast())
-                return CellType.CROSSROAD_WAITING_POINT;
-            return CellType.CROSSROAD_WAITING_POINT;
-        }
-        return null;     
-    }
-
     /**
      * Whether the robot can stand on this position
      * 
@@ -296,6 +239,7 @@ public class StreetNetworkManager extends RobotGridManager {
         }
             return orientationToDirection(facing, targetOrientation);
     }
+    
     /**
      * Returns the waypoint neighboring the given crossroad in the given side.<br>
      * 
@@ -459,58 +403,6 @@ public class StreetNetworkManager extends RobotGridManager {
         }
 	}
 
-	
-	
-	
-	
-    /**
-     * If the waypoints left, ahead and right of the crossroad which the position
-     * faces are blocked.<br>
-     * Position has to be on a traffic light
-     *
-     * @param facing   The orientation the Robot is facing
-     * @param position A position on a traffic light
-     * @return The waypoints left, ahead and right of the next crossroad
-     */
-    public boolean[] blockedWaypoint(Orientation facing, Position position) {
-        // All Directions except BEHIND
-        Direction[] directions = new Direction[] { Direction.LEFT, Direction.AHEAD, Direction.RIGHT };
-        Orientation[] sides = Arrays.stream(directions).map(direction -> Orientation.rotate(facing, direction))
-                .toArray(Orientation[]::new);
-
-        Position crossroad = getSouthwestCornerOfUpcomingCrossroad(facing, position);
-        Position[] waypoints = Arrays.stream(sides).map(side -> getWaypointOfCrossroad(crossroad, side))
-                .toArray(Position[]::new);
-
-        // No stream because of primitive type array
-        boolean[] blocked = new boolean[3];
-        for (int i = 0; i < waypoints.length; i++) {
-            blocked[i] = isBlockedByMap(waypoints[i]) || isBlockedByRobot(waypoints[i]);
-        }
-        return blocked;
-    }
-    
-    /**
-     * Returns the outhoings waypoints neighboring the given crossroad in the given side.<br>
-     * 
-     * @param cross   The bottom left cell of the crossroad
-     * @param side    The side of the waypoint
-     * @return The waypoint
-     */
-    public Position getWaypointOfCrossroad(Position cross, Orientation side) {
-        switch (side) {
-            case NORTH:
-                return new Position(cross.getX() + 1, cross.getY() + 2);
-            case EAST:
-                return new Position(cross.getX() + 2, cross.getY());
-            case SOUTH:
-                return new Position(cross.getX(), cross.getY() - 1);
-            case WEST:
-                return new Position(cross.getX() - 1, cross.getY() + 1);
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
 
     public void addTrafficLight(TrafficLight trafficLight) {
         Position relativePosition = trafficLight.getRelativePosition(); 
@@ -541,40 +433,6 @@ public class StreetNetworkManager extends RobotGridManager {
         if (pos.getX() == SimpleTrafficLightsConfiguration.getFieldWidth() - 1)
             return Orientation.WEST;
         return Orientation.SOUTH;
-    }
-
-    public static List<Position> getAllPossiblePositions() {
-        int width = SimpleTrafficLightsConfiguration.getFieldWidth();
-        int height = SimpleTrafficLightsConfiguration.getFieldHeight();
-        int positionsHorizontal = (width - 1) / 3;
-        int positionsVertical = (height - 1) / 3;
-
-        List<Position> list = new ArrayList<>(2 * (positionsHorizontal + positionsVertical));
-        for (int x = 0; x < width / 3; x++) {
-            list.add(new Position(3 * x + 2, 0));
-        }
-        for (int y = 0; y < height / 3; y++) {
-            list.add(new Position(0, 3 * y + 1));
-        }
-        return list;
-    }
-
-    public static Position getRandomDestination() {
-        int width = SimpleTrafficLightsConfiguration.getFieldWidth();
-        int height = SimpleTrafficLightsConfiguration.getFieldHeight();
-        int positionsHorizontal = (width - 1) / 3;
-        int positionsVertical = (height - 1) / 3;
-
-        int random = ThreadLocalRandom.current().nextInt(positionsHorizontal + positionsVertical);
-        if (random < positionsHorizontal)
-            return new Position(3*random + 2, height - 1);
-        return new Position(width - 1, 3*(random - positionsHorizontal) + 1);
-    }
-
-    public Position getRandomStart() {
-        List<Position> positions = getAllPossiblePositions();
-        positions = positions.stream().filter(p -> !isBlockedByRobot(p)).collect(Collectors.toList());
-        return positions.get(new Random().nextInt(positions.size()));
     }
 
     public void makeRobotIdle(SimpleRobot r) {
@@ -663,6 +521,10 @@ public class StreetNetworkManager extends RobotGridManager {
 
 	public List<Direction> getTargetDirections(Position pos) {
 		return Collections.emptyList();
+	}
+
+	public boolean isInFrontOfTrRafficLight(Position pos) {
+		return Arrays.stream(trafficLights).anyMatch(tl -> tl.isWaitingPosition(pos));
 	}
 
 }

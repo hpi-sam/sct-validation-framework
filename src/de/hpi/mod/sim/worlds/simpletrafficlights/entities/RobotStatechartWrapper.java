@@ -73,6 +73,10 @@ public class RobotStatechartWrapper extends StateChartWrapper<RobotStatechart.St
         getStatemachine().raiseNewTarget();
     }
 
+    public void actionCompletedAndTrafficLightObserved() {
+        getStatemachine().raiseActionCompletedAndTrafficLightObserved();
+    }
+
     public void actionCompleted() {
         getStatemachine().raiseActionCompleted();
     }

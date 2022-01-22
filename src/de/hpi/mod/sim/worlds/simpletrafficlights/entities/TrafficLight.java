@@ -102,7 +102,43 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
          */
         return ((TrafficLightStatechart) chart).isStateActive(state);
     }
+    
+    public Position getSouthWaitingPosition() {
+    	return getBottomLeftPosition().getModified(1, -1);
+    }
+    
+    public Position getNorthWaitingPosition() {
+    	return getBottomLeftPosition().getModified(0, 2);
+    }
+    
+    public Position getWestWaitingPosition() {
+    	return getBottomLeftPosition().getModified(-1, 0);
+    }
+    
+    public Position getEastWaitingPosition() {
+    	return getBottomLeftPosition().getModified(2, 1);
+    }
+    
+    public boolean isWaitingPosition(Position p) {
+    	return getNorthWaitingPosition().equals(p) || getSouthWaitingPosition().equals(p) || getEastWaitingPosition().equals(p) || getWestWaitingPosition().equals(p);
+    }
 
+    public TrafficLightState getTrafficLightState(Position p) {
+    	if(getSouthWaitingPosition().equals(p))
+    		return isGreenSouth() ? TrafficLightState.TRAFFIC_LIGHT_GREEN : TrafficLightState.TRAFFIC_LIGHT_RED;
+    	
+    	if(getNorthWaitingPosition().equals(p))
+    		return isGreenNorth() ? TrafficLightState.TRAFFIC_LIGHT_GREEN : TrafficLightState.TRAFFIC_LIGHT_RED;
+    	
+    	if(getEastWaitingPosition().equals(p))
+    		return isGreenEast() ? TrafficLightState.TRAFFIC_LIGHT_GREEN : TrafficLightState.TRAFFIC_LIGHT_RED;
+    	
+    	if(getWestWaitingPosition().equals(p))
+    		return isGreenWest() ? TrafficLightState.TRAFFIC_LIGHT_GREEN : TrafficLightState.TRAFFIC_LIGHT_RED;
+    	
+    	return TrafficLightState.NO_TRAFFIC_LIGHT;
+    }
+    
     public boolean isGreenNorth() {
         return lightStateNorth;
     }
