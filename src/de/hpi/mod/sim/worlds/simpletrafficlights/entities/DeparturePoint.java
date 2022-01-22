@@ -11,7 +11,7 @@ public class DeparturePoint extends TransitPoint {
 		NOT_OCCUPIED, ROBOT_WAITING_BEFORE_START, ROBOT_STARTED, ROBOT_LEFT
 	}
 	DeparturePointState currentState = DeparturePointState.NOT_OCCUPIED;
-	float countdownTimer = 0;
+	int countdownTimer = 0;
 	
 	SimpleRobot startingRobot;
 	ArrivalPoint targetforStartingRobot;

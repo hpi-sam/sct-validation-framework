@@ -9,43 +9,57 @@ import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
  * Can be set by the view.
  */
 public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
- 	
-	private static final Position DEFAULT_IDLE_ROBOTS_POSITION = new Position(-1000,-1000);
-	private static final Orientation DEFAULT_IDLE_ROBOTS_ORIENTATION = Orientation.NORTH;
-	
+
+	// Types
     public static enum GridMode {
         SINGLE_CROSSROAD, TWO_CROSSROADS, MAXIMUM_CROSSROADS
     }
-
-    private static final int FIELD_SIDE_SPACING = 2;
-	private static final int STREET_LENGTH = 5;
+    
+	// Immutable Field Properties (changing would require a complete logic change)
 	private static final int CROSSROAD_LENGTH = 2;
-	private static final int FIELD_BORDER_WIDTH = 2;
-	private static final int MINIMUM_CROSSROADS_IN_MAXIMUM_MODE = 2;
-	private static final GridMode DEFAULT_CROSSROAD_MODE = GridMode.MAXIMUM_CROSSROADS;
+	private static final int MINIMUM_NUMBER_OF_STREETS_IN_MAXIMUM_MODE = 2;
 	
-	private static final int DEFAULT_FIELD_WIDTH = 30;
-    private static final int DEFAULT_FIELD_HEIGHT = 30;
-        
-	private static int fieldBorderWidth = FIELD_BORDER_WIDTH;
-    private static int streetLength = STREET_LENGTH;
-    private static int crossroadLength = CROSSROAD_LENGTH;
-
-    private static int availableFieldWidth = DEFAULT_FIELD_WIDTH;
-	private static int availableFieldHeight = DEFAULT_FIELD_HEIGHT;
-
+	// Defaults for (potentially chanable) Field Properties 
+	private static final int DEFAULT_FIELD_BORDER_WIDTH = 2;	
+    private static final int DEFAULT_FIELD_SIDE_SPACING = 2;
+	private static final int DEFAULT_STREET_LENGTH = 5;
+	private static final GridMode DEFAULT_CROSSROAD_MODE = GridMode.MAXIMUM_CROSSROADS;
+ 	
+	// Defaults for Idle Robot Properties
+	private static final Position DEFAULT_IDLE_ROBOTS_POSITION = new Position(-1000,-1000);
+	private static final Orientation DEFAULT_IDLE_ROBOTS_ORIENTATION = Orientation.NORTH;
+	
+	// Defaults for Properties for Departure Point behaviour 
+	private static final int DEFAULT_DEPARTURE_POINT_AVERAGE_WAITING_TIME = 2000;
+	private static final int DEFAULT_DEPARTURE_POINT_MINIMUM_WAITING_TIME = 1500;
+	private static final int DEFAULT_DEPARTURE_POINT_MAXIMUM_WAITING_TIME = 4000;
+	
+	// Field properties that are dependant on settings.
+	private static int fieldBorderWidth = DEFAULT_FIELD_BORDER_WIDTH;
+	private static int streetLength = DEFAULT_STREET_LENGTH;
+	private static int fieldSideSpacing = DEFAULT_FIELD_SIDE_SPACING;
+	private static int minimalNumberOfStreetsInMaximumMode = MINIMUM_NUMBER_OF_STREETS_IN_MAXIMUM_MODE;
+	
+	// Field size properties that change depenting on avialbe space and scenario settings.
+    private static int availableFieldWidth = 0;
+	private static int availableFieldHeight = 0;
     private static int fieldWidth = 0;
 	private static int fieldHeight = 0;
-
 	private static int verticalStreets = 0;
 	private static int horizontalStreets = 0;
-	
 	private static GridMode crossroadsMode = DEFAULT_CROSSROAD_MODE;
-
+	
+	// Idle Robot Properties
 	private static Position idleRobotsPosition = DEFAULT_IDLE_ROBOTS_POSITION;	
 	private static Orientation idleRobotsOrientation = DEFAULT_IDLE_ROBOTS_ORIENTATION;
+	
+	// Properties for Departure Point behaviour 
+	private static int departurePointNormalWaitingTime = DEFAULT_DEPARTURE_POINT_AVERAGE_WAITING_TIME;
+	private static int departurePointMinimalWaitingTime = DEFAULT_DEPARTURE_POINT_MINIMUM_WAITING_TIME;
+	private static int departurePointMaximalWaitingTime = DEFAULT_DEPARTURE_POINT_MAXIMUM_WAITING_TIME;
 
-   	public static Position getIdleRobotsPosition() {
+	// Getter Methods
+	public static Position getIdleRobotsPosition() {
 		return idleRobotsPosition;
 	}
 
@@ -63,17 +77,6 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 
 	public static GridMode getCrossroadsMode() {
 		return crossroadsMode;
-	}
-
-	public static void setAvailableFieldDimensions(int width, int height) {
-		availableFieldWidth = width - (FIELD_SIDE_SPACING * 2);
-		availableFieldHeight = height - (FIELD_SIDE_SPACING * 2);
-		computeFieldSize();
-	}
-
-	public static void setCrossroadsMode(GridMode mode) {
-		crossroadsMode = mode;
-		computeFieldSize();
 	}
 	
 	public static int getVerticalStreets() {
@@ -102,14 +105,37 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	}
 
 	public static int getCrossroadLength() {
-		return crossroadLength;
+		return CROSSROAD_LENGTH;
 	}
 
+	public static int getDeparturePointMaximalWaitingTime() {
+		return departurePointMaximalWaitingTime;
+	}
 
+	public static int getDeparturePointMinimalWaitingTime() {
+		return departurePointMinimalWaitingTime;
+	}
+
+	public static int getDeparturePointNormalWaitingTime() {
+		return departurePointNormalWaitingTime;
+	}
+
+	// Setter Methods for properties that may change depending on user or scenario settings.
+	public static void setCrossroadsMode(GridMode mode) {
+		crossroadsMode = mode;
+		computeFieldSize();
+	}
+	public static void setAvailableFieldDimensions(int width, int height) {
+		availableFieldWidth = width - (fieldSideSpacing * 2);
+		availableFieldHeight = height - (fieldSideSpacing * 2);
+		computeFieldSize();
+	}
+
+	// Computation Method to adapt settings
 	private static void computeFieldSize() {
 		// Do necessary calculations
-		int twoBordersAndOneStreet = (2*FIELD_BORDER_WIDTH) + STREET_LENGTH;
-		int oneStreetAndOneBorder = CROSSROAD_LENGTH + STREET_LENGTH;
+		int twoBordersAndOneStreet = (2*fieldBorderWidth) + streetLength;
+		int oneStreetAndOneBorder = CROSSROAD_LENGTH + streetLength;
 		
 		switch(crossroadsMode) {
 		case SINGLE_CROSSROAD:
@@ -119,10 +145,10 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 			verticalStreets = horizontalStreets = 2;
 			break;
 		case MAXIMUM_CROSSROADS:
-			verticalStreets = Math.max(MINIMUM_CROSSROADS_IN_MAXIMUM_MODE, // Minimum number of crossroads
+			verticalStreets = Math.max(minimalNumberOfStreetsInMaximumMode, // Minimum number of crossroads
 					(int) ((availableFieldWidth-twoBordersAndOneStreet) / oneStreetAndOneBorder) // OR as many as fit in available space
 			);
-			horizontalStreets = Math.max(MINIMUM_CROSSROADS_IN_MAXIMUM_MODE, // Minimum number of crossroads
+			horizontalStreets = Math.max(minimalNumberOfStreetsInMaximumMode, // Minimum number of crossroads
 					(int) ((availableFieldHeight-twoBordersAndOneStreet) / oneStreetAndOneBorder) // OR as many as fit in available space
 			);
 			break;
