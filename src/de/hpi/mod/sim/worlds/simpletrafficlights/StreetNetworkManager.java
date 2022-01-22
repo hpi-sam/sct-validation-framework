@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,11 +40,54 @@ public class StreetNetworkManager extends RobotGridManager {
     
     private DeparturePoint[] departurePoints;
     
-    List<SimpleRobot> idleRobots = new ArrayList<>();
+    List<SimpleRobot> idleRobots = new CopyOnWriteArrayList<>();
 
     public StreetNetworkManager() {
         super();
         resetFieldDataStructures();
+    }
+    
+    /**
+     * Add a Robot to the list of idle robots.
+     */
+    public void addIdleRobot(SimpleRobot robot) {
+    	if(!this.hasIdleRobot(robot))
+    		this.idleRobots.add(robot);
+    }
+
+    /**
+     * Check if there are any Robots is inside the list of active robots. 
+     * 
+     * @return true is there is at least one Robot is in the data structure, false otherwise.
+     */
+    public boolean hasIdleRobots() {
+    	return !this.idleRobots.isEmpty();
+    }
+
+    /**
+     * Check if a Robot is inside the list of active robots. 
+     * 
+     * @return true is the Robot is in the data structure, false otherwise.
+     */
+    public boolean hasIdleRobot(SimpleRobot robot) {
+    	return this.idleRobots.contains(robot);
+    }
+    
+    /**
+     * Remove a Robot from the list of active robots.
+     */
+    public void removeIdleRobot(SimpleRobot robot) {
+    	this.idleRobots.remove(robot);
+    }
+
+    /**
+     * Clears all Robots from the list of active robots
+     */
+    public void clearIdleRobots() {
+        for (Robot robot : this.idleRobots) {
+            robot.close();
+        }
+        this.idleRobots.clear();
     }
 
 
@@ -377,29 +421,26 @@ public class StreetNetworkManager extends RobotGridManager {
 		return Arrays.stream(trafficLights).filter(x -> x != null).collect(Collectors.toList());
 	}
 	
-    public List<Entity> getEntities() {    	
-        return Stream.of(
-        		Arrays.asList(trafficLights),
-        		Arrays.asList(arrivalPoints),
-        		Arrays.asList(departurePoints)
-        		).filter(x -> x != null).flatMap(Collection::stream).collect(Collectors.toList());
+    public List<Entity> getNonRobotEntitiesForDetectors() {    	
+    	return Collections.emptyList();
+//        return Stream.of(
+//        		Arrays.asList(trafficLights),
+//        		Arrays.asList(arrivalPoints),
+//        		Arrays.asList(departurePoints)
+//        		).filter(x -> x != null).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    @Override
-	public void clearEntities() {
-		// Stop robot statecharts and clear robot datastructure 
-    	super.clearEntities();
-		
+	public void clearNonRobotEntities() {		
 		// Stop TrafficLight Statecharts
 		for(TrafficLight trafficLight : this.trafficLights)
 			if(trafficLight != null)
 				trafficLight.stop();
 		
-		// Trigger reset of datastructures
+		// Trigger reset of datastructures (removed traffic lights and arrival/departure points) 
 		this.resetFieldDataStructures();
 	}
     
-	public void updateEntities(float delta) {
+	public void updateNonRobotEntities(float delta) {
 		// Start Robots
 		startRobots();
 		
@@ -532,17 +573,25 @@ public class StreetNetworkManager extends RobotGridManager {
         return positions.get(new Random().nextInt(positions.size()));
     }
 
-    public void putRobotInWaitingQueue(SimpleRobot r) {
-    	if(!idleRobots.contains(r))
-    		idleRobots.add(r);
+    public void makeRobotIdle(SimpleRobot r) {
+    	this.removeRobot(r);
+    	this.addIdleRobot(r);
+    }
+
+    public void makeRobotActive(SimpleRobot r) {
+    	this.removeIdleRobot(r);
+    	this.addRobot(r);
     }
     
     public void startRobots() {
     	// As long as there are robots and free starting positions...
     	while(hasIdleRobots() && hasEmptyDeparturePoints()) {
-    		    		
+    	    		    		
     		// ...Get robot, ...
-    		SimpleRobot robot = idleRobots.remove(0);
+    		SimpleRobot robot = getNextIdleRobot();
+    		
+    		// ...Make robot active, ...
+    		makeRobotActive(robot);
     		
     		// ...Get start point, ...
     		DeparturePoint departure = getNextEmptyDeparturePoint();
@@ -556,15 +605,11 @@ public class StreetNetworkManager extends RobotGridManager {
     		
     	}
     }
-
-    public boolean hasIdleRobots() {
-    	return !idleRobots.isEmpty();
-    }
-
+    
     public SimpleRobot getNextIdleRobot() {
     	if(idleRobots.isEmpty())
     		return null;
-    	return idleRobots.remove(0);
+    	return idleRobots.get(0);
     }
     
     public boolean hasEmptyDeparturePoints() {
@@ -577,9 +622,12 @@ public class StreetNetworkManager extends RobotGridManager {
     }
     
     public ArrivalPoint getNextRandomDestination(List<TransitPoint> forbiddenNeighbours) {
+    	// Get all potential destinations
     	List<ArrivalPoint> emptiestArrivalPoints = Arrays.stream(arrivalPoints)
     			.filter(arrivalPoint -> forbiddenNeighbours.stream().noneMatch(neighbour -> neighbour.isNextTo(arrivalPoint)))
     			.collect(Collectors.toList());
+    	    	
+    	// Sort and randomize if values are identical
     	Collections.shuffle(emptiestArrivalPoints);
     	emptiestArrivalPoints.sort(new Comparator<ArrivalPoint>() {
     						@Override
@@ -587,7 +635,9 @@ public class StreetNetworkManager extends RobotGridManager {
     							return Integer.compare(me.getNumberOfExpectedRobots(), you.getNumberOfExpectedRobots());
     						}
     					});
-    	int index = (int) (Math.abs(new Random().nextGaussian() * SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() / 4 ));    	
+    	
+    	// Randomly select
+    	int index = (int) (Math.abs(ThreadLocalRandom.current().nextGaussian() * SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() / 4 ));    	
 	    return emptiestArrivalPoints.get(index % SimpleTrafficLightsConfiguration.getNumberOfTransferPoints());
     }
     

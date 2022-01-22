@@ -65,7 +65,7 @@ public class PongWorld extends World {
 	}
 
 	@Override
-	public List<? extends Entity> getEntities() {
+	public List<? extends Entity> getEntitiesForDetectors() {
 		List<Entity> list = new ArrayList<>(2);
 		list.add(paddle1);
 		list.add(ball);

@@ -15,7 +15,6 @@ public abstract class RobotSpecification <R extends Robot, M extends RobotGridMa
     @Override 
     public R createEntity() {
         R robot = createRobot(robotManager);
-        robotManager.addRobot(robot);
         return robot;
     }
 }

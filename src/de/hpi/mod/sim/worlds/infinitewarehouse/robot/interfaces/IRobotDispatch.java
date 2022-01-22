@@ -19,7 +19,7 @@ public interface IRobotDispatch {
 
     public void refreshRobots();
 
-    public void close();
+    public void closeRobots();
 
 	public void releaseAllLocks();
 

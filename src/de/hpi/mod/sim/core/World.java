@@ -93,7 +93,7 @@ public abstract class World {
 				detector.disable();
     }
 
-    public abstract List<? extends Entity> getEntities();
+    public abstract List<? extends Entity> getEntitiesForDetectors();
 
     public abstract void refreshEntities();
     
@@ -132,7 +132,7 @@ public abstract class World {
 	}
 
 	public void updateDetectors() {
-		List<? extends Entity> entities = this.getEntities();
+		List<? extends Entity> entities = this.getEntitiesForDetectors();
 		for (Detector detector : this.getDetectors())
 			if(detector.isEnabled())
 				detector.update(entities);

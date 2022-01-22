@@ -4,7 +4,6 @@ import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
-import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.CellType;
 import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 
@@ -22,13 +21,9 @@ public class SimpleRobot extends Robot implements IRobotData, IProcessor, StateC
         control = new RobotStatechartWrapper(getDriveManager(), this, this);
         
         if(destination != null) {
-        	// If a specific target is given, send it to statechart...
+        	// If a specific target is given, send it to statechart and notify statechart right away.
             setTarget(destination);
             control.newTarget();	
-            
-        }else {
-        	// ...otherwise, put robot in the grid manager's queue .
-        	gridManager.putRobotInWaitingQueue(this);
         }
     }
 

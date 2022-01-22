@@ -13,30 +13,45 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.interfaces.IRobotController
 public abstract class RobotGridManager extends GridManager implements IRobotController{ 
 
     private List<Robot> robots = new CopyOnWriteArrayList<>();
+    
     /**
-     * Creates a new Robot
-     * 
-     * @return The added Robot
+     * Add a Robot to the list of active robots.
      */
     public Robot addRobot(Robot robot) {
-        robots.add(robot);
+    	if(!this.hasRobot(robot))
+    		this.robots.add(robot);
         return robot;
+    }
+
+    /**
+     * Check if a Robot is inside the list of active robots. 
+     * 
+     * @return true is the Robot is in the data structure, false otherwise.
+     */
+    public boolean hasRobot(Robot robot) {
+    	return this.robots.contains(robot);
+    }
+    
+    /**
+     * Remove a Robot from the list of active robots.
+     */
+    public void removeRobot(Robot robot) {
+    	this.robots.remove(robot);
     }
 
     /**
      * Refreshes the Robots.
      */
     public void refreshRobots() {
-        for (Robot robot : robots) {
+        for (Robot robot : this.robots) {
         	robot.refresh();
         }
     }
 
-
     /**
-     * Clears all Robots.
+     * Clears all Robots from the list of active robots
      */
-    public void clearEntities() {
+    public void clearRobots() {
         for (Robot robot : robots) {
             robot.close();
         }
@@ -67,7 +82,7 @@ public abstract class RobotGridManager extends GridManager implements IRobotCont
         return robots;
     }
     
-    public void close() {
+    public void closeRobots() {
         for (Robot robot : robots)
             robot.close();
     }

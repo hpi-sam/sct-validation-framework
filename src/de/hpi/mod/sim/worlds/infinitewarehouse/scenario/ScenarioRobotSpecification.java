@@ -28,6 +28,7 @@ public class ScenarioRobotSpecification extends RobotSpecification<WarehouseRobo
 	@Override
 	public WarehouseRobot createRobot(WarehouseManager robots) {
 		WarehouseRobot robot = robots.createScenarioRobot(position, facing, delay);
+		robots.addRobot(robot);
 		robot.setIsAlone(isAlone);
 		return robot;
 	}

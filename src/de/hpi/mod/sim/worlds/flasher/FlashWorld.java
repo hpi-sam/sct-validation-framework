@@ -59,7 +59,7 @@ public class FlashWorld extends World {
 	}
 
 	@Override
-	public List<? extends Entity> getEntities() {
+	public List<? extends Entity> getEntitiesForDetectors() {
 		List<Entity> list = new ArrayList<>(1);
 		list.add(bulb);
 		list.add(starter);

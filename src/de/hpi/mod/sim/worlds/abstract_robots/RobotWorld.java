@@ -80,13 +80,13 @@ public abstract class RobotWorld extends GridWorld {
     }
     
     @Override
-    public List<? extends Entity> getEntities() {
+    public List<? extends Entity> getEntitiesForDetectors() {
         return getRobots();
     }
     
     @Override
     public void clearEntities() {
-    	getRobotGridManager().clearEntities();
+    	getRobotGridManager().clearRobots();
     }
     
     @Override
@@ -110,7 +110,7 @@ public abstract class RobotWorld extends GridWorld {
 
     @Override
     public void close() {
-        getRobotGridManager().close();
+        getRobotGridManager().closeRobots();
     }
     
     @Override

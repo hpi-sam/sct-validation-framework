@@ -116,8 +116,6 @@ public class RobotStatechartWrapper extends StateChartWrapper<RobotStatechart.St
     }
     
     public void newTarget() {
-
-		System.out.println(getStatemachine().isActive());
         getStatemachine().raiseNewTarget();
     }
 

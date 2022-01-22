@@ -78,8 +78,8 @@ public class TrafficLightWorld extends RobotWorld {
     }
     
     @Override
-    public List<? extends Entity> getEntities() {
-        List<? extends Entity> superList = super.getEntities();
+    public List<? extends Entity> getEntitiesForDetectors() {
+        List<? extends Entity> superList = super.getEntitiesForDetectors();
         List<TrafficLightWrapper> lights = getCrossRoadManager().getTrafficLights();
         List<Entity> list = new ArrayList<>(lights.size() + superList.size());
         list.addAll(superList);
