@@ -11,6 +11,7 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorData, StateChartEntity {
 
     private RobotStatechartWrapper control;
+	private boolean arrivedFlag;
 
     public SimpleRobot(int robotID, StreetNetworkManager gridManager, Position startPosition, Orientation startFacing,
             Position destination) {
@@ -28,15 +29,6 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
         }
     }
 
-    @Override
-    public void arrived() {
-    	System.out.println("ARRIVED");
-    	// #TODO: Link this to arrival points. Make sure false arrivals are caught.
-        super.arrived();
-        moveToIdlePosition();
-        getCrossRoadsManager().makeRobotIdle(this);
-    }
-
     /**
      * Handles state changes and refreshes the State-Machine
      */
@@ -45,18 +37,33 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
         control.onRefresh();
     }
 
-    private StreetNetworkManager getCrossRoadsManager() {
+    public StreetNetworkManager getCrossRoadsManager() {
         return (StreetNetworkManager) grid;
     }
 
 	public void setTargetAndNotify(Position position) {
 		this.setTarget(position);
+        setArrivedEventWasCalled(false);
 		this.control.newTarget();
 	}
 	
 	public void moveToIdlePosition() {
 	    setRobotTo(SimpleTrafficLightsConfiguration.getIdleRobotsPosition());
 	    setTarget(SimpleTrafficLightsConfiguration.getIdleRobotsPosition());
+	}
+	
+	@Override
+	public void arrived() {
+		super.arrived();
+		this.arrivedFlag = true;
+	}
+	
+	public void resetArrived() {
+		this.arrivedFlag = false;
+	}
+	
+	public boolean hasReportedArrive() {
+		return arrivedFlag;
 	}
 
     @Override
@@ -69,7 +76,7 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
     public String getTopStateName() {
         return "simpleTrafficLightRobot";
     }
-
+    
     @Override
     public void actionCompleted() {
         if(getCrossRoadsManager().isInFrontOfTrafficLight(pos())) {

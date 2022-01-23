@@ -13,18 +13,15 @@ public class DeparturePoint extends TransitPoint {
 	// Properties
 	private SimpleRobot startingRobot;
 	private ArrivalPoint targetforStartingRobot;
-	private boolean randomizeWitingTimes;
 
 	// State
 	private enum DeparturePointState {
 		NOT_OCCUPIED, WAITING_BEFORE_ROBOT_STARTS, WAITING_FOR_ROBOT_TO_LEAVE, WAITING_AFTER_ROBOT_LEFT
 	}
 	private DeparturePointState currentState = DeparturePointState.NOT_OCCUPIED;
-	private int countdownTimer = 0;
 
 	public DeparturePoint(int i, Position p, Orientation o, boolean r) {
-		super(i, p, o);
-		this.randomizeWitingTimes = r;
+		super(i, p, o, r);
 	}
 
 	public void addStartingRobot(SimpleRobot robot, ArrivalPoint arrival) {
@@ -55,14 +52,12 @@ public class DeparturePoint extends TransitPoint {
 	public void update(float delta) {
 		
 		// Decrement timer
-		if (this.countdownTimer > 0) {
-			this.countdownTimer -= delta;
-		}
+		updateCountdownTimer((int) delta);
 
 		// Update depending on current state and timer...
 
 		// Case 1: If currently in pause before task start AND timer has tun out....
-		if (this.currentState == DeparturePointState.WAITING_BEFORE_ROBOT_STARTS && this.countdownTimer <= 0) {
+		if (this.currentState == DeparturePointState.WAITING_BEFORE_ROBOT_STARTS && this.countdownTimerFinished()) {
 			// ...send start signal to robot and update starte.
 			this.startingRobot.setTargetAndNotify(this.targetforStartingRobot.getPosition());
 			this.currentState = DeparturePointState.WAITING_FOR_ROBOT_TO_LEAVE;
@@ -76,23 +71,9 @@ public class DeparturePoint extends TransitPoint {
 		}
 
 		// Case 3: If currently in pause before task start AND timer has tun out....
-		else if (this.currentState == DeparturePointState.WAITING_AFTER_ROBOT_LEFT && this.countdownTimer <= 0) {
+		else if (this.currentState == DeparturePointState.WAITING_AFTER_ROBOT_LEFT && this.countdownTimerFinished()) {
 			// ...update state and start timer.
 			this.currentState = DeparturePointState.NOT_OCCUPIED;
-		}
-	}
-	
-	private void startCountdownTimer() {
-		// Start Timer...
-		if(randomizeWitingTimes) {
-			// ...randomized (if so requested)...
-			this.countdownTimer = ThreadLocalRandom.current().nextInt(
-					SimpleTrafficLightsConfiguration.getDeparturePointMinimalWaitingTime(), 
-					SimpleTrafficLightsConfiguration.getDeparturePointMaximalWaitingTime()
-				);
-		}else {
-			// ...or not randomized (otherwise).
-			this.countdownTimer = SimpleTrafficLightsConfiguration.getDeparturePointNormalWaitingTime();
 		}
 	}
 

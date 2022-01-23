@@ -7,9 +7,13 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.ArrivalPoint;
 
 public class ArrivalPointSpecification extends TransitPointSpecification<ArrivalPoint> {
-    
+	
+	public ArrivalPointSpecification(int i, StreetNetworkManager g, boolean r) {
+		super(i, g, r);
+	}
+	
 	public ArrivalPointSpecification(int i, StreetNetworkManager g) {
-		super(i, g);
+		super(i, g, true);
 	}
 
     public Position getCoordinates() {
@@ -52,7 +56,7 @@ public class ArrivalPointSpecification extends TransitPointSpecification<Arrival
     
 	@Override
 	public ArrivalPoint createEntity() {
-		ArrivalPoint entity = new ArrivalPoint(this.id, getCoordinates(), getOrientation());
+		ArrivalPoint entity = new ArrivalPoint(this.id, getCoordinates(), getOrientation(), randomizeWitingTimes);
 		this.grid.addArrivalPoint(entity);
 	    return entity;
 	}

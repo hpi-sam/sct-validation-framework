@@ -11,10 +11,12 @@ public abstract class TransitPointSpecification<P extends TransitPoint> implemen
 	
 	protected int id;
     protected StreetNetworkManager grid;
-    
-	public TransitPointSpecification(int i, StreetNetworkManager g) {
+    protected boolean randomizeWitingTimes = true;
+	
+	public TransitPointSpecification(int i, StreetNetworkManager g, boolean r) {
         this.id = i;
         this.grid = g;
+        this.randomizeWitingTimes = r;
 	}
 	
     public Orientation getOrientation() {   	

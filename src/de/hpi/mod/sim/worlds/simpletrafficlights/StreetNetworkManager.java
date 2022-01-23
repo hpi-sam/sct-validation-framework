@@ -398,8 +398,12 @@ public class StreetNetworkManager extends RobotGridManager {
 		// Start Robots
 		startRobots();
 		
-		// Update (occupied) Departure Points to trigger timed robot starts.
+		// Update Departure Points to trigger timed robot starts.
 		for(DeparturePoint point : this.departurePoints)
+			point.update(delta);
+
+		// Update Arrival Points to trigger timed removal of robots from field.
+		for(ArrivalPoint point : this.arrivalPoints)
 			point.update(delta);
 		
 		// Update Traffic Lights
@@ -534,8 +538,6 @@ public class StreetNetworkManager extends RobotGridManager {
         
         Position robotPositionOneAhead = robotPosition.getModified(SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength(), robotOrientation);
 
-//		System.out.println(targetPosition+"vs"+robotPosition+" >>> "+Math.abs(targetPosition.getY() - robotPosition.getY())+" < "+SimpleTrafficLightsConfiguration.getCrossroadLength()+" || "+
-//    			Math.abs(targetPosition.getX() - robotPosition.getX())+" > "+SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength());
     	if(Math.abs(targetPosition.getY() - robotPosition.getY()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset() ||
     			Math.abs(targetPosition.getX() - robotPositionOneAhead.getX()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()){
     		// Robot Y and Target Y are (almost) equal => Robot is on same East-West-street as target
@@ -566,10 +568,8 @@ public class StreetNetworkManager extends RobotGridManager {
         	}
         }
         
-    	List<Direction> directions = targetOrientations.stream().map(orientation -> orientationToDirection(robotOrientation, orientation)).distinct().collect(Collectors.toList());
-        System.out.println(targetOrientations+" => "+ directions);
-        return directions;
-        
+    	// Turn Orientations to Directions
+    	return targetOrientations.stream().map(orientation -> orientationToDirection(robotOrientation, orientation)).distinct().collect(Collectors.toList());        
 	}
 	
 	@Override

@@ -223,8 +223,12 @@ public abstract class Robot implements Entity, IHighlightable {
 		return pos().fuzzyEquals(target);
 	}
 
+	public boolean isOn(Position t) {
+        return pos().equals(t);
+    }
+	
 	public boolean isOnTargetOrNearby() {
-        return pos().equals(target);
+        return isOn(target);
     }
     
     @Override
@@ -234,7 +238,7 @@ public abstract class Robot implements Entity, IHighlightable {
             && arrivementFullfilled()
             && (!requireUnloadingForTestCompletion || getDriveManager().hasUnloadedSomething());
     }
-    
+        
     public boolean arrivementFullfilled() {
         return !requireArrivedForTestCompletion || arrivedEventWasCalled;
     } 

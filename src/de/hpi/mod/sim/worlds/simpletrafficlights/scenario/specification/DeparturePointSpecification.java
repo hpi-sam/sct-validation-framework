@@ -8,16 +8,13 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
 
 
 public class DeparturePointSpecification extends TransitPointSpecification<DeparturePoint> {
-
-	boolean randomizeWitingTimes = true;
 	
 	public DeparturePointSpecification(int i, StreetNetworkManager g, boolean r) {
-		super(i, g);
-		this.randomizeWitingTimes = r;
+		super(i, g, r);
 	}
 	
 	public DeparturePointSpecification(int i, StreetNetworkManager g) {
-		super(i, g);		
+		super(i, g, true);		
 	}
 
     public Position getCoordinates() {

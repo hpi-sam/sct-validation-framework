@@ -1,8 +1,11 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights.entities;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
 
 public abstract class TransitPoint implements Entity {
 
@@ -12,12 +15,17 @@ public abstract class TransitPoint implements Entity {
 	// Coordinates + Orientation of the transit point
 	private Position position;
 	private Orientation orientation;
+
+	// Countdown properties
+	private boolean randomizeWitingTimes;
+	private int countdownTimer;
 	
 	
-	public TransitPoint(int i, Position p, Orientation o) {
+	public TransitPoint(int i, Position p, Orientation o, boolean r) {
 		this.id = i;
 		this.position = p;
 		this.orientation = o;
+		this.randomizeWitingTimes = r;
 	}
 	
 	public int getId() {
@@ -34,6 +42,29 @@ public abstract class TransitPoint implements Entity {
 
 	public Orientation getOrientation() {
 		return orientation;
+	}
+	
+	protected void startCountdownTimer() {
+		// Start Timer...
+		if(randomizeWitingTimes) {
+			// ...randomized (if so requested)...
+			this.countdownTimer = ThreadLocalRandom.current().nextInt(
+					SimpleTrafficLightsConfiguration.getDeparturePointMinimalWaitingTime(), 
+					SimpleTrafficLightsConfiguration.getDeparturePointMaximalWaitingTime()
+				);
+		}else {
+			// ...or not randomized (otherwise).
+			this.countdownTimer = SimpleTrafficLightsConfiguration.getDeparturePointNormalWaitingTime();
+		}
+	}
+
+	protected void updateCountdownTimer(int delta) {
+		if(this.countdownTimer > 0)
+			this.countdownTimer -= delta;
+	}
+	
+	protected boolean countdownTimerFinished() {
+		return  this.countdownTimer < 0;
 	}
 	
 }
