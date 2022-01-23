@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.worlds.abstract_grid;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The orientation an entity can face
@@ -75,8 +76,7 @@ public enum Orientation {
     }
     
     public static Orientation random() {
-    	Random random = new Random();
-    	return values()[random.nextInt(values().length)];
+    	return values()[ThreadLocalRandom.current().nextInt(values().length)];
     }
     
 }

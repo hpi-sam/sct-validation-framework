@@ -98,22 +98,26 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 
 	@Override
 	public boolean isTargetAhead() {
-		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.AHEAD);
+		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
+		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.AHEAD);
 	}
 
 	@Override
 	public boolean isTargetLeft() {
-		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.LEFT);
+		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
+		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.LEFT);
 	}
 
 	@Override
 	public boolean isTargetRight() {
-		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.RIGHT);
+		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
+		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.RIGHT);
 	}
 
 	@Override
 	public boolean isTargetBehind() {
-		return getCrossRoadsManager().getTargetDirections(pos()).contains(Direction.BEHIND);
+		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
+		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.BEHIND);
 	}
 
 }

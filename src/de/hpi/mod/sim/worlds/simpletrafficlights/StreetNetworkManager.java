@@ -2,18 +2,13 @@ package de.hpi.mod.sim.worlds.simpletrafficlights;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
@@ -533,8 +528,23 @@ public class StreetNetworkManager extends RobotGridManager {
 		return fittingTrafficLight.get().getTrafficLightState(pos);
 	}
 
-	public List<Direction> getTargetDirections(Position pos) {
-		return Collections.emptyList();
+	public List<Direction> getTargetDirections(Position currentPosition, Orientation currentOrientation, Position targetPosition) {
+		
+        List<Orientation> targetOrientations = new CopyOnWriteArrayList<>();
+        
+        if (currentPosition.getX() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset() > targetPosition.getX())
+        	targetOrientations.add(Orientation.WEST);
+        
+        if (currentPosition.getX() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset() < targetPosition.getX())
+        	targetOrientations.add(Orientation.EAST);
+        
+        if (currentPosition.getY() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset() > targetPosition.getY())
+        	targetOrientations.add(Orientation.SOUTH);
+        
+        if (currentPosition.getY() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset() < targetPosition.getY())
+        	targetOrientations.add(Orientation.NORTH);
+        
+        return targetOrientations.stream().map(orientation -> orientationToDirection(currentOrientation, orientation)).collect(Collectors.toList());
 	}
 
 	public boolean isInFrontOfTrafficLight(Position pos) {

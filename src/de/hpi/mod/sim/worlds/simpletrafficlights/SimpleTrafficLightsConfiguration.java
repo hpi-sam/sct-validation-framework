@@ -34,6 +34,9 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	private static final int DEFAULT_DEPARTURE_POINT_MINIMUM_WAITING_TIME = 1500;
 	private static final int DEFAULT_DEPARTURE_POINT_MAXIMUM_WAITING_TIME = 4000;
 	
+	// Defaults for Properties for worobt pathfinding
+	private static final int DEFAULT_TARGET_DIRECTION_OFFSET = 3;
+	
 	// Field properties that are dependant on settings.
 	private static int fieldBorderWidth = DEFAULT_FIELD_BORDER_WIDTH;
 	private static int streetLength = DEFAULT_STREET_LENGTH;
@@ -57,6 +60,9 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	private static int departurePointNormalWaitingTime = DEFAULT_DEPARTURE_POINT_AVERAGE_WAITING_TIME;
 	private static int departurePointMinimalWaitingTime = DEFAULT_DEPARTURE_POINT_MINIMUM_WAITING_TIME;
 	private static int departurePointMaximalWaitingTime = DEFAULT_DEPARTURE_POINT_MAXIMUM_WAITING_TIME;
+	
+	// Properties for worobt pathfinding
+	private static int targetDirectionOffset = DEFAULT_TARGET_DIRECTION_OFFSET;
 
 	// Getter Methods
 	public static Position getIdleRobotsPosition() {
@@ -157,5 +163,9 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 		}
 		fieldWidth = twoBordersAndOneStreet + (verticalStreets * oneStreetAndOneBorder);
 		fieldHeight = twoBordersAndOneStreet + (horizontalStreets * oneStreetAndOneBorder);
+	}
+
+	public static int getTargetDirectionOffset() {
+		return targetDirectionOffset;
 	}
 }
