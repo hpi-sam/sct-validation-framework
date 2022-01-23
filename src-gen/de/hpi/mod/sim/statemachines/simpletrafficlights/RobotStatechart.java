@@ -441,7 +441,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	}
 	
 	private boolean check_simpleTrafficLightRobot_driving__driving__choice_7_tr0_tr0() {
-		return sensors.operationCallback.trafficLightIsGreen();
+		return (sensors.operationCallback.trafficLightIsGreen() && !sensors.operationCallback.isObstacleAhead());
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving_tr0() {
