@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -80,6 +81,16 @@ public class StreetNetworkManager extends RobotGridManager {
     public void removeIdleRobot(SimpleRobot robot) {
     	this.idleRobots.remove(robot);
     }
+    
+    /**
+     * Clears all Robots from the list of active and inactive robots
+     */
+	@Override
+    public void clearRobots() {
+		super.clearRobots();
+		clearIdleRobots();
+    }
+    
 
     /**
      * Clears all Robots from the list of active robots
@@ -516,14 +527,17 @@ public class StreetNetworkManager extends RobotGridManager {
 	}
 
 	public TrafficLightState queryTrafficLight(Position pos) {
-		return TrafficLightState.TRAFFIC_LIGHT_GREEN;
+		Optional<TrafficLight> fittingTrafficLight = Arrays.stream(trafficLights).filter(tl -> tl.isWaitingPosition(pos)).findAny();
+		if(fittingTrafficLight.isEmpty())
+			return TrafficLightState.NO_TRAFFIC_LIGHT;
+		return fittingTrafficLight.get().getTrafficLightState(pos);
 	}
 
 	public List<Direction> getTargetDirections(Position pos) {
 		return Collections.emptyList();
 	}
 
-	public boolean isInFrontOfTrRafficLight(Position pos) {
+	public boolean isInFrontOfTrafficLight(Position pos) {
 		return Arrays.stream(trafficLights).anyMatch(tl -> tl.isWaitingPosition(pos));
 	}
 

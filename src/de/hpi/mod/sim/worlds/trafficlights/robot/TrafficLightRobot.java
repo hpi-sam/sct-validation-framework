@@ -78,7 +78,6 @@ public class TrafficLightRobot extends Robot implements IRobotData, IProcessor, 
 
     @Override
     public void actionCompleted() {
-        super.actionCompleted();
         drive.actionCompleted();
     }
     

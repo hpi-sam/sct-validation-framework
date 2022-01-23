@@ -146,4 +146,8 @@ public class DummyRobot extends Robot implements ISensor, IRobotActors, IProcess
     @Override
     protected void onRefresh() {
     }
+
+	@Override
+	public void actionCompleted() {		
+	}
 }

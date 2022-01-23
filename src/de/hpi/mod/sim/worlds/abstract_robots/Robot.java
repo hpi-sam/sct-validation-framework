@@ -329,8 +329,7 @@ public abstract class Robot implements Entity, IHighlightable {
     /**
      * Called once after the actors have performed a movement (turning, driving, unloading)
      */
-    public void actionCompleted() {
-    }
+    public  abstract void actionCompleted();
 
     public DriveManager getDriveManager() {
         return manager;

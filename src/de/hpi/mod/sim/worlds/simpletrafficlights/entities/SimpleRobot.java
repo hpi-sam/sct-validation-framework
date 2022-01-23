@@ -30,6 +30,7 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 
     @Override
     public void arrived() {
+    	System.out.println("ARRIVED");
     	// #TODO: Link this to arrival points. Make sure false arrivals are caught.
         super.arrived();
         moveToIdlePosition();
@@ -71,10 +72,11 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 
     @Override
     public void actionCompleted() {
-        super.actionCompleted();
-        if(getCrossRoadsManager().isInFrontOfTrRafficLight(pos()))
+        if(getCrossRoadsManager().isInFrontOfTrafficLight(pos())) {
         	control.actionCompletedAndTrafficLightObserved();
-        control.actionCompleted();
+        }else {
+        	control.actionCompleted();
+        }
     }
 
 	@Override
@@ -84,12 +86,14 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 
 	@Override
 	public boolean trafficLightIsGreen() {
-		return getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_GREEN;
+		boolean value = getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_GREEN;
+    	return value;
 	}
 
 	@Override
 	public boolean trafficLightIsRed() {
-		return getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_RED;
+		boolean value = getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_RED;
+    	return value;
 	}
 
 	@Override

@@ -395,7 +395,6 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     @Override
     public void actionCompleted() {
-        super.actionCompleted();
         drive.actionCompleted();
     }
 }
