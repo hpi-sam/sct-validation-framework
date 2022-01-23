@@ -109,25 +109,26 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	public enum State {
 		SIMPLETRAFFICLIGHTROBOT_IDLE,
 		SIMPLETRAFFICLIGHTROBOT_DRIVING,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_IN_FRONT_OF_TRAFFICLIGHT,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_FOR_FREE_PATH_,
-		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_WAITING_IN_FRONT_OF_TRAFFICLIGHT,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_ENTERING_CROSSROAD,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_DRIVING_FORWARD,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_NO_SAFE_DRIVING_NEEDED,
+		SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE,
 		$NULLSTATE$
 	};
 	
-	private final State[] stateVector = new State[1];
+	private final State[] stateVector = new State[2];
 	
 	private int nextStateIndex;
 	
@@ -135,7 +136,9 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	private final boolean[] timeEvents = new boolean[2];
 	
+	private Queue<Runnable> internalEventQueue = new LinkedList<Runnable>();
 	private Queue<Runnable> inEventQueue = new LinkedList<Runnable>();
+	private boolean driveForwardWhenSafe;
 	private boolean isExecuting;
 	
 	protected boolean getIsExecuting() {
@@ -150,11 +153,12 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		actors = new Actors();
 		sensors = new Sensors();
 		navigation = new Navigation();
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 2; i++) {
 			stateVector[i] = State.$NULLSTATE$;
 		}
 		
 		clearInEvents();
+		clearInternalEvents();
 		clearOutEvents();
 		
 		
@@ -196,7 +200,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	 * @see IStatemachine#isActive()
 	 */
 	public boolean isActive() {
-		return stateVector[0] != State.$NULLSTATE$;
+		return stateVector[0] != State.$NULLSTATE$||stateVector[1] != State.$NULLSTATE$;
 	}
 	
 	/** 
@@ -220,6 +224,10 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		actionCompletedAndTrafficLightObserved = false;
 		timeEvents[0] = false;
 		timeEvents[1] = false;
+	}
+	
+	private void clearInternalEvents() {
+		driveForwardWhenSafe = false;
 	}
 	
 	private void runCycle() {
@@ -248,41 +256,44 @@ public class RobotStatechart implements IStatemachine, ITimed {
 				case SIMPLETRAFFICLIGHTROBOT_IDLE:
 					simpleTrafficLightRobot_idle_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
-					simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3:
-					simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD:
-					simpleTrafficLightRobot_driving__driving_entering_crossroad_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_ENTERING_CROSSROAD:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_FOR_FREE_PATH_:
-					simpleTrafficLightRobot_driving__driving_waiting_for_free_path__react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_DRIVING_FORWARD:
+					simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_react(true);
 					break;
-				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD:
-					simpleTrafficLightRobot_driving__driving_driving_forward_react(true);
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_NO_SAFE_DRIVING_NEEDED:
+					simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed_react(true);
+					break;
+				case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE:
+					simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe_react(true);
 					break;
 				default:
 					// $NULLSTATE$
@@ -290,13 +301,18 @@ public class RobotStatechart implements IStatemachine, ITimed {
 			}
 			
 			clearInEvents();
+			clearInternalEvents();
 			nextEvent();
-		} while (((((newTarget || actionCompleted) || actionCompletedAndTrafficLightObserved) || timeEvents[0]) || timeEvents[1]));
+		} while ((((((newTarget || actionCompleted) || actionCompletedAndTrafficLightObserved) || driveForwardWhenSafe) || timeEvents[0]) || timeEvents[1]));
 		
 		isExecuting = false;
 	}
 	
 	protected void nextEvent() {
+		if(!internalEventQueue.isEmpty()) {
+			internalEventQueue.poll().run();
+			return;
+		}
 		if(!inEventQueue.isEmpty()) {
 			inEventQueue.poll().run();
 			return;
@@ -312,40 +328,42 @@ public class RobotStatechart implements IStatemachine, ITimed {
 			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_IDLE;
 		case SIMPLETRAFFICLIGHTROBOT_DRIVING:
 			return stateVector[0].ordinal() >= State.
-					SIMPLETRAFFICLIGHTROBOT_DRIVING.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD.ordinal();
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_IN_FRONT_OF_TRAFFICLIGHT;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD:
+					SIMPLETRAFFICLIGHTROBOT_DRIVING.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE.ordinal();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_WAITING_IN_FRONT_OF_TRAFFICLIGHT;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD:
 			return stateVector[0].ordinal() >= State.
-					SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1.ordinal();
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE:
+					SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1.ordinal();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE:
 			return stateVector[0].ordinal() >= State.
-					SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD.ordinal();
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE:
+					SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD.ordinal();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE:
 			return stateVector[0].ordinal() >= State.
-					SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3.ordinal();
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_FOR_FREE_PATH_:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_FOR_FREE_PATH_;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD:
-			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD;
+					SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE.ordinal()&& stateVector[0].ordinal() <= State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3.ordinal();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_ENTERING_CROSSROAD:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_ENTERING_CROSSROAD;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_DRIVING_FORWARD:
+			return stateVector[0] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_DRIVING_FORWARD;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_NO_SAFE_DRIVING_NEEDED:
+			return stateVector[1] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_NO_SAFE_DRIVING_NEEDED;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE:
+			return stateVector[1] == State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE;
 		default:
 			return false;
 		}
@@ -383,6 +401,14 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	public Navigation navigation() {
 		return navigation;
+	}
+	
+	protected void raiseDriveForwardWhenSafe() {
+		internalEventQueue.add(new Runnable() {
+			@Override public void run() {
+				driveForwardWhenSafe = true;
+			}
+		});
 	}
 	
 	private boolean newTarget;
@@ -424,24 +450,24 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		runCycle();
 	}
 	
-	private boolean check_simpleTrafficLightRobot_driving__driving__choice_0_tr0_tr0() {
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0_tr0() {
 		return navigation.operationCallback.isOnTarget();
 	}
 	
-	private boolean check_simpleTrafficLightRobot_driving__driving__choice_1_tr0_tr0() {
-		return sensors.operationCallback.isObstacleAhead();
-	}
-	
-	private boolean check_simpleTrafficLightRobot_driving__driving__choice_5_tr0_tr0() {
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0_tr0() {
 		return navigation.operationCallback.isTargetAhead();
 	}
 	
-	private boolean check_simpleTrafficLightRobot_driving__driving__choice_6_tr0_tr0() {
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0_tr0() {
 		return navigation.operationCallback.isTargetLeft();
 	}
 	
-	private boolean check_simpleTrafficLightRobot_driving__driving__choice_7_tr0_tr0() {
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0_tr0() {
 		return (sensors.operationCallback.trafficLightIsGreen() && !sensors.operationCallback.isObstacleAhead());
+	}
+	
+	private boolean check_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1_tr0_tr0() {
+		return sensors.operationCallback.isObstacleAhead();
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving_tr0() {
@@ -452,144 +478,146 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		react();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_tr0() {
-		exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead();
-		react_simpleTrafficLightRobot_driving__driving__choice_4();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_tr0() {
+		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_tr0() {
-		exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side();
-		react_simpleTrafficLightRobot_driving__driving__choice_3();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_tr0() {
+		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_tr0() {
-		exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side();
-		react_simpleTrafficLightRobot_driving__driving__choice_4();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_tr0() {
+		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_0_tr0() {
-		react_simpleTrafficLightRobot_driving__driving__exit_Default();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__exit_Default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_0_tr1() {
-		react_simpleTrafficLightRobot_driving__driving__choice_2();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr1() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_1_tr0() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_waiting_for_free_path__default();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1_tr0() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_1_tr1() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_driving_forward_default();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr0() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_2_tr0() {
-		react_simpleTrafficLightRobot_driving__driving__choice_1();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_3_tr0() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_driving_forward_default();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr1() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_4_tr0() {
-		react_simpleTrafficLightRobot_driving__driving__choice_3();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_5_tr0() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_default();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr1() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_5_tr1() {
-		react_simpleTrafficLightRobot_driving__driving__choice_6();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_6_tr0() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_default();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr1() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_6_tr1() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_default();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr0() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_7_tr0() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_entering_crossroad_default();
+	private void effect_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_0_tr0() {
+		react_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_7_tr1() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight_default();
+	private void effect_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1_tr0() {
+		enterSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__driving__choice_8_tr0() {
-		react_simpleTrafficLightRobot_driving__driving__choice_7();
+	private void effect_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1_tr1() {
+		actors.raiseDriveForward();
+		
+		enterSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed_default();
 	}
 	
 	/* Entry action for state 'waiting in front of trafficlight'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight() {
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight() {
 		timerService.setTimer(this, 0, 100, false);
 	}
 	
-	/* Entry action for state 'forward2'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2() {
-		actors.raiseDriveForward();
+	/* Entry action for state 'safe driving forward 2'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2() {
+		raiseDriveForwardWhenSafe();
 	}
 	
-	/* Entry action for state 'forward1'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1() {
-		actors.raiseDriveForward();
+	/* Entry action for state 'safe driving forward 1'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1() {
+		raiseDriveForwardWhenSafe();
 	}
 	
-	/* Entry action for state 'right'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right() {
+	/* Entry action for state 'turning right'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right() {
 		actors.raiseTurnRight();
 	}
 	
-	/* Entry action for state 'forward'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward() {
-		actors.raiseDriveForward();
+	/* Entry action for state 'safe driving forward'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward() {
+		raiseDriveForwardWhenSafe();
 	}
 	
-	/* Entry action for state 'forward1'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1() {
-		actors.raiseDriveForward();
+	/* Entry action for state 'safe driving forward 1'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1() {
+		raiseDriveForwardWhenSafe();
 	}
 	
-	/* Entry action for state 'left'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left() {
+	/* Entry action for state 'turning left'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left() {
 		actors.raiseTurnLeft();
 	}
 	
-	/* Entry action for state 'forward2'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2() {
-		actors.raiseDriveForward();
+	/* Entry action for state 'safe driving forward 2'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2() {
+		raiseDriveForwardWhenSafe();
 	}
 	
-	/* Entry action for state 'forward3'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3() {
-		actors.raiseDriveForward();
+	/* Entry action for state 'safe driving forward 3'. */
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3() {
+		raiseDriveForwardWhenSafe();
 	}
 	
 	/* Entry action for state 'entering crossroad'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_entering_crossroad() {
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad() {
 		actors.raiseDriveForward();
-	}
-	
-	/* Entry action for state 'waiting for free path '. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_() {
-		timerService.setTimer(this, 1, 100, false);
 	}
 	
 	/* Entry action for state 'driving forward'. */
-	private void entryAction_simpleTrafficLightRobot_driving__driving_driving_forward() {
-		actors.raiseDriveForward();
+	private void entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward() {
+		raiseDriveForwardWhenSafe();
+	}
+	
+	/* Entry action for state 'waiting until driving is safe'. */
+	private void entryAction_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe() {
+		timerService.setTimer(this, 1, 100, false);
 	}
 	
 	/* Exit action for state 'waiting in front of trafficlight'. */
-	private void exitAction_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight() {
+	private void exitAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight() {
 		timerService.unsetTimer(this, 0);
 	}
 	
-	/* Exit action for state 'waiting for free path '. */
-	private void exitAction_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_() {
+	/* Exit action for state 'waiting until driving is safe'. */
+	private void exitAction_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe() {
 		timerService.unsetTimer(this, 1);
 	}
 	
@@ -601,106 +629,113 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	/* 'default' enter sequence for state driving */
 	private void enterSequence_simpleTrafficLightRobot_driving_default() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_default();
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_default();
+		enterSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_default();
 	}
 	
 	/* 'default' enter sequence for state waiting in front of trafficlight */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_IN_FRONT_OF_TRAFFICLIGHT;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_WAITING_IN_FRONT_OF_TRAFFICLIGHT;
 	}
 	
 	/* 'default' enter sequence for state leaving crossroad ahead */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_default() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_default();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_default() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_default();
 	}
 	
-	/* 'default' enter sequence for state forward2 */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2();
+	/* 'default' enter sequence for state safe driving forward 2 */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2;
 	}
 	
-	/* 'default' enter sequence for state forward1 */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1();
+	/* 'default' enter sequence for state safe driving forward 1 */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1;
 	}
 	
 	/* 'default' enter sequence for state leaving crossroad to right side */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_default() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_default();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_default() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_default();
 	}
 	
-	/* 'default' enter sequence for state right */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+	/* 'default' enter sequence for state turning right */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT;
 	}
 	
-	/* 'default' enter sequence for state forward */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+	/* 'default' enter sequence for state safe driving forward */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD;
 	}
 	
 	/* 'default' enter sequence for state leaving crossroad to left side */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_default() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_default() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default();
 	}
 	
-	/* 'default' enter sequence for state forward1 */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+	/* 'default' enter sequence for state safe driving forward 1 */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1;
 	}
 	
-	/* 'default' enter sequence for state left */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+	/* 'default' enter sequence for state turning left */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT;
 	}
 	
-	/* 'default' enter sequence for state forward2 */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+	/* 'default' enter sequence for state safe driving forward 2 */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2;
 	}
 	
-	/* 'default' enter sequence for state forward3 */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+	/* 'default' enter sequence for state safe driving forward 3 */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3;
 	}
 	
 	/* 'default' enter sequence for state entering crossroad */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_entering_crossroad_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_entering_crossroad();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD;
-	}
-	
-	/* 'default' enter sequence for state waiting for free path  */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_waiting_for_free_path__default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_();
-		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_FOR_FREE_PATH_;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_ENTERING_CROSSROAD;
 	}
 	
 	/* 'default' enter sequence for state driving forward */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_driving_forward_default() {
-		entryAction_simpleTrafficLightRobot_driving__driving_driving_forward();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_default() {
+		entryAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward();
 		nextStateIndex = 0;
-		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD;
+		stateVector[0] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_DRIVING_FORWARD;
+	}
+	
+	/* 'default' enter sequence for state no safe driving needed */
+	private void enterSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed_default() {
+		nextStateIndex = 1;
+		stateVector[1] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_NO_SAFE_DRIVING_NEEDED;
+	}
+	
+	/* 'default' enter sequence for state waiting until driving is safe */
+	private void enterSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe_default() {
+		entryAction_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe();
+		nextStateIndex = 1;
+		stateVector[1] = State.SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE;
 	}
 	
 	/* 'default' enter sequence for region simpleTrafficLightRobot */
@@ -708,24 +743,29 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		react_simpleTrafficLightRobot__entry_Default();
 	}
 	
-	/* 'default' enter sequence for region _driving */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_default() {
-		react_simpleTrafficLightRobot_driving__driving__entry_Default();
+	/* 'default' enter sequence for region _primaryDrivingBehaviour */
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_default() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _leavingCrossroadAhead */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_default() {
-		react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead__entry_Default();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_default() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _onCrossroadDriveRight */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_default() {
-		react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_default() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default();
 	}
 	
 	/* 'default' enter sequence for region _onCrossroadDriveLeft */
-	private void enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default() {
-		react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default();
+	private void enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_default() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default();
+	}
+	
+	/* 'default' enter sequence for region _drivingBehaviourSafetyLoop */
+	private void enterSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_default() {
+		react_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__entry_Default();
 	}
 	
 	/* Default exit sequence for state idle */
@@ -736,98 +776,105 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	/* Default exit sequence for state driving */
 	private void exitSequence_simpleTrafficLightRobot_driving() {
-		exitSequence_simpleTrafficLightRobot_driving__driving();
+		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour();
+		exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop();
 	}
 	
 	/* Default exit sequence for state waiting in front of trafficlight */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight() {
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight();
+		exitAction_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight();
 	}
 	
 	/* Default exit sequence for state leaving crossroad ahead */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead() {
-		exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead();
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead() {
+		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead();
 	}
 	
-	/* Default exit sequence for state forward2 */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2() {
+	/* Default exit sequence for state safe driving forward 2 */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
-	/* Default exit sequence for state forward1 */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1() {
+	/* Default exit sequence for state safe driving forward 1 */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
 	/* Default exit sequence for state leaving crossroad to right side */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side() {
-		exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight();
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side() {
+		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight();
 	}
 	
-	/* Default exit sequence for state right */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right() {
+	/* Default exit sequence for state turning right */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
-	/* Default exit sequence for state forward */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward() {
+	/* Default exit sequence for state safe driving forward */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
 	/* Default exit sequence for state leaving crossroad to left side */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side() {
-		exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft();
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side() {
+		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft();
 	}
 	
-	/* Default exit sequence for state forward1 */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1() {
+	/* Default exit sequence for state safe driving forward 1 */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
-	/* Default exit sequence for state left */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left() {
+	/* Default exit sequence for state turning left */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
-	/* Default exit sequence for state forward2 */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2() {
+	/* Default exit sequence for state safe driving forward 2 */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
-	/* Default exit sequence for state forward3 */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3() {
+	/* Default exit sequence for state safe driving forward 3 */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 	}
 	
 	/* Default exit sequence for state entering crossroad */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_entering_crossroad() {
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
-	}
-	
-	/* Default exit sequence for state waiting for free path  */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_() {
-		nextStateIndex = 0;
-		stateVector[0] = State.$NULLSTATE$;
-		
-		exitAction_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_();
 	}
 	
 	/* Default exit sequence for state driving forward */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_driving_forward() {
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
+	}
+	
+	/* Default exit sequence for state no safe driving needed */
+	private void exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NULLSTATE$;
+	}
+	
+	/* Default exit sequence for state waiting until driving is safe */
+	private void exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe() {
+		nextStateIndex = 1;
+		stateVector[1] = State.$NULLSTATE$;
+		
+		exitAction_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe();
 	}
 	
 	/* Default exit sequence for region simpleTrafficLightRobot */
@@ -836,85 +883,90 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		case SIMPLETRAFFICLIGHTROBOT_IDLE:
 			exitSequence_simpleTrafficLightRobot_idle();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD:
-			exitSequence_simpleTrafficLightRobot_driving__driving_entering_crossroad();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_ENTERING_CROSSROAD:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_FOR_FREE_PATH_:
-			exitSequence_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_DRIVING_FORWARD:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD:
-			exitSequence_simpleTrafficLightRobot_driving__driving_driving_forward();
+		default:
+			break;
+		}
+		
+		switch (stateVector[1]) {
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_NO_SAFE_DRIVING_NEEDED:
+			exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed();
+			break;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE:
+			exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe();
 			break;
 		default:
 			break;
 		}
 	}
 	
-	/* Default exit sequence for region _driving */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving() {
+	/* Default exit sequence for region _primaryDrivingBehaviour */
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour() {
 		switch (stateVector[0]) {
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_WAITING_IN_FRONT_OF_TRAFFICLIGHT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_ENTERING_CROSSROAD:
-			exitSequence_simpleTrafficLightRobot_driving__driving_entering_crossroad();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_ENTERING_CROSSROAD:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_WAITING_FOR_FREE_PATH_:
-			exitSequence_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_();
-			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_DRIVING_FORWARD:
-			exitSequence_simpleTrafficLightRobot_driving__driving_driving_forward();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_DRIVING_FORWARD:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward();
 			break;
 		default:
 			break;
@@ -922,13 +974,13 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	}
 	
 	/* Default exit sequence for region _leavingCrossroadAhead */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead() {
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead() {
 		switch (stateVector[0]) {
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD2:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_2:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_FORWARD1:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_AHEAD__LEAVINGCROSSROADAHEAD_SAFE_DRIVING_FORWARD_1:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1();
 			break;
 		default:
 			break;
@@ -936,13 +988,13 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	}
 	
 	/* Default exit sequence for region _onCrossroadDriveRight */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight() {
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight() {
 		switch (stateVector[0]) {
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_RIGHT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_TURNING_RIGHT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_FORWARD:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_RIGHT_SIDE__ONCROSSROADDRIVERIGHT_SAFE_DRIVING_FORWARD:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward();
 			break;
 		default:
 			break;
@@ -950,19 +1002,33 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	}
 	
 	/* Default exit sequence for region _onCrossroadDriveLeft */
-	private void exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft() {
+	private void exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft() {
 		switch (stateVector[0]) {
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD1:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_1:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_LEFT:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_TURNING_LEFT:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD2:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_2:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2();
 			break;
-		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVING_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_FORWARD3:
-			exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__PRIMARYDRIVINGBEHAVIOUR_LEAVING_CROSSROAD_TO_LEFT_SIDE__ONCROSSROADDRIVELEFT_SAFE_DRIVING_FORWARD_3:
+			exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/* Default exit sequence for region _drivingBehaviourSafetyLoop */
+	private void exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop() {
+		switch (stateVector[1]) {
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_NO_SAFE_DRIVING_NEEDED:
+			exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed();
+			break;
+		case SIMPLETRAFFICLIGHTROBOT_DRIVING__DRIVINGBEHAVIOURSAFETYLOOP_WAITING_UNTIL_DRIVING_IS_SAFE:
+			exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe();
 			break;
 		default:
 			break;
@@ -970,68 +1036,68 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	}
 	
 	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_0() {
-		if (check_simpleTrafficLightRobot_driving__driving__choice_0_tr0_tr0()) {
-			effect_simpleTrafficLightRobot_driving__driving__choice_0_tr0();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0() {
+		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0_tr0()) {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0();
 		} else {
-			effect_simpleTrafficLightRobot_driving__driving__choice_0_tr1();
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_1() {
-		if (check_simpleTrafficLightRobot_driving__driving__choice_1_tr0_tr0()) {
-			effect_simpleTrafficLightRobot_driving__driving__choice_1_tr0();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1() {
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1_tr0();
+	}
+	
+	/* The reactions of state null. */
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2() {
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr0();
+	}
+	
+	/* The reactions of state null. */
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3() {
+		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0_tr0()) {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0();
 		} else {
-			effect_simpleTrafficLightRobot_driving__driving__choice_1_tr1();
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_2() {
-		effect_simpleTrafficLightRobot_driving__driving__choice_2_tr0();
-	}
-	
-	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_3() {
-		effect_simpleTrafficLightRobot_driving__driving__choice_3_tr0();
-	}
-	
-	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_4() {
-		effect_simpleTrafficLightRobot_driving__driving__choice_4_tr0();
-	}
-	
-	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_5() {
-		if (check_simpleTrafficLightRobot_driving__driving__choice_5_tr0_tr0()) {
-			effect_simpleTrafficLightRobot_driving__driving__choice_5_tr0();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4() {
+		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0_tr0()) {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0();
 		} else {
-			effect_simpleTrafficLightRobot_driving__driving__choice_5_tr1();
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_6() {
-		if (check_simpleTrafficLightRobot_driving__driving__choice_6_tr0_tr0()) {
-			effect_simpleTrafficLightRobot_driving__driving__choice_6_tr0();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5() {
+		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0_tr0()) {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0();
 		} else {
-			effect_simpleTrafficLightRobot_driving__driving__choice_6_tr1();
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr1();
 		}
 	}
 	
 	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_7() {
-		if (check_simpleTrafficLightRobot_driving__driving__choice_7_tr0_tr0()) {
-			effect_simpleTrafficLightRobot_driving__driving__choice_7_tr0();
-		} else {
-			effect_simpleTrafficLightRobot_driving__driving__choice_7_tr1();
-		}
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6() {
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr0();
 	}
 	
 	/* The reactions of state null. */
-	private void react_simpleTrafficLightRobot_driving__driving__choice_8() {
-		effect_simpleTrafficLightRobot_driving__driving__choice_8_tr0();
+	private void react_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_0() {
+		effect_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_0_tr0();
+	}
+	
+	/* The reactions of state null. */
+	private void react_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1() {
+		if (check_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1_tr0_tr0()) {
+			effect_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1_tr0();
+		} else {
+			effect_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1_tr1();
+		}
 	}
 	
 	/* Default react sequence for initial entry  */
@@ -1040,42 +1106,47 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead__entry_Default() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1_default();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead__entry_Default() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_default();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight__entry_Default() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default() {
-		enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_default();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft__entry_Default() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1_default();
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react_simpleTrafficLightRobot_driving__driving__entry_Default() {
-		react_simpleTrafficLightRobot_driving__driving__choice_2();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__entry_Default() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_default();
+	}
+	
+	/* Default react sequence for initial entry  */
+	private void react_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__entry_Default() {
+		enterSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed_default();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead__exit_Default() {
-		effect_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_tr0();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead__exit_Default() {
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default() {
-		effect_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_tr0();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default() {
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default() {
-		effect_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_tr0();
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default() {
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_tr0();
 	}
 	
 	/* The reactions of exit default. */
-	private void react_simpleTrafficLightRobot_driving__driving__exit_Default() {
+	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__exit_Default() {
 		effect_simpleTrafficLightRobot_driving_tr0();
 	}
 	
@@ -1113,248 +1184,247 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[0]) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_waiting_in_front_of_trafficlight();
-				react_simpleTrafficLightRobot_driving__driving__choice_8();
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6();
 			} else {
 				did_transition = false;
 			}
 		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving_react(try_transition);
-		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			did_transition = false;
 		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving_react(try_transition);
-		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2();
-				react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead__exit_Default();
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead__exit_Default();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_react(try_transition);
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward1();
-				enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead__leavingCrossroadAhead_forward2_default();
-				simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_react(false);
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_1();
+				enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead__leavingCrossroadAhead_safe_driving_forward_2_default();
+				simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_ahead_react(try_transition);
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			did_transition = false;
 		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving_react(try_transition);
-		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_right();
-				enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_default();
-				simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_react(false);
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_turning_right();
+				enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward_default();
+				simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_react(false);
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_react(try_transition);
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight_forward();
-				react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default();
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight_safe_driving_forward();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side__onCrossroadDriveRight__exit_Default();
 			} else {
 				did_transition = false;
 			}
 		}
 		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_right_side_react(try_transition);
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			did_transition = false;
 		}
+		return did_transition;
+	}
+	
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (actionCompleted) {
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_1();
+				enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left_default();
+				simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (actionCompleted) {
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_turning_left();
+				enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2_default();
+				simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (actionCompleted) {
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_2();
+				enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3_default();
+				simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(false);
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (actionCompleted) {
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft_safe_driving_forward_3();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default();
+			} else {
+				did_transition = false;
+			}
+		}
+		if (did_transition==false) {
+			did_transition = simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_react(try_transition);
+		}
+		return did_transition;
+	}
+	
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (actionCompleted) {
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3();
+			} else {
+				did_transition = false;
+			}
+		}
+		return did_transition;
+	}
+	
+	private boolean simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (actionCompleted) {
+				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0();
+			} else {
+				if (actionCompletedAndTrafficLightObserved) {
+					exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward();
+					react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6();
+				} else {
+					did_transition = false;
+				}
+			}
+		}
+		return did_transition;
+	}
+	
+	private boolean simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed_react(boolean try_transition) {
+		boolean did_transition = try_transition;
+		
+		if (try_transition) {
+			if (driveForwardWhenSafe) {
+				exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_no_safe_driving_needed();
+				react_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_0();
+			} else {
+				did_transition = false;
+			}
+		}
 		if (did_transition==false) {
 			did_transition = simpleTrafficLightRobot_driving_react(try_transition);
 		}
 		return did_transition;
 	}
 	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward1();
-				enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_default();
-				simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_left();
-				enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_default();
-				simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward2();
-				enterSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_default();
-				simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(false);
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft_forward3();
-				react_simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side__onCrossroadDriveLeft__exit_Default();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving__driving_leaving_crossroad_to_left_side_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean simpleTrafficLightRobot_driving__driving_entering_crossroad_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_entering_crossroad();
-				react_simpleTrafficLightRobot_driving__driving__choice_5();
-			} else {
-				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean simpleTrafficLightRobot_driving__driving_waiting_for_free_path__react(boolean try_transition) {
+	private boolean simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[1]) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_waiting_for_free_path_();
-				react_simpleTrafficLightRobot_driving__driving__choice_2();
+				exitSequence_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop_waiting_until_driving_is_safe();
+				react_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_0();
 			} else {
 				did_transition = false;
-			}
-		}
-		if (did_transition==false) {
-			did_transition = simpleTrafficLightRobot_driving_react(try_transition);
-		}
-		return did_transition;
-	}
-	
-	private boolean simpleTrafficLightRobot_driving__driving_driving_forward_react(boolean try_transition) {
-		boolean did_transition = try_transition;
-		
-		if (try_transition) {
-			if (actionCompleted) {
-				exitSequence_simpleTrafficLightRobot_driving__driving_driving_forward();
-				react_simpleTrafficLightRobot_driving__driving__choice_0();
-			} else {
-				if (actionCompletedAndTrafficLightObserved) {
-					exitSequence_simpleTrafficLightRobot_driving__driving_driving_forward();
-					react_simpleTrafficLightRobot_driving__driving__choice_8();
-				} else {
-					did_transition = false;
-				}
 			}
 		}
 		if (did_transition==false) {
