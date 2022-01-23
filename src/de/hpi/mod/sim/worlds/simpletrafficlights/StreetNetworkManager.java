@@ -359,42 +359,62 @@ public class StreetNetworkManager extends RobotGridManager {
 		
         List<Orientation> targetOrientations = new CopyOnWriteArrayList<>();
         
-        Position robotPositionOneAhead = robotPosition.getModified(SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength(), robotOrientation);
+        // If X coordinates of Robot and Target show a minimal difference then consider returning an EAST/WEST direction ... 
+        if(Math.abs(targetPosition.getX() - robotPosition.getX()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
+            
+        	// Decide which EAST/WEST direction it might be (there can only be one)
+	        Orientation targetEastWestOrientation = targetPosition.getX() < robotPosition.getX() ? Orientation.WEST : Orientation.EAST;
+	        
+	        // Calculate where robot would end up if it went 1 crossroad ahead in that direction
+	        Position robotPositionEastWestAhead = robotPosition.getModified(SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength(), targetEastWestOrientation);
 
-    	if(Math.abs(targetPosition.getY() - robotPosition.getY()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset() ||
-    			targetPosition.getX() != robotPositionOneAhead.getX()){
-    		// Robot Y and Target Y are (almost) equal => Robot is on same East-West-street as target
-    		// If Robot drove one crossroad ahead, X would still not be almost qual to target => Robot is NOT in danger of driving too far ahead
-    		// Either condition suffices to consider WEST or EAST as Target Direction
-    		    		
-    		if (targetPosition.getX() < robotPosition.getX() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
-    			// Target X is smaller than Robot X (-offset) => Target might be WEST
-    			targetOrientations.add(Orientation.WEST);
-        	}else if (targetPosition.getX() > robotPosition.getX() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
-        		// Target X is larger than Robot X (+offset) => Target might be EAST
-        		targetOrientations.add(Orientation.EAST);
-        	}
-        }
-	
-    	if(Math.abs(targetPosition.getX() - robotPosition.getX()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset() ||
-    			targetPosition.getY() != robotPositionOneAhead.getY()){
-    		// Robot X and Target X are (almost) equal => Robot is on same East-West-street as target
-    		// If Robot drove one crossroad ahead, Y would still not be almost qual to target => Robot is NOT in danger of driving too far ahead
-    		// Either condition suffices to consider NORTH or SOUTH as Target Direction
-    		    		
-    		if (targetPosition.getY() < robotPosition.getY() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
-    			// Target Y is smaller than Robot Y (-offset) => Target might be SOUTH
-    			targetOrientations.add(Orientation.SOUTH);
-        	}else if (targetPosition.getY() > robotPosition.getY() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
-        		// Target Y is larger than Robot X (+offset) => Target might be NORTH
-        		targetOrientations.add(Orientation.NORTH);
-        	}
+	        
+	        // Only add to final output if robot will not drive into a dead end.
+	        
+	        // Are Robot Y and Target Y (almost) equal? => Robot in on same East-West-lane as target target => Going ahead cannot be a dead end.
+	        if(Math.abs(targetPosition.getY() - robotPosition.getY()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset())
+	        	targetOrientations.add(targetEastWestOrientation);
+	        				
+	        // If robot drove one crossroad ahead, would there still be distance to target on X axis? => Cannot be a dead end (yet).
+	        else if(Math.abs(targetPosition.getX() - robotPositionEastWestAhead.getX()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) 
+	    		targetOrientations.add(targetEastWestOrientation);
+
+			// If robot drove one crossroad ahead, it be still inside the simulation boundaries with regards to the X axis? => Cannot be a dead end.
+	        else if(robotPositionEastWestAhead.getX() < SimpleTrafficLightsConfiguration.getFieldWidth() - SimpleTrafficLightsConfiguration.getFieldBorderWidth() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset() &&
+	        		robotPositionEastWestAhead.getX() > SimpleTrafficLightsConfiguration.getFieldBorderWidth() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) 
+						targetOrientations.add(targetEastWestOrientation);
+	    
         }
         
+        // If Y coordinates of Robot and Target show at least some difference then consider returning an NORTH/SOUTH direction ... 
+        if(Math.abs(targetPosition.getY() - robotPosition.getY()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
+            
+	        // Get potential NORTH/SOUTH direction (there can only be one)
+	        Orientation targetNorthSouthOrientation = targetPosition.getY() < robotPosition.getY() ? Orientation.SOUTH : Orientation.NORTH;
+	        
+	        // Calculate where robot would end up if it went 1 crossroad ahead in that direction
+	        Position robotPositionNorthSouthAhead = robotPosition.getModified(SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength(), targetNorthSouthOrientation);
+
+	        
+	        // Only add to final output if robot will not drive into a dead end.
+       		
+	        // Are Robot X and Target X (almost) equal? => Robot is on same North-South-lane as target. => Going ahead cannot be a dead end.
+	        if(Math.abs(targetPosition.getX() - robotPosition.getX()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset())
+	        	targetOrientations.add(targetNorthSouthOrientation);
+	       
+	        // If robot drove one crossroad ahead, will there there still be some distance to target on Y axis? => Step ahead is not leading to a dead end (yet).
+	        else if(Math.abs(targetPosition.getY() - robotPositionNorthSouthAhead.getY()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset())
+	        	targetOrientations.add(targetNorthSouthOrientation);
+			
+			// If robot drove one crossroad ahead, it be still inside the simulation boundaries with regards to the X axis? => Cannot be a dead end.
+	        else if(robotPositionNorthSouthAhead.getY() < SimpleTrafficLightsConfiguration.getFieldHeight() - SimpleTrafficLightsConfiguration.getFieldBorderWidth() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset() &&
+					robotPositionNorthSouthAhead.getY() > SimpleTrafficLightsConfiguration.getFieldBorderWidth() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) 
+				targetOrientations.add(targetNorthSouthOrientation);
+	        
+        }
+				
     	// Turn Orientations to Directions
-    	List<Direction> directions = targetOrientations.stream().map(orientation -> orientationToDirection(robotOrientation, orientation)).distinct().collect(Collectors.toList());
-    	System.out.println(targetOrientations + " => "+ directions);
-    	return directions;
+    	return targetOrientations.stream().distinct().map(orientation -> orientationToDirection(robotOrientation, orientation)).collect(Collectors.toList());
 	}
 	
 	@Override
