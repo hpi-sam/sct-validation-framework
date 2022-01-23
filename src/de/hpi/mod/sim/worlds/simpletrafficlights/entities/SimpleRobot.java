@@ -98,25 +98,21 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 
 	@Override
 	public boolean isTargetAhead() {
-		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
 		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.AHEAD);
 	}
 
 	@Override
 	public boolean isTargetLeft() {
-		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
 		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.LEFT);
 	}
 
 	@Override
 	public boolean isTargetRight() {
-		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
 		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.RIGHT);
 	}
 
 	@Override
 	public boolean isTargetBehind() {
-		System.out.println(getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()));
 		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.BEHIND);
 	}
 

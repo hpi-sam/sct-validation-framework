@@ -528,25 +528,88 @@ public class StreetNetworkManager extends RobotGridManager {
 		return fittingTrafficLight.get().getTrafficLightState(pos);
 	}
 
-	public List<Direction> getTargetDirections(Position currentPosition, Orientation currentOrientation, Position targetPosition) {
+	public List<Direction> getTargetDirections(Position robotPosition, Orientation robotOrientation, Position targetPosition) {
 		
         List<Orientation> targetOrientations = new CopyOnWriteArrayList<>();
         
-        if (currentPosition.getX() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset() > targetPosition.getX())
-        	targetOrientations.add(Orientation.WEST);
-        
-        if (currentPosition.getX() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset() < targetPosition.getX())
-        	targetOrientations.add(Orientation.EAST);
-        
-        if (currentPosition.getY() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset() > targetPosition.getY())
-        	targetOrientations.add(Orientation.SOUTH);
-        
-        if (currentPosition.getY() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset() < targetPosition.getY())
-        	targetOrientations.add(Orientation.NORTH);
-        
-        return targetOrientations.stream().map(orientation -> orientationToDirection(currentOrientation, orientation)).collect(Collectors.toList());
-	}
+        Position robotPositionOneAhead = robotPosition.getModified(SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength(), robotOrientation);
 
+//		System.out.println(targetPosition+"vs"+robotPosition+" >>> "+Math.abs(targetPosition.getY() - robotPosition.getY())+" < "+SimpleTrafficLightsConfiguration.getCrossroadLength()+" || "+
+//    			Math.abs(targetPosition.getX() - robotPosition.getX())+" > "+SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength());
+    	if(Math.abs(targetPosition.getY() - robotPosition.getY()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset() ||
+    			Math.abs(targetPosition.getX() - robotPositionOneAhead.getX()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()){
+    		// Robot Y and Target Y are (almost) equal => Robot is on same East-West-street as target
+    		// If Robot drove one crossroad ahead, X would still not be almost qual to target => Robot is NOT in danger of driving too far ahead
+    		// Either condition suffices to consider WEST or EAST as Target Direction
+    		    		
+    		if (targetPosition.getX() < robotPosition.getX() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
+    			// Target X is smaller than Robot X (-offset) => Target might be WEST
+    			targetOrientations.add(Orientation.WEST);
+        	}else if (targetPosition.getX() > robotPosition.getX() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
+        		// Target X is larger than Robot X (+offset) => Target might be EAST
+        		targetOrientations.add(Orientation.EAST);
+        	}
+        }
+	
+    	if(Math.abs(targetPosition.getX() - robotPosition.getX()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset() ||
+    			Math.abs(targetPosition.getY() - robotPositionOneAhead.getY()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()){
+    		// Robot X and Target X are (almost) equal => Robot is on same East-West-street as target
+    		// If Robot drove one crossroad ahead, Y would still not be almost qual to target => Robot is NOT in danger of driving too far ahead
+    		// Either condition suffices to consider NORTH or SOUTH as Target Direction
+    		    		
+    		if (targetPosition.getY() < robotPosition.getY() - SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
+    			// Target Y is smaller than Robot Y (-offset) => Target might be SOUTH
+    			targetOrientations.add(Orientation.SOUTH);
+        	}else if (targetPosition.getY() > robotPosition.getY() + SimpleTrafficLightsConfiguration.getTargetDirectionOffset()) {
+        		// Target Y is larger than Robot X (+offset) => Target might be NORTH
+        		targetOrientations.add(Orientation.NORTH);
+        	}
+        }
+        
+    	List<Direction> directions = targetOrientations.stream().map(orientation -> orientationToDirection(robotOrientation, orientation)).distinct().collect(Collectors.toList());
+        System.out.println(targetOrientations+" => "+ directions);
+        return directions;
+        
+	}
+	
+	@Override
+    public Direction orientationToDirection(Orientation facing, Orientation target) {
+		
+		// Initialize direction variable with the assumption that robot is facing north
+		Direction direction;
+		switch (target) {
+		case NORTH:
+			direction = Direction.AHEAD;
+			break;
+		case EAST:
+			direction = Direction.RIGHT;
+			break;
+		case SOUTH:
+			direction = Direction.BEHIND;
+			break;
+		default: // WEST
+			direction = Direction.LEFT;
+			break;
+		}
+		
+		// If actually facing NORTH then return direction.
+		if(facing == Orientation.NORTH)
+			return direction;
+
+		// Turn right. If facing EAST then return direction.
+		direction = direction.getTurnedRight();
+		if(facing == Orientation.EAST)
+			return direction;
+		
+		// Turn right. If facing SOUTH then return direction.
+		direction = direction.getTurnedRight();
+		if(facing == Orientation.SOUTH)
+			return direction;
+
+		// Turn right. Only WEST leftover, so return direction anyway.
+		return direction.getTurnedRight();
+    }
+    
 	public boolean isInFrontOfTrafficLight(Position pos) {
 		return Arrays.stream(trafficLights).anyMatch(tl -> tl.isWaitingPosition(pos));
 	}
