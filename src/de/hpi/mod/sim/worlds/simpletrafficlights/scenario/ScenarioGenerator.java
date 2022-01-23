@@ -27,7 +27,7 @@ public class ScenarioGenerator {
     	
     	SimpleTrafficLightsConfiguration.GridMode gridMode;
     
-		protected List<EntitySpecification<?>> getDefaultEnvironmentEntities(boolean randomizeWaitingTimes) {
+		private List<EntitySpecification<?>> createDefaultEnvironmentEntities(boolean randomizeWaitingTimes) {
 			// Initialize list
 			List<EntitySpecification<?>> list = new ArrayList<>();
 			
@@ -48,8 +48,12 @@ public class ScenarioGenerator {
 			return list; 
 		}
 		
-		protected List<EntitySpecification<?>> getDefaultEnvironmentEntities() {
-			return getDefaultEnvironmentEntities(true);
+		protected List<EntitySpecification<?>> createDefaultEnvironmentEntitiesWithRandomizedTimes() {
+			return createDefaultEnvironmentEntities(true);
+		}
+		
+		protected List<EntitySpecification<?>> createDefaultEnvironmentEntitiesWithoutRandomizedTimes() {
+			return createDefaultEnvironmentEntities(false);
 		}
 		
         @Override
@@ -72,7 +76,7 @@ public class ScenarioGenerator {
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
-			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
 			return list;
 		}
 	}
@@ -86,7 +90,7 @@ public class ScenarioGenerator {
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
-			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
 			list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
 		}
@@ -101,7 +105,7 @@ public class ScenarioGenerator {
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
-			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
 			list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
 		}
@@ -116,7 +120,7 @@ public class ScenarioGenerator {
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
-			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
 			for(int i = 0 ; i<SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() ; i++)
 				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
@@ -132,7 +136,7 @@ public class ScenarioGenerator {
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
-			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
 			for(int i = 0 ; i<SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()*(SimpleTrafficLightsConfiguration.getStreetLength()-1) ; i++)
 				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
@@ -148,7 +152,7 @@ public class ScenarioGenerator {
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
-			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities(false);
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithoutRandomizedTimes();
 			for(int i = 0 ; i<SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()*SimpleTrafficLightsConfiguration.getStreetLength()*2 ; i++)
 				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
@@ -164,7 +168,7 @@ public class ScenarioGenerator {
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
-			List<EntitySpecification<?>> list = getDefaultEnvironmentEntities();
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithoutRandomizedTimes();
 			for(int i = 0 ; i<SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()*SimpleTrafficLightsConfiguration.getStreetLength()*(SimpleTrafficLightsConfiguration.getVerticalStreets()+SimpleTrafficLightsConfiguration.getHorizontalStreets()) ; i++)
 				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;

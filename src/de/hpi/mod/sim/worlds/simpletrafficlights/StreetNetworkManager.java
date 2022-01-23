@@ -31,11 +31,9 @@ import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TransitPoint;
  */
 public class StreetNetworkManager extends RobotGridManager {
 	
-	private TrafficLight[] trafficLights;
-
-    private ArrivalPoint[] arrivalPoints;
-    
-    private DeparturePoint[] departurePoints;
+	private List<TrafficLight> trafficLights;
+    private List<ArrivalPoint> arrivalPoints;
+    private List<DeparturePoint> departurePoints;
     
     List<SimpleRobot> idleRobots = new CopyOnWriteArrayList<>();
 
@@ -99,16 +97,13 @@ public class StreetNetworkManager extends RobotGridManager {
 
 
     public void resetFieldDataStructures() {
-    	this.arrivalPoints = new ArrivalPoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
-    	this.departurePoints = new DeparturePoint[SimpleTrafficLightsConfiguration.getNumberOfTransferPoints()];
-    	this.trafficLights = new TrafficLight[SimpleTrafficLightsConfiguration.getNumberOfCrossroads()];
+    	this.arrivalPoints = new CopyOnWriteArrayList();
+    	this.departurePoints = new CopyOnWriteArrayList();
+    	this.trafficLights = new CopyOnWriteArrayList();
     }
     
     public TrafficLight getLightForCrossroad(int x, int y) {
-        int index = y * SimpleTrafficLightsConfiguration.getVerticalStreets() + x;
-        if (trafficLights.length > index)
-            return trafficLights[index];
-        return null;
+    	return trafficLights.stream().filter(light -> light.getRelativePosition().is(new Position(x,y))).findFirst().get();
     }
 
     /**
@@ -205,174 +200,10 @@ public class StreetNetworkManager extends RobotGridManager {
     public boolean isBlockedByMap(Position position) {
         return cellType(position) == CellType.WALL;
     }
-
-    /**
-     * Returns the direction the target is pointing to
-     * 
-     * @param facing   The orientation the robot is looking at
-     * @param position The position of the robot
-     * @param target   The position of the target
-     * 
-     * @return the direction
-     */
-    @Override
-    public Direction targetDirection(Orientation facing, Position current, Position target) {
-        int currentCol = current.getX() / 3;
-        int currentRow = current.getY() / 3;
-        int targetCol = (target.getX() - 1) / 3;
-        int targetRow = (target.getY() - 1) / 3;
-        Orientation targetOrientation;
-
-        if (currentCol < targetCol)
-            targetOrientation = Orientation.EAST;
-        else if (currentCol > targetCol)
-            targetOrientation = Orientation.WEST;
-        else if (currentRow < targetRow)
-            targetOrientation = Orientation.NORTH;
-        else if (currentRow > targetRow)
-            targetOrientation = Orientation.SOUTH;
-        else {
-            if (current.getX() < target.getX())
-                targetOrientation = Orientation.EAST;
-            else if (current.getX() > target.getX())
-                targetOrientation = Orientation.WEST;
-            else if (current.getY() < target.getY())
-                targetOrientation = Orientation.NORTH;
-            else if (current.getY() > target.getY())
-                targetOrientation = Orientation.SOUTH;
-            else
-                targetOrientation = Orientation.random();
-        }
-            return orientationToDirection(facing, targetOrientation);
-    }
     
-    /**
-     * Returns the waypoint neighboring the given crossroad in the given side.<br>
-     * 
-     * @param cross   The bottom left cell of the crossroad
-     * @param side    The side of the waypoint
-     * @param onCross Switches Modes. If true all outgoing waypoints of the
-     *                crossroad are considered, if false all incoming ones.
-     * @return The waypoint
-     */
-    public Position getWaypointOfCrossroad(Position cross, Orientation side, boolean onCross) {
-        switch (side) {
-            case NORTH:
-                return new Position(onCross ? cross.getX() + 1 : cross.getX(), cross.getY() + 2);
-            case EAST:
-                return new Position(cross.getX() + 2, onCross ? cross.getY() : cross.getY() + 1);
-            case SOUTH:
-                return new Position(onCross ? cross.getX() : cross.getX() + 1, cross.getY() - 1);
-            case WEST:
-                return new Position(cross.getX() - 1, onCross ? cross.getY() + 1 : cross.getY());
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * Returns the left bottom cell of the crossroad which the position and facing
-     * points to.<br>
-     * Position has to be on a waypoint.
-     * 
-     * @param facing   The orientation the Robot is facing
-     * @param position The position of the waypoint
-     * @return left bottom cell of the crossroad
-     */
-    public Position getSouthwestCornerOfUpcomingCrossroad(Orientation facing, Position position) {
-        Position next = Position.nextPositionInOrientation(facing, position);
-        return getSouthwestCornerOfCrossroad(next);
-    }
-
-    /**
-     * Returns the "lower left" cell of the crossroad to which the position points
-     * relative to the current orientation. Only returns a valid Position if the
-     * given position is on a crossroad
-     * 
-     * @param facing   The orientation the Robot is facing
-     * @param position A Position on a Crossroad
-     * @return The (relative) lower left cell of the Crossroad
-     */
-    public Position getLowerLeftCornerOfCrossroad(Orientation facing, Position position) {
-        Position crossroad_absolute = getSouthwestCornerOfCrossroad(position);
-        if (facing == Orientation.NORTH) {
-            return new Position(crossroad_absolute.getX(), crossroad_absolute.getY());
-        } else if (facing == Orientation.EAST) {
-            return new Position(crossroad_absolute.getX(), crossroad_absolute.getY() + 1);
-        } else if (facing == Orientation.WEST) {
-            return new Position(crossroad_absolute.getX() + 1, crossroad_absolute.getY());
-        } else {
-            return new Position(crossroad_absolute.getX() + 1, crossroad_absolute.getY() + 1);
-        }
-    }
-
-    /**
-     * Returns the left bottom cell of the crossroad to which the position points.
-     * Only returns a valid Position if the given position is on a crossroad
-     * 
-     * @param position A Position on a Crossroad
-     * @return The left bottom cell of the Crossroad
-     */
-    public Position getSouthwestCornerOfCrossroad(Position position) {
-        int x = position.getX() - (Math.floorMod(position.getX(), 3) - 1);
-        int y = (position.getY() / 3) * 3 + 1;
-        return new Position(x, y);
-    }
-
-    /**
-     * Returns the southwest (i.e. bottom left) cell of the waipint that the
-     * position is on. Only returns a valid Position if the given position is on a
-     * waypoint
-     * 
-     * @param position A Position on a Crossroad
-     * @return The left bottom cell of the Crossroad
-     */
-    public Position getSouthwestCornerOfWaypoint(Position position) {
-        int x = position.getX(), y = position.getY();
-        if (Math.floorMod(x, 3) == 2 && y % 3 == 0) {
-            x = x - 1;
-        } else if (x % 3 == 0 && Math.floorMod(y, 3) == 2) {
-            y = y - 1;
-        }
-        return new Position(x, y);
-    }
-
-    /**
-     * All 4 position of cells in a Crossroad
-     * 
-     * @param any position on a crossroad
-     * @return Cells in Crossroad
-     */
-    List<Position> getCellsOfCrossroad(Position position) {
-        return getCellsOfCrossroad(position, new ArrayList<Position>());
-    }
-
-    /**
-     * All 4 position of cells in a Crossroad with additional list of positions to
-     * ignore
-     * 
-     * @param position        a position on a corssroad
-     * @param ignorePositions Positions to ignore in output
-     * @return Cells in Crossroad
-     */
-    List<Position> getCellsOfCrossroad(Position position, ArrayList<Position> ignorePositions) {
-        // get the reference position of the corssroad (i.e. the southwest corner).
-        Position crossroad = getSouthwestCornerOfCrossroad(position);
-        // Get all four positions that should belong to a croassroad
-        List<Position> cells = new ArrayList<Position>(
-                Arrays.asList(crossroad, new Position(crossroad.getX() + 1, crossroad.getY()),
-                        new Position(crossroad.getX() + 1, crossroad.getY() + 1),
-                        new Position(crossroad.getX(), crossroad.getY() + 1)));
-
-        // Remove any of the corssroad positions that are to be ignored
-        cells.removeAll(ignorePositions);
-
-        // Return filtered results
-        return cells;
-    }
     
 	public List<TrafficLight> getTraffigLights() {
-		return Arrays.stream(trafficLights).filter(x -> x != null).collect(Collectors.toList());
+		return trafficLights;
 	}
 	
     public List<Entity> getNonRobotEntitiesForDetectors() {    	
@@ -415,24 +246,16 @@ public class StreetNetworkManager extends RobotGridManager {
 
 
     public void addTrafficLight(TrafficLight trafficLight) {
-        Position relativePosition = trafficLight.getRelativePosition(); 
-        int index = relativePosition.getY() * SimpleTrafficLightsConfiguration.getVerticalStreets() + relativePosition.getX();
-        if(trafficLights.length > index)
-        	trafficLights[index] = trafficLight;
+        trafficLights.add(trafficLight);
     }
 
 
 	public void addArrivalPoint(ArrivalPoint point) {		
-        if(arrivalPoints.length > point.getId()) {
-        	arrivalPoints[point.getId()] = point;
-        }
-        	
+        arrivalPoints.add(point);	
 	}   
 
 	public void addDeparturePoint(DeparturePoint point) {	
-        if(departurePoints.length > point.getId()) {
-        	departurePoints[point.getId()] = point;
-        }
+		departurePoints.add(point);
 	}   
     
     public static Orientation getSuitableRobotOrientationForPosition(Position pos) {
@@ -485,17 +308,17 @@ public class StreetNetworkManager extends RobotGridManager {
     }
     
     public boolean hasEmptyDeparturePoints() {
-    	return Arrays.stream(departurePoints).anyMatch(departurePoint -> departurePoint.isNotOccupied());
+    	return departurePoints.stream().anyMatch(departurePoint -> departurePoint.isNotOccupied());
     }
     
     public DeparturePoint getNextEmptyDeparturePoint() {
-    	List<DeparturePoint> emtpyDeparturePoints = Arrays.stream(departurePoints).filter(departurePoint -> departurePoint.isNotOccupied()).collect(Collectors.toList());;
+    	List<DeparturePoint> emtpyDeparturePoints = departurePoints.stream().filter(departurePoint -> departurePoint.isNotOccupied()).collect(Collectors.toList());;
     	return emtpyDeparturePoints.get(ThreadLocalRandom.current().nextInt(emtpyDeparturePoints.size()));
     }
     
     public ArrivalPoint getNextRandomDestination(List<TransitPoint> forbiddenNeighbours) {
     	// Get all potential destinations
-    	List<ArrivalPoint> emptiestArrivalPoints = Arrays.stream(arrivalPoints)
+    	List<ArrivalPoint> emptiestArrivalPoints = arrivalPoints.stream()
     			.filter(arrivalPoint -> forbiddenNeighbours.stream().noneMatch(neighbour -> neighbour.isNextTo(arrivalPoint)))
     			.collect(Collectors.toList());
     	    	
@@ -510,7 +333,7 @@ public class StreetNetworkManager extends RobotGridManager {
     	
     	// Randomly select
     	int index = (int) (Math.abs(ThreadLocalRandom.current().nextGaussian() * SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() / 4 ));    	
-	    return emptiestArrivalPoints.get(index % SimpleTrafficLightsConfiguration.getNumberOfTransferPoints());
+	    return emptiestArrivalPoints.get(index % arrivalPoints.size());
     }
     
     public ArrivalPoint getNextRandomDestination() {
@@ -526,7 +349,7 @@ public class StreetNetworkManager extends RobotGridManager {
 	}
 
 	public TrafficLightState queryTrafficLight(Position pos) {
-		Optional<TrafficLight> fittingTrafficLight = Arrays.stream(trafficLights).filter(tl -> tl.isWaitingPosition(pos)).findAny();
+		Optional<TrafficLight> fittingTrafficLight = trafficLights.stream().filter(tl -> tl.isWaitingPosition(pos)).findAny();
 		if(fittingTrafficLight.isEmpty())
 			return TrafficLightState.NO_TRAFFIC_LIGHT;
 		return fittingTrafficLight.get().getTrafficLightState(pos);
@@ -539,7 +362,7 @@ public class StreetNetworkManager extends RobotGridManager {
         Position robotPositionOneAhead = robotPosition.getModified(SimpleTrafficLightsConfiguration.getStreetLength()+SimpleTrafficLightsConfiguration.getCrossroadLength(), robotOrientation);
 
     	if(Math.abs(targetPosition.getY() - robotPosition.getY()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset() ||
-    			Math.abs(targetPosition.getX() - robotPositionOneAhead.getX()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()){
+    			targetPosition.getX() != robotPositionOneAhead.getX()){
     		// Robot Y and Target Y are (almost) equal => Robot is on same East-West-street as target
     		// If Robot drove one crossroad ahead, X would still not be almost qual to target => Robot is NOT in danger of driving too far ahead
     		// Either condition suffices to consider WEST or EAST as Target Direction
@@ -554,7 +377,7 @@ public class StreetNetworkManager extends RobotGridManager {
         }
 	
     	if(Math.abs(targetPosition.getX() - robotPosition.getX()) <= SimpleTrafficLightsConfiguration.getTargetDirectionOffset() ||
-    			Math.abs(targetPosition.getY() - robotPositionOneAhead.getY()) > SimpleTrafficLightsConfiguration.getTargetDirectionOffset()){
+    			targetPosition.getY() != robotPositionOneAhead.getY()){
     		// Robot X and Target X are (almost) equal => Robot is on same East-West-street as target
     		// If Robot drove one crossroad ahead, Y would still not be almost qual to target => Robot is NOT in danger of driving too far ahead
     		// Either condition suffices to consider NORTH or SOUTH as Target Direction
@@ -569,7 +392,9 @@ public class StreetNetworkManager extends RobotGridManager {
         }
         
     	// Turn Orientations to Directions
-    	return targetOrientations.stream().map(orientation -> orientationToDirection(robotOrientation, orientation)).distinct().collect(Collectors.toList());        
+    	List<Direction> directions = targetOrientations.stream().map(orientation -> orientationToDirection(robotOrientation, orientation)).distinct().collect(Collectors.toList());
+    	System.out.println(targetOrientations + " => "+ directions);
+    	return directions;
 	}
 	
 	@Override
@@ -611,7 +436,7 @@ public class StreetNetworkManager extends RobotGridManager {
     }
     
 	public boolean isInFrontOfTrafficLight(Position pos) {
-		return Arrays.stream(trafficLights).anyMatch(tl -> tl.isWaitingPosition(pos));
+		return trafficLights.stream().anyMatch(tl -> tl.isWaitingPosition(pos));
 	}
 
 }

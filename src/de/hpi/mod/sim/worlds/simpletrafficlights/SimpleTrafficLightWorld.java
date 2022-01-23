@@ -13,9 +13,9 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.ScenarioGenerator;
+import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.TestCaseGenerator;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
@@ -55,8 +55,8 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 
 	@Override
 	public Map<String, List<TestScenario>> getTestGroups() {
-		// TODO Add tests
-		return new java.util.Hashtable<>();
+		return new TestCaseGenerator(this).getAllTestCases();
+		// return new java.util.Hashtable<>();
 	}
 
 	@Override

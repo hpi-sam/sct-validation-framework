@@ -1,112 +1,61 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights.scenario;
-// package de.hpi.mod.sim.worlds.traffic_light_robots.scenario;
 
-// import java.util.ArrayList;
-// import java.util.Arrays;
-// import java.util.LinkedHashMap;
-// import java.util.List;
-// import java.util.Map;
-// import java.util.Random;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.LinkedHashMap;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Random;
 
-// import de.hpi.mod.sim.core.scenario.EntitySpecification;
-// import de.hpi.mod.sim.core.scenario.TestScenario;
-// import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
-// import de.hpi.mod.sim.worlds.abstract_grid.Position;
-// import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
-// import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot.RobotState;
+import de.hpi.mod.sim.core.World;
+import de.hpi.mod.sim.core.scenario.EntitySpecification;
+ import de.hpi.mod.sim.core.scenario.TestScenario;
+ import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
+ import de.hpi.mod.sim.worlds.abstract_grid.Position;
+ import de.hpi.mod.sim.worlds.infinitewarehouse.environment.WarehouseManager;
+ import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot.RobotState;
+import de.hpi.mod.sim.worlds.infinitewarehouse.scenario.TestRobotSpecification;
+import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightWorld;
+import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
+import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration.GridMode;
+import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.DeparturePoint;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.RelativePosition;
+import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.ArrivalPointSpecification;
+import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.DeparturePointSpecification;
+import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.SimpleRobotSpecification;
+import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.specification.TrafficLightSpecification;
 
-// public class TestCaseGenerator {
+ public class TestCaseGenerator {
+
+    private SimpleTrafficLightWorld world;
+
+	public TestCaseGenerator(SimpleTrafficLightWorld world) {
+        this.world = world;
+    }
 	
-// 	private static Random rand = new Random();
-
-	
-//     public static Map<String, List<TestScenario>> getAllTestCases(WarehouseManager robots) {
-//         Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
-// 		testGroups.put("I. Driving in Station", generateStationTests(robots));
-//         testGroups.put("II. Driving at Crossroads", generateSimpleCrossroadTests(robots));
+     public Map<String, List<TestScenario>> getAllTestCases() {
+         Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
+ 		
+         testGroups.put("II. Complete Routes Tests", generateCompleteRouteTests(this.world.getStreetNetworkManager()));
 //         testGroups.put("III. Crossroad Conflicts", generateCrossroadConflicTests(robots));
 //         testGroups.put("IV. Unloading Correctly", generateUnloadingTests(robots));
 //         testGroups.put("V. Combined Drive Routine", generateCompleteDriveRoutineTests(robots));
-//         // testGroups.put("VI. Bonus: Deadlock tests", generateDeadlockTests());
-//         return testGroups;
-//     }
+         // testGroups.put("VI. Bonus: Deadlock tests", generateDeadlockTests());
+         return testGroups;
+     }
 
-//     // private List<TestScenario> generateDeadlockTests() {
-//     // List<TestScenario> testScenarios = new ArrayList<>();
-//     // List<NewRobot> newRobots = new ArrayList<>();
-//     // List<Position> targetsRobotOne = new ArrayList<>();
-//     // List<Position> targetsRobotTwo = new ArrayList<>();
-//     // targetsRobotOne.add(new Position(1,0));
-//     // targetsRobotTwo.add(new Position(3,4));
-//     // newRobots.add(new NewTestRobot(new Position(3, 4), RobotState.TO_UNLOADING,
-//     // Orientation.EAST, targetsRobotOne));
-//     // newRobots.add(new NewTestRobot(new Position(3, 5), RobotState.TO_UNLOADING,
-//     // Orientation.WEST, targetsRobotTwo));
-//     // testScenarios.add(new ConcreteTestScenario("Opposite Robots", "Opposite
-//     // Robots", newRobots));
-//     //
-//     // testScenarios.add(new ConcreteTestScenario("4 Robots deadlock", "2 robots at
-//     // crossroad and 2 robots waiting on waypoint creates Deadlock", newRobots));
-//     //
-//     // testScenarios.add(new ConcreteTestScenario("8 Robots deadlock", "2 robots at
-//     // crossroad and 6 robots waiting on waypoint creates Deadlock", newRobots));
-//     //
-//     // testScenarios.add(new ConcreteTestScenario("12 Robots deadlock", "2 robots at
-//     // crossroad and 10 robots waiting on waypoint creates Deadlock", newRobots));
-//     //
-//     // //Etc.
-//     // return testScenarios;
-//     // }
+      private List<TestScenario> generateCompleteRouteTests(StreetNetworkManager manager) {
 
-//     private static List<TestScenario> generateUnloadingTests(WarehouseManager robots) {
-
-//         // Start list of test scenarios
-//         List<TestScenario> testScenarios = new ArrayList<>();
-//         TestRobotSpecification testRobot;
+         // Start list of test scenarios for this group
+         List<TestScenario> testScenarios = new ArrayList<>();
+         
+         // Define Variables
+         SimpleRobotSpecification testRobot;
+         ArrivalPointSpecification testArrivalPoint;
+         DeparturePointSpecification testDeparturePoint;
 
 //         // Unloading test where robots starts at a station
-
-//         testRobot = new TestRobotSpecification(robots, p(2, 0), RobotState.TO_LOADING, Orientation.NORTH, p_list(p(0, 9)));
-//         testRobot.setRequireArrived(true);
-//         testRobot.setFuzzyTargetCheck(true);
-//         testRobot.setUnloadingRequired(true);
-//         testScenarios.add(new ConcreteTestScenario("Unloading from station 1",
-//                 "Start at a station, drive to unloding shaft, unload there and report. (Version 1)",
-//                 r_list(testRobot)));
-
-//         testRobot = new TestRobotSpecification(robots, p(2, 0), RobotState.TO_LOADING, Orientation.NORTH, p_list(p(3, 9)));
-//         testRobot.setRequireArrived(true);
-//         testRobot.setFuzzyTargetCheck(true);
-//         testRobot.setUnloadingRequired(true);
-//         testScenarios.add(new ConcreteTestScenario("Unloading from station 2",
-//                 "Start at a station, drive to unloding shaft, unload there and report. (Version 2)",
-//                 r_list(testRobot)));
-
-//         testRobot = new TestRobotSpecification(robots, p(2, 0), RobotState.TO_LOADING, Orientation.NORTH, p_list(p(6, 9)));
-//         testRobot.setRequireArrived(true);
-//         testRobot.setFuzzyTargetCheck(true);
-//         testRobot.setUnloadingRequired(true);
-//         testScenarios.add(new ConcreteTestScenario("Unloading from station 3",
-//                 "Start at a station, drive to unloding shaft, unload there and report. (Version 3)",
-//                 r_list(testRobot)));
-
-//         // Unloading test where robots starts on any waypoint
-
-//         testRobot = new TestRobotSpecification(robots, p(-3, 10), RobotState.TO_LOADING, Orientation.EAST, p_list(p(6, 9)));
-//         testRobot.setRequireArrived(true);
-//         testRobot.setFuzzyTargetCheck(true);
-//         testRobot.setUnloadingRequired(true);
-//         testScenarios.add(new ConcreteTestScenario("Unloading from anywhere 1",
-//                 "Start at a waypoint, drive to unloding shaft, unload there and report. (Version 3)",
-//                 r_list(testRobot)));
-
-//         testRobot = new TestRobotSpecification(robots, p(6, 8), RobotState.TO_LOADING, Orientation.WEST, p_list(p(-3, 9)));
-//         testRobot.setRequireArrived(true);
-//         testRobot.setFuzzyTargetCheck(true);
-//         testRobot.setUnloadingRequired(true);
-//         testScenarios.add(new ConcreteTestScenario("Unloading from anywhere 2",
-//                 "Start at a waypoint, drive to unloding shaft, unload there and report. (Version 3)",
-//                 r_list(testRobot)));
 
 //         testRobot = new TestRobotSpecification(robots, p(1, 21), RobotState.TO_LOADING, Orientation.SOUTH, p_list(p(3, 9)));
 //         testRobot.setRequireArrived(true);
@@ -116,15 +65,32 @@ package de.hpi.mod.sim.worlds.simpletrafficlights.scenario;
 //                 "Start at a waypoint, drive to unloding shaft, unload there and report. (Version 3)",
 //                 r_list(testRobot)));
 
-//         testRobot = new TestRobotSpecification(robots, p(1, 21), RobotState.TO_LOADING, Orientation.SOUTH, p_list(p(0, 9)));
-//         testRobot.setRequireArrived(true);
-//         testRobot.setFuzzyTargetCheck(true);
-//         testRobot.setUnloadingRequired(true);
-//         testScenarios.add(new ConcreteTestScenario("Unloading from anywhere 4",
-//                 "Start at a waypoint, drive to unloding shaft and unload there. (Version 4)", r_list(testRobot)));
+         testRobot = new SimpleRobotSpecification(manager);
+         testArrivalPoint = new ArrivalPointSpecification(0, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(1, manager, false);
+         testScenarios.add(new SimpleTrafficLightTestScenario(
+        		 "Drive Loop 1", "Drive Loop 1",
+        		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
+        		 GridMode.TWO_CROSSROADS, true, false, false));
+         
+         testRobot = new SimpleRobotSpecification(manager);
+         testArrivalPoint = new ArrivalPointSpecification(2, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(3, manager, false);
+         testScenarios.add(new SimpleTrafficLightTestScenario(
+        		 "Drive Loop 2", "Drive Loop 2",
+        		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
+        		 GridMode.TWO_CROSSROADS, true, false, false));
 
-//         return testScenarios;
-//     }
+         testRobot = new SimpleRobotSpecification(manager);
+         testArrivalPoint = new ArrivalPointSpecification(4, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(5, manager, false);
+         testScenarios.add(new SimpleTrafficLightTestScenario(
+        		 "Drive Loop 3", "Drive Loop 3",
+        		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
+        		 GridMode.TWO_CROSSROADS, true, false, false));
+         
+         return testScenarios;
+     }
 
 //     private static List<TestScenario> generateCompleteDriveRoutineTests(WarehouseManager robots) {
 //         List<TestScenario> testScenarios = new ArrayList<>();
@@ -678,20 +644,77 @@ package de.hpi.mod.sim.worlds.simpletrafficlights.scenario;
 //         return testScenarios;
 // 	}
 	
-	
-// 	private static class ConcreteTestScenario extends TestScenario {
-// 		List<EntitySpecification<?>> newEntities = new ArrayList<>();
 
-//         public ConcreteTestScenario(String name, String description, List<EntitySpecification<?>> robots) {
-//             this.name = name;
-//             this.description = description;
-//             this.newEntities = robots;
-//         }
+      private static List<EntitySpecification<?>> e_list(EntitySpecification<?>... e) {
+          return new ArrayList<>(Arrays.asList(e));
+      }
+      
+      private class SimpleTrafficLightTestScenario extends TestScenario {
+    		
+    		List<EntitySpecification<?>> customEntities = new ArrayList<>();
+    	 	SimpleTrafficLightsConfiguration.GridMode gridMode;
+    	 	boolean autoamticTrafficLights;
+    	 	boolean autoamticArrivalPoints;
+    	 	boolean autoamticDeparturePoints;
 
-//         @Override
-//         public List<EntitySpecification<?>> getScenarioEntities() {
-//             return newEntities;
-//         }
-//     }
+    	     public SimpleTrafficLightTestScenario(String name, String description, List<EntitySpecification<?>> customEntities, 
+    	    		 GridMode gridMode, boolean autoamticTrafficLights, boolean autoamticArrivalPoints, boolean autoamticDeparturePoints) {
+    	         this.name = name;
+    	         this.description = description;
+    	         this.customEntities = customEntities;
+    	         this.gridMode = gridMode;
+    	         this.autoamticTrafficLights = autoamticTrafficLights;
+    	         this.autoamticArrivalPoints = autoamticArrivalPoints;
+    	         this.autoamticDeparturePoints = autoamticDeparturePoints;
+    	     }
 
-// }
+    	     @Override
+    	     public List<EntitySpecification<?>> getScenarioEntities() {
+    	         List<EntitySpecification<?>> entites = createAutomaticEntities();
+    	         entites.addAll(customEntities);
+    	         return entites;
+    	     }     
+
+    		 private List<EntitySpecification<?>> createAutomaticEntities() {
+    			// Initialize list
+    			List<EntitySpecification<?>> list = new ArrayList<>();
+    			
+    			// Add Traffic Light Specifications to list
+    			if(autoamticTrafficLights) {
+    				for(int x = 0 ; x<SimpleTrafficLightsConfiguration.getVerticalStreets() ; x++) {
+    					for(int y = 0 ; y<SimpleTrafficLightsConfiguration.getHorizontalStreets() ; y++) {
+    						list.add(new TrafficLightSpecification(new RelativePosition(x, y), world.getStreetNetworkManager()));
+    					}
+    				}
+    			}
+    			
+    			// Add Arrival  Point specifications to list
+    			if(autoamticArrivalPoints) {
+    				for (int i=0 ; i<SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() ; i++) {
+    					list.add(new DeparturePointSpecification(i, world.getStreetNetworkManager()));
+    				}
+    			}
+    			
+    			// Add  Departure Point specifications to list
+    			if(autoamticDeparturePoints) {
+    				for (int i=0 ; i<SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() ; i++) {
+    					list.add(new ArrivalPointSpecification(i, world.getStreetNetworkManager()));
+    				}
+    			}
+    			
+    			// Return List
+    			return list; 
+    		}
+    		
+    		
+    	     @Override
+    	     public void loadScenario(World world) {
+    	     	if(gridMode != null) {
+    	     		SimpleTrafficLightsConfiguration.setCrossroadsMode(gridMode);
+    	     		world.configurationChanged(); 
+    	     	}
+    	     	super.loadScenario(world);
+    	     }
+    	 }
+
+ }

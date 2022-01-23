@@ -61,6 +61,11 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 	public void resetArrived() {
 		this.arrivedFlag = false;
 	}
+    
+    @Override
+    public boolean hasPassedAllTestCriteria() {
+        return false;
+    }
 	
 	public boolean hasReportedArrive() {
 		return arrivedFlag;
