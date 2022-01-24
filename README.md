@@ -32,12 +32,13 @@ The core contains 2 classes and 4 packages.
 A `world` is the definition of the environment for a specific application. To set up an environment, one thus has to overwrite the abstract class `de.hpi.mod.sim.core.World`.
 + One can use inheritance to build a structure of abstract and more and more specific environments
 + Currently there are 6 worlds
-  - `abstract_grid.GridWorld` introduces an abstract environment with a grid-based 2D surface and provides useful utilities like the concept of positions and orientations in that grid
+  - `abstract_grid.GridWorld` introduces an **abstract** environment with a grid-based 2D surface and provides useful utilities like the concept of positions and orientations in that grid
   - `abstract_robots.RobotWorld` is a still abstract extension of the `GridWorld` and introduces robots to be moved around on the grid
-  - `infinite_warehouse` is a ready-to-use implementation of a `RobotWorld` where robots transport packages from stations to unloading stations, have to avoid collisions and be recharged. The exact behavior of the robots drivesystem is specified by a YAKINDU statechart.
-  - ` pong` is leand on the traditionally Pong- Game. There is a one player and two player- mode. You have to catch the ball with your paddle. The exact behavior of the paddles are specified by a YAKINDU statechart.
-  - `flasher` contains a world with a flashlight. In the beginning you get a number. This number represents the amount the bulb has to blink. The exact behavior of the bulb is specified by a YAKINDU statechart.
-  - `flash-light-world` is another implementation of a RobotWorld where robots transport packages from stations to unloading stations, have to avoid collisions. There are flash lights to help avoiding collisions. The exact behavior of the robots and flashlights are specified by a YAKINDU statechart.
+  - `infinitewarehouse.InfiniteWarehouseWord` is a ready-to-use implementation of a `RobotWorld` where robots transport packages from stations to unloading stations, have to avoid collisions and be recharged. The exact behavior of the robots drivesystem is specified by a YAKINDU statechart.
+  - `simpletrafficlights.SimpleTrafficLightsWord` is a ready-to-use implementation of a `RobotWorld` where robots drive in a grid-like street network with longer street stections and intersections that are governed by traffic ligths. Robots drive from one entry point to an exit point. The exact behavior of both the the robots and the traffic ligths is specified by YAKINDU statecharts.
+  - `trafficlights.TrafficLightWorld` is an **unfinished** implementation of a RobotWorld where robots transport packages from stations to unloading stations, have to avoid collisions. There are trraffic lights to help avoiding collisions. The exact behavior of the robots and traffic lights is specified by YAKINDU statecharts.
+  - `pong.PongWold` is leand on the traditionally Pong- Game. There is a one player and two player- mode. You have to catch the ball with your paddle. The exact behavior of the paddles are specified by a YAKINDU statechart.
+  - `flasher.FlashWorld` contains a world with a flashlight. In the beginning you get a number. This number represents the amount the bulb has to blink. The exact behavior of the bulb is specified by a YAKINDU statechart.
  
 #### Setting up your world
    - When there is the need to add/edit static parameters (magic numbers), do so by extend the class `core.Configuration`
