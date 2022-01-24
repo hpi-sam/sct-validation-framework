@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import de.hpi.mod.sim.core.simulation.Entity;
+import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
@@ -457,6 +458,14 @@ public class StreetNetworkManager extends RobotGridManager {
     
 	public boolean isInFrontOfTrafficLight(Position pos) {
 		return trafficLights.stream().anyMatch(tl -> tl.isWaitingPosition(pos));
+	}
+    
+	public boolean isOnOrInFrontOfTrafficLight(Position pos) {
+		return trafficLights.stream().anyMatch(tl -> tl.isWaitingPosition(pos));
+	}
+    
+	public Optional<TrafficLight> getTrafficLightAt(Position pos) {
+		return trafficLights.stream().filter(tl -> tl.isRelatedPosition(pos)).findAny();
 	}
 
 }

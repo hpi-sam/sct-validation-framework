@@ -118,10 +118,22 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
     public Position getEastWaitingPosition() {
     	return getBottomLeftPosition().getModified(2, 1);
     }
+
+    public boolean isCrossroadPosition(Position p) {
+    	return  getBottomLeftPosition().equals(p) ||
+    			getBottomLeftPosition().getModified(0, 1).equals(p) ||
+    			getBottomLeftPosition().getModified(1, 0).equals(p) ||
+    			getBottomLeftPosition().getModified(1, 1).equals(p);
+    }
     
     public boolean isWaitingPosition(Position p) {
     	return getNorthWaitingPosition().equals(p) || getSouthWaitingPosition().equals(p) || getEastWaitingPosition().equals(p) || getWestWaitingPosition().equals(p);
     }
+
+	public boolean isRelatedPosition(Position p) {
+		System.out.println(p+" vs "+getBottomLeftPosition()+" => "+isWaitingPosition(p) +", "+ isCrossroadPosition(p));
+		return isWaitingPosition(p) || isCrossroadPosition(p);
+	}
 
     public TrafficLightState getTrafficLightState(Position p) {
     	if(getSouthWaitingPosition().equals(p))

@@ -3,6 +3,7 @@ package de.hpi.mod.sim.worlds.simpletrafficlights;
 import java.awt.Graphics;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,6 +15,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
+import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.simpletrafficlights.scenario.TestCaseGenerator;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
@@ -128,13 +130,18 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 	public IHighlightable getHighlightAtPosition(int x, int y) {
 
 		// Use super method to find if there is a robot at the targeted position
-		IHighlightable highlight = super.getHighlightAtPosition(x, y);
-		if (highlight != null)
-			return highlight;
+		IHighlightable robotHighlight = super.getHighlightAtPosition(x, y);
+		if (robotHighlight != null)
+			return robotHighlight;
 
 		// If there is no robot, check if there is a crossroad
-		Position pos = getSimulationBlockView().toGridPosition(x, y);
-		return getStreetNetworkManager().getLightForCrossroad(pos.getX() / 3, pos.getY() / 3);
+        Position pos = getSimulationBlockView().toGridPosition(x, y);
+		Optional<TrafficLight> trafficLightHighlight = getStreetNetworkManager().getTrafficLightAt(pos);
+		if (trafficLightHighlight.isPresent())
+			return trafficLightHighlight.get();
+		
+		// If nothing matches, return null
+		return null;
 
 	}
 }
