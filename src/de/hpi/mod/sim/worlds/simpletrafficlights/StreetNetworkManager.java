@@ -1,7 +1,5 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import de.hpi.mod.sim.core.simulation.Entity;
-import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
@@ -98,9 +95,9 @@ public class StreetNetworkManager extends RobotGridManager {
 
 
     public void resetFieldDataStructures() {
-    	this.arrivalPoints = new CopyOnWriteArrayList();
-    	this.departurePoints = new CopyOnWriteArrayList();
-    	this.trafficLights = new CopyOnWriteArrayList();
+    	this.arrivalPoints = new CopyOnWriteArrayList<ArrivalPoint>();
+    	this.departurePoints = new CopyOnWriteArrayList<DeparturePoint>();
+    	this.trafficLights = new CopyOnWriteArrayList<TrafficLight>();
     }
     
     public TrafficLight getLightForCrossroad(int x, int y) {

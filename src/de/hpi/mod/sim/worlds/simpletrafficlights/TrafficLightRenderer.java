@@ -3,20 +3,16 @@ package de.hpi.mod.sim.worlds.simpletrafficlights;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import de.hpi.mod.sim.worlds.abstract_grid.ICellType;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
-import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
 import de.hpi.mod.sim.worlds.simpletrafficlights.entities.TrafficLight;
 
 public class TrafficLightRenderer {
@@ -89,13 +85,6 @@ public class TrafficLightRenderer {
             graphic.drawImage(image, x, y, (int) blockSize, (int) blockSize, null);
 		}
 
-	}
-	
-	private Color darken(Color color) {
-		float darken = 0.95f;
-		return new Color((int) (color.getRed() * darken), 
-	    		(int) (color.getGreen() * darken), 
-	    		(int) (color.getBlue() * darken));
 	}
 
 	private void drawTrafficLight(Graphics graphic, Point2D drawPosition, float blockSize, Orientation orientation,
