@@ -17,7 +17,7 @@ public abstract class TransitPoint implements Entity {
 	private Orientation orientation;
 
 	// Countdown properties
-	private boolean randomizeWitingTimes;
+	private boolean randomizeWaitingTimes;
 	private int countdownTimer;
 	
 	
@@ -25,7 +25,7 @@ public abstract class TransitPoint implements Entity {
 		this.id = i;
 		this.position = p;
 		this.orientation = o;
-		this.randomizeWitingTimes = r;
+		this.randomizeWaitingTimes = r;
 	}
 	
 	public int getId() {
@@ -46,7 +46,7 @@ public abstract class TransitPoint implements Entity {
 	
 	protected void startCountdownTimer() {
 		// Start Timer...
-		if(randomizeWitingTimes) {
+		if(randomizeWaitingTimes) {
 			// ...randomized (if so requested)...
 			this.countdownTimer = ThreadLocalRandom.current().nextInt(
 					SimpleTrafficLightsConfiguration.getDeparturePointMinimalWaitingTime(), 
@@ -64,7 +64,7 @@ public abstract class TransitPoint implements Entity {
 	}
 	
 	protected boolean countdownTimerFinished() {
-		return  this.countdownTimer < 0;
+		return  this.countdownTimer <= 0;
 	}
 	
 }

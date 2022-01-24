@@ -478,22 +478,22 @@ public class TrafficLightStatechart implements IStatemachine, ITimed {
 	
 	/* Entry action for state 'WaitEast'. */
 	private void entryAction_traffic_light_WaitEast() {
-		timerService.setTimer(this, 3, 100, false);
+		timerService.setTimer(this, 3, 100, true);
 	}
 	
 	/* Entry action for state 'WaitSouth'. */
 	private void entryAction_traffic_light_WaitSouth() {
-		timerService.setTimer(this, 4, 100, false);
+		timerService.setTimer(this, 4, 100, true);
 	}
 	
 	/* Entry action for state 'WaitWest'. */
 	private void entryAction_traffic_light_WaitWest() {
-		timerService.setTimer(this, 5, 100, false);
+		timerService.setTimer(this, 5, 100, true);
 	}
 	
 	/* Entry action for state 'WaitNorth'. */
 	private void entryAction_traffic_light_WaitNorth() {
-		timerService.setTimer(this, 6, 100, false);
+		timerService.setTimer(this, 6, 100, true);
 	}
 	
 	/* Entry action for state 'South'. */

@@ -19,6 +19,7 @@ public class ArrivalPoint extends TransitPoint {
 	
 	public void addExpectedRobot(SimpleRobot robot) {
 		awaitedRobots.add(robot);
+		System.out.println("arrival: STATE0");
 	}
 
 	public int getNumberOfExpectedRobots() {
@@ -30,14 +31,17 @@ public class ArrivalPoint extends TransitPoint {
 		// Decrement timer
 		this.updateCountdownTimer((int) delta);
 		
-		// Case 1: There is an arrived robot AND timer has tun out...
-		if(this.arrivedRobot != null && this.countdownTimerFinished()) {
-			// ...move robot to idle location....
-			arrivedRobot.moveToIdlePosition();
-			arrivedRobot.getCrossRoadsManager().makeRobotIdle(arrivedRobot);
-			
-			// ... and make departure point free for new arrivals.
-			this.arrivedRobot = null;
+		// Case 1: There is an arrived robot... 
+		if(this.arrivedRobot != null) {
+			// ...AND timer has tun out...
+			if(this.countdownTimerFinished()) {
+				// ...move robot to idle location....
+				arrivedRobot.moveToIdlePosition();
+				arrivedRobot.getCrossRoadsManager().makeRobotIdle(arrivedRobot);
+				
+				// ... and make departure point free for new arrivals.
+				this.arrivedRobot = null;
+			}
 			return;
 		}
 		

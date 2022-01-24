@@ -59,8 +59,8 @@ public class DeparturePoint extends TransitPoint {
 		// Case 1: If currently in pause before task start AND timer has tun out....
 		if (this.currentState == DeparturePointState.WAITING_BEFORE_ROBOT_STARTS && this.countdownTimerFinished()) {
 			// ...send start signal to robot and update starte.
-			this.startingRobot.setTargetAndNotify(this.targetforStartingRobot.getPosition());
 			this.currentState = DeparturePointState.WAITING_FOR_ROBOT_TO_LEAVE;
+			this.startingRobot.setTargetAndNotify(this.targetforStartingRobot.getPosition());
 		}
 
 		// Case 2: Task was send AND robot left field....

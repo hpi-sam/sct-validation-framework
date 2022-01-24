@@ -40,7 +40,7 @@ public class ScenarioGenerator {
 			
 			// Add Arrival + Departure Point specifications to list
 			for (int i=0 ; i<SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() ; i++) {
-				list.add(new ArrivalPointSpecification(i, world.getStreetNetworkManager()));
+				list.add(new ArrivalPointSpecification(i, world.getStreetNetworkManager(), randomizeWaitingTimes));
 				list.add(new DeparturePointSpecification(i, world.getStreetNetworkManager(), randomizeWaitingTimes));
 			}
 			

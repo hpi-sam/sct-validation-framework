@@ -30,9 +30,9 @@ public class SimpleTrafficLightsConfiguration extends RobotConfiguration {
 	private static final Orientation DEFAULT_IDLE_ROBOTS_ORIENTATION = Orientation.NORTH;
 	
 	// Defaults for Properties for Departure Point behaviour 
-	private static final int DEFAULT_DEPARTURE_POINT_AVERAGE_WAITING_TIME = 2000;
-	private static final int DEFAULT_DEPARTURE_POINT_MINIMUM_WAITING_TIME = 1500;
-	private static final int DEFAULT_DEPARTURE_POINT_MAXIMUM_WAITING_TIME = 4000;
+	private static final int DEFAULT_DEPARTURE_POINT_AVERAGE_WAITING_TIME = 1000;
+	private static final int DEFAULT_DEPARTURE_POINT_MINIMUM_WAITING_TIME = 500;
+	private static final int DEFAULT_DEPARTURE_POINT_MAXIMUM_WAITING_TIME = 3000;
 	
 	// Defaults for Properties for worobt pathfinding
 	private static final int DEFAULT_TARGET_DIRECTION_OFFSET = 3;

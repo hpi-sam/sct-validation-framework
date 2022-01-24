@@ -229,7 +229,7 @@ public class StreetNetworkManager extends RobotGridManager {
 	public void updateNonRobotEntities(float delta) {
 		// Start Robots
 		startRobots();
-		
+				
 		// Update Departure Points to trigger timed robot starts.
 		for(DeparturePoint point : this.departurePoints)
 			point.update(delta);
@@ -334,7 +334,7 @@ public class StreetNetworkManager extends RobotGridManager {
     	
     	// Randomly select
     	int index = (int) (Math.abs(ThreadLocalRandom.current().nextGaussian() * SimpleTrafficLightsConfiguration.getNumberOfTransferPoints() / 4 ));    	
-	    return emptiestArrivalPoints.get(index % arrivalPoints.size());
+	    return emptiestArrivalPoints.get(index % emptiestArrivalPoints.size());
     }
     
     public ArrivalPoint getNextRandomDestination() {
