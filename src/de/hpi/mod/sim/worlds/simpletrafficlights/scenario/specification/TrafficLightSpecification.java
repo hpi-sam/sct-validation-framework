@@ -28,7 +28,7 @@ public class TrafficLightSpecification implements EntitySpecification<TrafficLig
     
     @Override
     public TrafficLight createEntity() {
-    	TrafficLight entity = new TrafficLight(relativePosition, getCoordinates());
+    	TrafficLight entity = new TrafficLight(relativePosition, getCoordinates(), grid);
         this.grid.addTrafficLight(entity);
 		return entity;
     }

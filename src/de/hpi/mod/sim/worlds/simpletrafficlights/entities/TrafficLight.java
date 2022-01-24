@@ -13,6 +13,7 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.core.statechart.StateChartWrapper;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 
 public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State>
         implements StateChartEntity, IHighlightable {
@@ -28,6 +29,13 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
     private boolean lightStateNorth = false;
     private boolean lightStateEast = false;
     private boolean lightStateSouth = false; 
+    
+    // 
+    private TrafficLightOperationCallback centerCallback;
+    private TrafficLightOperationCallback northCallback;
+    private TrafficLightOperationCallback eastCallback;
+    private TrafficLightOperationCallback southCallback;
+    private TrafficLightOperationCallback westCallback;
 
     /**
      * Creates a traffic light. Each traffic light is responsible for a whole
@@ -36,12 +44,30 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
      * @param pos The southern position of traffic light. All other positions are
      *            calculated from this one.
      */
-    public TrafficLight(RelativePosition relative, Position absolute) {
+    public TrafficLight(RelativePosition relative, Position absolute, StreetNetworkManager manager) {
     	relativePosition = relative;
     	basePosition = absolute;
+    	
+        centerCallback = new TrafficLightOperationCallback(getCrossroadPositions(), manager);
+        northCallback = new TrafficLightOperationCallback(getNorthWaitingPosition(), manager);
+        eastCallback = new TrafficLightOperationCallback(getEastWaitingPosition(), manager);
+        southCallback = new TrafficLightOperationCallback(getSouthWaitingPosition(), manager);
+        westCallback = new TrafficLightOperationCallback(getWestWaitingPosition(), manager);
+        
         start();
     }
 
+
+    @Override
+    public void start() {
+        getStatemachine().center().setOperationCallback(centerCallback);
+        getStatemachine().north().setOperationCallback(northCallback);
+        getStatemachine().east().setOperationCallback(eastCallback);
+        getStatemachine().south().setOperationCallback(southCallback);
+        getStatemachine().west().setOperationCallback(westCallback);
+        super.start();
+    }
+    
     public Position getBottomLeftPosition() {
         return basePosition;
     }
@@ -181,11 +207,12 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
     @Override
     public List<String> getHighlightInfo() {
         List<String> infos = new ArrayList<>();
-        infos.add("Crossroad: " + new Position(basePosition.getX() / 3, basePosition.getY() / 3));
-        infos.add("South: " + (isGreenSouth() ? "green" : "red"));
-        infos.add("West: " + (isGreenWest() ? "green" : "red"));
-        infos.add("East: " + (isGreenEast() ? "green" : "red"));
-        infos.add("North: " + (isGreenNorth() ? "green" : "red"));
+        infos.add("Index: " + getRelativePosition().stringify());
+        infos.add("Position (bottom left): " + getBottomLeftPosition().stringify());
+        infos.add("South: " + (isGreenSouth() ? "GREEN" : "red"));
+        infos.add("West: " + (isGreenWest() ? "GREEN" : "red"));
+        infos.add("East: " + (isGreenEast() ? "GREEN" : "red"));
+        infos.add("North: " + (isGreenNorth() ? "GREEN" : "red"));
         return infos;
     }
 
