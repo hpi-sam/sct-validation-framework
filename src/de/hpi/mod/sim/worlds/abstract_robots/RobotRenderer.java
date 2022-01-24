@@ -3,6 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
+import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,7 +21,7 @@ import java.io.IOException;
 public class RobotRenderer {
 
     private SimulationBlockView simView;
-    private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
+    private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon, rightClickedAreaImage, leftClickedAreaImage;
     private RobotGridManager robots;
 
     public RobotRenderer(SimulationBlockView simView, RobotGridManager robots) {
@@ -31,11 +32,13 @@ public class RobotRenderer {
 
     private void loadImages() {
         try {
-            robotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRobotIcon()));
-            leftClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToLeftClickedRobotIcon()));
-            rightClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRightClickedRobotIcon()));
-            batteryIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToEmptyBattery()));
-            packageIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToPackage()));
+        	 this.robotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRobotIcon()));
+            this.leftClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToLeftClickedRobotIcon()));
+            this.rightClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRightClickedRobotIcon()));
+            this.batteryIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToEmptyBattery()));
+            this.packageIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToPackage()));
+            this.leftClickedAreaImage = ImageIO.read(new File(SimpleTrafficLightsConfiguration.getStringPathToLeftClickedAreaHighlight()));
+        	this.rightClickedAreaImage = ImageIO.read(new File(SimpleTrafficLightsConfiguration.getStringPathToRightClickedAreaHighlight()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,9 +67,11 @@ public class RobotRenderer {
     }
 
     private void drawRobot(Graphics graphic, Point2D drawPosition, float size, float angle, boolean leftClicked, boolean rightClicked, boolean hasPackage, boolean batteryEmpty) {
+    	
         int translateX = (int) drawPosition.getX();
         int translateY = (int) drawPosition.getY();
 
+        // Determine Icon (based on highlight status)
         BufferedImage image = robotIcon;
         if(leftClicked)
         	image = leftClickedRobotIcon;
@@ -78,13 +83,15 @@ public class RobotRenderer {
                 image.getWidth() / 2f, image.getHeight() / 2f);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
+        // Draw Robot itself
         graphic.drawImage(op.filter(image, null), translateX, translateY, (int) size, (int) size, null);
 
+        // Draw overlays over Robot (package and/or pattery)
         if (hasPackage) 
         	graphic.drawImage(op.filter(packageIcon, null), translateX, translateY, (int) size, (int) size, null);
-        
         if (batteryEmpty)
             graphic.drawImage(batteryIcon, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) size, (int) size, null);
+        
     }
 
     private void drawLineToTarget(Graphics graphic, Point2D drawPosition, Point2D targetPosition, float size) {

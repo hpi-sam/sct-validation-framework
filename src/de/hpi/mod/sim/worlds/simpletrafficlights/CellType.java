@@ -22,40 +22,10 @@ public class CellType implements ICellType {
     public static final CellType CROSSROAD = new CellType(Type.CROSSROAD);
     public static final CellType CROSSROAD_WAITING_POINT = new CellType(Type.CROSSROAD_WAITING_POINT);
     
-//    public static final CellType TRAFFIC_LIGHT_RED_NORTH = createTrafficLight(false, Orientation.NORTH);
-//    public static final CellType TRAFFIC_LIGHT_RED_SOUTH = createTrafficLight(false, Orientation.SOUTH);
-//    public static final CellType TRAFFIC_LIGHT_RED_EAST = createTrafficLight(false, Orientation.EAST);
-//    public static final CellType TRAFFIC_LIGHT_RED_WEST = createTrafficLight(false, Orientation.WEST);
-//    public static final CellType TRAFFIC_LIGHT_GREEN_NORTH = createTrafficLight(true, Orientation.NORTH);
-//    public static final CellType TRAFFIC_LIGHT_GREEN_SOUTH = createTrafficLight(true, Orientation.SOUTH);
-//    public static final CellType TRAFFIC_LIGHT_GREEN_EAST = createTrafficLight(true, Orientation.EAST);
-//    public static final CellType TRAFFIC_LIGHT_GREEN_WEST = createTrafficLight(true, Orientation.WEST);
-
     public  final Type type;
-
-    private Orientation borderOrientation; // For traffic lights only
 
     private CellType(Type type) {
         this.type = type;
-    }
-
-//    private static final CellType createTrafficLight(boolean green, Orientation orientation) {
-//        CellType cell = new CellType(green ? Type.TRAFFIC_LIGHT_GREEN : Type.TRAFFIC_LIGHT_RED);
-//        cell.borderOrientation = inverseOrientation(orientation);
-//        return cell;
-//    }
-
-    private static Orientation inverseOrientation(Orientation orientation) {
-        switch (orientation) {
-            case EAST:
-                return Orientation.WEST;
-            case NORTH:
-                return Orientation.SOUTH;
-            case SOUTH:
-                return Orientation.NORTH;
-            default: //WEST
-                return Orientation.EAST;
-        }
     }
     
     @Override
@@ -83,20 +53,11 @@ public class CellType implements ICellType {
     @Override
     public boolean hasBorder(Orientation orientation) {
     	return false;
-//        return (type.equals(Type.TRAFFIC_LIGHT_GREEN) || type.equals(Type.TRAFFIC_LIGHT_RED))
-//         && borderOrientation.equals(orientation);
     }
     
     @Override
     public Color borderColor(Orientation orientation) {
     	return Color.RED;
-//    	return type.equals(Type.TRAFFIC_LIGHT_GREEN) ? Color.GREEN : Color.RED;
-    }
-
-    public static boolean isWaypoint(CellType cell) {
-    	return false;
-//        return cell.type.equals(Type.ARRIVAL_POINT) || cell.type.equals(Type.TRAFFIC_LIGHT_GREEN)
-//                || cell.type.equals(Type.TRAFFIC_LIGHT_RED) || cell.type.equals(Type.PURE_WAYPOINT);
     }
     
     @Override

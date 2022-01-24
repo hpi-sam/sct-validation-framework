@@ -106,8 +106,8 @@ public class SimpleTrafficLightWorld extends RobotWorld {
 
 	@Override
 	protected void renderEntities(Graphics graphics) {
-		super.renderEntities(graphics);
 		this.trafficLightRenderer.render(graphics, getSimulationBlockView().getBlockSize());
+		super.renderEntities(graphics);
 	}
 
 	@Override

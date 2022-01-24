@@ -1,7 +1,10 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights.entities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.yakindu.core.IStatemachine;
 
@@ -119,19 +122,27 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
     	return getBottomLeftPosition().getModified(2, 1);
     }
 
-    public boolean isCrossroadPosition(Position p) {
-    	return  getBottomLeftPosition().equals(p) ||
-    			getBottomLeftPosition().getModified(0, 1).equals(p) ||
-    			getBottomLeftPosition().getModified(1, 0).equals(p) ||
-    			getBottomLeftPosition().getModified(1, 1).equals(p);
-    }
-    
-    public boolean isWaitingPosition(Position p) {
-    	return getNorthWaitingPosition().equals(p) || getSouthWaitingPosition().equals(p) || getEastWaitingPosition().equals(p) || getWestWaitingPosition().equals(p);
+    public List<Position> getWaitingPositions() {
+		return Arrays.asList(getNorthWaitingPosition(), getSouthWaitingPosition(), getEastWaitingPosition(), getWestWaitingPosition());
     }
 
+    public List<Position> getCrossroadPositions() {
+    	return  Arrays.asList(getBottomLeftPosition(), getBottomLeftPosition().getModified(0, 1), getBottomLeftPosition().getModified(1, 0), getBottomLeftPosition().getModified(1, 1));
+    }
+
+    public boolean isCrossroadPosition(Position position) {
+    	return getCrossroadPositions().stream().anyMatch(p -> p.equals(position));
+    }
+    
+    public boolean isWaitingPosition(Position position) {
+    	return getWaitingPositions().stream().anyMatch(p -> p.equals(position));
+    }
+
+	public List<Position> getRelatedPositions() {
+		return Stream.of(getCrossroadPositions(),getWaitingPositions()).flatMap(x -> x.stream()).collect(Collectors.toList());
+	}
+
 	public boolean isRelatedPosition(Position p) {
-		System.out.println(p+" vs "+getBottomLeftPosition()+" => "+isWaitingPosition(p) +", "+ isCrossroadPosition(p));
 		return isWaitingPosition(p) || isCrossroadPosition(p);
 	}
 

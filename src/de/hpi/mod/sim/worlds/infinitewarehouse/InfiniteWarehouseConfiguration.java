@@ -50,8 +50,8 @@ public class InfiniteWarehouseConfiguration extends RobotConfiguration {
     private static String stringPathToRobotIcon = STRING_PATH_TO_ROBOT_ICON;
     private static String stringPathToLeftClickedRobotIcon = STRING_PATH_TO_LEFT_CLICKED_ROBOT_ICON;
     private static String stringPathToRightClickedRobotIcon = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_ICON;
-    private static String stringPathToLeftClickedRobotBlocking = STRING_PATH_TO_LEFT_CLICKED_ROBOT_BLOCKING;
-    private static String stringPathToRightClickedRobotBlocking = STRING_PATH_TO_RIGHT_CLICKED_ROBOT_BLOCKING;
+    private static String stringPathToLeftClickedRobotBlocking = STRING_PATH_TO_LEFT_CLICKED_AREA_HIGHLIGHT;
+    private static String stringPathToRightClickedRobotBlocking = STRING_PATH_TO_RIGHT_CLICKED_AREA_HIGHLIGHT;
     private static String stringPathToEmptyBattery = STRING_PATH_TO_EMPTY_BATTERY;
     private static String stringPathToPackage = STRING_PATH_TO_PACKAGE;
     private static float defaultRotationSpeed = DEFAULT_ROTATION_SPEED;
