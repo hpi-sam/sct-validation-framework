@@ -19,7 +19,6 @@ public class ArrivalPoint extends TransitPoint {
 	
 	public void addExpectedRobot(SimpleRobot robot) {
 		awaitedRobots.add(robot);
-		System.out.println("arrival: STATE0");
 	}
 
 	public int getNumberOfExpectedRobots() {
