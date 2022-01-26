@@ -60,11 +60,11 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
 
     @Override
     public void start() {
-        getStatemachine().center().setOperationCallback(centerCallback);
-        getStatemachine().north().setOperationCallback(northCallback);
-        getStatemachine().east().setOperationCallback(eastCallback);
-        getStatemachine().south().setOperationCallback(southCallback);
-        getStatemachine().west().setOperationCallback(westCallback);
+        getStatemachine().centerSensor().setOperationCallback(centerCallback);
+        getStatemachine().northSensor().setOperationCallback(northCallback);
+        getStatemachine().eastSensor().setOperationCallback(eastCallback);
+        getStatemachine().southSensor().setOperationCallback(southCallback);
+        getStatemachine().westSensor().setOperationCallback(westCallback);
         super.start();
     }
     
@@ -91,24 +91,24 @@ public class TrafficLight extends StateChartWrapper<TrafficLightStatechart.State
         /**
          * Runs a cycle of the statechart and checks if any functions got fired
          */
-        if (getStatemachine().north().isRaisedGreen())
+        if (getStatemachine().northLamp().isRaisedGreen())
         	lightStateNorth = true;
-        if (getStatemachine().north().isRaisedRed())
+        if (getStatemachine().northLamp().isRaisedRed())
             lightStateNorth = false;
         
-        if (getStatemachine().east().isRaisedGreen())
+        if (getStatemachine().eastLamp().isRaisedGreen())
         	lightStateEast = true;
-        if (getStatemachine().east().isRaisedRed())
+        if (getStatemachine().eastLamp().isRaisedRed())
         	lightStateEast = false;
         
-        if (getStatemachine().south().isRaisedGreen())
+        if (getStatemachine().southLamp().isRaisedGreen())
         	lightStateSouth = true;
-        if (getStatemachine().south().isRaisedRed())
+        if (getStatemachine().southLamp().isRaisedRed())
             lightStateSouth = false;
         
-        if (getStatemachine().west().isRaisedGreen())
+        if (getStatemachine().westLamp().isRaisedGreen())
         	lightStateWest = true;
-        if (getStatemachine().west().isRaisedRed())
+        if (getStatemachine().westLamp().isRaisedRed())
         	lightStateWest = false;
     }
 

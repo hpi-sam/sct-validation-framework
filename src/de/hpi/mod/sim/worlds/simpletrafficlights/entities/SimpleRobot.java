@@ -85,7 +85,7 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
     @Override
     public void actionCompleted() {
         if(getCrossRoadsManager().isInFrontOfTrafficLight(pos())) {
-        	control.actionCompletedAndTrafficLightObserved();
+        	control.actionCompletedAndTrafficLightAhead();
         }else {
         	control.actionCompleted();
         }
@@ -97,15 +97,18 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 	}
 
 	@Override
+	public boolean isTrafficLightAhead() {
+		return getCrossRoadsManager().queryTrafficLight(pos()) != TrafficLightState.NO_TRAFFIC_LIGHT;
+	}
+
+	@Override
 	public boolean trafficLightIsGreen() {
-		boolean value = getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_GREEN;
-    	return value;
+		return getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_GREEN;
 	}
 
 	@Override
 	public boolean trafficLightIsRed() {
-		boolean value = getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_RED;
-    	return value;
+		return getCrossRoadsManager().queryTrafficLight(pos()) == TrafficLightState.TRAFFIC_LIGHT_RED;
 	}
 
 	@Override

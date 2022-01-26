@@ -63,6 +63,8 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		
 			public boolean isObstacleAhead();
 			
+			public boolean isTrafficLightAhead();
+			
 			public boolean trafficLightIsGreen();
 			
 			public boolean trafficLightIsRed();
@@ -221,7 +223,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	private void clearInEvents() {
 		newTarget = false;
 		actionCompleted = false;
-		actionCompletedAndTrafficLightObserved = false;
+		actionCompletedAndTrafficLightAhead = false;
 		timeEvents[0] = false;
 		timeEvents[1] = false;
 	}
@@ -303,7 +305,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 			clearInEvents();
 			clearInternalEvents();
 			nextEvent();
-		} while ((((((newTarget || actionCompleted) || actionCompletedAndTrafficLightObserved) || driveForwardWhenSafe) || timeEvents[0]) || timeEvents[1]));
+		} while ((((((newTarget || actionCompleted) || actionCompletedAndTrafficLightAhead) || driveForwardWhenSafe) || timeEvents[0]) || timeEvents[1]));
 		
 		isExecuting = false;
 	}
@@ -437,33 +439,33 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		runCycle();
 	}
 	
-	private boolean actionCompletedAndTrafficLightObserved;
+	private boolean actionCompletedAndTrafficLightAhead;
 	
 	
-	public void raiseActionCompletedAndTrafficLightObserved() {
+	public void raiseActionCompletedAndTrafficLightAhead() {
 		inEventQueue.add(new Runnable() {
 			@Override
 			public void run() {
-				actionCompletedAndTrafficLightObserved = true;
+				actionCompletedAndTrafficLightAhead = true;
 			}
 		});
 		runCycle();
 	}
 	
-	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0_tr0() {
-		return navigation.operationCallback.isOnTarget();
-	}
-	
-	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0_tr0() {
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr0_tr0() {
 		return navigation.operationCallback.isTargetAhead();
 	}
 	
-	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0_tr0() {
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0_tr0() {
 		return navigation.operationCallback.isTargetLeft();
 	}
 	
-	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0_tr0() {
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0_tr0() {
 		return (sensors.operationCallback.trafficLightIsGreen() && !sensors.operationCallback.isObstacleAhead());
+	}
+	
+	private boolean check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr0_tr0() {
+		return navigation.operationCallback.isOnTarget();
 	}
 	
 	private boolean check_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_1_tr0_tr0() {
@@ -480,61 +482,61 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_tr0() {
 		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead();
-		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1();
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_tr0() {
 		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side();
-		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0();
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_tr0() {
 		exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side();
-		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1();
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0() {
-		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__exit_Default();
-	}
-	
-	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr1() {
 		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_default();
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1_tr0() {
-		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_default();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0();
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr0() {
-		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_1();
-	}
-	
-	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0() {
 		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_ahead_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr1() {
-		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4();
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr1() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0() {
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr0() {
 		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_left_side_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr1() {
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3_tr1() {
 		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_leaving_crossroad_to_right_side_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0() {
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr0() {
 		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad_default();
 	}
 	
-	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr1() {
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4_tr1() {
 		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight_default();
 	}
 	
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0() {
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_4();
+	}
+	
 	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr0() {
-		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5();
+		react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__exit_Default();
+	}
+	
+	private void effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr1() {
+		enterSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward_default();
 	}
 	
 	private void effect_simpleTrafficLightRobot_driving__drivingBehaviourSafetyLoop__choice_0_tr0() {
@@ -1037,11 +1039,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	/* The reactions of state null. */
 	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0() {
-		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0_tr0()) {
-			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0();
-		} else {
-			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr1();
-		}
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0_tr0();
 	}
 	
 	/* The reactions of state null. */
@@ -1051,7 +1049,11 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	/* The reactions of state null. */
 	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2() {
-		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr0();
+		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr0_tr0()) {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr0();
+		} else {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2_tr1();
+		}
 	}
 	
 	/* The reactions of state null. */
@@ -1074,16 +1076,16 @@ public class RobotStatechart implements IStatemachine, ITimed {
 	
 	/* The reactions of state null. */
 	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5() {
-		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0_tr0()) {
-			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0();
-		} else {
-			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr1();
-		}
+		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5_tr0();
 	}
 	
 	/* The reactions of state null. */
 	private void react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6() {
-		effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr0();
+		if (check_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr0_tr0()) {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr0();
+		} else {
+			effect_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6_tr1();
+		}
 	}
 	
 	/* The reactions of state null. */
@@ -1190,7 +1192,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		if (try_transition) {
 			if (timeEvents[0]) {
 				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_waiting_in_front_of_trafficlight();
-				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5();
 			} else {
 				did_transition = false;
 			}
@@ -1372,7 +1374,7 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		if (try_transition) {
 			if (actionCompleted) {
 				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_entering_crossroad();
-				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_3();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_2();
 			} else {
 				did_transition = false;
 			}
@@ -1386,11 +1388,11 @@ public class RobotStatechart implements IStatemachine, ITimed {
 		if (try_transition) {
 			if (actionCompleted) {
 				exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward();
-				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_0();
+				react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6();
 			} else {
-				if (actionCompletedAndTrafficLightObserved) {
+				if (actionCompletedAndTrafficLightAhead) {
 					exitSequence_simpleTrafficLightRobot_driving__primaryDrivingBehaviour_driving_forward();
-					react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_6();
+					react_simpleTrafficLightRobot_driving__primaryDrivingBehaviour__choice_5();
 				} else {
 					did_transition = false;
 				}

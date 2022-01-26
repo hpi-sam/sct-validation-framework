@@ -6,8 +6,8 @@ import de.hpi.mod.sim.statemachines.simpletrafficlights.TrafficLightStatechart;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.simpletrafficlights.StreetNetworkManager;
 
-public class TrafficLightOperationCallback implements TrafficLightStatechart.Center.OperationCallback, TrafficLightStatechart.North.OperationCallback, 
-				TrafficLightStatechart.East.OperationCallback, TrafficLightStatechart.South.OperationCallback, TrafficLightStatechart.West.OperationCallback {
+public class TrafficLightOperationCallback implements TrafficLightStatechart.CenterSensor.OperationCallback, TrafficLightStatechart.NorthSensor.OperationCallback, 
+				TrafficLightStatechart.EastSensor.OperationCallback, TrafficLightStatechart.SouthSensor.OperationCallback, TrafficLightStatechart.WestSensor.OperationCallback {
 
 	private List<Position> positions;
 	private StreetNetworkManager manager;
