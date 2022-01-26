@@ -1,5 +1,8 @@
 package de.hpi.mod.sim.worlds.simpletrafficlights.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
@@ -43,6 +46,7 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 
 	public void setTargetAndNotify(Position position) {
 		this.setTarget(position);
+		this.getDriveManager().resetBattery();
         setArrivedEventWasCalled(false);
 		this.control.newTarget();
 	}
@@ -131,4 +135,13 @@ public class SimpleRobot extends Robot implements IRobotCallback, IRobotSensorDa
 		return getCrossRoadsManager().getTargetDirections(pos(), facing(), getTarget()).contains(Direction.BEHIND);
 	}
 
+    @Override
+    public List<String> getHighlightInfo() {
+        List<String> infos = new ArrayList<>();
+        infos.add("Position: " + pos().stringify());
+        infos.add("Target: " + getTarget().stringify());
+        infos.add("Facing: " + posOrientation().toString());
+        return infos;
+    }
+    
 }
