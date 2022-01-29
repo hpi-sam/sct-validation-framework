@@ -170,13 +170,13 @@ public class StreetNetworkManager extends RobotGridManager {
             		return CellType.CROSSROAD;
 
     			// OPTION 2.3. Waiting Point before crossroad 
-            	if(x2 % blockSize == 6 && y2 % blockSize == 4 && y2 < SimpleTrafficLightsConfiguration.getFieldWidth()-blockSize)
+            	if(x2 % blockSize == 6 && y2 % blockSize == 4 && y2 < SimpleTrafficLightsConfiguration.getFieldHeight()-blockSize)
             		return CellType.CROSSROAD_WAITING_POINT;
             	if(x2 % blockSize == 0 && y2 % blockSize == 6 && x2 > 0)
             		return CellType.CROSSROAD_WAITING_POINT;
             	if(x2 % blockSize == 5 && y2 % blockSize == 0 && y2 > 0)
             		return CellType.CROSSROAD_WAITING_POINT;
-            	if(x2 % blockSize == 4 && y2 % blockSize == 5 && x2 < SimpleTrafficLightsConfiguration.getFieldHeight()-blockSize)
+            	if(x2 % blockSize == 4 && y2 % blockSize == 5 && x2 < SimpleTrafficLightsConfiguration.getFieldWidth()-blockSize)
             		return CellType.CROSSROAD_WAITING_POINT;
 
     			// OPTION 2.4. Generic Street (default) 
@@ -463,6 +463,10 @@ public class StreetNetworkManager extends RobotGridManager {
     
 	public Optional<TrafficLight> getTrafficLightAt(Position pos) {
 		return trafficLights.stream().filter(tl -> tl.isRelatedPosition(pos)).findAny();
+	}
+
+	public Optional<Robot> getRobotAt(Position position) {
+		return getRobots().stream().filter(tl -> tl.isOn(position)).findAny();
 	}
 
 }
