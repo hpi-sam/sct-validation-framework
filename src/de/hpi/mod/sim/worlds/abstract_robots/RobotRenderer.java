@@ -3,7 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
-import de.hpi.mod.sim.worlds.simpletrafficlights.SimpleTrafficLightsConfiguration;
+import de.hpi.mod.sim.worlds.simpletraffic.SimpleTrafficWorldConfiguration;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -37,8 +37,8 @@ public class RobotRenderer {
             this.rightClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRightClickedRobotIcon()));
             this.batteryIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToEmptyBattery()));
             this.packageIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToPackage()));
-            this.leftClickedAreaImage = ImageIO.read(new File(SimpleTrafficLightsConfiguration.getStringPathToLeftClickedAreaHighlight()));
-        	this.rightClickedAreaImage = ImageIO.read(new File(SimpleTrafficLightsConfiguration.getStringPathToRightClickedAreaHighlight()));
+            this.leftClickedAreaImage = ImageIO.read(new File(SimpleTrafficWorldConfiguration.getStringPathToLeftClickedAreaHighlight()));
+        	this.rightClickedAreaImage = ImageIO.read(new File(SimpleTrafficWorldConfiguration.getStringPathToRightClickedAreaHighlight()));
         } catch (IOException e) {
             e.printStackTrace();
         }

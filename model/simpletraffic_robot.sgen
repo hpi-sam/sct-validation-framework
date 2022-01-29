@@ -1,0 +1,25 @@
+GeneratorModel for yakindu::java {
+
+	statechart SimpleTrafficRobotStatechart {
+
+		feature Outlet {
+			targetProject = "sct-sim-edu"
+			targetFolder = "src-gen"
+   			libraryTargetFolder = "src-gen"
+			skipLibraryFiles = false
+		}
+		
+		feature Naming {
+			basePackage = "de.hpi.mod.sim.statemachines.simpletraffic"
+		}
+		
+		feature OutEventAPI {
+		    observables = false
+		    getters = true
+		}
+		
+        feature GeneralFeatures {
+            TimerService = false
+        }
+	}
+}
