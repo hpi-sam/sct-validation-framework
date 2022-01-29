@@ -76,14 +76,18 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
 	}
 
     @Override
-    public String getMachineState() {
-        return control.getChartState();
+    public String getActiveState() {
+        return control.getActiveState();
     }
-    
 
     @Override
-    public String getTopStateName() {
-        return "simpleTrafficLightRobot";
+    public List<String> getActiveStates() {
+        return control.getActiveStates();
+    }
+
+    @Override
+    public String getTopLevelRegionName() {
+        return "_simpletrafficrobot";
     }
     
     @Override

@@ -3,6 +3,7 @@ package de.hpi.mod.sim.core.statechart;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.yakindu.core.IStatemachine;
@@ -56,7 +57,7 @@ public abstract class StateChartWrapper<T> {
         }
     }
 
-    public String getChartState() {
+    public String getActiveState() {
     	try {
 	    	List<String> activeStates = new ArrayList<>();
 	    	for(T state : getStates()) {
@@ -67,6 +68,31 @@ public abstract class StateChartWrapper<T> {
     		return activeStates.get(activeStates.size() - 1);
     	} catch (Exception e) { //avoid problems with version changes
     		return "";
+    	}
+    }
+
+    public List<String> getActiveStates() {
+    	try {
+    		// Get all active state names
+	    	List<String> allActiveStates = new ArrayList<>();
+	    	for(T state : getStates()) {
+	    		if(isActive(state)) {
+	    			allActiveStates.add(state.toString());
+	    		}		
+	    	}
+
+    		// Of theses, return only lowest level states and not hierachical top-states
+	    	Collections.reverse(allActiveStates);	    	
+	    	List<String> activeStates = new ArrayList<>();
+	    	for(String state : allActiveStates) {
+	    		if(activeStates.stream().noneMatch(s -> s.startsWith(state))) {
+	    			activeStates.add(state);
+	    		}
+	    	}	    	
+	    	Collections.reverse(activeStates);	   
+    		return activeStates;
+    	} catch (Exception e) { //avoid problems with version changes
+    		return List.of();
     	}
     }
 

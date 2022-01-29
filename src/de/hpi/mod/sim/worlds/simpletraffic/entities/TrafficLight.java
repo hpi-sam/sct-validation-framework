@@ -71,15 +71,10 @@ public class TrafficLight extends StateChartWrapper<SimpleTrafficLightStatechart
     public Position getBottomLeftPosition() {
         return basePosition;
     }
-
+    
     @Override
-    public String getMachineState() {
-        return getChartState();
-    }
-
-    @Override
-    public String getTopStateName() {
-        return "trafficlight";
+    public String getTopLevelRegionName() {
+        return "_simpletrafficlight";
     }
 
     private SimpleTrafficLightStatechart getStatemachine() {
@@ -91,25 +86,25 @@ public class TrafficLight extends StateChartWrapper<SimpleTrafficLightStatechart
         /**
          * Runs a cycle of the statechart and checks if any functions got fired
          */
-        if (getStatemachine().northLamp().isRaisedGreen())
-        	lightStateNorth = true;
         if (getStatemachine().northLamp().isRaisedRed())
             lightStateNorth = false;
-        
-        if (getStatemachine().eastLamp().isRaisedGreen())
-        	lightStateEast = true;
+        if (getStatemachine().northLamp().isRaisedGreen())
+        	lightStateNorth = true;
+
         if (getStatemachine().eastLamp().isRaisedRed())
         	lightStateEast = false;
-        
-        if (getStatemachine().southLamp().isRaisedGreen())
-        	lightStateSouth = true;
+        if (getStatemachine().eastLamp().isRaisedGreen())
+        	lightStateEast = true;
+
         if (getStatemachine().southLamp().isRaisedRed())
             lightStateSouth = false;
-        
-        if (getStatemachine().westLamp().isRaisedGreen())
-        	lightStateWest = true;
+        if (getStatemachine().southLamp().isRaisedGreen())
+        	lightStateSouth = true;
+
         if (getStatemachine().westLamp().isRaisedRed())
         	lightStateWest = false;
+        if (getStatemachine().westLamp().isRaisedGreen())
+        	lightStateWest = true;
     }
 
     @Override

@@ -1,11 +1,15 @@
 package de.hpi.mod.sim.core.statechart;
 
+import java.util.List;
+
 import de.hpi.mod.sim.core.simulation.Entity;
 
 public interface StateChartEntity extends Entity {
 
-	String getMachineState();
+	String getActiveState();
+	
+    List<String> getActiveStates();
 
-	String getTopStateName();
+	String getTopLevelRegionName();
 
 }

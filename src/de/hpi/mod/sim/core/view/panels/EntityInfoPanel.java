@@ -1,6 +1,8 @@
 package de.hpi.mod.sim.core.view.panels;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -23,10 +25,6 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 
 	private JLabel[] textLabels = null;
 	private StateTreeLabel treeLabel;
-
-	private static interface InfoPanelType {
-
-	}
 
 	/**
 	 * @param animationPanel       We need to ask the simulation for the reference
@@ -110,7 +108,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 
 		private static final long serialVersionUID = -42067353669036945L;
 
-		private String lastDisplayedStateString = "";
+		private List<String> lastDisplayedStateNames = List.of();
 
 		public void showDefaultText() {
 			setText("<html>State: -");
@@ -122,20 +120,30 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 			if (entity == null) return;
 			
 			// Ensure  that the state String has changed since last time 
-			String stateString = entity.getMachineState();
-			if (stateString.equals(lastDisplayedStateString)) return;
+			List<String> stateNames = entity.getActiveStates();
+			if (stateNames.equals(lastDisplayedStateNames)) return;
 						
-			lastDisplayedStateString = stateString;
-
-			String[] states = splitStates(stateString, entity.getTopStateName());
-			
+			lastDisplayedStateNames = stateNames;
+						
 			StringBuilder stringBuilder = new StringBuilder("<html>State:<br/>");
-			for (int i = 0; i < states.length; i++) {
-				for (int j = 0; j < 2 * i + 1; j++)
-					stringBuilder.append("&nbsp;"); // adds a secure space since the JLabel won't render normal
-													// spaces like we want it to
-				stringBuilder.append(states[i]);
-				stringBuilder.append("<br/>");
+			
+			String[] previousStates = new String[0];
+			for(String stateName : stateNames) {
+				String[] states = splitStates(stateName, entity.getTopLevelRegionName());
+				for (int i = 0; i < states.length; i++) {
+					if(previousStates.length < states.length || !previousStates[i].equals(states[i])) {
+
+						// Write text
+						for (int j = 0; j < 3 * i + 1; j++)
+							stringBuilder.append("&nbsp;"); // adds a secure space since the JLabel won't render normal
+															// spaces like we want it to
+						stringBuilder.append("&gt; ");
+						stringBuilder.append(states[i]);
+						stringBuilder.append("<br/>");
+					}
+				}
+				previousStates = states;
+
 			}
 
 			setText(stringBuilder.toString());

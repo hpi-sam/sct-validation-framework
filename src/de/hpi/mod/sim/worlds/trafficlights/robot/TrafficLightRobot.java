@@ -1,5 +1,7 @@
 package de.hpi.mod.sim.worlds.trafficlights.robot;
 
+import java.util.List;
+
 import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
@@ -67,12 +69,17 @@ public class TrafficLightRobot extends Robot implements IRobotData, IProcessor, 
     }
 
     @Override
-    public String getMachineState() {
-        return drive.getChartState();
+    public String getActiveState() {
+        return drive.getActiveState();
     }
 
     @Override
-    public String getTopStateName() {
+    public List<String> getActiveStates() {
+        return drive.getActiveStates();
+    }
+
+    @Override
+    public String getTopLevelRegionName() {
         return "tlRobot";
     }
 
