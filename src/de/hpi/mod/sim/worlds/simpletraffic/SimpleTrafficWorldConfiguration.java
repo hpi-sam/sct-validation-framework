@@ -1,8 +1,10 @@
 package de.hpi.mod.sim.worlds.simpletraffic;
 
+import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
+import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 
 /**
  * Contains all "magic-numbers" set in the Robots-and-Traffic-Lights-Simulation.
@@ -176,6 +178,21 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
 		}
 		fieldWidth = twoBordersAndOneStreet + (verticalStreets * oneStreetAndOneBorder);
 		fieldHeight = twoBordersAndOneStreet + (horizontalStreets * oneStreetAndOneBorder);
+		
+		// Set Offset... 
+		
+		// ...in X direction: 
+		//     Default: View will autoamtically put 0 in the center. 
+		//     Problem: However, We have 0 at the left side of the field instead of at the center.
+		//     Solution: We need to use the offset to shift the field by 1/2 fieldWidth to the left,  so that the field is centered again.
+		setOriginOffsetX(-(fieldWidth/2)-1);
+		
+		// ...in Y direction: 
+		//     Default: View will autoamtically put 0 directoly on the bottom. 
+		//     Problem: However, We want to have equal spacing on bottom and top side.
+		//     Solution: We need to calculate te distace between window and field height and make the offset 1/2 of that to truely center the field.
+		setOriginOffsetY( (availableFieldHeight+(fieldSideSpacing * 2)-fieldHeight)/2 );
+		
 	}
 
 	public static int getTargetDirectionOffset() {

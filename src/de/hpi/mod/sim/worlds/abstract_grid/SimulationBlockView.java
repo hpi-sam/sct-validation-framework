@@ -14,6 +14,7 @@ public class SimulationBlockView extends AnimationPanel {
      * The scaling of a block
      */
     private float blockSize;
+    
     /**
      * The Position of the mouse in blocks
      */
