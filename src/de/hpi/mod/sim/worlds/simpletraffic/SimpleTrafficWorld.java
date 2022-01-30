@@ -21,7 +21,6 @@ import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.SimpleTrafficRobot
 import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.TrafficLightRenderer;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.TestCaseGenerator;
-import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 
 public class SimpleTrafficWorld extends RobotWorld {
@@ -36,11 +35,6 @@ public class SimpleTrafficWorld extends RobotWorld {
 	@Override
 	public void initialize() {
 		super.initialize();
-		// Moved here from static initialization of configuration class, until a better
-		// solution from the configuration if found.
-		GridConfiguration.setOriginOffsetX(-TrafficLightsConfiguration.getFieldWidth() / 2 - 1);
-		SimpleTrafficWorldConfiguration.setOriginOffsetY(2);
-
 		trafficLightRenderer = new TrafficLightRenderer(getSimulationBlockView(), getStreetNetworkManager());
 	}
 
