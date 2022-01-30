@@ -32,21 +32,21 @@ public class CellType implements ICellType {
     public Color getColor() {
         switch(type) {
 	        case DEPARTURE_POINT:
-	            return Color.GREEN; // new Color(235, 235, 235);
+	            return new Color(180, 222, 255);
             case ARRIVAL_POINT:
-                return Color.RED; //new Color(235, 235, 235);
+                return new Color(180, 222, 255);
             case WALL:
-                return Color.DARK_GRAY;
+                return new Color(63, 63, 63);
             case EMPTY:
                 return Color.WHITE;
             case STREET:
-                return Color.LIGHT_GRAY;
+                return new Color(216, 216, 216);
             case CROSSROAD:
-                return Color.YELLOW;
+                return new Color(255, 242, 204);
             case CROSSROAD_WAITING_POINT:
-            	return Color.ORANGE;
+            	return new Color(251, 215, 187);
             default:
-                return Color.DARK_GRAY;
+                return new Color(63, 63, 63);
         }
     }
 
@@ -57,7 +57,7 @@ public class CellType implements ICellType {
     
     @Override
     public Color borderColor(Orientation orientation) {
-    	return Color.RED;
+    	return Color.BLACK;
     }
     
     @Override
