@@ -16,6 +16,7 @@ import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
+import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
@@ -144,8 +145,10 @@ public class SimpleTrafficWorld extends RobotWorld {
 				SimpleTrafficWorldConfiguration.getFieldWidth(),
 				SimpleTrafficWorldConfiguration.getFieldHeight());
 						
-		Font bigFont = new Font("Monospaced", Font.BOLD, 18);
-		Font smallFont = new Font("Arial", Font.PLAIN, 10);
+
+        float blockScale = getSimulationBlockView().getBlockSize() / GridConfiguration.getDefaultBlockSize();
+		Font bigFont = new Font("Monospaced", Font.BOLD, (int) (18*blockScale));
+		Font smallFont = new Font("Arial", Font.PLAIN, (int) (10*blockScale));
 		
 		// Get fontmetrics to calulate spacings
 	    FontMetrics bigFontMetrics = graphics.getFontMetrics(bigFont);
@@ -156,7 +159,7 @@ public class SimpleTrafficWorld extends RobotWorld {
 		
 		graphics.setFont(bigFont);
 		
-		String text1 = " Statistics ";
+		String text1 = " Throughput ";
 		int text1X = (int) (topRightPoint.getX() - bigFontMetrics.stringWidth(text1));
 		int text1Y =(int) (topRightPoint.getY() + 2*getSimulationBlockView().getBlockSize());
 
