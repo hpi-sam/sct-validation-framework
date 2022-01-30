@@ -76,8 +76,9 @@ public class SimpleTrafficRobotRenderer extends RobotRenderer {
 				Point2D position = getSimView().toDrawPosition(robot.x(), robot.y());
 				List<Direction> directions = manager.getTargetDirections(robot.pos(), robot.facing(), robot.getTarget());
 				
-				// ...and draw indicators above robot. 
-				this.drawRobotIndicator(graphic, position, blockSize, robot.getAngle(), directions.contains(Direction.LEFT), directions.contains(Direction.RIGHT));				
+				// ...and draw indicators above robot, IF Robot can NOT drive ahead.
+				if(!directions.contains(Direction.AHEAD))
+					this.drawRobotIndicator(graphic, position, blockSize, robot.getAngle(), directions.contains(Direction.LEFT), directions.contains(Direction.RIGHT));				
 			}	
 		}
 		
