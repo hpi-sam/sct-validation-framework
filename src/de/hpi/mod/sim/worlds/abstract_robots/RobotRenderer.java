@@ -21,7 +21,7 @@ import java.io.IOException;
 public class RobotRenderer {
 
     private SimulationBlockView simView;
-    private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon, rightClickedAreaImage, leftClickedAreaImage;
+    private BufferedImage robotIcon, leftClickedRobotIcon, rightClickedRobotIcon, batteryIcon, packageIcon;
     private RobotGridManager robots;
 
     public RobotRenderer(SimulationBlockView simView, RobotGridManager robots) {
@@ -37,35 +37,34 @@ public class RobotRenderer {
             this.rightClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRightClickedRobotIcon()));
             this.batteryIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToEmptyBattery()));
             this.packageIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToPackage()));
-            this.leftClickedAreaImage = ImageIO.read(new File(SimpleTrafficWorldConfiguration.getStringPathToLeftClickedAreaHighlight()));
-        	this.rightClickedAreaImage = ImageIO.read(new File(SimpleTrafficWorldConfiguration.getStringPathToRightClickedAreaHighlight()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
+    
 
-    public void render(Graphics graphic, float size) {
-        // Draw Robots
+    public void render(Graphics graphic, float blockSize) {
         for (Robot robot : robots.getRobots()) {
-            Point2D drawPosition = simView.toDrawPosition(robot.x(), robot.y());
-	
-	            boolean leftClicked = robot.equals(simView.getHighlighted1());
-	            boolean rightClicked = robot.equals(simView.getHighlighted2());
-	
-	            drawRobot(graphic, drawPosition, size, robot.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
-        }
-
-        // Render additional Info like Targets
-        for (Robot robot : robots.getRobots()) {
-            if (robot.equals(simView.getHighlighted1()) || robot.equals(simView.getHighlighted2())) {
-	                Point2D drawPos = simView.toDrawPosition(robot.x(), robot.y());
-	                Point2D targetPos = simView.toDrawPosition(robot.getTarget());
-	
-	                drawLineToTarget(graphic, drawPos, targetPos, size);
-            }
+        	drawRobotAndContext(graphic, blockSize, robot);
         }
     }
+    
+    protected void drawRobotAndContext(Graphics graphic, float blockSize, Robot robot) {
+    	Point2D drawPosition = getSimView().toDrawPosition(robot.x(), robot.y());
 
+    	// Draw actual Robots
+        boolean leftClicked = robot.equals(getSimView().getHighlighted1());
+        boolean rightClicked = robot.equals(getSimView().getHighlighted2());
+        drawRobot(graphic, drawPosition, blockSize, robot.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
+
+        // Render additional Info like Targets
+        if (leftClicked || rightClicked) {
+        	Point2D targetPosition = getSimView().toDrawPosition(robot.getTarget());
+        	drawLineFromRobotToTarget(graphic, drawPosition, targetPosition, blockSize);
+        }
+    }
+    	
     private void drawRobot(Graphics graphic, Point2D drawPosition, float size, float angle, boolean leftClicked, boolean rightClicked, boolean hasPackage, boolean batteryEmpty) {
     	
         int translateX = (int) drawPosition.getX();
@@ -94,15 +93,19 @@ public class RobotRenderer {
         
     }
 
-    private void drawLineToTarget(Graphics graphic, Point2D drawPosition, Point2D targetPosition, float size) {
+    private void drawLineFromRobotToTarget(Graphics graphic, Point2D robotPosition, Point2D targetPosition, float size) {
         Graphics2D Graphic2D = (Graphics2D) graphic;
         graphic.setColor(Color.RED);
 
         int offset = (int) size / 2;
         Graphic2D.drawLine(
-                (int) drawPosition.getX() + offset,
-                (int) drawPosition.getY() + offset,
+                (int) robotPosition.getX() + offset,
+                (int) robotPosition.getY() + offset,
                 (int) targetPosition.getX() + offset,
                 (int) targetPosition.getY() + offset);
     }
+
+	public SimulationBlockView getSimView() {
+		return simView;
+	}
 }

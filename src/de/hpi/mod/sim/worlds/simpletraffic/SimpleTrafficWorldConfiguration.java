@@ -37,6 +37,13 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
 	// Defaults for Properties for worobt pathfinding
 	private static final int DEFAULT_TARGET_DIRECTION_OFFSET = 3;
 	
+	// Defaults for Image Files for Robot Indicator lights
+	private static final boolean DEFAULT_SHOW_INDICATOR = true;
+    public static final String DEFAULT_STRING_PATH_TO_LEFT_INDICATOR_IMAGE = "res/robot-indicator-left.png"; 
+    public static final String DEFAULT_STRING_PATH_TO_RIGHT_INDICATOR_IMAGE = "res/robot-indicator-right.png";    
+	private static final int DEFAULT_INDICATPR_FLASH_INTERVALL = 200;
+
+	
 	// Field properties that are dependant on settings.
 	private static int fieldBorderWidth = DEFAULT_FIELD_BORDER_WIDTH;
 	private static int streetLength = DEFAULT_STREET_LENGTH;
@@ -64,6 +71,12 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
 	// Properties for worobt pathfinding
 	private static int targetDirectionOffset = DEFAULT_TARGET_DIRECTION_OFFSET;
 
+	// Image Files for Robot Indicator lights
+    private static boolean showIndicator = DEFAULT_SHOW_INDICATOR;
+    private static String stringPathToLeftIndicatorImage = DEFAULT_STRING_PATH_TO_LEFT_INDICATOR_IMAGE;
+	private static String stringPathToRightIndicatorImage = DEFAULT_STRING_PATH_TO_RIGHT_INDICATOR_IMAGE;
+	private static int indicatorFlashInterval = DEFAULT_INDICATPR_FLASH_INTERVALL;
+    
 	// Getter Methods
 	public static Position getIdleRobotsPosition() {
 		return idleRobotsPosition;
@@ -168,4 +181,21 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
 	public static int getTargetDirectionOffset() {
 		return targetDirectionOffset;
 	}
+	
+    public static String getStringPathToLeftIndicatorImage() {
+		return stringPathToLeftIndicatorImage;
+	}
+
+	public static String getStringPathToRightIndicatorImage() {
+		return stringPathToRightIndicatorImage;
+	}
+	
+    public static boolean showIndicator() {
+		return showIndicator;
+	}
+
+	public static int getIndicatorFlashInterval() {
+		return indicatorFlashInterval ;
+	}
+	
 }

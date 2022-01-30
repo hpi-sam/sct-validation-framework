@@ -9,6 +9,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 public class ExplosionRenderer {
+	
 	private Image explosion;
 	private Point2D location;
 	private boolean shouldRender = false;

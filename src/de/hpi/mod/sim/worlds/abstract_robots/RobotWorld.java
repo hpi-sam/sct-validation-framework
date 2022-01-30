@@ -29,7 +29,11 @@ public abstract class RobotWorld extends GridWorld {
     public void initialize() {
         super.initialize();
         explosionRenderer = new ExplosionRenderer();
-        robotRenderer = new RobotRenderer(getSimulationBlockView(), getRobotGridManager());
+        robotRenderer = createRobotRenderer();
+    }
+
+    protected RobotRenderer createRobotRenderer() {
+    	return new RobotRenderer(getSimulationBlockView(), getRobotGridManager());
     }
 
     protected List<Detector> createDetectors() {

@@ -226,6 +226,14 @@ public abstract class Robot implements Entity, IHighlightable {
 	public boolean isOn(Position t) {
         return pos().equals(t);
     }
+
+	public boolean isStandingOn(Position t) {
+        return pos().equals(t) && isStanding();
+    }
+
+	public boolean isStanding() {
+        return pos().equals(oldPos());
+    }
 	
 	public boolean isOnTargetOrNearby() {
         return isOn(target);

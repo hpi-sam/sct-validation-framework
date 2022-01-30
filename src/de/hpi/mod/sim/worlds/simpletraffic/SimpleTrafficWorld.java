@@ -14,8 +14,11 @@ import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotRenderer;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.TrafficLight;
+import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.SimpleTrafficRobotRenderer;
+import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.TrafficLightRenderer;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.ScenarioGenerator;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.TestCaseGenerator;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
@@ -45,6 +48,11 @@ public class SimpleTrafficWorld extends RobotWorld {
 	protected GridManager createGridManager() {
 		return new TrafficGridManager();
 	}
+
+	@Override
+    protected RobotRenderer createRobotRenderer() {
+    	return new SimpleTrafficRobotRenderer(getSimulationBlockView(), getStreetNetworkManager());
+    }
 
 	@Override
 	public void resetScenario() {

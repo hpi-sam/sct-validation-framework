@@ -1,4 +1,4 @@
-package de.hpi.mod.sim.worlds.simpletraffic;
+package de.hpi.mod.sim.worlds.simpletraffic.entities.rendering;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
+import de.hpi.mod.sim.worlds.simpletraffic.SimpleTrafficWorldConfiguration;
+import de.hpi.mod.sim.worlds.simpletraffic.TrafficGridManager;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.TrafficLight;
 
 public class TrafficLightRenderer {

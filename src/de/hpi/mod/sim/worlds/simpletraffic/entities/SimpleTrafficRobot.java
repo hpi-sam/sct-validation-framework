@@ -92,7 +92,7 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
     
     @Override
     public void actionCompleted() {
-        if(getCrossRoadsManager().isInFrontOfTrafficLight(pos())) {
+        if(getCrossRoadsManager().isInFrontOfTrafficLight(pos()) && pos().equals(oldPos())) {
         	control.actionCompletedAndTrafficLightAhead();
         }else {
         	control.actionCompleted();
