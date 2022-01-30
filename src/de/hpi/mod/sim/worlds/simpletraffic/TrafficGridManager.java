@@ -32,6 +32,8 @@ public class TrafficGridManager extends RobotGridManager {
 	private List<TrafficLight> trafficLights;
     private List<ArrivalPoint> arrivalPoints;
     private List<DeparturePoint> departurePoints;
+    private int totalDepartedRobots = 0;
+    private int totalArrivedRobots = 0;
     
     List<SimpleTrafficRobot> idleRobots = new CopyOnWriteArrayList<>();
 
@@ -98,6 +100,8 @@ public class TrafficGridManager extends RobotGridManager {
     	this.arrivalPoints = new CopyOnWriteArrayList<ArrivalPoint>();
     	this.departurePoints = new CopyOnWriteArrayList<DeparturePoint>();
     	this.trafficLights = new CopyOnWriteArrayList<TrafficLight>();
+    	this.totalDepartedRobots = 0;
+    	this.totalArrivedRobots = 0;
     }
     
     public TrafficLight getLightForCrossroad(int x, int y) {
@@ -266,6 +270,14 @@ public class TrafficGridManager extends RobotGridManager {
         return Orientation.SOUTH;
     }
 
+    public void reportDeparture() {
+    	this.totalDepartedRobots++;
+    }
+
+    public void reportArrival() {
+    	this.totalArrivedRobots++;
+    }
+
     public void makeRobotIdle(SimpleTrafficRobot r) {
     	this.removeRobot(r);
     	this.addIdleRobot(r);
@@ -278,23 +290,26 @@ public class TrafficGridManager extends RobotGridManager {
     
     public void startRobots() {
     	// As long as there are robots and free starting positions...
-    	while(hasIdleRobots() && hasEmptyDeparturePoints()) {
+    	while(this.hasIdleRobots() && this.hasEmptyDeparturePoints()) {
     	    		    		
     		// ...Get robot, ...
-    		SimpleTrafficRobot robot = getNextIdleRobot();
+    		SimpleTrafficRobot robot = this.getNextIdleRobot();
     		
     		// ...Make robot active, ...
     		makeRobotActive(robot);
     		
     		// ...Get start point, ...
-    		DeparturePoint departure = getNextEmptyDeparturePoint();
+    		DeparturePoint departure = this.getNextEmptyDeparturePoint();
     		
-    		// ...Get target and...
-    		ArrivalPoint arrival = getNextRandomDestination(Collections.singletonList(departure));
+    		// ...Get target, ...
+    		ArrivalPoint arrival = this.getNextRandomDestination(Collections.singletonList(departure));
     		
-    		// ...connect robot to selected transfer points.
+    		// ...connect robot to selected transfer points and....
     		departure.addStartingRobot(robot, arrival);
     		arrival.addExpectedRobot(robot);
+    		
+    		// ...update statistics.
+    		this.reportDeparture();
     		
     	}
     }
@@ -469,4 +484,11 @@ public class TrafficGridManager extends RobotGridManager {
 		return getRobots().stream().filter(tl -> tl.isOn(position)).findAny();
 	}
 
+	public int getNumberOfDepartedRobots() {
+		return totalDepartedRobots;
+	}
+
+	public int getNumberOfArrivedRobots() {
+		return totalArrivedRobots;
+	}
 }

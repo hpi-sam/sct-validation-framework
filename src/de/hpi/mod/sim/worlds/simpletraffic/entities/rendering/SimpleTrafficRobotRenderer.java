@@ -1,19 +1,15 @@
 package de.hpi.mod.sim.worlds.simpletraffic.entities.rendering;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;

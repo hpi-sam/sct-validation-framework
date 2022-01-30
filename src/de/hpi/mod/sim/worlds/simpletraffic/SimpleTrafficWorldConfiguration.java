@@ -26,6 +26,7 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
     private static final int DEFAULT_FIELD_SIDE_SPACING = 2;
 	private static final int DEFAULT_STREET_LENGTH = 5;
 	private static final GridMode DEFAULT_CROSSROAD_MODE = GridMode.MAXIMUM_CROSSROADS;
+	private static final boolean DEFAUT_SHOW_STATISTICS = false;
  	
 	// Defaults for Idle Robot Properties
 	private static final Position DEFAULT_IDLE_ROBOTS_POSITION = new Position(-1000,-1000);
@@ -60,6 +61,7 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
 	private static int verticalStreets = 0;
 	private static int horizontalStreets = 0;
 	private static GridMode crossroadsMode = DEFAULT_CROSSROAD_MODE;
+	private static boolean showStatistics = DEFAUT_SHOW_STATISTICS;
 	
 	// Idle Robot Properties
 	private static Position idleRobotsPosition = DEFAULT_IDLE_ROBOTS_POSITION;	
@@ -70,7 +72,7 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
 	private static int departurePointMinimalWaitingTime = DEFAULT_DEPARTURE_POINT_MINIMUM_WAITING_TIME;
 	private static int departurePointMaximalWaitingTime = DEFAULT_DEPARTURE_POINT_MAXIMUM_WAITING_TIME;
 	
-	// Properties for worobt pathfinding
+	// Properties for rorobt pathfinding
 	private static int targetDirectionOffset = DEFAULT_TARGET_DIRECTION_OFFSET;
 
 	// Image Files for Robot Indicator lights
@@ -213,6 +215,14 @@ public class SimpleTrafficWorldConfiguration extends RobotConfiguration {
 
 	public static int getIndicatorFlashInterval() {
 		return indicatorFlashInterval ;
+	}
+
+    public static boolean showStatistics() {
+		return showStatistics;
+	} 
+    
+	public static void setShowStatistics(boolean statistics) {
+		showStatistics = statistics;
 	}
 	
 }

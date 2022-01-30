@@ -23,9 +23,10 @@ public class ScenarioGenerator {
         this.world = world;
     }
     
-    private abstract class SimpleTrafficLightScenario extends Scenario {
+    private abstract class SimpleTrafficScenario extends Scenario {
     	
     	SimpleTrafficWorldConfiguration.GridMode gridMode;
+    	boolean statistics = false;
     
 		private List<EntitySpecification<?>> createDefaultEnvironmentEntities(boolean randomizeWaitingTimes) {
 			// Initialize list
@@ -60,6 +61,7 @@ public class ScenarioGenerator {
         public void loadScenario(World world) {
         	if(gridMode != null) {
         		SimpleTrafficWorldConfiguration.setCrossroadsMode(gridMode);
+        		SimpleTrafficWorldConfiguration.setShowStatistics(statistics);
         		world.configurationChanged(); 
         	}
         	
@@ -67,11 +69,12 @@ public class ScenarioGenerator {
         }
     }
     
-	private class NoRobotsScenario extends SimpleTrafficLightScenario {
+	private class NoRobotsScenario extends SimpleTrafficScenario {
 	    public NoRobotsScenario() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.TWO_CROSSROADS;
 	        name = "No Robots";
+	        statistics = false;
 	    }
 	    
 		@Override
@@ -81,11 +84,12 @@ public class ScenarioGenerator {
 		}
 	}
     
-	private class SingleRobotSingleCrossroadScenario extends SimpleTrafficLightScenario {
+	private class SingleRobotSingleCrossroadScenario extends SimpleTrafficScenario {
 	    public SingleRobotSingleCrossroadScenario() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.SINGLE_CROSSROAD;
 	        name = "Single Robot + Single Crossrad";
+	        statistics = false;
 	    }
 	    
 		@Override
@@ -96,11 +100,12 @@ public class ScenarioGenerator {
 		}
 	}
     
-	private class SingleRobotManyCrossroadsScenario extends SimpleTrafficLightScenario {
+	private class SingleRobotManyCrossroadsScenario extends SimpleTrafficScenario {
 	    public SingleRobotManyCrossroadsScenario() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
 	        name = "Single Robot";
+	        statistics = false;
 	    }
 	    
 		@Override
@@ -111,11 +116,12 @@ public class ScenarioGenerator {
 		}
 	}
     
-	private class FewRobotManyCrossroadsScenario extends SimpleTrafficLightScenario {
+	private class FewRobotManyCrossroadsScenario extends SimpleTrafficScenario {
 	    public FewRobotManyCrossroadsScenario() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
 	        name = "Few Robots";
+	        statistics = false;
 	    }
 	    
 		@Override
@@ -127,11 +133,12 @@ public class ScenarioGenerator {
 		}
 	}
     
-	private class ManyRobotManyCrossroadsScenario extends SimpleTrafficLightScenario {
+	private class ManyRobotManyCrossroadsScenario extends SimpleTrafficScenario {
 	    public ManyRobotManyCrossroadsScenario() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
 	        name = "Many Robots";
+	        statistics = false;
 	    }
 	    
 		@Override
@@ -143,11 +150,12 @@ public class ScenarioGenerator {
 		}
 	}
     
-	private class ThroughputChallengeWithSingleCrossroad extends SimpleTrafficLightScenario {
+	private class ThroughputChallengeWithSingleCrossroad extends SimpleTrafficScenario {
 	    public ThroughputChallengeWithSingleCrossroad() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.SINGLE_CROSSROAD;
 	        name = "CHALLENGE (single crossroad)";
+	        statistics = true;
 	    }
 	    
 		@Override
@@ -159,11 +167,12 @@ public class ScenarioGenerator {
 		}
 	}
     
-	private class ThroughputChallengeWithManyCrossroads extends SimpleTrafficLightScenario {
+	private class ThroughputChallengeWithManyCrossroads extends SimpleTrafficScenario {
 	    public ThroughputChallengeWithManyCrossroads() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
 	        name = "CHALLENGE (multiple crossroads)";
+	        statistics = true;
 	    }
 	    
 		@Override

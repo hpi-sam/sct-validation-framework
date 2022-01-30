@@ -62,10 +62,10 @@ public class TimerPanel extends JPanel {
 	}
 	
 	private void initializeTimer() {
-		timer = new Timer(1000,new ActionListener(){
+		timer = new Timer(100,new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				if(simulationRunner.isRunning()) {
-			        time += 1 * Configuration.getEntitySpeedFactor();
+			        time += 0.1 * Configuration.getEntitySpeedFactor();
 			        displayNewTime();
 				}
 			}
@@ -101,5 +101,10 @@ public class TimerPanel extends JPanel {
 		} else {
 			valueField.setText(Integer.toString(passedMinutes) + ":0" + Integer.toString(passedSeconds));
 		}
+	}
+
+	public float getTime() {
+		//TODO: Remove ugly workaround!
+		return time;
 	}
 }

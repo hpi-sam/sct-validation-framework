@@ -1,6 +1,11 @@
 package de.hpi.mod.sim.worlds.simpletraffic;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,11 +16,12 @@ import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
-import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
+import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotRenderer;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
+import de.hpi.mod.sim.worlds.flasher.config.FlasherConfiguration;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.TrafficLight;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.SimpleTrafficRobotRenderer;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.TrafficLightRenderer;
@@ -110,6 +116,80 @@ public class SimpleTrafficWorld extends RobotWorld {
 	protected void renderEntities(Graphics graphics) {
 		this.trafficLightRenderer.render(graphics, getSimulationBlockView().getBlockSize());
 		super.renderEntities(graphics);
+	}
+
+	@Override
+	public void render(Graphics graphics) {
+		super.render(graphics);
+		if(SimpleTrafficWorldConfiguration.showStatistics() && getScenarioManager().isRunningScenario())
+			this.drawStatistics(graphics);
+	}
+	
+	private void drawStatistics(Graphics graphics) {
+
+		float timeInSeconds = getScenarioManager().getCurrentSimulationTime();
+		int departedRobots = getStreetNetworkManager().getNumberOfDepartedRobots();
+		int arrivedRobots = getStreetNetworkManager().getNumberOfArrivedRobots();
+		
+
+		String robotsPerMinuteString = "---";
+		if(timeInSeconds >= 60) {
+			float robotsPerMinute = (arrivedRobots / timeInSeconds) *60;
+			robotsPerMinuteString = new DecimalFormat("#.00").format(robotsPerMinute);
+		}
+		
+
+		// TopRightPoint
+		Point2D topRightPoint = getSimulationBlockView().toDrawPosition(
+				SimpleTrafficWorldConfiguration.getFieldWidth(),
+				SimpleTrafficWorldConfiguration.getFieldHeight());
+						
+		Font bigFont = new Font("Monospaced", Font.BOLD, 18);
+		Font smallFont = new Font("Arial", Font.PLAIN, 10);
+		
+		// Get fontmetrics to calulate spacings
+	    FontMetrics bigFontMetrics = graphics.getFontMetrics(bigFont);
+	    FontMetrics smallFontMetrics = graphics.getFontMetrics(smallFont);
+	    
+	    // Set color for all text rendering
+		graphics.setColor(Color.WHITE);
+		
+		graphics.setFont(bigFont);
+		
+		String text1 = " Statistics ";
+		int text1X = (int) (topRightPoint.getX() - bigFontMetrics.stringWidth(text1));
+		int text1Y =(int) (topRightPoint.getY() + 2*getSimulationBlockView().getBlockSize());
+
+		graphics.drawString(text1, text1X, text1Y);
+		
+		String text2 = robotsPerMinuteString;
+		int text2X = (int) (text1X + (bigFontMetrics.stringWidth(text1) - bigFontMetrics.stringWidth(text2))/2);
+		int text2Y = text1Y + (int) (1.2*bigFontMetrics.getHeight());
+		graphics.drawString(text2, text2X, text2Y);
+
+		graphics.setFont(smallFont);
+		
+		String text3 = "robots/min";
+		int text3X = (int) (text1X + (bigFontMetrics.stringWidth(text1) - smallFontMetrics.stringWidth(text3))/2);
+		int text3Y = text2Y +(int) +smallFontMetrics.getHeight();
+		graphics.drawString(text3, text3X, text3Y);
+		
+		
+		String text4 = "Departed: "+departedRobots+ " robots";
+		int text4X = (int) (text1X + (bigFontMetrics.stringWidth(text1) - smallFontMetrics.stringWidth(text4))/2);
+		int text4Y = text3Y +(int) (1.5*smallFontMetrics.getHeight());
+		graphics.drawString(text4, text4X, text4Y);
+		
+		String text5 = "Arrived: "+arrivedRobots+ " robots";
+		int text5X = (int) (text1X + (bigFontMetrics.stringWidth(text1) - smallFontMetrics.stringWidth(text5))/2);
+		int text5Y = text4Y +(int) smallFontMetrics.getHeight();
+		graphics.drawString(text5, text5X, text5Y);
+		
+		String text6 = "Now driving: "+(departedRobots-arrivedRobots)+ " robots";
+		int text6X = (int) (text1X + (bigFontMetrics.stringWidth(text1) - smallFontMetrics.stringWidth(text6))/2);
+		int text6Y = text5Y +(int) smallFontMetrics.getHeight();
+		graphics.drawString(text6, text6X, text6Y);
+			
 	}
 
 	@Override

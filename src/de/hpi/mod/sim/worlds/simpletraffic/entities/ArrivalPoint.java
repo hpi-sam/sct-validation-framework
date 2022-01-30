@@ -51,6 +51,7 @@ public class ArrivalPoint extends TransitPoint {
 			this.arrivedRobot = potentiallyArrivedRobot.get();
 			this.arrivedRobot.resetArrived();
 			this.awaitedRobots.remove(arrivedRobot);
+			arrivedRobot.getCrossRoadsManager().reportArrival();
 			this.startCountdownTimer();
 			this.totalArrivedRobots++;		
 		}
