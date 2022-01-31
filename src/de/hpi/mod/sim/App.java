@@ -1,8 +1,5 @@
 package de.hpi.mod.sim;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-
 import javax.swing.JOptionPane;
 
 import de.hpi.mod.sim.core.World;
@@ -14,7 +11,7 @@ import de.hpi.mod.sim.worlds.infinitewarehouse.InfiniteWarehouse;
 import de.hpi.mod.sim.core.view.SimulatorFrame;
 
 /**
- * @author Tim Cech, Jonas Kordt, Paul Methfessel, Chiara Schirmer, Simon Wietheger, Christian Zöllner
+ * @author Christian Zöllner, Tim Cech, Jonas Kordt, Paul Methfessel, Chiara Schirmer, Simon Wietheger
  *         (System Analysis and Modeling Group @ Hasso-Plattner-Institute, Potsdam University, Germany)
  * @version 0.9.0
  * 
@@ -50,7 +47,7 @@ public class App {
     	// Set global system 
         SimulatorFrame.setSystemLookAndFeel();
         
-        // Instranciate Simulator World, exit if selected world is invalid
+        // Instantiate Simulator World, exit if selected world is invalid
         World world = selectWorld();
         if (world == null) System.exit(1);
         
