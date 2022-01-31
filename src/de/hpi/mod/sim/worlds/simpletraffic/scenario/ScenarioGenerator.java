@@ -69,26 +69,27 @@ public class ScenarioGenerator {
         }
     }
     
-	private class NoRobotsScenario extends SimpleTrafficScenario {
-	    public NoRobotsScenario() {
+	private class SingleRobotSingleCrossroadScenario extends SimpleTrafficScenario {
+	    public SingleRobotSingleCrossroadScenario() {
 	    	super();
-	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.TWO_CROSSROADS;
-	        name = "No Robots";
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.SINGLE_CROSSROAD;
+	        name = "Single Robot 1";
 	        statistics = false;
 	    }
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
 			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
+			list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
 		}
 	}
     
-	private class SingleRobotSingleCrossroadScenario extends SimpleTrafficScenario {
-	    public SingleRobotSingleCrossroadScenario() {
+	private class SingleRobotSomeCrossroadsScenario extends SimpleTrafficScenario {
+	    public SingleRobotSomeCrossroadsScenario() {
 	    	super();
-	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.SINGLE_CROSSROAD;
-	        name = "Single Robot + Single Crossrad";
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.TWO_CROSSROADS;
+	        name = "Single Robot 2";
 	        statistics = false;
 	    }
 	    
@@ -104,7 +105,7 @@ public class ScenarioGenerator {
 	    public SingleRobotManyCrossroadsScenario() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
-	        name = "Single Robot";
+	        name = "Single Robot 2";
 	        statistics = false;
 	    }
 	    
@@ -116,11 +117,28 @@ public class ScenarioGenerator {
 		}
 	}
     
+	private class FewRobotSomeCrossroadsScenario extends SimpleTrafficScenario {
+	    public FewRobotSomeCrossroadsScenario() {
+	    	super();
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.TWO_CROSSROADS;
+	        name = "Few Robots 1";
+	        statistics = false;
+	    }
+	    
+		@Override
+		protected List<EntitySpecification<?>> getScenarioEntities() {
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
+			for(int i = 0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints() ; i++)
+				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
+			return list;
+		}
+	}
+    
 	private class FewRobotManyCrossroadsScenario extends SimpleTrafficScenario {
 	    public FewRobotManyCrossroadsScenario() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
-	        name = "Few Robots";
+	        name = "Few Robots 2";
 	        statistics = false;
 	    }
 	    
@@ -144,17 +162,49 @@ public class ScenarioGenerator {
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
 			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
-			for(int i = 0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints()*(SimpleTrafficWorldConfiguration.getStreetLength()-1) ; i++)
+			for(int i = 0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints()*(SimpleTrafficWorldConfiguration.getStreetLength()-2) ; i++)
 				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
 		}
 	}
     
-	private class ThroughputChallengeWithSingleCrossroad extends SimpleTrafficScenario {
-	    public ThroughputChallengeWithSingleCrossroad() {
+	private class NoRobotsScenario extends SimpleTrafficScenario {
+	    public NoRobotsScenario() {
+	    	super();
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.TWO_CROSSROADS;
+	        name = "Only Crossroads, No Robots";
+	        statistics = false;
+	    }
+	    
+		@Override
+		protected List<EntitySpecification<?>> getScenarioEntities() {
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithRandomizedTimes();
+			return list;
+		}
+	}
+    
+	private class ThroughputChallengeWithSingleCrossroadAndFewRobots extends SimpleTrafficScenario {
+	    public ThroughputChallengeWithSingleCrossroadAndFewRobots() {
 	    	super();
 	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.SINGLE_CROSSROAD;
-	        name = "CHALLENGE (single crossroad)";
+	        name = "Single Crossroad, Few Robots (CHALLENGE)";
+	        statistics = true;
+	    }
+	    
+		@Override
+		protected List<EntitySpecification<?>> getScenarioEntities() {
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithoutRandomizedTimes();
+			for(int i = 0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints()*2 ; i++)
+				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
+			return list;
+		}
+	}
+    
+	private class ThroughputChallengeWithSingleCrossroadAndManyRobots extends SimpleTrafficScenario {
+	    public ThroughputChallengeWithSingleCrossroadAndManyRobots() {
+	    	super();
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.SINGLE_CROSSROAD;
+	        name = "Single Crossroad, Many Robots (CHALLENGE)";
 	        statistics = true;
 	    }
 	    
@@ -167,18 +217,52 @@ public class ScenarioGenerator {
 		}
 	}
     
-	private class ThroughputChallengeWithManyCrossroads extends SimpleTrafficScenario {
-	    public ThroughputChallengeWithManyCrossroads() {
+	private class ThroughputChallengeWithFourCrossroadsAndFewRobots extends SimpleTrafficScenario {
+	    public ThroughputChallengeWithFourCrossroadsAndFewRobots() {
 	    	super();
-	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
-	        name = "CHALLENGE (multiple crossroads)";
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.TWO_CROSSROADS;
+	        name = "Four Crossroad, Few Robots (CHALLENGE)";
 	        statistics = true;
 	    }
 	    
 		@Override
 		protected List<EntitySpecification<?>> getScenarioEntities() {
 			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithoutRandomizedTimes();
-			for(int i = 0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints()*SimpleTrafficWorldConfiguration.getStreetLength()*(SimpleTrafficWorldConfiguration.getVerticalStreets()+SimpleTrafficWorldConfiguration.getHorizontalStreets()) ; i++)
+			for(int i = 0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints()*2 ; i++)
+				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
+			return list;
+		}
+	}
+    
+	private class ThroughputChallengeWithFourCrossroadsAndManyRobots extends SimpleTrafficScenario {
+	    public ThroughputChallengeWithFourCrossroadsAndManyRobots() {
+	    	super();
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.TWO_CROSSROADS;
+	        name = "Four Crossroad, Many Robots (CHALLENGE)";
+	        statistics = true;
+	    }
+	    
+		@Override
+		protected List<EntitySpecification<?>> getScenarioEntities() {
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithoutRandomizedTimes();
+			for(int i=0 ; i < SimpleTrafficWorldConfiguration.getNumberOfTransferPoints()*3 ; i++)
+				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
+			return list;
+		}
+	}
+    
+	private class ThroughputChallengeWithManyCrossroads extends SimpleTrafficScenario {
+	    public ThroughputChallengeWithManyCrossroads() {
+	    	super();
+	    	gridMode = SimpleTrafficWorldConfiguration.GridMode.MAXIMUM_CROSSROADS;
+	        name = "Many Crossroads (CHALLENGE)";
+	        statistics = true;
+	    }
+	    
+		@Override
+		protected List<EntitySpecification<?>> getScenarioEntities() {
+			List<EntitySpecification<?>> list = createDefaultEnvironmentEntitiesWithoutRandomizedTimes();
+			for(int i=0 ; i < SimpleTrafficWorldConfiguration.getNumberOfTransferPoints()*3 ; i++)
 				list.add(new SimpleRobotSpecification(world.getStreetNetworkManager()));
 			return list;
 		}
@@ -186,12 +270,19 @@ public class ScenarioGenerator {
 	
     public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList<>();
-        scenarios.add(new NoRobotsScenario());
+        
         scenarios.add(new SingleRobotSingleCrossroadScenario());
+        scenarios.add(new SingleRobotSomeCrossroadsScenario());
         scenarios.add(new SingleRobotManyCrossroadsScenario());
         scenarios.add(new FewRobotManyCrossroadsScenario());
+        scenarios.add(new FewRobotSomeCrossroadsScenario());
         scenarios.add(new ManyRobotManyCrossroadsScenario());
-        scenarios.add(new ThroughputChallengeWithSingleCrossroad());
+        
+        scenarios.add(new NoRobotsScenario());
+        scenarios.add(new ThroughputChallengeWithSingleCrossroadAndFewRobots());
+        scenarios.add(new ThroughputChallengeWithSingleCrossroadAndManyRobots());
+        scenarios.add(new ThroughputChallengeWithFourCrossroadsAndFewRobots());
+        scenarios.add(new ThroughputChallengeWithFourCrossroadsAndManyRobots());
         scenarios.add(new ThroughputChallengeWithManyCrossroads());
         return scenarios;
     }
