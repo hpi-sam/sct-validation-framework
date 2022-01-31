@@ -271,19 +271,20 @@ public class ScenarioGenerator {
     public List<Scenario> getScenarios() {
         List<Scenario> scenarios = new ArrayList<>();
         
-//        scenarios.add(new SingleRobotSingleCrossroadScenario());
-//        scenarios.add(new SingleRobotSomeCrossroadsScenario());
-//        scenarios.add(new SingleRobotManyCrossroadsScenario());
-//        scenarios.add(new FewRobotManyCrossroadsScenario());
-//        scenarios.add(new FewRobotSomeCrossroadsScenario());
-//        scenarios.add(new ManyRobotManyCrossroadsScenario());
+        scenarios.add(new SingleRobotSingleCrossroadScenario());
+        scenarios.add(new SingleRobotSomeCrossroadsScenario());
+        scenarios.add(new SingleRobotManyCrossroadsScenario());
+        scenarios.add(new FewRobotManyCrossroadsScenario());
+        scenarios.add(new FewRobotSomeCrossroadsScenario());
+        scenarios.add(new ManyRobotManyCrossroadsScenario());
         
-        scenarios.add(new NoRobotsScenario());
-        scenarios.add(new ThroughputChallengeWithSingleCrossroadAndFewRobots());
-        scenarios.add(new ThroughputChallengeWithSingleCrossroadAndManyRobots());
-        scenarios.add(new ThroughputChallengeWithFourCrossroadsAndFewRobots());
-        scenarios.add(new ThroughputChallengeWithFourCrossroadsAndManyRobots());
-        scenarios.add(new ThroughputChallengeWithManyCrossroads());
+//        scenarios.add(new NoRobotsScenario());
+//        scenarios.add(new ThroughputChallengeWithSingleCrossroadAndFewRobots());
+//        scenarios.add(new ThroughputChallengeWithSingleCrossroadAndManyRobots());
+//        scenarios.add(new ThroughputChallengeWithFourCrossroadsAndFewRobots());
+//        scenarios.add(new ThroughputChallengeWithFourCrossroadsAndManyRobots());
+//        scenarios.add(new ThroughputChallengeWithManyCrossroads());
+        
         return scenarios;
     }
 }

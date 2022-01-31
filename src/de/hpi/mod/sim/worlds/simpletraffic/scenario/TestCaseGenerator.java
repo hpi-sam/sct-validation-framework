@@ -31,13 +31,56 @@ import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSp
      public Map<String, List<TestScenario>> getAllTestCases() {
          Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
          
-         testGroups.put("I. Simple Driving", new CopyOnWriteArrayList<TestScenario>());
+         testGroups.put("I. Simple Driving", generateSimpleDrivingTests(this.world.getStreetNetworkManager()));
          testGroups.put("II. Complete Route Driving", generateCompleteRouteTests(this.world.getStreetNetworkManager()));
-         testGroups.put("III. Crossroad Conflicts", new CopyOnWriteArrayList<TestScenario>());
-         testGroups.put("IV. Complex Traffic", new CopyOnWriteArrayList<TestScenario>());
+//         testGroups.put("III. Crossroad Conflicts", new CopyOnWriteArrayList<TestScenario>());
+//         testGroups.put("IV. Complex Traffic", new CopyOnWriteArrayList<TestScenario>());
          return testGroups;
      }
 
+
+     
+     private List<TestScenario> generateSimpleDrivingTests(TrafficGridManager manager) {
+
+        // Start list of test scenarios for this group
+        List<TestScenario> testScenarios = new ArrayList<>();
+
+
+        testScenarios.add(new SimpleTrafficTestScenario(
+       		 "TODO 1", "Will be implemented today :-).",
+       		 e_list(), 
+       		 GridMode.TWO_CROSSROADS, true, false, false));
+
+        testScenarios.add(new SimpleTrafficTestScenario(
+       		 "TODO 2", "Will be implemented today :-).",
+       		 e_list(), 
+       		 GridMode.TWO_CROSSROADS, true, false, false));
+
+        testScenarios.add(new SimpleTrafficTestScenario(
+       		 "TODO 3", "Will be implemented today :-).",
+       		 e_list(), 
+       		 GridMode.TWO_CROSSROADS, true, false, false));
+
+        testScenarios.add(new SimpleTrafficTestScenario(
+       		 "TODO 4", "Will be implemented today :-).",
+       		 e_list(), 
+       		 GridMode.TWO_CROSSROADS, true, false, false));
+
+        testScenarios.add(new SimpleTrafficTestScenario(
+       		 "TODO 5", "Will be implemented today :-).",
+       		 e_list(), 
+       		 GridMode.TWO_CROSSROADS, true, false, false));
+
+        testScenarios.add(new SimpleTrafficTestScenario(
+       		 "TODO 6", "Will be implemented today :-).",
+       		 e_list(), 
+       		 GridMode.TWO_CROSSROADS, true, false, false));
+        
+        
+        return testScenarios;
+    }
+
+     
      
      
       private List<TestScenario> generateCompleteRouteTests(TrafficGridManager manager) {
