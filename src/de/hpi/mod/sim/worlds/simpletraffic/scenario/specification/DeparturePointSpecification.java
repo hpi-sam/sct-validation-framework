@@ -9,12 +9,16 @@ import de.hpi.mod.sim.worlds.simpletraffic.entities.DeparturePoint;
 
 public class DeparturePointSpecification extends TransitPointSpecification<DeparturePoint> {
 	
-	public DeparturePointSpecification(int i, TrafficGridManager g, boolean r) {
-		super(i, g, r);
+	public DeparturePointSpecification(int id, TrafficGridManager gridManager, boolean randomizeTimes, boolean testMode) {
+		super(id, gridManager, randomizeTimes, testMode);
 	}
 	
-	public DeparturePointSpecification(int i, TrafficGridManager g) {
-		super(i, g, true);		
+	public DeparturePointSpecification(int id, TrafficGridManager gridManager, boolean randomizeTimes) {
+		super(id, gridManager, randomizeTimes, false);
+	}
+	
+	public DeparturePointSpecification(int id, TrafficGridManager gridManager) {
+		super(id, gridManager, true, false);		
 	}
 
     public Position getCoordinates() {
@@ -55,7 +59,9 @@ public class DeparturePointSpecification extends TransitPointSpecification<Depar
 		
 		DeparturePoint entity = new DeparturePoint(this.id, getCoordinates(), getOrientation(), this.randomizeWitingTimes);
 		this.grid.addDeparturePoint(entity);
-	    return entity;
+		if(testMode)
+			entity.activateSingleUseMode();
+		return entity;
 	}
 
 }

@@ -2,6 +2,8 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
@@ -23,7 +25,7 @@ public abstract class Robot implements Entity, IHighlightable {
     private DriveManager manager;
 
     private Position target = null;
-    private List<Position> testTargets = null;
+    private List<Position> testTargets = new CopyOnWriteArrayList<Position>();
     private int robotID;
     private int robotSpecificDelay = 0;
 

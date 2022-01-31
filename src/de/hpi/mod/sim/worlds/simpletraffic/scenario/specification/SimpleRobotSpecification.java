@@ -15,7 +15,7 @@ public class SimpleRobotSpecification extends RobotSpecification<SimpleTrafficRo
 	@Override
     public SimpleTrafficRobot createRobot(TrafficGridManager networkManager) {
 		SimpleTrafficRobot robot = new SimpleTrafficRobot(Robot.incrementID(), networkManager, SimpleTrafficWorldConfiguration.getIdleRobotsPosition(), SimpleTrafficWorldConfiguration.getIdleRobotsOrientation(), null);
-    	networkManager.makeRobotIdle(robot);
+		networkManager.makeRobotIdle(robot);
     	return robot;
     }   
 	    

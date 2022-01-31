@@ -20,6 +20,9 @@ public abstract class TransitPoint implements Entity {
 	private boolean randomizeWaitingTimes;
 	private int countdownTimer;
 	
+	// Test property
+	private boolean singleUse = false;
+	private boolean singleUseFinished = false;
 	
 	public TransitPoint(int i, Position p, Orientation o, boolean r) {
 		this.id = i;
@@ -27,7 +30,11 @@ public abstract class TransitPoint implements Entity {
 		this.orientation = o;
 		this.randomizeWaitingTimes = r;
 	}
-	
+
+    public boolean hasPassedAllTestCriteria() {
+    	return !singleUse || singleUseFinished;
+    }
+    
 	public int getId() {
 		return id;
 	}
@@ -65,6 +72,18 @@ public abstract class TransitPoint implements Entity {
 	
 	protected boolean countdownTimerFinished() {
 		return  this.countdownTimer <= 0;
+	}
+
+	public boolean isSingleUse() {
+		return this.singleUse;
+	}
+
+	public void activateSingleUseMode() {
+		this.singleUse = true;
+	}
+
+	public void singleUseFinished() {
+		this.singleUseFinished = true;
 	}
 	
 }

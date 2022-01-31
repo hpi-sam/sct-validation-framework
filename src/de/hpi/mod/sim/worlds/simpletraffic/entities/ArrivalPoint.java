@@ -24,10 +24,6 @@ public class ArrivalPoint extends TransitPoint {
 	public int getNumberOfExpectedRobots() {
 		return awaitedRobots.size();
 	}
-
-    public boolean hasPassedAllTestCriteria() {
-    	return totalArrivedRobots >= 1;
-    }
 	
 	public void update(float delta) {
 		
@@ -38,9 +34,14 @@ public class ArrivalPoint extends TransitPoint {
 		if(this.arrivedRobot != null) {
 			// ...AND timer has tun out...
 			if(this.countdownTimerFinished()) {
-				// ...move robot to idle location....
-				arrivedRobot.moveToIdlePosition();
-				arrivedRobot.getCrossRoadsManager().makeRobotIdle(arrivedRobot);
+				if(isSingleUse()) {
+					// ...mark this point as used...
+					singleUseFinished();
+				}else {
+					// ...OR move robot to idle location (for multiple use)....
+					arrivedRobot.moveToIdlePosition();
+					arrivedRobot.getCrossRoadsManager().makeRobotIdle(arrivedRobot);
+				}
 				
 				// ... and make departure point free for new arrivals.
 				this.arrivedRobot = null;

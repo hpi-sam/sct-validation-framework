@@ -16,7 +16,7 @@ public class DeparturePoint extends TransitPoint {
 
 	// State
 	private enum DeparturePointState {
-		NOT_OCCUPIED, WAITING_BEFORE_ROBOT_STARTS, WAITING_FOR_ROBOT_TO_LEAVE, WAITING_AFTER_ROBOT_LEFT
+		NOT_OCCUPIED, WAITING_BEFORE_ROBOT_STARTS, WAITING_FOR_ROBOT_TO_LEAVE, WAITING_AFTER_ROBOT_LEFT, FINISHED_AFTER_SINGLE_USE
 	}
 	private DeparturePointState currentState = DeparturePointState.NOT_OCCUPIED;
 
@@ -59,15 +59,21 @@ public class DeparturePoint extends TransitPoint {
 		// Case 1: If currently in pause before task start AND timer has tun out....
 		if (this.currentState == DeparturePointState.WAITING_BEFORE_ROBOT_STARTS && this.countdownTimerFinished()) {
 			// ...send start signal to robot and update starte.
-			this.currentState = DeparturePointState.WAITING_FOR_ROBOT_TO_LEAVE;
 			this.startingRobot.setTargetAndNotify(this.targetforStartingRobot.getPosition());
+			this.currentState = DeparturePointState.WAITING_FOR_ROBOT_TO_LEAVE;
 		}
 
 		// Case 2: Task was send AND robot left field....
 		else if (this.currentState == DeparturePointState.WAITING_FOR_ROBOT_TO_LEAVE && !this.startingRobot.pos().fuzzyEquals(this.getPosition())) {
-			// ...update state and start timer.
-			this.currentState = DeparturePointState.WAITING_AFTER_ROBOT_LEFT;
-			this.startCountdownTimer();
+			if(isSingleUse()) {
+				// ...mark single use as finshed.
+				this.currentState = DeparturePointState.FINISHED_AFTER_SINGLE_USE;
+				this.singleUseFinished();
+			}else {
+				// ...OR update state and start timer.
+				this.currentState = DeparturePointState.WAITING_AFTER_ROBOT_LEFT;
+				this.startCountdownTimer();
+			}
 		}
 
 		// Case 3: If currently in pause before task start AND timer has tun out....

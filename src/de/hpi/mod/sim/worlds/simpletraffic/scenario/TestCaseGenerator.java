@@ -52,24 +52,24 @@ import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSp
 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(1, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(4, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(1, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(4, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Straigt Ahead 1", "Robot starts at top position of left side and has to drive straight to top position of right side.",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false));
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(7, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(2, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(7, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(2, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Straigt Ahead 2", "Robot starts at left position of bottom side and has to drive straight to left position of top side.",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false));
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(5, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(0, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(5, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(0, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Straigt Ahead 3", "Robot starts at bottom position of right side and has to drive straight to bottom position of left side.",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
@@ -79,40 +79,40 @@ import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSp
          
          
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(0, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(7, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(0, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(7, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Right 1", "Robot starts at bottom position of left side and has to drive to left position of bottom side (i.e. turn right once).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false)); 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(2, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(5, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(2, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(5, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Right 2", "Robot starts at left position of top side and has to drive to bottom position of left side (i.e. drive straigt once, then turn right).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false)); 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(7, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(5, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(7, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(5, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Right 3", "Robot starts at left position of bottom side and has to drive to bottom position of right side (i.e. turn right once, then drive straigt).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false)); 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(5, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(2, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(5, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(2, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Right 4", "Robot starts at bottom position of right side and has to drive to left position of top side (i.e. drive straigt once, turn right once, then drive straigt again or alternatively drive left, right, left).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false)); 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(4, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(2, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(4, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(2, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Right 4 EXTRA", "Robot starts at bottom position of right side and has to drive to left position of top side (i.e. drive straigt once, turn right once, then drive straigt again or alternatively drive left, right, left).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
@@ -123,32 +123,32 @@ import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSp
          
          
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(1, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(2, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(1, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(2, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Left 1", "Robot starts at top position of left side and has to drive to left position of top side (i.e. turn left once).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false)); 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(3, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(5, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(3, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(5, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Left 2", "Robot starts at right position of top side and has to drive to bottom position of right side (i.e. drive straigt once, then turn left).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false)); 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(5, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(7, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(5, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(7, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Left 3", "Robot starts at bottom position of right side and has to drive to left position of bottom side (i.e. turn left once, then drive straigt).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false)); 
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(6, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(1, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(6, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(1, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Left 4", "Robot starts at right position of bottom side and has to drive to top position of left side (i.e. drive straigt once, turn left once, then drive straigt again or alternatively drive left, right, left).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
@@ -158,16 +158,16 @@ import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSp
 
          
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(5, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(1, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(5, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(1, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Opposite Ahead 1", "Robot starts at bottom position of right side and has to drive top position of left side (ie. turn right once and then left at some point to switch lanes).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false));
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(3, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(7, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(3, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(7, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Opposite Ahead 2", "Robot starts at right position of top side and has to drive left position of bottom side (ie. turn left once and then right at some point to switch lanes).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
@@ -176,24 +176,24 @@ import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSp
          
          
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(0, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(1, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(0, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(1, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Behind 1", "Robot starts at bottom position of left side and has to drive to top position of left side (i.e. turn left twice).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false));
          
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(3, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(4, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(3, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(4, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Behind 2", "Robot starts at right position of top side and has to drive to left position of top side (i.e. turn right twice).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
         		 GridMode.TWO_CROSSROADS, true, false, false));
 
          testRobot = new SimpleRobotSpecification(manager);
-         testDeparturePoint = new DeparturePointSpecification(4, manager, false);
-         testArrivalPoint = new ArrivalPointSpecification(5, manager, false);
+         testDeparturePoint = new DeparturePointSpecification(4, manager, false, true);
+         testArrivalPoint = new ArrivalPointSpecification(5, manager, false, true);
          testScenarios.add(new SimpleTrafficTestScenario(
         		 "Target is Behind 3", "Robot starts at top position of right side and has to drive to bottom position of right side (i.e. turn left twice).",
         		 e_list(testRobot, testArrivalPoint, testDeparturePoint), 
@@ -251,14 +251,14 @@ import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSp
     			// Add Arrival  Point specifications to list
     			if(autoamticArrivalPoints) {
     				for (int i=0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints() ; i++) {
-    					list.add(new DeparturePointSpecification(i, world.getStreetNetworkManager()));
+    					list.add(new DeparturePointSpecification(i, world.getStreetNetworkManager(), false, true));
     				}
     			}
     			
     			// Add  Departure Point specifications to list
     			if(autoamticDeparturePoints) {
     				for (int i=0 ; i<SimpleTrafficWorldConfiguration.getNumberOfTransferPoints() ; i++) {
-    					list.add(new ArrivalPointSpecification(i, world.getStreetNetworkManager()));
+    					list.add(new ArrivalPointSpecification(i, world.getStreetNetworkManager(), false, true));
     				}
     			}
     			

@@ -8,12 +8,16 @@ import de.hpi.mod.sim.worlds.simpletraffic.entities.ArrivalPoint;
 
 public class ArrivalPointSpecification extends TransitPointSpecification<ArrivalPoint> {
 	
-	public ArrivalPointSpecification(int i, TrafficGridManager g, boolean r) {
-		super(i, g, r);
+	public ArrivalPointSpecification(int id, TrafficGridManager gridManager, boolean randomizeTimes, boolean testMode) {
+		super(id, gridManager, randomizeTimes, testMode);
 	}
 	
-	public ArrivalPointSpecification(int i, TrafficGridManager g) {
-		super(i, g, true);
+	public ArrivalPointSpecification(int id, TrafficGridManager gridManager, boolean randomizeTimes) {
+		super(id, gridManager, randomizeTimes, false);
+	}
+	
+	public ArrivalPointSpecification(int id, TrafficGridManager gridManager) {
+		super(id, gridManager, true, false);
 	}
 
     public Position getCoordinates() {
@@ -58,6 +62,8 @@ public class ArrivalPointSpecification extends TransitPointSpecification<Arrival
 	public ArrivalPoint createEntity() {
 		ArrivalPoint entity = new ArrivalPoint(this.id, getCoordinates(), getOrientation(), randomizeWitingTimes);
 		this.grid.addArrivalPoint(entity);
+		if(testMode)
+			entity.activateSingleUseMode();
 	    return entity;
 	}
 
