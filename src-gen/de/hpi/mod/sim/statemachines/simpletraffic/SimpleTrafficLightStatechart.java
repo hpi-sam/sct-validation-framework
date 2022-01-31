@@ -238,14 +238,14 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 	protected Direction direction;
 	
 	public enum State {
-		_SIMPLETRAFFICLIGHT_NORTH_LAMP_IS_GREEN,
-		_SIMPLETRAFFICLIGHT_EAST_LAMP_IS_GREEN,
-		_SIMPLETRAFFICLIGHT_WEST_LAMP_IS_GREEN,
-		_SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_EAST_LAMP,
-		_SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_SOUTH_LAMP,
-		_SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_WEST_LAMP,
-		_SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_NORTH_LAMP,
-		_SIMPLETRAFFICLIGHT_SOUTH_LAMP_IS_GREEN,
+		_SIMPLETRAFFICLIGHTXXX_NORTH_LAMP_IS_GREEN,
+		_SIMPLETRAFFICLIGHTXXX_EAST_LAMP_IS_GREEN,
+		_SIMPLETRAFFICLIGHTXXX_WEST_LAMP_IS_GREEN,
+		_SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_EAST_LAMP,
+		_SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_SOUTH_LAMP,
+		_SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_WEST_LAMP,
+		_SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_NORTH_LAMP,
+		_SIMPLETRAFFICLIGHTXXX_SOUTH_LAMP_IS_GREEN,
 		$NULLSTATE$
 	};
 	
@@ -319,7 +319,7 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 			return;
 		}
 		isExecuting = true;
-		enterSequence__simpleTrafficLight_default();
+		enterSequence__simpleTrafficLightXXX_default();
 		isExecuting = false;
 	}
 	
@@ -328,7 +328,7 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 			return;
 		}
 		isExecuting = true;
-		exitSequence__simpleTrafficLight();
+		exitSequence__simpleTrafficLightXXX();
 		isExecuting = false;
 	}
 	
@@ -404,29 +404,29 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		do { 
 			for (nextStateIndex = 0; nextStateIndex < stateVector.length; nextStateIndex++) {
 				switch (stateVector[nextStateIndex]) {
-				case _SIMPLETRAFFICLIGHT_NORTH_LAMP_IS_GREEN:
-					_simpleTrafficLight_North_Lamp_is_Green_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_NORTH_LAMP_IS_GREEN:
+					_simpleTrafficLightXXX_North_Lamp_is_Green_react(true);
 					break;
-				case _SIMPLETRAFFICLIGHT_EAST_LAMP_IS_GREEN:
-					_simpleTrafficLight_East_Lamp_is_Green_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_EAST_LAMP_IS_GREEN:
+					_simpleTrafficLightXXX_East_Lamp_is_Green_react(true);
 					break;
-				case _SIMPLETRAFFICLIGHT_WEST_LAMP_IS_GREEN:
-					_simpleTrafficLight_West_Lamp_is_Green_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_WEST_LAMP_IS_GREEN:
+					_simpleTrafficLightXXX_West_Lamp_is_Green_react(true);
 					break;
-				case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_EAST_LAMP:
-					_simpleTrafficLight_Wait_to_light_East_Lamp_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_EAST_LAMP:
+					_simpleTrafficLightXXX_Wait_to_light_East_Lamp_react(true);
 					break;
-				case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_SOUTH_LAMP:
-					_simpleTrafficLight_Wait_to_light_South_Lamp_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_SOUTH_LAMP:
+					_simpleTrafficLightXXX_Wait_to_light_South_Lamp_react(true);
 					break;
-				case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_WEST_LAMP:
-					_simpleTrafficLight_Wait_to_light_West_Lamp_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_WEST_LAMP:
+					_simpleTrafficLightXXX_Wait_to_light_West_Lamp_react(true);
 					break;
-				case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_NORTH_LAMP:
-					_simpleTrafficLight_Wait_to_light_North_Lamp_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_NORTH_LAMP:
+					_simpleTrafficLightXXX_Wait_to_light_North_Lamp_react(true);
 					break;
-				case _SIMPLETRAFFICLIGHT_SOUTH_LAMP_IS_GREEN:
-					_simpleTrafficLight_South_Lamp_is_Green_react(true);
+				case _SIMPLETRAFFICLIGHTXXX_SOUTH_LAMP_IS_GREEN:
+					_simpleTrafficLightXXX_South_Lamp_is_Green_react(true);
 					break;
 				default:
 					// $NULLSTATE$
@@ -452,22 +452,22 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 	public boolean isStateActive(State state) {
 	
 		switch (state) {
-		case _SIMPLETRAFFICLIGHT_NORTH_LAMP_IS_GREEN:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_NORTH_LAMP_IS_GREEN;
-		case _SIMPLETRAFFICLIGHT_EAST_LAMP_IS_GREEN:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_EAST_LAMP_IS_GREEN;
-		case _SIMPLETRAFFICLIGHT_WEST_LAMP_IS_GREEN:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_WEST_LAMP_IS_GREEN;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_EAST_LAMP:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_EAST_LAMP;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_SOUTH_LAMP:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_SOUTH_LAMP;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_WEST_LAMP:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_WEST_LAMP;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_NORTH_LAMP:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_NORTH_LAMP;
-		case _SIMPLETRAFFICLIGHT_SOUTH_LAMP_IS_GREEN:
-			return stateVector[0] == State._SIMPLETRAFFICLIGHT_SOUTH_LAMP_IS_GREEN;
+		case _SIMPLETRAFFICLIGHTXXX_NORTH_LAMP_IS_GREEN:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_NORTH_LAMP_IS_GREEN;
+		case _SIMPLETRAFFICLIGHTXXX_EAST_LAMP_IS_GREEN:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_EAST_LAMP_IS_GREEN;
+		case _SIMPLETRAFFICLIGHTXXX_WEST_LAMP_IS_GREEN:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_WEST_LAMP_IS_GREEN;
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_EAST_LAMP:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_EAST_LAMP;
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_SOUTH_LAMP:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_SOUTH_LAMP;
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_WEST_LAMP:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_WEST_LAMP;
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_NORTH_LAMP:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_NORTH_LAMP;
+		case _SIMPLETRAFFICLIGHTXXX_SOUTH_LAMP_IS_GREEN:
+			return stateVector[0] == State._SIMPLETRAFFICLIGHTXXX_SOUTH_LAMP_IS_GREEN;
 		default:
 			return false;
 		}
@@ -532,252 +532,252 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 	}
 	
 	/* Entry action for state 'North Lamp is Green'. */
-	private void entryAction__simpleTrafficLight_North_Lamp_is_Green() {
+	private void entryAction__simpleTrafficLightXXX_North_Lamp_is_Green() {
 		timerService.setTimer(this, 0, (3 * 1000), false);
 		
 		northLamp.raiseGreen();
 	}
 	
 	/* Entry action for state 'East Lamp is Green'. */
-	private void entryAction__simpleTrafficLight_East_Lamp_is_Green() {
+	private void entryAction__simpleTrafficLightXXX_East_Lamp_is_Green() {
 		timerService.setTimer(this, 1, (3 * 1000), false);
 		
 		eastLamp.raiseGreen();
 	}
 	
 	/* Entry action for state 'West Lamp is Green'. */
-	private void entryAction__simpleTrafficLight_West_Lamp_is_Green() {
+	private void entryAction__simpleTrafficLightXXX_West_Lamp_is_Green() {
 		timerService.setTimer(this, 2, (3 * 1000), false);
 		
 		westLamp.raiseGreen();
 	}
 	
 	/* Entry action for state 'Wait to light East Lamp'. */
-	private void entryAction__simpleTrafficLight_Wait_to_light_East_Lamp() {
+	private void entryAction__simpleTrafficLightXXX_Wait_to_light_East_Lamp() {
 		timerService.setTimer(this, 3, 100, true);
 	}
 	
 	/* Entry action for state 'Wait to light South Lamp'. */
-	private void entryAction__simpleTrafficLight_Wait_to_light_South_Lamp() {
+	private void entryAction__simpleTrafficLightXXX_Wait_to_light_South_Lamp() {
 		timerService.setTimer(this, 4, 100, true);
 	}
 	
 	/* Entry action for state 'Wait to light West Lamp'. */
-	private void entryAction__simpleTrafficLight_Wait_to_light_West_Lamp() {
+	private void entryAction__simpleTrafficLightXXX_Wait_to_light_West_Lamp() {
 		timerService.setTimer(this, 5, 100, true);
 	}
 	
 	/* Entry action for state 'Wait to light North Lamp'. */
-	private void entryAction__simpleTrafficLight_Wait_to_light_North_Lamp() {
+	private void entryAction__simpleTrafficLightXXX_Wait_to_light_North_Lamp() {
 		timerService.setTimer(this, 6, 100, true);
 	}
 	
 	/* Entry action for state 'South Lamp is Green'. */
-	private void entryAction__simpleTrafficLight_South_Lamp_is_Green() {
+	private void entryAction__simpleTrafficLightXXX_South_Lamp_is_Green() {
 		timerService.setTimer(this, 7, (3 * 1000), false);
 		
 		southLamp.raiseGreen();
 	}
 	
 	/* Exit action for state 'North Lamp is Green'. */
-	private void exitAction__simpleTrafficLight_North_Lamp_is_Green() {
+	private void exitAction__simpleTrafficLightXXX_North_Lamp_is_Green() {
 		timerService.unsetTimer(this, 0);
 		
 		northLamp.raiseRed();
 	}
 	
 	/* Exit action for state 'East Lamp is Green'. */
-	private void exitAction__simpleTrafficLight_East_Lamp_is_Green() {
+	private void exitAction__simpleTrafficLightXXX_East_Lamp_is_Green() {
 		timerService.unsetTimer(this, 1);
 		
 		eastLamp.raiseRed();
 	}
 	
 	/* Exit action for state 'West Lamp is Green'. */
-	private void exitAction__simpleTrafficLight_West_Lamp_is_Green() {
+	private void exitAction__simpleTrafficLightXXX_West_Lamp_is_Green() {
 		timerService.unsetTimer(this, 2);
 		
 		westLamp.raiseRed();
 	}
 	
 	/* Exit action for state 'Wait to light East Lamp'. */
-	private void exitAction__simpleTrafficLight_Wait_to_light_East_Lamp() {
+	private void exitAction__simpleTrafficLightXXX_Wait_to_light_East_Lamp() {
 		timerService.unsetTimer(this, 3);
 	}
 	
 	/* Exit action for state 'Wait to light South Lamp'. */
-	private void exitAction__simpleTrafficLight_Wait_to_light_South_Lamp() {
+	private void exitAction__simpleTrafficLightXXX_Wait_to_light_South_Lamp() {
 		timerService.unsetTimer(this, 4);
 	}
 	
 	/* Exit action for state 'Wait to light West Lamp'. */
-	private void exitAction__simpleTrafficLight_Wait_to_light_West_Lamp() {
+	private void exitAction__simpleTrafficLightXXX_Wait_to_light_West_Lamp() {
 		timerService.unsetTimer(this, 5);
 	}
 	
 	/* Exit action for state 'Wait to light North Lamp'. */
-	private void exitAction__simpleTrafficLight_Wait_to_light_North_Lamp() {
+	private void exitAction__simpleTrafficLightXXX_Wait_to_light_North_Lamp() {
 		timerService.unsetTimer(this, 6);
 	}
 	
 	/* Exit action for state 'South Lamp is Green'. */
-	private void exitAction__simpleTrafficLight_South_Lamp_is_Green() {
+	private void exitAction__simpleTrafficLightXXX_South_Lamp_is_Green() {
 		timerService.unsetTimer(this, 7);
 		
 		southLamp.raiseRed();
 	}
 	
 	/* 'default' enter sequence for state North Lamp is Green */
-	private void enterSequence__simpleTrafficLight_North_Lamp_is_Green_default() {
-		entryAction__simpleTrafficLight_North_Lamp_is_Green();
+	private void enterSequence__simpleTrafficLightXXX_North_Lamp_is_Green_default() {
+		entryAction__simpleTrafficLightXXX_North_Lamp_is_Green();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_NORTH_LAMP_IS_GREEN;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_NORTH_LAMP_IS_GREEN;
 	}
 	
 	/* 'default' enter sequence for state East Lamp is Green */
-	private void enterSequence__simpleTrafficLight_East_Lamp_is_Green_default() {
-		entryAction__simpleTrafficLight_East_Lamp_is_Green();
+	private void enterSequence__simpleTrafficLightXXX_East_Lamp_is_Green_default() {
+		entryAction__simpleTrafficLightXXX_East_Lamp_is_Green();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_EAST_LAMP_IS_GREEN;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_EAST_LAMP_IS_GREEN;
 	}
 	
 	/* 'default' enter sequence for state West Lamp is Green */
-	private void enterSequence__simpleTrafficLight_West_Lamp_is_Green_default() {
-		entryAction__simpleTrafficLight_West_Lamp_is_Green();
+	private void enterSequence__simpleTrafficLightXXX_West_Lamp_is_Green_default() {
+		entryAction__simpleTrafficLightXXX_West_Lamp_is_Green();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_WEST_LAMP_IS_GREEN;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_WEST_LAMP_IS_GREEN;
 	}
 	
 	/* 'default' enter sequence for state Wait to light East Lamp */
-	private void enterSequence__simpleTrafficLight_Wait_to_light_East_Lamp_default() {
-		entryAction__simpleTrafficLight_Wait_to_light_East_Lamp();
+	private void enterSequence__simpleTrafficLightXXX_Wait_to_light_East_Lamp_default() {
+		entryAction__simpleTrafficLightXXX_Wait_to_light_East_Lamp();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_EAST_LAMP;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_EAST_LAMP;
 	}
 	
 	/* 'default' enter sequence for state Wait to light South Lamp */
-	private void enterSequence__simpleTrafficLight_Wait_to_light_South_Lamp_default() {
-		entryAction__simpleTrafficLight_Wait_to_light_South_Lamp();
+	private void enterSequence__simpleTrafficLightXXX_Wait_to_light_South_Lamp_default() {
+		entryAction__simpleTrafficLightXXX_Wait_to_light_South_Lamp();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_SOUTH_LAMP;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_SOUTH_LAMP;
 	}
 	
 	/* 'default' enter sequence for state Wait to light West Lamp */
-	private void enterSequence__simpleTrafficLight_Wait_to_light_West_Lamp_default() {
-		entryAction__simpleTrafficLight_Wait_to_light_West_Lamp();
+	private void enterSequence__simpleTrafficLightXXX_Wait_to_light_West_Lamp_default() {
+		entryAction__simpleTrafficLightXXX_Wait_to_light_West_Lamp();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_WEST_LAMP;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_WEST_LAMP;
 	}
 	
 	/* 'default' enter sequence for state Wait to light North Lamp */
-	private void enterSequence__simpleTrafficLight_Wait_to_light_North_Lamp_default() {
-		entryAction__simpleTrafficLight_Wait_to_light_North_Lamp();
+	private void enterSequence__simpleTrafficLightXXX_Wait_to_light_North_Lamp_default() {
+		entryAction__simpleTrafficLightXXX_Wait_to_light_North_Lamp();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_NORTH_LAMP;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_NORTH_LAMP;
 	}
 	
 	/* 'default' enter sequence for state South Lamp is Green */
-	private void enterSequence__simpleTrafficLight_South_Lamp_is_Green_default() {
-		entryAction__simpleTrafficLight_South_Lamp_is_Green();
+	private void enterSequence__simpleTrafficLightXXX_South_Lamp_is_Green_default() {
+		entryAction__simpleTrafficLightXXX_South_Lamp_is_Green();
 		nextStateIndex = 0;
-		stateVector[0] = State._SIMPLETRAFFICLIGHT_SOUTH_LAMP_IS_GREEN;
+		stateVector[0] = State._SIMPLETRAFFICLIGHTXXX_SOUTH_LAMP_IS_GREEN;
 	}
 	
-	/* 'default' enter sequence for region _simpleTrafficLight */
-	private void enterSequence__simpleTrafficLight_default() {
-		react__simpleTrafficLight__entry_Default();
+	/* 'default' enter sequence for region _simpleTrafficLightXXX */
+	private void enterSequence__simpleTrafficLightXXX_default() {
+		react__simpleTrafficLightXXX__entry_Default();
 	}
 	
 	/* Default exit sequence for state North Lamp is Green */
-	private void exitSequence__simpleTrafficLight_North_Lamp_is_Green() {
+	private void exitSequence__simpleTrafficLightXXX_North_Lamp_is_Green() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_North_Lamp_is_Green();
+		exitAction__simpleTrafficLightXXX_North_Lamp_is_Green();
 	}
 	
 	/* Default exit sequence for state East Lamp is Green */
-	private void exitSequence__simpleTrafficLight_East_Lamp_is_Green() {
+	private void exitSequence__simpleTrafficLightXXX_East_Lamp_is_Green() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_East_Lamp_is_Green();
+		exitAction__simpleTrafficLightXXX_East_Lamp_is_Green();
 	}
 	
 	/* Default exit sequence for state West Lamp is Green */
-	private void exitSequence__simpleTrafficLight_West_Lamp_is_Green() {
+	private void exitSequence__simpleTrafficLightXXX_West_Lamp_is_Green() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_West_Lamp_is_Green();
+		exitAction__simpleTrafficLightXXX_West_Lamp_is_Green();
 	}
 	
 	/* Default exit sequence for state Wait to light East Lamp */
-	private void exitSequence__simpleTrafficLight_Wait_to_light_East_Lamp() {
+	private void exitSequence__simpleTrafficLightXXX_Wait_to_light_East_Lamp() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_Wait_to_light_East_Lamp();
+		exitAction__simpleTrafficLightXXX_Wait_to_light_East_Lamp();
 	}
 	
 	/* Default exit sequence for state Wait to light South Lamp */
-	private void exitSequence__simpleTrafficLight_Wait_to_light_South_Lamp() {
+	private void exitSequence__simpleTrafficLightXXX_Wait_to_light_South_Lamp() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_Wait_to_light_South_Lamp();
+		exitAction__simpleTrafficLightXXX_Wait_to_light_South_Lamp();
 	}
 	
 	/* Default exit sequence for state Wait to light West Lamp */
-	private void exitSequence__simpleTrafficLight_Wait_to_light_West_Lamp() {
+	private void exitSequence__simpleTrafficLightXXX_Wait_to_light_West_Lamp() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_Wait_to_light_West_Lamp();
+		exitAction__simpleTrafficLightXXX_Wait_to_light_West_Lamp();
 	}
 	
 	/* Default exit sequence for state Wait to light North Lamp */
-	private void exitSequence__simpleTrafficLight_Wait_to_light_North_Lamp() {
+	private void exitSequence__simpleTrafficLightXXX_Wait_to_light_North_Lamp() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_Wait_to_light_North_Lamp();
+		exitAction__simpleTrafficLightXXX_Wait_to_light_North_Lamp();
 	}
 	
 	/* Default exit sequence for state South Lamp is Green */
-	private void exitSequence__simpleTrafficLight_South_Lamp_is_Green() {
+	private void exitSequence__simpleTrafficLightXXX_South_Lamp_is_Green() {
 		nextStateIndex = 0;
 		stateVector[0] = State.$NULLSTATE$;
 		
-		exitAction__simpleTrafficLight_South_Lamp_is_Green();
+		exitAction__simpleTrafficLightXXX_South_Lamp_is_Green();
 	}
 	
-	/* Default exit sequence for region _simpleTrafficLight */
-	private void exitSequence__simpleTrafficLight() {
+	/* Default exit sequence for region _simpleTrafficLightXXX */
+	private void exitSequence__simpleTrafficLightXXX() {
 		switch (stateVector[0]) {
-		case _SIMPLETRAFFICLIGHT_NORTH_LAMP_IS_GREEN:
-			exitSequence__simpleTrafficLight_North_Lamp_is_Green();
+		case _SIMPLETRAFFICLIGHTXXX_NORTH_LAMP_IS_GREEN:
+			exitSequence__simpleTrafficLightXXX_North_Lamp_is_Green();
 			break;
-		case _SIMPLETRAFFICLIGHT_EAST_LAMP_IS_GREEN:
-			exitSequence__simpleTrafficLight_East_Lamp_is_Green();
+		case _SIMPLETRAFFICLIGHTXXX_EAST_LAMP_IS_GREEN:
+			exitSequence__simpleTrafficLightXXX_East_Lamp_is_Green();
 			break;
-		case _SIMPLETRAFFICLIGHT_WEST_LAMP_IS_GREEN:
-			exitSequence__simpleTrafficLight_West_Lamp_is_Green();
+		case _SIMPLETRAFFICLIGHTXXX_WEST_LAMP_IS_GREEN:
+			exitSequence__simpleTrafficLightXXX_West_Lamp_is_Green();
 			break;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_EAST_LAMP:
-			exitSequence__simpleTrafficLight_Wait_to_light_East_Lamp();
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_EAST_LAMP:
+			exitSequence__simpleTrafficLightXXX_Wait_to_light_East_Lamp();
 			break;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_SOUTH_LAMP:
-			exitSequence__simpleTrafficLight_Wait_to_light_South_Lamp();
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_SOUTH_LAMP:
+			exitSequence__simpleTrafficLightXXX_Wait_to_light_South_Lamp();
 			break;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_WEST_LAMP:
-			exitSequence__simpleTrafficLight_Wait_to_light_West_Lamp();
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_WEST_LAMP:
+			exitSequence__simpleTrafficLightXXX_Wait_to_light_West_Lamp();
 			break;
-		case _SIMPLETRAFFICLIGHT_WAIT_TO_LIGHT_NORTH_LAMP:
-			exitSequence__simpleTrafficLight_Wait_to_light_North_Lamp();
+		case _SIMPLETRAFFICLIGHTXXX_WAIT_TO_LIGHT_NORTH_LAMP:
+			exitSequence__simpleTrafficLightXXX_Wait_to_light_North_Lamp();
 			break;
-		case _SIMPLETRAFFICLIGHT_SOUTH_LAMP_IS_GREEN:
-			exitSequence__simpleTrafficLight_South_Lamp_is_Green();
+		case _SIMPLETRAFFICLIGHTXXX_SOUTH_LAMP_IS_GREEN:
+			exitSequence__simpleTrafficLightXXX_South_Lamp_is_Green();
 			break;
 		default:
 			break;
@@ -785,21 +785,21 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 	}
 	
 	/* Default react sequence for initial entry  */
-	private void react__simpleTrafficLight__entry_Default() {
-		enterSequence__simpleTrafficLight_Wait_to_light_North_Lamp_default();
+	private void react__simpleTrafficLightXXX__entry_Default() {
+		enterSequence__simpleTrafficLightXXX_Wait_to_light_North_Lamp_default();
 	}
 	
 	private boolean react() {
 		return false;
 	}
 	
-	private boolean _simpleTrafficLight_North_Lamp_is_Green_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_North_Lamp_is_Green_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[0]) {
-				exitSequence__simpleTrafficLight_North_Lamp_is_Green();
-				enterSequence__simpleTrafficLight_Wait_to_light_East_Lamp_default();
+				exitSequence__simpleTrafficLightXXX_North_Lamp_is_Green();
+				enterSequence__simpleTrafficLightXXX_Wait_to_light_East_Lamp_default();
 				react();
 			} else {
 				did_transition = false;
@@ -811,13 +811,13 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean _simpleTrafficLight_East_Lamp_is_Green_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_East_Lamp_is_Green_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[1]) {
-				exitSequence__simpleTrafficLight_East_Lamp_is_Green();
-				enterSequence__simpleTrafficLight_Wait_to_light_South_Lamp_default();
+				exitSequence__simpleTrafficLightXXX_East_Lamp_is_Green();
+				enterSequence__simpleTrafficLightXXX_Wait_to_light_South_Lamp_default();
 				react();
 			} else {
 				did_transition = false;
@@ -829,13 +829,13 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean _simpleTrafficLight_West_Lamp_is_Green_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_West_Lamp_is_Green_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[2]) {
-				exitSequence__simpleTrafficLight_West_Lamp_is_Green();
-				enterSequence__simpleTrafficLight_Wait_to_light_North_Lamp_default();
+				exitSequence__simpleTrafficLightXXX_West_Lamp_is_Green();
+				enterSequence__simpleTrafficLightXXX_Wait_to_light_North_Lamp_default();
 				react();
 			} else {
 				did_transition = false;
@@ -847,13 +847,13 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean _simpleTrafficLight_Wait_to_light_East_Lamp_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_Wait_to_light_East_Lamp_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (((timeEvents[3]) && (centerSensor.operationCallback.isFree()))) {
-				exitSequence__simpleTrafficLight_Wait_to_light_East_Lamp();
-				enterSequence__simpleTrafficLight_East_Lamp_is_Green_default();
+				exitSequence__simpleTrafficLightXXX_Wait_to_light_East_Lamp();
+				enterSequence__simpleTrafficLightXXX_East_Lamp_is_Green_default();
 				react();
 			} else {
 				did_transition = false;
@@ -865,13 +865,13 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean _simpleTrafficLight_Wait_to_light_South_Lamp_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_Wait_to_light_South_Lamp_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (((timeEvents[4]) && (centerSensor.operationCallback.isFree()))) {
-				exitSequence__simpleTrafficLight_Wait_to_light_South_Lamp();
-				enterSequence__simpleTrafficLight_South_Lamp_is_Green_default();
+				exitSequence__simpleTrafficLightXXX_Wait_to_light_South_Lamp();
+				enterSequence__simpleTrafficLightXXX_South_Lamp_is_Green_default();
 				react();
 			} else {
 				did_transition = false;
@@ -883,13 +883,13 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean _simpleTrafficLight_Wait_to_light_West_Lamp_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_Wait_to_light_West_Lamp_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (((timeEvents[5]) && (centerSensor.operationCallback.isFree()))) {
-				exitSequence__simpleTrafficLight_Wait_to_light_West_Lamp();
-				enterSequence__simpleTrafficLight_West_Lamp_is_Green_default();
+				exitSequence__simpleTrafficLightXXX_Wait_to_light_West_Lamp();
+				enterSequence__simpleTrafficLightXXX_West_Lamp_is_Green_default();
 				react();
 			} else {
 				did_transition = false;
@@ -901,13 +901,13 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean _simpleTrafficLight_Wait_to_light_North_Lamp_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_Wait_to_light_North_Lamp_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (((timeEvents[6]) && (centerSensor.operationCallback.isFree()))) {
-				exitSequence__simpleTrafficLight_Wait_to_light_North_Lamp();
-				enterSequence__simpleTrafficLight_North_Lamp_is_Green_default();
+				exitSequence__simpleTrafficLightXXX_Wait_to_light_North_Lamp();
+				enterSequence__simpleTrafficLightXXX_North_Lamp_is_Green_default();
 				react();
 			} else {
 				did_transition = false;
@@ -919,13 +919,13 @@ public class SimpleTrafficLightStatechart implements IStatemachine, ITimed {
 		return did_transition;
 	}
 	
-	private boolean _simpleTrafficLight_South_Lamp_is_Green_react(boolean try_transition) {
+	private boolean _simpleTrafficLightXXX_South_Lamp_is_Green_react(boolean try_transition) {
 		boolean did_transition = try_transition;
 		
 		if (try_transition) {
 			if (timeEvents[7]) {
-				exitSequence__simpleTrafficLight_South_Lamp_is_Green();
-				enterSequence__simpleTrafficLight_Wait_to_light_West_Lamp_default();
+				exitSequence__simpleTrafficLightXXX_South_Lamp_is_Green();
+				enterSequence__simpleTrafficLightXXX_Wait_to_light_West_Lamp_default();
 				react();
 			} else {
 				did_transition = false;

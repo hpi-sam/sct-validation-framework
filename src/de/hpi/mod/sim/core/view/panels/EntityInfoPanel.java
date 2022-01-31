@@ -1,7 +1,6 @@
 package de.hpi.mod.sim.core.view.panels;
 
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -130,6 +129,13 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 			String[] previousStates = new String[0];
 			for(String stateName : stateNames) {
 				String[] states = splitStates(stateName, entity.getTopLevelRegionName());
+				
+				// Emergency stop if split name is "-"
+				if(states.length == 1 && states[0].equals("-")) {
+					setText("");
+					return;
+				}
+				
 				for (int i = 0; i < states.length; i++) {
 					if(previousStates.length < states.length || !previousStates[i].equals(states[i])) {
 
