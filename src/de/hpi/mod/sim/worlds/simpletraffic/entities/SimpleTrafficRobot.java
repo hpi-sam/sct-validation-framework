@@ -65,11 +65,6 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
 	public void resetArrived() {
 		this.arrivedFlag = false;
 	}
-    
-    @Override
-    public boolean hasPassedAllTestCriteria() {
-        return false;
-    }
 	
 	public boolean hasReportedArrive() {
 		return arrivedFlag;

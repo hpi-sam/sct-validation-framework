@@ -24,6 +24,10 @@ public class ArrivalPoint extends TransitPoint {
 	public int getNumberOfExpectedRobots() {
 		return awaitedRobots.size();
 	}
+
+    public boolean hasPassedAllTestCriteria() {
+    	return totalArrivedRobots >= 1;
+    }
 	
 	public void update(float delta) {
 		
