@@ -4,7 +4,6 @@ import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotSpecification;
-import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot;
 import de.hpi.mod.sim.worlds.trafficlights.CrossRoadsManager;
 import de.hpi.mod.sim.worlds.trafficlights.TrafficLightWorld;
 import de.hpi.mod.sim.worlds.trafficlights.robot.TrafficLightRobot;

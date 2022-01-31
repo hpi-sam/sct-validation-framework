@@ -2,7 +2,6 @@ package de.hpi.mod.sim.worlds.simpletraffic.scenario;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import de.hpi.mod.sim.core.World;
 import de.hpi.mod.sim.core.scenario.EntitySpecification;

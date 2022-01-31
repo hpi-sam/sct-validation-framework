@@ -1,10 +1,8 @@
 package de.hpi.mod.sim.worlds.simpletraffic;
 
-import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotConfiguration;
-import de.hpi.mod.sim.worlds.trafficlights.TrafficLightsConfiguration;
 
 /**
  * Contains all "magic-numbers" set in the Robots-and-Traffic-Lights-Simulation.

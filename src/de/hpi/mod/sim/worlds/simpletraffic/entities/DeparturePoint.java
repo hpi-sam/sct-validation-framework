@@ -1,12 +1,7 @@
 package de.hpi.mod.sim.worlds.simpletraffic.entities;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-import de.hpi.mod.sim.core.Configuration;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
-import de.hpi.mod.sim.worlds.abstract_robots.Robot;
-import de.hpi.mod.sim.worlds.simpletraffic.SimpleTrafficWorldConfiguration;
 
 public class DeparturePoint extends TransitPoint {
 	
