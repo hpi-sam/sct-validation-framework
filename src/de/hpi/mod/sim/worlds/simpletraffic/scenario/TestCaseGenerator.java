@@ -642,14 +642,6 @@ public class TestCaseGenerator {
 				e_list(testRobot, testArrivalPoint, testDeparturePoint), 
 				GridMode.TWO_CROSSROADS, true, false, false)); 
 
-		testRobot = new SimpleRobotSpecification(manager);
-		testDeparturePoint = new DeparturePointSpecification(4, manager, false, true);
-		testArrivalPoint = new ArrivalPointSpecification(2, manager, false, true);
-		testScenarios.add(new SimpleTrafficTestScenario(
-				"Target is Right 4 EXTRA", "Robot starts at bottom position of right side and has to drive to left position of top side (i.e. drive straigt once, turn right once, then drive straigt again or alternatively drive left, right, left).",
-				e_list(testRobot, testArrivalPoint, testDeparturePoint), 
-				GridMode.TWO_CROSSROADS, true, false, false)); 
-
 
 
 
