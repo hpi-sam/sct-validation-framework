@@ -18,19 +18,28 @@ public class TrafficLightSpecification implements EntitySpecification<TrafficLig
         this.grid = g;
     }
 
-    public Position getCoordinates() {
+    protected Position getCoordinates() {
     	int x = SimpleTrafficWorldConfiguration.getFieldBorderWidth() + SimpleTrafficWorldConfiguration.getStreetLength() 
-    			+ (relativePosition.getX() * (SimpleTrafficWorldConfiguration.getStreetLength()  + SimpleTrafficWorldConfiguration.getCrossroadLength()));
+    			+ (getRelativePosition().getX() * (SimpleTrafficWorldConfiguration.getStreetLength()  + SimpleTrafficWorldConfiguration.getCrossroadLength()));
     	int y = SimpleTrafficWorldConfiguration.getFieldBorderWidth() + SimpleTrafficWorldConfiguration.getStreetLength() 
-				+ (relativePosition.getY() * (SimpleTrafficWorldConfiguration.getStreetLength()  + SimpleTrafficWorldConfiguration.getCrossroadLength()));
+				+ (getRelativePosition().getY() * (SimpleTrafficWorldConfiguration.getStreetLength()  + SimpleTrafficWorldConfiguration.getCrossroadLength()));
     	return new Position(x,y);
     }
     
+    protected TrafficGridManager getGridManager() {
+    	return grid;
+    }
+    
+    protected RelativePosition getRelativePosition() {
+		return relativePosition;
+	}
+    
     @Override
     public TrafficLight createEntity() {
-    	TrafficLight entity = new TrafficLight(relativePosition, getCoordinates(), grid);
-        this.grid.addTrafficLight(entity);
+    	TrafficLight entity = new TrafficLight(getRelativePosition(), getCoordinates(), getGridManager());
+        this.getGridManager().addTrafficLight(entity);
 		return entity;
     }
+
     
 }

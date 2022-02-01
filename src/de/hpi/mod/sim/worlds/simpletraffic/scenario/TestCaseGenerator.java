@@ -17,10 +17,12 @@ import de.hpi.mod.sim.worlds.simpletraffic.SimpleTrafficWorldConfiguration;
 import de.hpi.mod.sim.worlds.simpletraffic.TrafficGridManager;
 import de.hpi.mod.sim.worlds.simpletraffic.SimpleTrafficWorldConfiguration.GridMode;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.RelativePosition;
+import de.hpi.mod.sim.worlds.simpletraffic.entities.TrafficLightWithStaticColors;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.ArrivalPointSpecification;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.DeparturePointSpecification;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.SimpleRobotSpecification;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.SimpleTestRobotSpecification;
+import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TestTrafficLightSpecification;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSpecification;
 
 public class TestCaseGenerator {
@@ -35,11 +37,9 @@ public class TestCaseGenerator {
 		Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
 
 		testGroups.put("I. Simple Driving on Streets", generateSimpleDrivingTests(this.world.getStreetNetworkManager()));
-		testGroups.put("II. Driving With Obstacles", generateDrivingWithObstaclesTests(this.world.getStreetNetworkManager())); 
-		testGroups.put("III. Handling Traffic Lights", new CopyOnWriteArrayList<TestScenario>());
+		testGroups.put("II. Driving with Obstacles", generateDrivingWithObstaclesTests(this.world.getStreetNetworkManager())); 
+		testGroups.put("III. Driving with Traffic Lights", generateDrivingAtTrafficLightTests(this.world.getStreetNetworkManager()));
 		testGroups.put("IV. Complete Route Driving", generateCompleteRouteTests(this.world.getStreetNetworkManager()));
-		//         testGroups.put("III. Crossroad Conflicts", new CopyOnWriteArrayList<TestScenario>());
-		//         testGroups.put("IV. Complex Traffic", new CopyOnWriteArrayList<TestScenario>());
 		return testGroups;
 	}
 
@@ -52,25 +52,26 @@ public class TestCaseGenerator {
 
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Drive on empty street 1", "Robot starts on a street and drives two fields ahead in east direction.",
+				"Drive on empty Street 1", "Robot starts on a street and drives two fields ahead in east direction.",
 				e_list(new SimpleTestRobotSpecification(manager, p(10,7), Orientation.EAST, p(12,7))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Drive on empty street 2", "Robot starts on a street and drives four fields ahead in south direction, starting at an departure point.",
+				"Drive on empty Street 2", "Robot starts on a street and drives four fields ahead in south direction, starting at an departure point.",
 				e_list(new SimpleTestRobotSpecification(manager, p(14,21), Orientation.SOUTH, p(14,17))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Drive on empty street 3", "Robot starts on a street and drives five fields ahead in west direction, ending at an arrival point.",
+				"Drive on empty Street 3", "Robot starts on a street and drives five fields ahead in west direction, ending at an arrival point.",
 				e_list(new SimpleTestRobotSpecification(manager, p(6,15), Orientation.WEST, p(1,15))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Drive on empty street 4", "Robot starts on a street and drives five fields ahead in north direction, starting on a crossroad.",
+				"Drive on empty Street 4", "Robot starts on a street and drives five fields ahead in north direction, starting on a crossroad.",
 				e_list(new SimpleTestRobotSpecification(manager, p(8,7), Orientation.NORTH, p(8,12))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
+		
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Drive long distance 1", "Robot starts on a street and drives three fields ahead in west direction, accross diabeled traffic light.",
 				e_list(new SimpleTestRobotSpecification(manager, p(21,8), Orientation.WEST, p(1,8))), 
@@ -81,6 +82,7 @@ public class TestCaseGenerator {
 				e_list(new SimpleTestRobotSpecification(manager, p(15,1), Orientation.NORTH, p(15,21))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
+		
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Report arrived 1", "Robot dives a shout route ahead in east direction and reports arrive() when finished.",
 				e_list(new SimpleTestRobotSpecification(manager, p(10,14), Orientation.EAST, p(12,14), true)), 
@@ -103,41 +105,42 @@ public class TestCaseGenerator {
 		List<TestScenario> testScenarios = new ArrayList<>();
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't crash into wall 1", "Robot does not drive ahead for at least five seconds if starting directly in front of a wall, even if target is ahead.",
+				"Don't crash into Wall 1", "Robot does not drive ahead for at least five seconds if starting directly in front of a wall, even if target is ahead.",
 				e_list(new SimpleTestRobotSpecification(manager, p(14,11), Orientation.WEST, p(12,11), false, p(14,11), 5000, 7000 )), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't crash into wall 2", "If after driving ahead, Robot encounters a wall ahead, it does not advance further for at least five seconds, even if target is ahead.",
+				"Don't crash into Wall 2", "If after driving ahead, Robot encounters a wall ahead, it does not advance further for at least five seconds, even if target is ahead.",
 				e_list(new SimpleTestRobotSpecification(manager, p(7,4), Orientation.SOUTH, p(7,-1), false, p(7,1), 5000, 7000)), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't crash into wall 3", "If after driving ahead, Robot encounters a wall ahead, it does not advance further for at least five seconds, even if target is ahead.",
+				"Don't crash into Wall 3", "If after driving ahead, Robot encounters a wall ahead, it does not advance further for at least five seconds, even if target is ahead.",
 				e_list(new SimpleTestRobotSpecification(manager, p(5,7), Orientation.NORTH, p(5,9), false, p(5,8), 5000, 7000)), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't crash into robot 1", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
+				"Don't crash into Robot 1", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
 				e_list( new SimpleTestRobotSpecification(manager, p(5,14), Orientation.EAST, p(8,14), false, p(5,14), 5000, 7000 ),
 						new SimpleTestRobotSpecification(manager, p(6,14), Orientation.NORTH )), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 		
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't crash into robot 2", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
+				"Don't crash into Robot 2", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
 				e_list( new SimpleTestRobotSpecification(manager, p(21,8), Orientation.WEST, p(8,8), false, p(17,8), 5000, 7000 ),
 						new SimpleTestRobotSpecification(manager, p(16,8), Orientation.EAST )), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 		
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't crash into robot 3", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
+				"Don't crash into Robot 3", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
 				e_list( new SimpleTestRobotSpecification(manager, p(8,10), Orientation.NORTH, p(8,20), false, p(8,13), 5000, 7000 ),
 						new SimpleTestRobotSpecification(manager, p(8,14), Orientation.NORTH ),
 						new SimpleTestRobotSpecification(manager, p(8,15), Orientation.WEST ),
 						new SimpleTestRobotSpecification(manager, p(7,14), Orientation.EAST ),
 						new SimpleTestRobotSpecification(manager, p(7,15), Orientation.SOUTH )), 
 				GridMode.TWO_CROSSROADS, false, false, false));
+		
 		
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Driving behind each other 1", "Robots can drive behind each other without crashing.",
@@ -166,10 +169,111 @@ public class TestCaseGenerator {
 		List<TestScenario> testScenarios = new ArrayList<>();
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't crash into wall 1", "Robot does not drive ahead for at least five seconds if starting directly in front of a wall.",
-				e_list(new SimpleTestRobotSpecification(manager, p(14,11), Orientation.WEST, p(12,11), false, p(14,11), 5000, 7000 )), 
-				GridMode.TWO_CROSSROADS, false, false, false));
+				"Wait in front of red Traffic Light 1", "Robot coming from south direction stop in front of a red traffic light and waits there.",
+				e_list( new SimpleTestRobotSpecification(manager, p(8,1), Orientation.NORTH, p(8,14), false, p(8,6), 7000, 10000),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
 
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Wait in front of red Traffic Light 2", "Robot coming from west direction stop in front of a red traffic light and waits there.",
+				e_list( new SimpleTestRobotSpecification(manager, p(1,7), Orientation.EAST, p(14,7), false, p(6,7), 7000, 10000),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Wait in front of red Traffic Light 3", "Two Robots coming from north direction stop in front of a red traffic light and wait there.",
+				e_list( new SimpleTestRobotSpecification(manager, p(7,14), Orientation.SOUTH, p(7,1), false, p(7,10), 7000, 10000),
+						new SimpleTestRobotSpecification(manager, p(7,13), Orientation.SOUTH, p(7,1), false, p(7,9), 7000, 10000),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Wait in front of red Traffic Light 4", "Two Robots coming from east direction stop in front of a red traffic light and wait there.",
+				e_list( new SimpleTestRobotSpecification(manager, p(14,8), Orientation.WEST, p(1,8), false, p(10,8), 7000, 10000),
+						new SimpleTestRobotSpecification(manager, p(13,8), Orientation.WEST, p(1,8), false, p(9,8), 7000, 10000),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving ahead on Crossroad 1", "Robot coming from south drives ahead while traffic light is green.",
+				e_list( new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(8,12), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving ahead on Crossroad 2", "Robot coming from west drives ahead while traffic light is green.",
+				e_list( new SimpleTestRobotSpecification(manager, p(3,7), Orientation.EAST, p(12,7), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving ahead on Crossroad 3", "Robot coming from north drives ahead while traffic light is green.",
+				e_list( new SimpleTestRobotSpecification(manager, p(7,12), Orientation.SOUTH, p(7,3), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving right on Crossroad 1", "Robot coming from east drives to crossroad, passes green traffic light, turns right and drives on ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(12,8), Orientation.WEST, p(8,12), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false, true, false, false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving right on Crossroad 2", "Robot coming from north drives to crossroad, passes green traffic light, turns right and drives on ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(7,12), Orientation.SOUTH, p(3,8), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true, false, false, false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving right on Crossroad 3", "Robot coming from west drives to crossroad, passes green traffic light, turns right and drives on ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(3,7), Orientation.EAST, p(7,3), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false, false, false, true)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving left on Crossroad 1", "Robot coming from south drives to crossroad, passes green traffic light, turns right and drives on ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(3,8), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false, false, true, false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving left on Crossroad 2", "Robot coming from west drives to crossroad, passes green traffic light, turns right and drives on ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(3,7), Orientation.EAST, p(8,12), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false, false, false, true)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving left on Crossroad 3", "Robot coming from north drives to crossroad, passes green traffic light, turns right and drives on ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(7,12), Orientation.SOUTH, p(12,7), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true, false, false, false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+
+
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple robots on Crossroad 1", "Three Robots coming from east drive to crossroad, pass green traffic light and turn or drive ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(14,8), Orientation.WEST, p(8,12), false),
+						new SimpleTestRobotSpecification(manager, p(13,8), Orientation.WEST, p(3,8), false),
+						new SimpleTestRobotSpecification(manager, p(12,8), Orientation.WEST, p(7,3), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false, true, false, false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple robots on Crossroad 2 ", "Three Robots coming from south drive to crossroad, pass green traffic light and turn or drive ahead.",
+				e_list( new SimpleTestRobotSpecification(manager, p(8,1), Orientation.NORTH, p(3,8), false),
+						new SimpleTestRobotSpecification(manager, p(8,2), Orientation.NORTH, p(12,7), false),
+						new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(8,12), false),
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false, false, true, false)), 
+				GridMode.SINGLE_CROSSROAD, false, false, false));
+		
 		
 		return testScenarios;
 	}

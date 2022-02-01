@@ -26,7 +26,7 @@ public class TrafficLight extends StateChartWrapper<SimpleTrafficLightStatechart
     
 	// true if a light is green.
     private boolean lightStateWest = false;
-    private boolean lightStateNorth = false;
+	private boolean lightStateNorth = false;
     private boolean lightStateEast = false;
     private boolean lightStateSouth = false; 
     
@@ -36,6 +36,11 @@ public class TrafficLight extends StateChartWrapper<SimpleTrafficLightStatechart
     private TrafficLightOperationCallback eastCallback;
     private TrafficLightOperationCallback southCallback;
     private TrafficLightOperationCallback westCallback;
+    
+    public TrafficLight(RelativePosition relative, Position absolute) {
+    	relativePosition = relative;
+    	basePosition = absolute;
+    }
 
     /**
      * Creates a traffic light. Each traffic light is responsible for a whole
@@ -45,8 +50,7 @@ public class TrafficLight extends StateChartWrapper<SimpleTrafficLightStatechart
      *            calculated from this one.
      */
     public TrafficLight(RelativePosition relative, Position absolute, TrafficGridManager manager) {
-    	relativePosition = relative;
-    	basePosition = absolute;
+    	this(relative, absolute);
     	
         centerCallback = new TrafficLightOperationCallback(getCrossroadPositions(), manager);
         northCallback = new TrafficLightOperationCallback(getNorthWaitingPosition(), manager);
@@ -56,6 +60,22 @@ public class TrafficLight extends StateChartWrapper<SimpleTrafficLightStatechart
         
         start();
     }
+    
+    protected void setLightStateWest(boolean lightStateWest) {
+		this.lightStateWest = lightStateWest;
+	}
+
+	protected void setLightStateNorth(boolean lightStateNorth) {
+		this.lightStateNorth = lightStateNorth;
+	}
+
+	protected void setLightStateEast(boolean lightStateEast) {
+		this.lightStateEast = lightStateEast;
+	}
+
+	protected void setLightStateSouth(boolean lightStateSouth) {
+		this.lightStateSouth = lightStateSouth;
+	}
 
 
     @Override
@@ -87,24 +107,24 @@ public class TrafficLight extends StateChartWrapper<SimpleTrafficLightStatechart
          * Runs a cycle of the statechart and checks if any functions got fired
          */
         if (getStatemachine().northLamp().isRaisedRed())
-            lightStateNorth = false;
+            setLightStateNorth(false);
         if (getStatemachine().northLamp().isRaisedGreen())
-        	lightStateNorth = true;
+        	setLightStateNorth(true);
 
         if (getStatemachine().eastLamp().isRaisedRed())
-        	lightStateEast = false;
+        	setLightStateEast(false);
         if (getStatemachine().eastLamp().isRaisedGreen())
-        	lightStateEast = true;
+        	setLightStateEast(true);
 
         if (getStatemachine().southLamp().isRaisedRed())
-            lightStateSouth = false;
+        	setLightStateSouth(false);
         if (getStatemachine().southLamp().isRaisedGreen())
-        	lightStateSouth = true;
+        	setLightStateSouth(true);
 
         if (getStatemachine().westLamp().isRaisedRed())
-        	lightStateWest = false;
+        	setLightStateWest(false);
         if (getStatemachine().westLamp().isRaisedGreen())
-        	lightStateWest = true;
+        	setLightStateWest(true);
     }
 
     @Override
