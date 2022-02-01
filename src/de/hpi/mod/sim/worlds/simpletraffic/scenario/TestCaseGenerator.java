@@ -83,12 +83,12 @@ public class TestCaseGenerator {
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Report arrived 1", "Robot dives a shout route ahead in east direction and reports arrive() when finished.",
-				e_list(new SimpleTestRobotSpecification(manager, p(10,14), Orientation.EAST, p(12,14))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(10,14), Orientation.EAST, p(12,14), true)), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Report arrived 1", "Robot dives a long route ahead in south direction and reports arrive() when finished.",
-				e_list(new SimpleTestRobotSpecification(manager, p(7,21), Orientation.SOUTH, p(7,1))), 
+				"Report arrived 2", "Robot dives a long route ahead in south direction and reports arrive() when finished.",
+				e_list(new SimpleTestRobotSpecification(manager, p(7,21), Orientation.SOUTH, p(7,1), true)), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		return testScenarios;
@@ -103,23 +103,78 @@ public class TestCaseGenerator {
 		List<TestScenario> testScenarios = new ArrayList<>();
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't drive into wall 1", "Robot does not drive ahead if wall is ahead.",
-				e_list(new SimpleTestRobotSpecification(manager, p(14,11), Orientation.WEST, p(12,11))), 
+				"Don't crash into wall 1", "Robot does not drive ahead for at least five seconds if starting directly in front of a wall, even if target is ahead.",
+				e_list(new SimpleTestRobotSpecification(manager, p(14,11), Orientation.WEST, p(12,11), false, p(14,11), 5000, 7000 )), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't drive into wall 2", "Robot does not drive ahead if wall is ahead.",
-				e_list(new SimpleTestRobotSpecification(manager, p(7,1), Orientation.SOUTH, p(7,-1))), 
+				"Don't crash into wall 2", "If after driving ahead, Robot encounters a wall ahead, it does not advance further for at least five seconds, even if target is ahead.",
+				e_list(new SimpleTestRobotSpecification(manager, p(7,4), Orientation.SOUTH, p(7,-1), false, p(7,1), 5000, 7000)), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
-				"Don't drive into wall 2", "Robot does not drive ahead if wall is ahead.",
-				e_list(new SimpleTestRobotSpecification(manager, p(6,7), Orientation.NORTH, p(6,9))), 
+				"Don't crash into wall 3", "If after driving ahead, Robot encounters a wall ahead, it does not advance further for at least five seconds, even if target is ahead.",
+				e_list(new SimpleTestRobotSpecification(manager, p(5,7), Orientation.NORTH, p(5,9), false, p(5,8), 5000, 7000)), 
+				GridMode.TWO_CROSSROADS, false, false, false));
+
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Don't crash into robot 1", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
+				e_list( new SimpleTestRobotSpecification(manager, p(5,14), Orientation.EAST, p(8,14), false, p(5,14), 5000, 7000 ),
+						new SimpleTestRobotSpecification(manager, p(6,14), Orientation.NORTH )), 
+				GridMode.TWO_CROSSROADS, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Don't crash into robot 2", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
+				e_list( new SimpleTestRobotSpecification(manager, p(21,8), Orientation.WEST, p(8,8), false, p(17,8), 5000, 7000 ),
+						new SimpleTestRobotSpecification(manager, p(16,8), Orientation.EAST )), 
+				GridMode.TWO_CROSSROADS, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Don't crash into robot 3", "Robot does not drive ahead for at least five seconds if another robot is blocking the path ahead of it.",
+				e_list( new SimpleTestRobotSpecification(manager, p(8,10), Orientation.NORTH, p(8,20), false, p(8,13), 5000, 7000 ),
+						new SimpleTestRobotSpecification(manager, p(8,14), Orientation.NORTH ),
+						new SimpleTestRobotSpecification(manager, p(8,15), Orientation.WEST ),
+						new SimpleTestRobotSpecification(manager, p(7,14), Orientation.EAST ),
+						new SimpleTestRobotSpecification(manager, p(7,15), Orientation.SOUTH )), 
+				GridMode.TWO_CROSSROADS, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving behind each other 1", "Robots can drive behind each other without crashing.",
+				e_list( new SimpleTestRobotSpecification(manager, p(15,21), Orientation.SOUTH, p(15,4) ),
+						new SimpleTestRobotSpecification(manager, p(15,20), Orientation.SOUTH, p(15,3) ),
+						new SimpleTestRobotSpecification(manager, p(15,19), Orientation.SOUTH, p(15,2) ),
+						new SimpleTestRobotSpecification(manager, p(15,18), Orientation.SOUTH, p(15,1) )), 
+				GridMode.TWO_CROSSROADS, false, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Driving behind each other 2", "Robots can drive behind each other without crashing.",
+				e_list( new SimpleTestRobotSpecification(manager, p(2,14), Orientation.EAST, p(22,14), false, p(19,14), 8000, 16000 ),
+						new SimpleTestRobotSpecification(manager, p(4,14), Orientation.EAST, p(20,14) ),
+						new SimpleTestRobotSpecification(manager, p(18,15), Orientation.WEST, p(2,15), false, p(3,15), 8000, 16000 ),
+						new SimpleTestRobotSpecification(manager, p(17,15), Orientation.WEST, p(2,15) )), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 		
 		return testScenarios;
 	}
 
+
+	
+	private List<TestScenario> generateDrivingAtTrafficLightTests(TrafficGridManager manager) {
+
+		// Start list of test scenarios for this group
+		List<TestScenario> testScenarios = new ArrayList<>();
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Don't crash into wall 1", "Robot does not drive ahead for at least five seconds if starting directly in front of a wall.",
+				e_list(new SimpleTestRobotSpecification(manager, p(14,11), Orientation.WEST, p(12,11), false, p(14,11), 5000, 7000 )), 
+				GridMode.TWO_CROSSROADS, false, false, false));
+
+		
+		return testScenarios;
+	}
+	
+	
 
 	private List<TestScenario> generateCompleteRouteTests(TrafficGridManager manager) {
 

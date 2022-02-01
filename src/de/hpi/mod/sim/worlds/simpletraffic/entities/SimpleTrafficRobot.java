@@ -18,11 +18,16 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
 
     private SimpleTrafficRobotStatechartWrapper control;
 	private boolean arrivedFlag;
+	
+	// Special Variables for 
+	private Position secretTarget;
+	private int secretTargetCheckMinDelay;
+	private int secretTargetCheckMaxDelay;
 
     public SimpleTrafficRobot(int robotID, TrafficGridManager gridManager, Position startPosition, Orientation startFacing,
             Position destination) {
     	
-    	// Initialze robot itself (via parent)
+    	// Initialize robot itself (via parent)
         super(robotID, gridManager, startPosition, startFacing);
         
         // Initialize statechart
@@ -170,5 +175,25 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
         infos.add("Facing: " + posOrientation().toString());
         return infos;
     }
+
+
+	public void setSecretTarget(Position testSecretDestination, int testSecretDestinationEvaluationDelayMin, int testSecretDestinationEvaluationDelayMax) {
+		this.secretTarget = testSecretDestination;
+		this.secretTargetCheckMinDelay = testSecretDestinationEvaluationDelayMin;
+		this.secretTargetCheckMaxDelay = testSecretDestinationEvaluationDelayMax;
+	}
+    
+    @Override
+    public boolean hasPassedAllTestCriteria() {
+    	// If there is a Secret Target...
+    	if(this.secretTarget != null) {
+    		// ...return true if timer is in correct interval passed and position is reached.
+    		return this.isOn(secretTarget) && timeSinceTestStart() > secretTargetCheckMinDelay && timeSinceTestStart() < secretTargetCheckMaxDelay;
+    	}
+    	
+    	// Otherwise, use default behavior...
+    	return super.hasPassedAllTestCriteria();
+    }
+
     
 }

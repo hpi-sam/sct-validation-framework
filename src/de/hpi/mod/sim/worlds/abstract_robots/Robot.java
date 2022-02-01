@@ -99,11 +99,15 @@ public abstract class Robot implements Entity, IHighlightable {
         this.oldPosition = pos;
     }
 
+    public long timeSinceTestStart() {
+    	return System.currentTimeMillis() - initialNow;
+    }
+    
 	/**
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
-        if (System.currentTimeMillis() >= initialNow + initialDelay)
+        if (timeSinceTestStart() > initialDelay)
             onRefresh();
     }
 
@@ -243,7 +247,6 @@ public abstract class Robot implements Entity, IHighlightable {
     
     @Override
     public boolean hasPassedAllTestCriteria() {
-		System.out.println();
         return testTargets.isEmpty() 
             && this.isOnTarget()
             && arrivementFullfilled()
