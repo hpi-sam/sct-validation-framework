@@ -273,8 +273,8 @@ public class ScenarioGenerator {
         scenarios.add(new SingleRobotSingleCrossroadScenario());
         scenarios.add(new SingleRobotSomeCrossroadsScenario());
         scenarios.add(new SingleRobotManyCrossroadsScenario());
-        scenarios.add(new FewRobotManyCrossroadsScenario());
         scenarios.add(new FewRobotSomeCrossroadsScenario());
+        scenarios.add(new FewRobotManyCrossroadsScenario());
         scenarios.add(new ManyRobotManyCrossroadsScenario());
         
 //        scenarios.add(new NoRobotsScenario());

@@ -173,6 +173,8 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
         infos.add("Position: " + pos().stringify());
         infos.add("Target: " + getTarget().stringify());
         infos.add("Facing: " + posOrientation().toString());
+        List<Direction> targetDirections = getCrossRoadsManager().getTargetDirections(pos(),facing(), getTarget());
+        infos.add("TargetDirections: " + ((targetDirections.size() > 0) ? targetDirections.toString() : " -"));
         return infos;
     }
 
