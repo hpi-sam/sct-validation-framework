@@ -6,6 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 
 import de.hpi.mod.sim.core.scenario.Scenario;
 import de.hpi.mod.sim.core.scenario.TestScenario;
+import de.hpi.mod.sim.core.simulation.Detector;
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.GridConfiguration;
@@ -21,6 +23,7 @@ import de.hpi.mod.sim.worlds.abstract_grid.GridManager;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotRenderer;
 import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
+import de.hpi.mod.sim.worlds.simpletraffic.detectors.TestTimeoutDetector;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.TrafficLight;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.SimpleTrafficRobotRenderer;
 import de.hpi.mod.sim.worlds.simpletraffic.entities.rendering.TrafficLightRenderer;
@@ -36,6 +39,14 @@ public class SimpleTrafficWorld extends RobotWorld {
 		super();
 		publicName = "Simple robots with Traffic Light World";
 	}
+
+
+	@Override
+    protected List<Detector> createDetectors() {
+        List<Detector> detectors = super.createDetectors();
+        detectors.add(new TestTimeoutDetector(this));
+        return detectors;
+    }
 
 	@Override
 	public void initialize() {
