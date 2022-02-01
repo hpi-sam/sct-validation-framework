@@ -7,7 +7,10 @@ import de.hpi.mod.sim.core.statechart.StateChartEntity;
 import de.hpi.mod.sim.worlds.abstract_grid.Orientation;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
 import de.hpi.mod.sim.worlds.abstract_grid.Position;
+import de.hpi.mod.sim.worlds.abstract_robots.DriveManager;
 import de.hpi.mod.sim.worlds.abstract_robots.Robot;
+import de.hpi.mod.sim.worlds.abstract_robots.RobotGridManager;
+import de.hpi.mod.sim.worlds.infinitewarehouse.robot.WarehouseRobot.RobotState;
 import de.hpi.mod.sim.worlds.simpletraffic.SimpleTrafficWorldConfiguration;
 import de.hpi.mod.sim.worlds.simpletraffic.TrafficGridManager;
 
@@ -31,6 +34,19 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
             control.newTarget();	
         }
     }
+    
+
+    public SimpleTrafficRobot(int robotID, TrafficGridManager gridManager, Position startPosition, Orientation startFacing,
+            List<Position> destinations, int initialDelay, boolean requireArrived) {
+    	
+    	// Variant of above method for test purposes
+
+    	// Initialize robot itself (via parent's special method for test robots)
+    	super(gridManager, startPosition, startFacing, destinations, 0, initialDelay, false, requireArrived);
+        
+        // Initialize statechart
+        control = new SimpleTrafficRobotStatechartWrapper(getDriveManager(), this, this);
+    }
 
     /**
      * Handles state changes and refreshes the State-Machine
@@ -38,6 +54,17 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
     @Override
     public void onRefresh() {
         control.onRefresh();
+        
+        // If robot has no current target...
+    	if (!robotHasDriveTarget) {
+    		// ...and robot is in a test and there are test targets left...
+            if(isInTest() && !getTestTargets().isEmpty()) {
+            	
+            	// Then assign next target
+                Position target = getTestTargets().remove(0);
+                this.setTargetAndNotify(target);
+            }
+        }
     }
 
     public TrafficGridManager getCrossRoadsManager() {
@@ -47,7 +74,8 @@ public class SimpleTrafficRobot extends Robot implements IRobotCallback, IRobotS
 	public void setTargetAndNotify(Position position) {
 		this.setTarget(position);
 		this.getDriveManager().resetBattery();
-        setArrivedEventWasCalled(false);
+        this.setArrivedEventWasCalled(false);
+        this.startDriving();
 		this.control.newTarget();
 	}
 	

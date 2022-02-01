@@ -243,6 +243,7 @@ public abstract class Robot implements Entity, IHighlightable {
     
     @Override
     public boolean hasPassedAllTestCriteria() {
+		System.out.println();
         return testTargets.isEmpty() 
             && this.isOnTarget()
             && arrivementFullfilled()

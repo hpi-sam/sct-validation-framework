@@ -20,7 +20,7 @@ import de.hpi.mod.sim.worlds.simpletraffic.entities.RelativePosition;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.ArrivalPointSpecification;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.DeparturePointSpecification;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.SimpleRobotSpecification;
-import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.SimpleRobotWithFixedRouteSpecification;
+import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.SimpleTestRobotSpecification;
 import de.hpi.mod.sim.worlds.simpletraffic.scenario.specification.TrafficLightSpecification;
 
 public class TestCaseGenerator {
@@ -53,42 +53,42 @@ public class TestCaseGenerator {
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Drive on empty street 1", "Robot starts on a street and drives two fields ahead in east direction.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(10,7), Orientation.EAST, p(12,7))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(10,7), Orientation.EAST, p(12,7))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Drive on empty street 2", "Robot starts on a street and drives four fields ahead in south direction, starting at an departure point.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(14,21), Orientation.SOUTH, p(14,17))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(14,21), Orientation.SOUTH, p(14,17))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Drive on empty street 3", "Robot starts on a street and drives five fields ahead in west direction, ending at an arrival point.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(6,15), Orientation.WEST, p(1,15))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(6,15), Orientation.WEST, p(1,15))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Drive on empty street 4", "Robot starts on a street and drives five fields ahead in north direction, starting on a crossroad.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(8,7), Orientation.NORTH, p(8,12))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(8,7), Orientation.NORTH, p(8,12))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Drive long distance 1", "Robot starts on a street and drives three fields ahead in west direction, accross diabeled traffic light.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(21,8), Orientation.WEST, p(1,8))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(21,8), Orientation.WEST, p(1,8))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Drive long distance 2", "Robot starts on a street and drives three fields ahead in north direction, starting at an departure point.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(15,1), Orientation.NORTH, p(15,21))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(15,1), Orientation.NORTH, p(15,21))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Report arrived 1", "Robot dives a shout route ahead in east direction and reports arrive() when finished.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(10,14), Orientation.EAST, p(12,14))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(10,14), Orientation.EAST, p(12,14))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Report arrived 1", "Robot dives a long route ahead in south direction and reports arrive() when finished.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(7,21), Orientation.SOUTH, p(7,1))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(7,21), Orientation.SOUTH, p(7,1))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		return testScenarios;
@@ -104,17 +104,17 @@ public class TestCaseGenerator {
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Don't drive into wall 1", "Robot does not drive ahead if wall is ahead.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(14,11), Orientation.WEST, p(12,11))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(14,11), Orientation.WEST, p(12,11))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Don't drive into wall 2", "Robot does not drive ahead if wall is ahead.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(7,1), Orientation.SOUTH, p(7,-1))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(7,1), Orientation.SOUTH, p(7,-1))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Don't drive into wall 2", "Robot does not drive ahead if wall is ahead.",
-				e_list(new SimpleRobotWithFixedRouteSpecification(manager, p(6,7), Orientation.NORTH, p(6,9))), 
+				e_list(new SimpleTestRobotSpecification(manager, p(6,7), Orientation.NORTH, p(6,9))), 
 				GridMode.TWO_CROSSROADS, false, false, false));
 		
 		return testScenarios;
