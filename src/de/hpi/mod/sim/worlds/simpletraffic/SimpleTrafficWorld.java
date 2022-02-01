@@ -199,10 +199,11 @@ public class SimpleTrafficWorld extends RobotWorld {
 		List<? extends Entity> robots = super.getEntitiesForDetectors();
 
 		// Get other relevant entities
-		List<? extends Entity> streetNetworkEntities = getStreetNetworkManager().getNonRobotEntitiesForDetectors();
+		// List<? extends Entity> streetNetworkEntities = getStreetNetworkManager().getNonRobotEntitiesForDetectors();
 
 		// Combine Lists
-		return Stream.concat(robots.stream(), streetNetworkEntities.stream()).collect(Collectors.toList());
+		// return Stream.concat(robots.stream(), streetNetworkEntities.stream()).collect(Collectors.toList());
+		return robots;
 	}
 
 	public TrafficGridManager getStreetNetworkManager() {

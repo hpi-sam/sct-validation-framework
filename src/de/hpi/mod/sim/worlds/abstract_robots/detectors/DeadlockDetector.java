@@ -12,7 +12,7 @@ import de.hpi.mod.sim.worlds.abstract_robots.RobotWorld;
 public class DeadlockDetector extends RobotDetector {
 
 	public DeadlockDetector(RobotWorld world) {
-		super(world, false, true);
+		super(world, true, true);
 		getRobotPositions();
 	}
 

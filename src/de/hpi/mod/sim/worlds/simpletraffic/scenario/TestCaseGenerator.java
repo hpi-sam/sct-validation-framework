@@ -199,7 +199,7 @@ public class TestCaseGenerator {
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Driving ahead on Crossroad 1", "Robot coming from south drives ahead while traffic light is green.",
 				e_list( new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(8,12), false),
-						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true)), 
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false)), 
 				GridMode.SINGLE_CROSSROAD, false, false, false));
 		
 		testScenarios.add(new SimpleTrafficTestScenario(
