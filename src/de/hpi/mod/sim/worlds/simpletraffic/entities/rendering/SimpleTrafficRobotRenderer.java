@@ -64,6 +64,7 @@ public class SimpleTrafficRobotRenderer extends RobotRenderer {
 		
 		// IF indicators are enabled....
 		if(SimpleTrafficWorldConfiguration.showIndicator()) {
+			
 						
 			// ...and IF indicator should be on, ...
 			if(this.indicatorOn && this.manager.isInFrontOfTrafficLight(robot.pos()) && this.manager.isInFrontOfTrafficLight(robot.oldPos())) {

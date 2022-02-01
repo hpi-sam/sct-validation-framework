@@ -36,11 +36,296 @@ public class TestCaseGenerator {
 	public Map<String, List<TestScenario>> getAllTestCases() {
 		Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
 
-		testGroups.put("I. Simple Driving on Streets", generateSimpleDrivingTests(this.world.getStreetNetworkManager()));
-		testGroups.put("II. Driving with Obstacles", generateDrivingWithObstaclesTests(this.world.getStreetNetworkManager())); 
-		testGroups.put("III. Driving with Traffic Lights", generateDrivingAtTrafficLightTests(this.world.getStreetNetworkManager()));
-		testGroups.put("IV. Complete Route Driving", generateCompleteRouteTests(this.world.getStreetNetworkManager()));
+//		testGroups.put("I. Simple Driving on Streets", generateSimpleDrivingTests(this.world.getStreetNetworkManager()));
+//		testGroups.put("II. Driving with Obstacles", generateDrivingWithObstaclesTests(this.world.getStreetNetworkManager())); 
+//		testGroups.put("III. Driving with Traffic Lights", generateDrivingAtTrafficLightTests(this.world.getStreetNetworkManager()));
+//		testGroups.put("IV. Complete Route Driving", generateCompleteRouteTests(this.world.getStreetNetworkManager()));
+
+		testGroups.put("I. Robots don't wait too long", generateWaitingRobotTests(this.world.getStreetNetworkManager()));
+		testGroups.put("II. Robots can turn", generateTurningRobotTests(this.world.getStreetNetworkManager()));
+		testGroups.put("III. Robot Queues", generateMultipleRobotsPerSideTests(this.world.getStreetNetworkManager()));
 		return testGroups;
+	}
+
+
+
+	private List<TestScenario> generateWaitingRobotTests(TrafficGridManager manager) {
+
+		// Start list of test scenarios for this group
+		List<TestScenario> testScenarios = new ArrayList<>();
+
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robot from north", "Single robot coming from south does not have to wait longer than 30 seconds.",
+				e_list(new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(7,4))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robot from east", "Single robot coming from east does not have to wait longer than 30 seconds.",
+				e_list(new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(4,8))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robot from south", "Single robot coming from south does not have to wait longer than 30 seconds.",
+				e_list(new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(8,11))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robot from west", "Single robot coming from west does not have to wait longer than 30 seconds.",
+				e_list(new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(11,7))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robots from two directions 1", "Two robots are coming from west and south. They each do not have to wait longer than 30 seconds.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(11,7)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(8,11))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robots from two directions 2", "Two robots are coming from east and north. They each do not have to wait longer than 30 seconds.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(4,8)), 			
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(7,4))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robots from two directions 3", "Two robots are coming from north and south. They each do not have to wait longer than 30 seconds.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(7,4)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(8,11))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robots from two directions 4", "Two robots are coming from east and west. They each do not have to wait longer than 30 seconds.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(4,8)), 		
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(11,7))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robots from three directions 1", "Three robots are coming from north, south and west. They each do not have to wait longer than 30 seconds.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(11,7)), 
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(7,4)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(8,11))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robots from three directions 2", "Three robots are coming from north, east and west. They each do not have to wait longer than 30 seconds.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(7,4)), 
+						new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(4,8)), 		
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(11,7))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Robots from all directions", "Four robots are coming from all directions. They each do not have to wait longer than 30 seconds.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(11,7)), 
+						new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(4,8)), 
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(7,4)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(8,11))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+
+		return testScenarios;
+	}
+
+	private List<TestScenario> generateTurningRobotTests(TrafficGridManager manager) {
+
+		// Start list of test scenarios for this group
+		List<TestScenario> testScenarios = new ArrayList<>();
+
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn right 1", "Single robot coming from south can turn right.",
+				e_list(new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(12,7))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn right 2", "Single robot coming from west can turn right.",
+				e_list(new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(7,3))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn right 3", "Two robot coming from east and north can turn right.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(8,12)), 			
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(3,8))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn right 4", "Two robot coming from north and south can turn right.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(3,8)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(12,7))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn right 5", "Three robot coming from south, east and west can turn right.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(8,12)),
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(7,3)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(12,7))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn right 6", "Three robot coming from north, south and west can turn right.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(3,8)), 
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(7,3)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(12,7))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn right 7", "Four robot coming from all directions can turn right.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(3,8)), 
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(7,3)), 
+						new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(8,12)),
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(12,7))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+
+		
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn left 1", "Single robot coming from south can turn left.",
+				e_list(new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn left 2", "Single robot coming from west can turn left.",
+				e_list(new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(8,12))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn left 3", "Two robot coming from east and north can turn left.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(7,3)), 			
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(12,7))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn left 4", "Two robot coming from north and south can turn left.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn left 5", "Three robot coming from south, east and west can turn left.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(8,12)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn left 6", "Three robot coming from north, south and west can turn left.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(8,12)), 
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Turn left 7", "Four robot coming from all directions can turn left.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(8,12)), 
+						new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+
+		return testScenarios;
+	}
+
+	private List<TestScenario> generateMultipleRobotsPerSideTests(TrafficGridManager manager) {
+
+		// Start list of test scenarios for this group
+		List<TestScenario> testScenarios = new ArrayList<>();
+
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from north 1", "Three robots coming from south can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,12), Orientation.SOUTH, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(12,7)), 		
+						new SimpleTestRobotSpecification(manager, p(7,13), Orientation.SOUTH, p(3,8))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from north 2", "Three robots coming from south can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(7,12), Orientation.SOUTH, p(13,7)), 		
+						new SimpleTestRobotSpecification(manager, p(7,13), Orientation.SOUTH, p(12,7))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from east 1", "Three robots coming from east can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(3,8)),
+						new SimpleTestRobotSpecification(manager, p(12,8), Orientation.WEST, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(13,8), Orientation.WEST, p(8,12))), 	
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from east 2", "Three robots coming from east can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(12,8), Orientation.WEST, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(8,13)),
+						new SimpleTestRobotSpecification(manager, p(13,8), Orientation.WEST, p(8,12))), 	
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from south 1", "Three robots coming from south can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(8,2), Orientation.NORTH, p(8,12)), 
+						new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(12,7)),
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from south 2", "Three robots coming from south can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(8,2), Orientation.NORTH, p(8,12)), 
+						new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(12,7)),
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(8,13))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from west 1", "Three robots coming from west can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(2,7), Orientation.EAST, p(7,3)), 
+						new SimpleTestRobotSpecification(manager, p(3,7), Orientation.EAST, p(8,12))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from west 2", "Three robots coming from west can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(2,7), Orientation.EAST, p(8,12)), 
+						new SimpleTestRobotSpecification(manager, p(3,7), Orientation.EAST, p(8,13))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		
+		
+		
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from two sides 1", "Two robots coming from west and two robots coming from east can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(3,7), Orientation.EAST, p(7,3)), 
+						new SimpleTestRobotSpecification(manager, p(12,8), Orientation.WEST, p(8,12)),
+						new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(3,8))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from two sides 2", "Two robots coming from north and two robots coming from east can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,12), Orientation.SOUTH, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(12,7)), 		
+						new SimpleTestRobotSpecification(manager, p(12,8), Orientation.WEST, p(3,8)),
+						new SimpleTestRobotSpecification(manager, p(11,8), Orientation.WEST, p(8,12))), 
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from two sides 3", "Two robots coming from south and two robots coming from west can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(4,7), Orientation.EAST, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(3,7), Orientation.EAST, p(7,3)), 
+						new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(8,12)),
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+
+		testScenarios.add(new SimpleTrafficTestScenario(
+				"Multiple Robots from two sides 4", "Two robots coming from north and two robots coming from south can pass crossroad without crash.",
+				e_list(	new SimpleTestRobotSpecification(manager, p(7,12), Orientation.SOUTH, p(7,3)),
+						new SimpleTestRobotSpecification(manager, p(7,11), Orientation.SOUTH, p(12,7)), 
+						new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(8,12)),
+						new SimpleTestRobotSpecification(manager, p(8,4), Orientation.NORTH, p(3,8))),
+				GridMode.SINGLE_CROSSROAD, true, false, false));
+		return testScenarios;
 	}
 
 
