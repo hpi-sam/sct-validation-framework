@@ -1,6 +1,7 @@
 package de.hpi.mod.sim.worlds.abstract_grid;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The orientation an entity can face
@@ -9,7 +10,7 @@ public enum Orientation {
     NORTH, EAST, SOUTH, WEST;
 
     private float angle;
-    private Orientation left, right;
+    private Orientation left, right, inverse;
 
     static {
         NORTH.angle = 0;
@@ -26,6 +27,11 @@ public enum Orientation {
         EAST.right = SOUTH;
         SOUTH.right = WEST;
         WEST.right = NORTH;
+        
+        NORTH.inverse = SOUTH;
+        EAST.inverse = WEST;
+        SOUTH.inverse = NORTH;
+        WEST.inverse = EAST;
     }
 
     public float getAngle() {
@@ -40,6 +46,10 @@ public enum Orientation {
         return right;
     }
 
+    public Orientation getInverse() {
+        return inverse;
+    }
+    
     public static Orientation rotate(Orientation facing, Direction rotation) {
         switch (rotation) {
             case AHEAD:
@@ -66,8 +76,7 @@ public enum Orientation {
     }
     
     public static Orientation random() {
-    	Random random = new Random();
-    	return values()[random.nextInt(values().length)];
+    	return values()[ThreadLocalRandom.current().nextInt(values().length)];
     }
     
 }

@@ -4,22 +4,22 @@ import de.hpi.mod.sim.core.Configuration;
 
 public class GridConfiguration extends Configuration {
 
-    public static final float DEFAULT_BLOCK_SIZE = 20;
-    public static final float MIN_BLOCK_SIZE = 5;
-    public static final float MAX_BLOCK_SIZE = 30;
+    public static final float DEFAULT_INITIAL_BLOCK_SIZE = 20;
+    public static final float DEFAULT_MIN_BLOCK_SIZE = 5;
+    public static final float DEFAULT_MAX_BLOCK_SIZE = 30;
 
-    public static final int ORIGIN_OFFSET_X = 0;
-    public static final int ORIGIN_OFFSET_Y = 0;
+    public static final int DEFAULT_ORIGIN_OFFSET_X = 0;
+    public static final int DEFAULT_ORIGIN_OFFSET_Y = 0;
 
     public static final int DEFAULT_MAP_HEIGHT = 10; //TODO move?
     public static final int NOT_USED_ROWS = 3;// TODO move?
 
-    private static float defaultBlockSize = DEFAULT_BLOCK_SIZE;
-    private static float minBlockSize = MIN_BLOCK_SIZE;
-    private static float maxBlockSize = MAX_BLOCK_SIZE;
+    private static float initialBlockSize = DEFAULT_INITIAL_BLOCK_SIZE;
+    private static float minBlockSize = DEFAULT_MIN_BLOCK_SIZE;
+    private static float maxBlockSize = DEFAULT_MAX_BLOCK_SIZE;
 
-    private static int originOffsetX = ORIGIN_OFFSET_X;
-    private static int originOffsetY = ORIGIN_OFFSET_Y;
+    private static int originOffsetX = DEFAULT_ORIGIN_OFFSET_X;
+    private static int originOffsetY = DEFAULT_ORIGIN_OFFSET_Y;
 
     private static int defaultMapHeight = DEFAULT_MAP_HEIGHT;
     private static int mapHeight = DEFAULT_MAP_HEIGHT;
@@ -27,7 +27,7 @@ public class GridConfiguration extends Configuration {
     private static int notUsedRows = NOT_USED_ROWS;
 
     public static float getDefaultBlockSize() {
-        return defaultBlockSize;
+        return initialBlockSize;
     }
 
     public static float getMinBlockSize() {
@@ -58,15 +58,20 @@ public class GridConfiguration extends Configuration {
         return notUsedRows;
     }
 
-    public static void setMapHeight(int mapHeight) {
-        GridConfiguration.mapHeight = mapHeight;
+    public static void setMapHeight(int height) {
+        mapHeight = height;
+    }
+   
+    public static void resetOriginOffset() {
+        originOffsetY = DEFAULT_ORIGIN_OFFSET_X;
+        originOffsetY = DEFAULT_ORIGIN_OFFSET_Y;
     }
 
     public static void setOriginOffsetX(int offset) {
-        GridConfiguration.originOffsetX = offset;
+        originOffsetX = offset;
     }
    
     public static void setOriginOffsetY(int offset) {
-        GridConfiguration.originOffsetY = offset;
+        originOffsetY = offset;
     }
 }

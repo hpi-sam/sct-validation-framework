@@ -59,7 +59,7 @@ public class FlashWorld extends World {
 	}
 
 	@Override
-	public List<? extends Entity> getEntities() {
+	public List<? extends Entity> getEntitiesForDetectors() {
 		List<Entity> list = new ArrayList<>(1);
 		list.add(bulb);
 		list.add(starter);
@@ -96,7 +96,7 @@ public class FlashWorld extends World {
 	}
 
 	@Override
-	public void refreshSimulationProperties(int currentHeight, int currentWidth) {
+	public void refreshSimulationSize(int currentHeight, int currentWidth) {
 		this.width = currentWidth;
 		this.height = currentHeight;
 	}
@@ -108,7 +108,7 @@ public class FlashWorld extends World {
 
 	@Override
 	public void close() {
-		bulb.close();
+		bulb.stop();
 	}
 
 	public void setBulb(LightBulb bulb) {
@@ -128,30 +128,6 @@ public class FlashWorld extends World {
 	public void startBulb(int n) {
 		if (bulb != null)
 			bulb.doBlinkingTask(n);
-	}
-
-
-
-	@Override
-	public AnimationPanel getAnimationPanel() {
-		return new AnimationPanel(this) {
-
-			
-			private static final long serialVersionUID = -3511125389453371432L;
-
-			@Override
-			public void resetZoom() {
-			}
-
-			@Override
-			public void zoomIn(float zoom) {
-			}
-
-			@Override
-			public void zoomOut(float zoom) {
-			}
-			
-		};
 	}
 
 }

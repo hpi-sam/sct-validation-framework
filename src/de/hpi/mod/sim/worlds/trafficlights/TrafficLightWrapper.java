@@ -40,12 +40,12 @@ public class TrafficLightWrapper extends StateChartWrapper<TrafficLight.State>
     }
 
     @Override
-    public String getMachineState() {
-        return getChartState();
+    public String getActiveState() {
+        return getActiveState();
     }
 
     @Override
-    public String getTopStateName() {
+    public String getTopLevelRegionName() {
         return "trafficlight";
     }
 

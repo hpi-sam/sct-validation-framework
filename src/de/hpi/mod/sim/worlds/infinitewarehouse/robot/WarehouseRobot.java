@@ -346,7 +346,7 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     @Override
     public void close() {
-        chart.close();
+        chart.stop();
     }
 
     public int getStationID() {
@@ -357,8 +357,8 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
         return packageID;
     }
 
-    public String getMachineState() {
-    	return chart.getChartState();
+    public String getActiveState() {
+    	return chart.getActiveState();
     }
 
     public enum RobotState {
@@ -385,8 +385,13 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
     }
 
     @Override
-    public String getTopStateName() {
+    public String getTopLevelRegionName() {
         return "drive_system";
+    }
+    
+    @Override
+    public List<String> getActiveStates() {
+        return drive.getActiveStates();
     }
 
     private WarehouseManager getWarehouseManager() {
@@ -395,7 +400,6 @@ public class WarehouseRobot extends Robot implements IProcessor, ISensor, IDrive
 
     @Override
     public void actionCompleted() {
-        super.actionCompleted();
         drive.actionCompleted();
     }
 }

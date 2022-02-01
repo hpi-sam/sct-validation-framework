@@ -14,6 +14,7 @@ public class SimulationBlockView extends AnimationPanel {
      * The scaling of a block
      */
     private float blockSize;
+    
     /**
      * The Position of the mouse in blocks
      */
@@ -67,9 +68,8 @@ public class SimulationBlockView extends AnimationPanel {
         y = (int) (getHeight() - y - blockSize / 2);
         int blockX = (int) Math.floor(
                 x / blockSize - getWidth() / (2 * blockSize) - GridConfiguration.getOriginOffsetX() + getOffsetX());
-        int blockY = (int) Math
-                .floor(y / blockSize - GridConfiguration.getOriginOffsetY() + getOffsetY());
-
+        int blockY = (int) Math.floor(
+        		y / blockSize - GridConfiguration.getOriginOffsetY() + getOffsetY());
         return new Position(blockX, blockY);
     }
 

@@ -29,7 +29,11 @@ public abstract class RobotWorld extends GridWorld {
     public void initialize() {
         super.initialize();
         explosionRenderer = new ExplosionRenderer();
-        robotRenderer = new RobotRenderer(getSimulationBlockView(), getRobotGridManager());
+        robotRenderer = createRobotRenderer();
+    }
+
+    protected RobotRenderer createRobotRenderer() {
+    	return new RobotRenderer(getSimulationBlockView(), getRobotGridManager());
     }
 
     protected List<Detector> createDetectors() {
@@ -80,13 +84,13 @@ public abstract class RobotWorld extends GridWorld {
     }
     
     @Override
-    public List<? extends Entity> getEntities() {
+    public List<? extends Entity> getEntitiesForDetectors() {
         return getRobots();
     }
     
     @Override
     public void clearEntities() {
-        getRobots().clear();
+    	getRobotGridManager().clearRobots();
     }
     
     @Override
@@ -105,12 +109,12 @@ public abstract class RobotWorld extends GridWorld {
     
     @Override
     public void refreshEntities() {
-        getRobotGridManager().refresh();
+        getRobotGridManager().refreshRobots();
     }
 
     @Override
     public void close() {
-        getRobotGridManager().close();
+        getRobotGridManager().closeRobots();
     }
     
     @Override

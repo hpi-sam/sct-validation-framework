@@ -297,7 +297,12 @@ public class SimulatorFrame extends JFrame {
 				e.printStackTrace();
 			}
 		}
-        float delta = System.currentTimeMillis() - this.lastUpdateTime;
+		
+		// Calculate delta
+        float systemTimeDelta = System.currentTimeMillis() - this.lastUpdateTime;
+        float simulationTimeDelta =  (float) Math.floor(systemTimeDelta * Configuration.getEntitySpeedFactor());
+
+        // Update last System time
         this.lastUpdateTime = System.currentTimeMillis();
         
         // Refresh Control Programm(s) 
@@ -305,7 +310,7 @@ public class SimulatorFrame extends JFrame {
 		this.entityInfoPanel1.onValueUpdate();
 		this.entityInfoPanel2.onValueUpdate();
 		this.world.getScenarioManager().refresh();
-		this.world.getSimulationRunner().update(delta);
+		this.world.getSimulationRunner().update(simulationTimeDelta);
 
 		// Repaint Layout Elements
         this.repaint();

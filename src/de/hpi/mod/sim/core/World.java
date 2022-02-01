@@ -25,8 +25,6 @@ public abstract class World {
 
     private List<Detector> detectors;
 
-    private AnimationPanel panel;
-
     protected abstract List<Detector> createDetectors();
 
     public List<Detector> getDetectors() {
@@ -95,7 +93,7 @@ public abstract class World {
 				detector.disable();
     }
 
-    public abstract List<? extends Entity> getEntities();
+    public abstract List<? extends Entity> getEntitiesForDetectors();
 
     public abstract void refreshEntities();
     
@@ -105,7 +103,9 @@ public abstract class World {
 
     public abstract void render(java.awt.Graphics graphics);
 
-    public abstract void refreshSimulationProperties(int currentHeight, int currentWidth);
+    public abstract void refreshSimulationSize(int currentHeight, int currentWidth);
+
+    public void configurationChanged()  { }
 
     public void mousePressed(java.awt.event.MouseEvent e) { }
 
@@ -123,11 +123,6 @@ public abstract class World {
 	public String toString() {
 		return getPublicName()+ " (" + this.getClass().getName() + ")";
 	}
-
-	public AnimationPanel getAnimationPanel() {
-        return panel;
-    }
-
 	public String getPublicName() {
 		return publicName;
 	}
@@ -137,12 +132,10 @@ public abstract class World {
 	}
 
 	public void updateDetectors() {
-		List<? extends Entity> entities = this.getEntities();
+		List<? extends Entity> entities = this.getEntitiesForDetectors();
 		for (Detector detector : this.getDetectors())
 			if(detector.isEnabled())
 				detector.update(entities);
-	}
-
-	
+	}	
 
 }

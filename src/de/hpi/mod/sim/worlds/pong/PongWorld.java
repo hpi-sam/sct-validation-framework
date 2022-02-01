@@ -65,7 +65,7 @@ public class PongWorld extends World {
 	}
 
 	@Override
-	public List<? extends Entity> getEntities() {
+	public List<? extends Entity> getEntitiesForDetectors() {
 		List<Entity> list = new ArrayList<>(2);
 		list.add(paddle1);
 		list.add(ball);
@@ -136,7 +136,7 @@ public class PongWorld extends World {
 	}
 
 	@Override
-	public void refreshSimulationProperties(int currentHeight, int currentWidth) {
+	public void refreshSimulationSize(int currentHeight, int currentWidth) {
 		this.width = (int) currentWidth;
 		this.height = (int) currentHeight;
 	}
@@ -182,8 +182,8 @@ public class PongWorld extends World {
 
 	@Override
 	public void close() {
-		paddle1.close();
-		paddle2.close();
+		paddle1.stop();
+		paddle2.stop();
 	}
 
 	@Override

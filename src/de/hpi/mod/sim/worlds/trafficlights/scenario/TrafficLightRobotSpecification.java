@@ -24,7 +24,9 @@ public class TrafficLightRobotSpecification extends RobotSpecification<TrafficLi
 
     @Override
     public TrafficLightRobot createRobot(CrossRoadsManager robots) {
-        return new TrafficLightRobot(Robot.incrementID(), robots, pos, facing, destination);
+    	TrafficLightRobot robot =  new TrafficLightRobot(Robot.incrementID(), robots, pos, facing, destination);
+		robots.addRobot(robot);
+		return robot;
     }
     
 }

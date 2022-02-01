@@ -39,7 +39,7 @@ public abstract class Scenario {
     public void loadScenario(World world) { 
         entities.clear();
         List<EntitySpecification<?>> specs = getScenarioEntities();
-        
+                
         specs.forEach(spec -> world.getSimulationRunner().addEntityRunner(() -> {
             Entity e = spec.createEntity();
             entities.add(e);

@@ -2,6 +2,8 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import de.hpi.mod.sim.core.simulation.Entity;
 import de.hpi.mod.sim.core.simulation.IHighlightable;
 import de.hpi.mod.sim.worlds.abstract_grid.Direction;
@@ -23,7 +25,7 @@ public abstract class Robot implements Entity, IHighlightable {
     private DriveManager manager;
 
     private Position target = null;
-    private List<Position> testTargets = null;
+    private List<Position> testTargets = new CopyOnWriteArrayList<Position>();
     private int robotID;
     private int robotSpecificDelay = 0;
 
@@ -55,7 +57,7 @@ public abstract class Robot implements Entity, IHighlightable {
         this.grid = grid;
         setRobotTo(startPosition);
         target = startPosition;
-        turnRobotTo(startFacing);
+        setFacingTo(startFacing);
         setTargetFacing(startFacing);
         manager = new DriveManager(this);
     }
@@ -97,11 +99,15 @@ public abstract class Robot implements Entity, IHighlightable {
         this.oldPosition = pos;
     }
 
+    public long timeSinceTestStart() {
+    	return System.currentTimeMillis() - initialNow;
+    }
+    
 	/**
      * Handles state changes and refreshes the State-Machine
      */
     public void refresh() {
-        if (System.currentTimeMillis() >= initialNow + initialDelay)
+        if (timeSinceTestStart() > initialDelay)
             onRefresh();
     }
 
@@ -192,11 +198,6 @@ public abstract class Robot implements Entity, IHighlightable {
         setAngle(getAngle() + angle);
     }
 
-    public void turnRobotTo(Orientation facing) {
-        setFacing(facing);
-        setAngle(facing.getAngle());
-    }
-
     public void setTargetFacing(Orientation facing) {
         this.targetFacing = facing;
     }
@@ -228,8 +229,20 @@ public abstract class Robot implements Entity, IHighlightable {
 		return pos().fuzzyEquals(target);
 	}
 
+	public boolean isOn(Position t) {
+        return pos().equals(t);
+    }
+
+	public boolean isStandingOn(Position t) {
+        return pos().equals(t) && isStanding();
+    }
+
+	public boolean isStanding() {
+        return pos().equals(oldPos());
+    }
+	
 	public boolean isOnTargetOrNearby() {
-        return pos().equals(target);
+        return isOn(target);
     }
     
     @Override
@@ -239,7 +252,7 @@ public abstract class Robot implements Entity, IHighlightable {
             && arrivementFullfilled()
             && (!requireUnloadingForTestCompletion || getDriveManager().hasUnloadedSomething());
     }
-    
+        
     public boolean arrivementFullfilled() {
         return !requireArrivedForTestCompletion || arrivedEventWasCalled;
     } 
@@ -334,8 +347,7 @@ public abstract class Robot implements Entity, IHighlightable {
     /**
      * Called once after the actors have performed a movement (turning, driving, unloading)
      */
-    public void actionCompleted() {
-    }
+    public  abstract void actionCompleted();
 
     public DriveManager getDriveManager() {
         return manager;

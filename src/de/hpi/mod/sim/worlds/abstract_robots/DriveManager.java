@@ -99,7 +99,7 @@ public class DriveManager implements IRobotActors {
     }
 
     private void loadBattery(float delta) {
-        battery = Math.min(battery + delta * RobotConfiguration.getBatteryChargingSpeed(), 100);
+        battery = Math.min(battery + delta * RobotConfiguration.getBatteryChargingSpeed(), RobotConfiguration.getBatteryFull());
     }
 
     private void calculateUnload() {
@@ -121,7 +121,7 @@ public class DriveManager implements IRobotActors {
             robot.increaseAngle(360);
 
         if (robot.getAngle() >= robot.targetFacing().getAngle()) {
-            robot.turnRobotTo(robot.targetFacing());
+            robot.setFacingTo(robot.targetFacing());
             isTurningRight = false;
             robot.actionCompleted();
         }
@@ -135,7 +135,7 @@ public class DriveManager implements IRobotActors {
         robot.increaseAngle(Math.copySign(getRotationSpeed() * delta, deltaAngle));
 
         if (robot.getAngle() <= robot.targetFacing().getAngle()) {
-            robot.turnRobotTo(robot.targetFacing());
+            robot.setFacingTo(robot.targetFacing());
             isTurningLeft = false;
             robot.actionCompleted();
         }
@@ -317,6 +317,10 @@ public class DriveManager implements IRobotActors {
 
     public float getBattery() {
         return battery;
+    }
+
+    public void resetBattery() {
+        battery = RobotConfiguration.getBatteryFull();
     }
 
     public void setLoading(boolean loading) {

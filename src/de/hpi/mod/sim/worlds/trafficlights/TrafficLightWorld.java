@@ -50,8 +50,8 @@ public class TrafficLightWorld extends RobotWorld {
     }
 
     @Override
-    public void refreshSimulationProperties(int currentHeight, int currentWidth) {
-    	SimulationBlockView blockView = (SimulationBlockView) getAnimationPanel();
+    public void refreshSimulationSize(int currentHeight, int currentWidth) {
+    	SimulationBlockView blockView = getSimulationBlockView();
     	if(blockView != null) {
 	        float blockSize = blockView.getBlockSize();
 	        int width = (int) ((currentWidth / blockSize) + TrafficLightsConfiguration.getOriginOffsetX() * 2) * 3
@@ -78,8 +78,8 @@ public class TrafficLightWorld extends RobotWorld {
     }
     
     @Override
-    public List<? extends Entity> getEntities() {
-        List<? extends Entity> superList = super.getEntities();
+    public List<? extends Entity> getEntitiesForDetectors() {
+        List<? extends Entity> superList = super.getEntitiesForDetectors();
         List<TrafficLightWrapper> lights = getCrossRoadManager().getTrafficLights();
         List<Entity> list = new ArrayList<>(lights.size() + superList.size());
         list.addAll(superList);

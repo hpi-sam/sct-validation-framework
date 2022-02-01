@@ -42,6 +42,7 @@ public class ScenarioGenerator {
                 lights.add(new TrafficLightSpecification(new Position(x * 3 + 2, y * 3), world));
             }
         }
+        System.out.println("GENERATE CROSSROADS");
         return lights;
     }
 

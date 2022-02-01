@@ -61,7 +61,7 @@ public class InfiniteWarehouse extends RobotWorld {
     }
 
     @Override
-    public void refreshSimulationProperties(int currentHeight, int currentWidth) {
+    public void refreshSimulationSize(int currentHeight, int currentWidth) {
 
         int chargingStations = getWarehouseManager().chargingStationsInUse(currentHeight, currentWidth);
             

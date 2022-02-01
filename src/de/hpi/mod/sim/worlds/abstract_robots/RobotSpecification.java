@@ -4,18 +4,17 @@ import de.hpi.mod.sim.core.scenario.EntitySpecification;
 
 public abstract class RobotSpecification <R extends Robot, M extends RobotGridManager> implements EntitySpecification<R> {
     
-    private M robots;
+    private M robotManager;
 
-    public RobotSpecification(M robots) {
-        this.robots = robots;
+    public RobotSpecification(M manager) {
+        this.robotManager = manager;
     }
 
     protected abstract R createRobot(M robots);
 
     @Override 
     public R createEntity() {
-        R robot = createRobot(robots);
-        robots.addRobot(robot);
+        R robot = createRobot(robotManager);
         return robot;
     }
 }

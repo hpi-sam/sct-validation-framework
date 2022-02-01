@@ -67,17 +67,10 @@ public class RightPaddle extends StateChartWrapper<PaddleControl2.State>
     private void goUp() {
     	y += PongConfiguration.stepsPerCall * Configuration.getEntitySpeedFactor();
     }
-    
-    
-    
-    @Override
-    public String getMachineState() {
-        return getChartState();
-    
-    }
+  
 
     @Override
-    public String getTopStateName() {
+    public String getTopLevelRegionName() {
         return "pong";
     }
 

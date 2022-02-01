@@ -148,14 +148,23 @@ public class ScenarioManager {
 	}
 
 	public void restartScenario() {
-		if (currentScenario != null) {
+		if(isRunningScenario()){
 			frame.getTimerPanel().startNewClock();
 			frame.displayMessage("Restarting scenario: \"" + currentScenario.getName() + "\"");
 			runScenario(currentScenario, isRunningTest);
 
 		}
 	}
+	
+	public float getCurrentSimulationTime() {
+		//TODO: Remove ugly workaround!
+		return frame.getTimerPanel().getTime();
+	}
 
+	public boolean isRunningScenario() {
+		return (currentScenario != null);
+	}
+	
 	public void refresh() {
 		if (isRunningTest) { // Is a test running?
 

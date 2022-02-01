@@ -135,12 +135,7 @@ public class LightBulb extends StateChartWrapper<FlashControl.State>
 	}
 
 	@Override
-	public String getMachineState() {
-		return getChartState();
-	}
-
-	@Override
-	public String getTopStateName() {
+	public String getTopLevelRegionName() {
 		return "flasher";
 	}
 

@@ -70,16 +70,9 @@ public class LeftPaddle extends StateChartWrapper<PaddleControl1.State>
     	y += PongConfiguration.stepsPerCall * Configuration.getEntitySpeedFactor();
     }
     
-    
-    
-    @Override
-    public String getMachineState() {
-        return getChartState();
-    
-    }
 
     @Override
-    public String getTopStateName() {
+    public String getTopLevelRegionName() {
         return "pong";
     }
 

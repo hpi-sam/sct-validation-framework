@@ -3,6 +3,7 @@ package de.hpi.mod.sim.worlds.abstract_robots;
 import javax.imageio.ImageIO;
 
 import de.hpi.mod.sim.worlds.abstract_grid.SimulationBlockView;
+import de.hpi.mod.sim.worlds.simpletraffic.SimpleTrafficWorldConfiguration;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,42 +32,45 @@ public class RobotRenderer {
 
     private void loadImages() {
         try {
-            robotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRobotIcon()));
-            leftClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToLeftClickedRobotIcon()));
-            rightClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRightClickedRobotIcon()));
-            batteryIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToEmptyBattery()));
-            packageIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToPackage()));
+        	 this.robotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRobotIcon()));
+            this.leftClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToLeftClickedRobotIcon()));
+            this.rightClickedRobotIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToRightClickedRobotIcon()));
+            this.batteryIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToEmptyBattery()));
+            this.packageIcon = ImageIO.read(new File(RobotConfiguration.getStringPathToPackage()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
+    
 
-    public void render(Graphics graphic, float size) {
-        // Draw Robots
+    public void render(Graphics graphic, float blockSize) {
         for (Robot robot : robots.getRobots()) {
-            Point2D drawPosition = simView.toDrawPosition(robot.x(), robot.y());
-	
-	            boolean leftClicked = robot.equals(simView.getHighlighted1());
-	            boolean rightClicked = robot.equals(simView.getHighlighted2());
-	
-	            drawRobot(graphic, drawPosition, size, robot.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
-        }
-
-        // Render additional Info like Targets
-        for (Robot robot : robots.getRobots()) {
-            if (robot.equals(simView.getHighlighted1()) || robot.equals(simView.getHighlighted2())) {
-	                Point2D drawPos = simView.toDrawPosition(robot.x(), robot.y());
-	                Point2D targetPos = simView.toDrawPosition(robot.getTarget());
-	
-	                drawTarget(graphic, drawPos, targetPos, size);
-            }
+        	drawRobotAndContext(graphic, blockSize, robot);
         }
     }
+    
+    protected void drawRobotAndContext(Graphics graphic, float blockSize, Robot robot) {
+    	Point2D drawPosition = getSimView().toDrawPosition(robot.x(), robot.y());
 
+    	// Draw actual Robots
+        boolean leftClicked = robot.equals(getSimView().getHighlighted1());
+        boolean rightClicked = robot.equals(getSimView().getHighlighted2());
+        drawRobot(graphic, drawPosition, blockSize, robot.getAngle(), leftClicked, rightClicked, robot.hasPackage(), robot.getBattery() < .1);
+
+        // Render additional Info like Targets
+        if (leftClicked || rightClicked) {
+        	Point2D targetPosition = getSimView().toDrawPosition(robot.getTarget());
+        	drawLineFromRobotToTarget(graphic, drawPosition, targetPosition, blockSize);
+        }
+    }
+    	
     private void drawRobot(Graphics graphic, Point2D drawPosition, float size, float angle, boolean leftClicked, boolean rightClicked, boolean hasPackage, boolean batteryEmpty) {
+    	
         int translateX = (int) drawPosition.getX();
         int translateY = (int) drawPosition.getY();
 
+        // Determine Icon (based on highlight status)
         BufferedImage image = robotIcon;
         if(leftClicked)
         	image = leftClickedRobotIcon;
@@ -78,24 +82,30 @@ public class RobotRenderer {
                 image.getWidth() / 2f, image.getHeight() / 2f);
         AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
+        // Draw Robot itself
         graphic.drawImage(op.filter(image, null), translateX, translateY, (int) size, (int) size, null);
 
+        // Draw overlays over Robot (package and/or pattery)
         if (hasPackage) 
         	graphic.drawImage(op.filter(packageIcon, null), translateX, translateY, (int) size, (int) size, null);
-        
         if (batteryEmpty)
             graphic.drawImage(batteryIcon, (int) drawPosition.getX(), (int) drawPosition.getY(), (int) size, (int) size, null);
+        
     }
 
-    private void drawTarget(Graphics graphic, Point2D drawPosition, Point2D targetPosition, float size) {
+    private void drawLineFromRobotToTarget(Graphics graphic, Point2D robotPosition, Point2D targetPosition, float size) {
         Graphics2D Graphic2D = (Graphics2D) graphic;
         graphic.setColor(Color.RED);
 
         int offset = (int) size / 2;
         Graphic2D.drawLine(
-                (int) drawPosition.getX() + offset,
-                (int) drawPosition.getY() + offset,
+                (int) robotPosition.getX() + offset,
+                (int) robotPosition.getY() + offset,
                 (int) targetPosition.getX() + offset,
                 (int) targetPosition.getY() + offset);
     }
+
+	public SimulationBlockView getSimView() {
+		return simView;
+	}
 }

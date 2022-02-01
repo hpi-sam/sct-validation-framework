@@ -58,6 +58,21 @@ public class Position {
     public Position getModified(int dx, int dy) {
         return new Position(x + dx, y + dy);
     }
+    
+    public Position getModified(int d, Orientation orientation) {
+        switch (orientation) {
+        case NORTH:
+            return new Position(getX(), getY() + d);
+        case EAST:
+            return new Position(getX() + d, getY());
+        case SOUTH:
+            return new Position(getX(), getY() - d);
+        case WEST:
+            return new Position(getX() - d, getY());
+        default:
+            throw new IllegalArgumentException();
+    }
+    }
 
     public static Position nextPositionInOrientation(Orientation facing, Position current) {
         switch (facing) {
