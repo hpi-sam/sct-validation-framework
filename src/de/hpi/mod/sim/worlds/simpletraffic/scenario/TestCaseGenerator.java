@@ -196,10 +196,12 @@ public class TestCaseGenerator {
 
 		
 		
+		
+		
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Driving ahead on Crossroad 1", "Robot coming from south drives ahead while traffic light is green.",
 				e_list( new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(8,12), false),
-						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), false)), 
+						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true)), 
 				GridMode.SINGLE_CROSSROAD, false, false, false));
 		
 		testScenarios.add(new SimpleTrafficTestScenario(
@@ -214,6 +216,8 @@ public class TestCaseGenerator {
 						new TestTrafficLightSpecification(new RelativePosition(0,0), world.getStreetNetworkManager(), true)), 
 				GridMode.SINGLE_CROSSROAD, false, false, false));
 
+		
+		
 		
 		
 		testScenarios.add(new SimpleTrafficTestScenario(
@@ -236,6 +240,8 @@ public class TestCaseGenerator {
 
 		
 		
+		
+		
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Driving left on Crossroad 1", "Robot coming from south drives to crossroad, passes green traffic light, turns right and drives on ahead.",
 				e_list( new SimpleTestRobotSpecification(manager, p(8,3), Orientation.NORTH, p(3,8), false),
@@ -256,6 +262,7 @@ public class TestCaseGenerator {
 		
 
 
+		
 		
 		testScenarios.add(new SimpleTrafficTestScenario(
 				"Multiple robots on Crossroad 1", "Three Robots coming from east drive to crossroad, pass green traffic light and turn or drive ahead.",
