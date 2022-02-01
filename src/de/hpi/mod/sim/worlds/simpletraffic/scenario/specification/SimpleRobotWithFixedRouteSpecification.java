@@ -24,7 +24,7 @@ public class SimpleRobotWithFixedRouteSpecification extends SimpleRobotSpecifica
     @Override
     public SimpleTrafficRobot createRobot(TrafficGridManager networkManager) {
         SimpleTrafficRobot robot = new SimpleTrafficRobot(Robot.incrementID(), networkManager, pos, facing, destination);
-    	networkManager.makeRobotIdle(robot);
+    	networkManager.addRobot(robot);
     	return robot;
     }
     
