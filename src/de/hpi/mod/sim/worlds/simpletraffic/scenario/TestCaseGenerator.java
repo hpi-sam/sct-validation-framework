@@ -36,14 +36,14 @@ public class TestCaseGenerator {
 	public Map<String, List<TestScenario>> getAllTestCases() {
 		Map<String, List<TestScenario>> testGroups = new LinkedHashMap<>();
 
-//		testGroups.put("I. Simple Driving on Streets", generateSimpleDrivingTests(this.world.getStreetNetworkManager()));
-//		testGroups.put("II. Driving with Obstacles", generateDrivingWithObstaclesTests(this.world.getStreetNetworkManager())); 
-//		testGroups.put("III. Driving with Traffic Lights", generateDrivingAtTrafficLightTests(this.world.getStreetNetworkManager()));
-//		testGroups.put("IV. Complete Route Driving", generateCompleteRouteTests(this.world.getStreetNetworkManager()));
+		testGroups.put("(R) I. Simple Driving on Streets", generateSimpleDrivingTests(this.world.getStreetNetworkManager()));
+		testGroups.put("(R) II. Driving with Obstacles", generateDrivingWithObstaclesTests(this.world.getStreetNetworkManager())); 
+		testGroups.put("(R) III. Driving with Traffic Lights", generateDrivingAtTrafficLightTests(this.world.getStreetNetworkManager()));
+		testGroups.put("(R) IV. Complete Route Driving", generateCompleteRouteTests(this.world.getStreetNetworkManager()));
 
-		testGroups.put("I. Robots don't wait too long", generateWaitingRobotTests(this.world.getStreetNetworkManager()));
-		testGroups.put("II. Robots can turn", generateTurningRobotTests(this.world.getStreetNetworkManager()));
-		testGroups.put("III. Robot Queues", generateMultipleRobotsPerSideTests(this.world.getStreetNetworkManager()));
+		testGroups.put("(L) I. Robots don't wait too long", generateWaitingRobotTests(this.world.getStreetNetworkManager()));
+		testGroups.put("(L) II. Robots can turn", generateTurningRobotTests(this.world.getStreetNetworkManager()));
+		testGroups.put("(L) III. Robot Queues", generateMultipleRobotsPerSideTests(this.world.getStreetNetworkManager()));
 		return testGroups;
 	}
 
