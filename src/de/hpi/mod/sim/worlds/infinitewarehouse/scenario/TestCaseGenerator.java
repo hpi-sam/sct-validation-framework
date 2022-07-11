@@ -595,19 +595,19 @@ public class TestCaseGenerator {
 		biasY = rand.nextInt(5);
         testRobot = new TestRobotSpecification(robots, p(-6+biasX*3, 8+biasY*3), RobotState.TO_UNLOADING, Orientation.WEST, p_list(p(-8+biasX*3,6+biasY*3)));
         testRobot.setRequireArrived(true);
-        testScenarios.add(new ConcreteTestScenario("Turning right on crossroad 1", "Start at a waypoint, go right on upcoming crossroad, report arrival. (Version 1)", r_list(testRobot)));
+        testScenarios.add(new ConcreteTestScenario("Turning left on crossroad 1", "Start at a waypoint, go left on upcoming crossroad, report arrival. (Version 1)", r_list(testRobot)));
         
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
         testRobot = new TestRobotSpecification(robots, p(-9+biasX*3, 7+biasY*3), RobotState.TO_UNLOADING, Orientation.EAST, p_list(p(-7+biasX*3,9+biasY*3)));
         testRobot.setRequireArrived(true);
-        testScenarios.add(new ConcreteTestScenario("Turning right on crossroad 2", "Start at a waypoint, go right on upcoming crossroad, report arrival. (Version 2)", r_list(testRobot)));
+        testScenarios.add(new ConcreteTestScenario("Turning left on crossroad 2", "Start at a waypoint, go left on upcoming crossroad, report arrival. (Version 2)", r_list(testRobot)));
         
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
         testRobot = new TestRobotSpecification(robots, p(-7+biasX*3, 6+biasY*3), RobotState.TO_UNLOADING, Orientation.NORTH, p_list(p(-9+biasX*3,8+biasY*3)));
         testRobot.setRequireArrived(true);
-        testScenarios.add(new ConcreteTestScenario("Turning right on crossroad 3", "Start at a waypoint, go right on upcoming crossroad, report arrival. (Version 3)", r_list(testRobot)));
+        testScenarios.add(new ConcreteTestScenario("Turning left on crossroad 3", "Start at a waypoint, go left on upcoming crossroad, report arrival. (Version 3)", r_list(testRobot)));
         
 		return testScenarios;
         
@@ -622,19 +622,19 @@ public class TestCaseGenerator {
 		biasY = rand.nextInt(5);
         testRobot = new TestRobotSpecification(robots, p(-6+biasX*3, 8+biasY*3), RobotState.TO_UNLOADING, Orientation.WEST, p_list(p(-7+biasX*3,9+biasY*3)));
         testRobot.setRequireArrived(true);
-        testScenarios.add(new ConcreteTestScenario("Turning left on crossroad 1", "Start at a waypoint, go left on upcoming crossroad, report arrival. (Version 1)", r_list(testRobot)));
+        testScenarios.add(new ConcreteTestScenario("Turning right on crossroad 1", "Start at a waypoint, go right on upcoming crossroad, report arrival. (Version 1)", r_list(testRobot)));
        
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
         testRobot = new TestRobotSpecification(robots, p(-9+biasX*3, 7+biasY*3), RobotState.TO_UNLOADING, Orientation.EAST, p_list(p(-8+biasX*3,6+biasY*3)));
         testRobot.setRequireArrived(true);
-        testScenarios.add(new ConcreteTestScenario("Turning left on crossroad 2", "Start at a waypoint, go left on upcoming crossroad, report arrival. (Version 2)", r_list(testRobot)));
+        testScenarios.add(new ConcreteTestScenario("Turning right on crossroad 2", "Start at a waypoint, go right on upcoming crossroad, report arrival. (Version 2)", r_list(testRobot)));
 
         biasX = rand.nextInt(5);
 		biasY = rand.nextInt(5);
         testRobot = new TestRobotSpecification(robots, p(-7+biasX*3, 6+biasY*3), RobotState.TO_UNLOADING, Orientation.NORTH, p_list(p(-6+biasX*3,7+biasY*3)));
         testRobot.setRequireArrived(true);
-        testScenarios.add(new ConcreteTestScenario("Turning left on crossroad 3", "Start at a waypoint, go left on upcoming crossroad, report arrival. (Version 3)", r_list(testRobot)));
+        testScenarios.add(new ConcreteTestScenario("Turning right on crossroad 3", "Start at a waypoint, go right on upcoming crossroad, report arrival. (Version 3)", r_list(testRobot)));
       
 		return testScenarios;
 	}
