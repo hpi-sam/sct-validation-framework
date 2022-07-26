@@ -33,7 +33,7 @@ public class SimulatorFrame extends JFrame {
 	public static Color MENU_WHITE = Color.WHITE;
 
 	public SimulatorFrame(World world) {
-		super("Statechart Simulator");
+		super("Statechart Validation Framework");
 		this.world = world;
 		this.animationPanel = world.createAnimationPanel();
 		SimulationRunner simulationRunner = new SimulationRunner(world, this.animationPanel);
