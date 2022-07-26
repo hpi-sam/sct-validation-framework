@@ -1,6 +1,10 @@
-# Statechart Simulator
+# Validation Framework
 
-This project is a simulating environment which allows to run simulations in which it is possible to define some behavior by YAKINDU Statechart tools.
+This project is a validation framework which allows to run simulations of different environments that may include code generated from statechart models specified with YAKINDU Statechart Tools.
+
+Related teaching materials are published at https://github.com/hpi-sam/sct-teaching-materials.
+
+
 
 ## Project Structure
 
@@ -58,13 +62,9 @@ A `world` is the definition of the environment for a specific application. To se
 
 ## Setup
 
-**[=> Hier geht es zur Installations-Anleitung für alle Betriebssysteme! <=](INSTALL.md)**
+YAKUNDU Statechart Tools ist ein Eclipse-Plugin. Da es Gelegentlich zu Problemen mit einem Nachinstallierten Plugin kommt, empfehlen wir Eclipse und YAKINDU als separates Standalone-Bundle zu installieren.
 
-YAKUNDU Statechart Tools ist ein Eclipse-Plugin. Da es Gelegentlich zu Problemen mit einem Nachinstallierten Plugin kommt, empfehlen wir Eclipse und YAKINDU als separates Standalone-Bundle zu installieren ([siehe Anleitung](INSTALL.md)).
-
-Es wird Mindestens Java Version 10 benötigt.
-
-Für Mitarbeiter und Studierende des Hasso-Plattner-Institut steht eine Lizenz für die YAKINDU Statechart Tools Professional Edition bereit. Näheres dazu ebenfalls in der [Installations-Anleitung](INSTALL.md).
+Es wird mindestens Java Version 10 benötigt.
 
 
 
@@ -84,12 +84,9 @@ Für Mitarbeiter und Studierende des Hasso-Plattner-Institut steht eine Lizenz f
 
 * Damit der aktuelle Zustand im Simulator angezeigt werden kann, müssen bei der Benennung der Zustände einige Bedingungen eingehalten werden.
 * Die **äußerste Region** muss in den einzelnen Welten spezielle Namen haben:
-	* InfinityWarehouse world: Die  Region muss ``Drive System`` heißen bzw zumindest genau 13 Zeichen lang sein (inkl. Leerzeichen).
+	* InfiniteWarehouseWorld: Die  Region muss ``Drive System`` heißen bzw zumindest genau 13 Zeichen lang sein (inkl. Leerzeichen).
 	* FlashWorld: Die Region muss ``flasher``
 	* PongWorld: Die Region muss ``pong``
-	* Traffic light World: 
-		* Im Modell des Roboters muss die äußerste Region ``tlRobot`` heißen
-		* Im Modell der Ampel (traffic-light) muss die äußerste Region ``trafficlight`` heißen
 
 * Wenn **Unterregionen** verwendet werden müssen sie entweder unbenannt sein oder mit einem Unterstich ("_") beginnen. 
 Sie dürfen keine Lehrzeichen und keine weiteren Unterstiche enthalten.
