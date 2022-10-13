@@ -32,7 +32,8 @@ The core contains 2 classes and 4 packages.
 - The package `core.simulation` handles running the simulation (starting and refreshing) and provides the interfaces `Entity` (active objects in the simulation) and `IHighlightable` (objects that can be clicked to view information). The concept of detectors (`core.simulation.Detector`) can be used to react to certain conditions in the simulation, e.g. fail the simulation if an entity goes to a place where it should not be able to go (e.g., a wall) and thereby testing the statechart implenentation.
 - The package `statechart` provides utilities to include the statechart behavior into the environment. The abstract class `StateChartWrapper` starts and stops the execution of statecharts and is able to provide name of the current (hierarchical) state. For each entity defined by a statechart, a non-abstract class should be defined that inherits from `StatechartWrapper`. Such entities should implement the interface `StatechartEntity` in order to display the (hierarchical) state name when highlighted.
 
-Further, the class `SimulationTimerService` manages the translation of time events between the code from the state chart and the simulation as allows customizing the speed.
+Further, the class `SimulationTimerService` manages the translation of time events between the code from the statechart and the simulation as allows customizing the speed.
+
 - The package `view` holds all used UI elements. Most importantly, it holds a collection of `Panel`-classes for the different graphical user interfaces. The class `view.panels.AnimationPanel` displays the animated environment and is responsible for showing additional information on the state of up to two highlighted entities.
 
 
