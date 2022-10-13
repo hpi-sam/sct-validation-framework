@@ -75,7 +75,8 @@ A `world` is the definition of the environment for a specific application. To se
   To raise input events from the simulation to the state machine, use `getStateMachine().raise[name of the event]`.  
   See for example the method `update()` in `worlds.pong.LeftPaddle`.
 
-  Further, if the state chart employs variables, you have to implement the required methods and returning the desired value. Such an example is the `long myPos()` method in the `LeftPaddle` class. 
+  Furthermore, if the state chart employs variables, you have to implement the required methods and returning the desired value. Such an example is the `long myPos()` method in the `LeftPaddle` class. 
+
 
 ## Setup
 
