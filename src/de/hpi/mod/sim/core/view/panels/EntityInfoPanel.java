@@ -159,7 +159,7 @@ public class EntityInfoPanel extends JPanel implements IHighlightedListener {
 		/*
 		 * This splits the YAKINDU state name into the hierarchy levels.
 		 * 
-		 * This only works with the following naming conventions in the state chart: 1.
+		 * This only works with the following naming conventions in the statechart: 1.
 		 * The top state must be called as specified in {@link
 		 * StateChartEntity#getTopStateName()} 2. When regions are used they have to
 		 * either be unnamed or start with an underscore "_". 3. No other underscores
